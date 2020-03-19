@@ -1,0 +1,101 @@
+{
+  "title": "如何安装Android Studio套件",
+  "author": "@PassionPenguin",
+  "postTime": "1584581819269",
+  "imgSrc": "How-to-install-android-studio.png",
+  "imgDescription": "AndroidStudio安装指南Banner图",
+  "content": [
+    {
+      "type": "subtitle",
+      "innerHTML": "方法A 使用Android Studio安装包",
+      "id": "methodA"
+    },
+    {
+      "type": "expandable",
+      "choose": [
+        "MacOS X",
+        "Windows (NT)"
+      ],
+      "innerHTML": [
+        "如果您希望完全重新安装该软件，请执行以下代码<br><pre><code class='bash'># Deletes the Android Studio App(if installed at the default place)\n# Note that this may be different depending on\n# what you named the application as,\n# where you stored your application (if you stored it at a different place,\n# or if you are using JetBrains Toolbox App,\n# and that's path may be:\n# ~/Library/Application Support/JetBrains/Toolbox), or whether you downloaded the preview version\nrm -Rf /Applications/Android\\ Studio.app\n# Delete All Android Studio related preferences\n# The asterisk here should target all folders/files beginning with the string before it\nrm -Rf ~/Library/Preferences/AndroidStudio*\n# Deletes the Android Studio's plist file\nrm -Rf ~/Library/Preferences/com.google.android.*\n# Deletes the Android Emulator's plist file\nrm -Rf ~/Library/Preferences/com.android.*\n# Deletes mainly plugins (or at least according to what mine (Edric) contains)\nrm -Rf ~/Library/Application\\ Support/AndroidStudio*\n# Deletes all logs that Android Studio outputs\nrm -Rf ~/Library/Logs/AndroidStudio*\n# Deletes Android Studio's caches\nrm -Rf ~/Library/Caches/AndroidStudio*\n# Deletes older versions of Android Studio\nrm -Rf ~/.AndroidStudio*</code></pre><br>如果您希望删除原有的所有项目，请执行以下代码：<br><pre><code class='bash'>rm -Rf ~/AndroidStudioProjects</code></pre><br>如果您希望删除Gradle相关信息（Caches & wrapper），请执行以下代码：<br><pre><code class='bash'>rm -Rf ~/.gradle</code></pre><br>使用以下的文件删除所有的AVD（安卓虚拟设备）和keystores文件，请执行以下代码：<br>(需要注意的是，该文件夹也被别的Android IDEs使用着，如果您希望继续使用别的IDEs，那么你可能不需要执行以下代码)<br><pre><code class='bash'>rm -Rf ~/.android</code></pre><br>删除Android SDK<br><pre><code class='bash'>rm -Rf ~/Library/Android*\nrm -Rf /usr/local/var/lib/android-sdk/</code></pre><br>删除Android Emulator Console Auth Token<br><pre><code class='bash'>rm -Rf ~/.emulator_console_auth_token</code></pre>",
+        "如果您希望完全重新安装该软件:<br><b>1. 运行AS卸载器:</b><br>如果您希望完全重新安装该软件，请先打开控制面板，先按照正常模式卸载Android Studio<br><br><b>2. 删除AS文件:</b><br>要删除所有的AS文件，打开文件浏览器，前往你的用户文件夹（%USERPROFILE%），删除.android .AndroidStudio以及以AndroidStudio+版本号例如.AndroidStudio1.2为名字的文件夹，删除.gradle和.m2文件夹<br>然后前往%APPDATA%，删除JetBrains文件夹（如果您系统安装了例如Intellij或Webstorm之类的由JetBrinas发布的软件，则需要注意不要误删另外软件的配置。然后前往您的系统程序文件夹，例如C:\\Program Files，删除Android文件夹。<br><br><b>3. 删除SDK文件:</b><br>您需要前往%LOCALAPPDATA%文件夹并删除Android文件夹。<br><br><b>4. 删除AS项目</b><br>如果您希望删除AS项目，你可以前往%USERPROFILE%\\AndroidStudioProjects并删除其中您所创建的项目。"
+      ],
+      "option": {
+        "expand": false
+      }
+    },
+    {
+      "innerHTML": "首先在安装Android Studio之前，我们需要先保证系统是："
+    },
+    {
+      "type": "expandable",
+      "choose": [
+        "MacOS X",
+        "Windows NT",
+        "Linux",
+        "ChromeOS"
+      ],
+      "innerHTML": [
+        "Mac® OS X® 10.10 (Yosemite) 或更新系统<br>至少 4 GB RAM, 推介 8 GB RAM<br>至少 2 GB 可用硬盘空间,<br>推介 4 GB 硬盘空间 (500 MB IDE空间 + 1.5 GB SDK和虚拟设备ISO空间)<br>1280 x 800 最小屏幕分辨率",
+        "Microsoft® Windows® 7/8/10 (64-bit)<br>至少 4 GB RAM, 推介 8 GB RAM<br>至少 2 GB 可用硬盘空间,<br>推介 4 GB 硬盘空间 (500 MB IDE空间 + 1.5 GB SDK和虚拟设备ISO空间)<br>1280 x 800 最小屏幕分辨率",
+        "GNOME 或 KDE 桌面端系统<br>(Tested on gLinux based on Debian (4.19.67-2rodete2).)<br><br>如果是64位系统，需要支持运行32位程序运营<br>GNU C Library (glibc) 2.19 或更新<br>至少 4 GB RAM, 推介 8 GB RAM<br>至少 2 GB 可用硬盘空间,<br>推介 4 GB 硬盘空间 (500 MB IDE空间 + 1.5 GB SDK和虚拟设备ISO空间)<br>1280 x 800 最小屏幕分辨率",
+        "至少 8 GB RAM 或更多<br>至少 4 GB 的硬盘空间<br>1280 x 800 最小屏幕分辨率<br>推介使用Intel i5 处理器或更好的处理器 或 推介使用性能更优的处理器 (U 系列或更高)"
+      ],
+      "option": {
+        "expand": true
+      }
+    },
+    {
+      "innerHTML": "其次我们需要在安装Android Studio之前确保系统安装了JDK与Java Runtime环境并配置了相关系统环境。如果您还没有安装这款软件，那么您可以查看另外一篇文章介绍如何配置Java环境。"
+    },
+    {
+      "innerHTML": "首先我们需要进入安卓开发者网络这个网址：<br><ul><li>国内版本\t<a href='https://developer.android.google.cn/studio'>https://developer.android.google.cn/studio</a></li><li>国际版本\t<a href='https://developer.android.com/studio'>https://developer.android.com/studio</a></li></ul>"
+    },
+    {
+      "innerHTML": "它大概长如此丑陋（x）模样的："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/The-official-website.png",
+      "imgDescription": "The official website"
+    },
+    {
+      "innerHTML": "我们点击一下 DOWNLOAD ANDROID STUDIO按键，会有一个同意协议的对话框"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Agree-to-the-license.png",
+      "imgDescription": "Agree to the license"
+    },
+    {
+      "innerHTML": "然后会开始下载的进程，这里建议大家使用Chrome开启了Parallel downloading选项来下载，或者使用Aria2/FDM/IDM软件来下载，会稍微快一些。一般来说，下载速度在Chrome中，以100Mbps的接入网速，可以跑到10MB/s"
+    },
+    {
+      "innerHTML": "下载完成以后打开安装包：<br><ul><li>MacOS X与Linux:\t直接拖动dmg文件到/Applications文件夹中，双击打开后一路按照指示进行下去即可。</li><li>Windows NT:\t双击运行exe文件一路进行下去即可。</li></ul>"
+    },
+    {
+      "type": "subtitle",
+      "innerHTML": "方法B 使用JetBrains Toolbox一键安装",
+      "id": "methodB"
+    },
+    {
+      "innerHTML": "JetBrains Toolbox是由JetBrains提供的管理工具。由于Android Studio是基于Intellij IDE且他们的合作，故大家可以通过Toolbox一键安装且管理。\n顺带说一句，Kotlin这款语言就是JetBrains领导开发的。\n使用这款软件的好处在乎，它可以顺带方便的安装其他JetBrains家的软件（大家都听过CLion或WebStorm或Intellij Idea吧），同时也可以直接更新Android Studio等软件，且可以全局管理这群IDEs。"
+    },
+    {
+      "innerHTML": "打开Toolbox，找到AndroidStudio，然后您可以直接点击Install或者点击右侧的倒三角，选择您希望安装的AndroidStudio版本。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Android-Studio-Version-Chooser.png",
+      "imgDescription": "Chooser the proper version"
+    },
+    {
+      "innerHTML": "点击下载以后首先会Checking for Updates，然后就会步入正轨开始下载，一般来说下载速率与Chrome等软件下载速度等同或更快。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/JetBrainsToolbox-AS-Downloading.png",
+      "imgDescription": "Downloading the Android Studio"
+    }
+  ]
+}

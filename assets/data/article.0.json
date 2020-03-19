@@ -50,7 +50,7 @@
       }
     },
     {
-      "innerHTML": "其次我们需要在安装Android Studio之前确保系统安装了JDK与Java Runtime环境并配置了相关系统环境。如果您还没有安装这款软件，那么您可以查看另外一篇文章介绍如何配置Java环境。"
+      "innerHTML": "Android Studio自从2017.1(Windows NT)/2016(Linux)/All(MacOS X)已经捆绑自带了JDK和Dava Runtime，所以各位其实不用额外安装的..."
     },
     {
       "innerHTML": "首先我们需要进入安卓开发者网络这个网址：<br><ul><li>国内版本\t<a href='https://developer.android.google.cn/studio'>https://developer.android.google.cn/studio</a></li><li>国际版本\t<a href='https://developer.android.com/studio'>https://developer.android.com/studio</a></li></ul>"

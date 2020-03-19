@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PassionPenguin</title>
+    <style>
+        :root {
+            --grey: #888;
+            --black: #000;
+            --white: #fff;
+            --light: #ddd;
+            --dark: #222;
+            --theme: #009688;
+        }
+
+        html, body, .pg-app {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        p {
+            font: 400 16px/28px Anodina, sans-serif;
+            color: var(--dark);
+        }
+
+        .pg-app {
+            display: inline-flex;
+            margin-top: 48px;
+            height: calc(100% - 72px);
+            overflow-y: scroll;
+        }
+
+        .leftpane {
+            width: 20%;
+        }
+
+        .rightpane {
+            width: 80%;
+        }
+
+        h3.articleListTitle {
+            font: 600 20px/2 Anodina, sans-serif;
+            margin-bottom: 0;
+        }
+
+        h3.articleListTitle small {
+            font: 300 14px/2 Anodina, sans-serif;
+            color: var(--grey);
+        }
+
+        small.timeString {
+            font: 200 12px/1 Anodina, sans-serif;
+        }
+
+        .pg-content-articleListContent {
+            display: block;
+            width: calc(100% - 30px);
+            padding: 10px;
+            margin: 0 auto;
+            border-bottom: 1px solid var(--light);
+        }
+
+        .pg-content-articleListContent p {
+            font: 16px/1.5 Anodina, sans-serif;
+        }
+
+        .pg-content-articleListContent img {
+            width: 100%;
+        }
+
+        @media (max-width: 1028px) {
+            .leftpane {
+                display: none;
+            }
+
+            .rightpane {
+                margin: 0 auto;
+            }
+
+            .pg-content-articleListContent {
+                width: calc(100% - 20px);
+                margin: 0;
+            }
+        }
+
+        @media (min-width: 1028px) {
+            .pg-app {
+                width: 1028px;
+                margin: 0 auto;
+            }
+        }
+
+        /* post */
+        .pg-img-headbanner, .pg-img-contentImage {
+            width: 100%;
+        }
+
+        .pg-post-metainfo {
+            margin-top: 0;
+            font: 13px/1 Anodina, sans-serif;
+            color: var(--grey);
+        }
+
+        .pg-title-header {
+            margin-bottom: 5px;
+            font: 800 28px/42px Anodina, sans-serif;
+        }
+
+        .pg-content-subtitle {
+            font: 800 18px/1 Anodina,sans-serif;
+        }
+
+        /* Plugin - Expand */
+        .pg-app-plugin-expand-selector {
+            padding: 10px;
+            display: inline-block;
+            border-bottom: 3px solid var(--dark);
+            margin-right: 10px;
+        }
+
+        .pg-app-plugin-expand-selector.active {
+            border-color: var(--theme)
+        }
+
+        .pg-app-plugin-expand-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .pg-app-plugin-expand-content {
+            display: none;
+            opacity: 0;
+        }
+
+        .pg-app-plugin-expand {
+            padding: 20px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/styles/atom-one-light.css">
+</head>
+<body>
+<div class="pg-app">
+    <div class="leftpane">
+        <div id="selectors">
+
+        </div>
+    </div>
+    <div class="rightpane">
+        <div id="content">
+
+        </div>
+    </div>
+</div>
+</body>
+<script src="./assets/scripts/highlight.pack.js"></script>
+<script>
+    const $ = (e) => {
+        return document.querySelectorAll(e)
+    };
+    const Int = (val) => {
+        return parseInt(val);
+    };
+    const Float = (val) => {
+        return parseFloat(val);
+    };
+    const cE = (data) => {
+        if (data === undefined)
+            data = {tagName: "div", attr: [], innerText: undefined, innerHTML: undefined, onclick: undefined}
+        let e = document.createElement(data.tagName);
+        if (data.attr !== undefined)
+            data.attr.forEach((attr) => {
+                e.setAttribute(attr[0], attr[1]);
+            });
+        if (data.innerText !== undefined)
+            e.innerText = data.innerText;
+        if (data.innerHTML !== undefined)
+            e.innerHTML = data.innerHTML;
+        if (data.onclick !== undefined)
+            e.onclick = () => {
+                data.onclick()
+            };
+        return e;
+    };
+    const $_GET = (url) => {
+        url = url || window.location.href;
+        let result = [],
+            tmp = [];
+        url.substr(url.indexOf("?"))
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+                tmp = item.split("=");
+                result[decodeURIComponent(tmp[0])] = decodeURIComponent(tmp[1]);
+            });
+        return result;
+    };
+    const loadList = () => {
+        (async () => {
+            history.pushState({"mod": "viewlist"}, "Main Page", "?mod=viewlist")
+
+            const data = await fetch("./articles.json");
+            const articleContents = await data.json();
+
+            articleContents.forEach((article) => {
+                contentArea.appendChild(cE({
+                    tagName: "div", attr: [["class", "pg-content-articleListContent"]],
+                    innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
+                    onclick: () => {
+                        history.pushState({
+                            "mod": "viewpost",
+                            "postid": article.articleid
+                        }, article.title, "?mod=viewpost&postid=" + article.articleid)
+                        contentArea.innerHTML = "";
+                        loadPost();
+                    }
+                }));
+            });
+        })();
+    }
+    const loadPost = () => {
+
+        (async () => {
+            let postid = null;
+            if (history.state === null) postid = $_GET()["postid"]
+            else postid = history.state.postid;
+            history.pushState({
+                "mod": "viewpost",
+                "postid": postid
+            }, "Main Page", "?mod=viewpost&postid=" + $_GET()['postid'])
+
+            const data = await fetch("./assets/data/article." + $_GET()['postid'] + ".json");
+            const article = await data.json();
+
+            contentArea.appendChild(cE({
+                tagName: "img",
+                attr: [["class", "pg-img-headbanner"], ["src", "./assets/media/images/" + article.imgSrc], ["alt", article.imgDescription]]
+            }));
+            contentArea.appendChild(cE({
+                tagName: "h2",
+                attr: [["class", "pg-title-header"]],
+                innerText: article.title
+            }));
+            contentArea.appendChild(cE({
+                tagName: "p",
+                attr: [["class", "pg-post-metainfo"]],
+                innerText: article.author + " - " + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"})
+            }));
+            article.content.forEach(e => {
+                if (e.type === "img")
+                    contentArea.appendChild(cE({
+                        tagName: "img",
+                        attr: [["class", "pg-img-contentImage"], ["src", "./assets/media/images/" + e.imgSrc], ["alt", e.imgDescription]]
+                    }));
+                else if (e.type === "expandable") {
+                    let container = cE({
+                        tagName: "div",
+                        attr: [["class", "pg-app-plugin-expand"]],
+                    });
+                    let chooser = cE({
+                        tagName: "div",
+                        attr: [["class", "pg-app-plugin-expand-topSelector"]]
+                    });
+                    let contentContainer = cE({
+                        tagName: "div",
+                        attr: [["class", "pg-app-plugin-expand-contentContainer"]]
+                    });
+                    container.appendChild(chooser);
+                    container.appendChild(contentContainer);
+                    e.choose.forEach((i, index) => {
+                        chooser.appendChild(cE({
+                            tagName: "span",
+                            attr: [["class", "pg-app-plugin-expand-selector"]],
+                            innerText: i, onclick: () => {
+                                container.querySelectorAll("*.active").forEach(j => {
+                                    j.classList.remove("active")
+                                });
+                                contentContainer.children[index].classList.add("active");
+                                chooser.children[index].classList.add("active");
+                            }
+                        }));
+                    });
+                    e.innerHTML.forEach(i => {
+                        contentContainer.appendChild(cE({
+                            tagName: "p",
+                            attr: [["class", "pg-app-plugin-expand-content"]],
+                            innerHTML: i
+                        }));
+                    });
+                    contentContainer.children[0].classList.add("active");
+                    chooser.children[0].classList.add("active");
+                    contentArea.appendChild(container);
+                } else if (e.type === "subtitle")
+                    contentArea.appendChild(cE({
+                        tagName: "h4",
+                        attr: [["class", "pg-content-subtitle"], ["id", e.id]], innerHTML: e.innerHTML
+                    })); else
+                    contentArea.appendChild(cE({
+                        tagName: "p",
+                        attr: [["class", "pg-content"]], innerHTML: e.innerHTML
+                    }));
+            });
+            hljs.initHighlighting();
+        })();
+    }
+    window.onload = window.onpopstate = () => {
+        window.contentArea = $("#content")[0];
+        contentArea.innerHTML = "";
+
+        if ($_GET()["mod"] === "viewpost")
+            loadPost();
+        else
+            loadList();
+    }
+</script>
+</html>

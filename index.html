@@ -3,145 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>PassionPenguin</title>
-    <style>
-        :root {
-            --grey: #888;
-            --black: #000;
-            --white: #fff;
-            --light: #ddd;
-            --dark: #222;
-            --theme: #009688;
-        }
-
-        html, body, .pg-app {
-            margin: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        p {
-            font: 400 16px/28px Anodina, sans-serif;
-            color: var(--dark);
-        }
-
-        .pg-app {
-            display: inline-flex;
-            margin-top: 48px;
-            height: calc(100% - 72px);
-            overflow-y: scroll;
-        }
-
-        .leftpane {
-            width: 20%;
-        }
-
-        .rightpane {
-            width: 80%;
-        }
-
-        h3.articleListTitle {
-            font: 600 20px/2 Anodina, sans-serif;
-            margin-bottom: 0;
-        }
-
-        h3.articleListTitle small {
-            font: 300 14px/2 Anodina, sans-serif;
-            color: var(--grey);
-        }
-
-        small.timeString {
-            font: 200 12px/1 Anodina, sans-serif;
-        }
-
-        .pg-content-articleListContent {
-            display: block;
-            width: calc(100% - 30px);
-            padding: 10px;
-            margin: 0 auto;
-            border-bottom: 1px solid var(--light);
-        }
-
-        .pg-content-articleListContent p {
-            font: 16px/1.5 Anodina, sans-serif;
-        }
-
-        .pg-content-articleListContent img {
-            width: 100%;
-        }
-
-        @media (max-width: 1028px) {
-            .leftpane {
-                display: none;
-            }
-
-            .rightpane {
-                margin: 0 auto;
-            }
-
-            .pg-content-articleListContent {
-                width: calc(100% - 20px);
-                margin: 0;
-            }
-        }
-
-        @media (min-width: 1028px) {
-            .pg-app {
-                width: 1028px;
-                margin: 0 auto;
-            }
-        }
-
-        /* post */
-        .pg-img-headbanner, .pg-img-contentImage {
-            width: 100%;
-        }
-
-        .pg-post-metainfo {
-            margin-top: 0;
-            font: 13px/1 Anodina, sans-serif;
-            color: var(--grey);
-        }
-
-        .pg-title-header {
-            margin-bottom: 5px;
-            font: 800 28px/42px Anodina, sans-serif;
-        }
-
-        .pg-content-subtitle {
-            font: 800 18px/1 Anodina,sans-serif;
-        }
-
-        /* Plugin - Expand */
-        .pg-app-plugin-expand-selector {
-            padding: 10px;
-            display: inline-block;
-            border-bottom: 3px solid var(--dark);
-            margin-right: 10px;
-        }
-
-        .pg-app-plugin-expand-selector.active {
-            border-color: var(--theme)
-        }
-
-        .pg-app-plugin-expand-content.active {
-            display: block;
-            opacity: 1;
-        }
-
-        .pg-app-plugin-expand-content {
-            display: none;
-            opacity: 0;
-        }
-
-        .pg-app-plugin-expand {
-            padding: 20px 0;
-        }
-    </style>
     <link rel="stylesheet" href="./assets/styles/atom-one-light.css">
+    <link rel="stylesheet" href="./assets/styles/styles.css">
 </head>
 <body>
-<div class="pg-app">
+<div id="pg-app">
     <div class="leftpane">
         <div id="selectors">
 
@@ -195,6 +61,141 @@
                 result[decodeURIComponent(tmp[0])] = decodeURIComponent(tmp[1]);
             });
         return result;
+    };
+    const zoomImage = (src) => {
+        let removeZoomImage = () => {
+            document.body.removeChild(imageUtilWrap);
+            document.body.removeChild(bottomZoomImageUtilCtrlWrap);
+            document.body.removeChild($("#pg-filter-zoomFilter")[0]);
+            document.body.removeChild($("#zoomImage")[0]);
+            $("#pg-app")[0].style.filter = "none";
+        }
+        document.body.append(cE({
+            tagName: "div",
+            attr: [["style", "width:200%;height:200%;position:fixed;left:0;top:0;z-index:1000;background:var(--black500);left:0;top:0;"], ["id", "pg-filter-zoomFilter"]],
+            onclick: () => {
+                removeZoomImage()
+            }
+        }));
+        $("#pg-app")[0].style.filter = "blur(10px)";
+        document.body.append(cE({
+            tagName: "img",
+            attr: [["src", src], ["style", "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;max-width:100%;max-height:100%;z-index:1000;user-select:none;"], ["id", "zoomImage"]]
+        }));
+        let imageUtilWrap = cE({
+            tagName: "div",
+            attr: [["style", "position:fixed;top:0;left:0;width:100%;height:48px;z-index:1002;background:var(--white);"], ["id", "zoomImageUtilWrap"]]
+        });
+        imageUtilWrap.append(cE({
+            tagName: "div",
+            attr: [["class", "mi"], ["style", "display: inline-block;position: absolute;left: 20px;top: 50%;transform: translate(0, -50%);user-select:none;"]],
+            onclick: () => {
+                removeZoomImage()
+            }, innerText: "chevron_left"
+        }));
+        imageUtilWrap.append(cE({
+            tagName: "div",
+            attr: [["class", "mi"], ["style", "display: inline-block;position: absolute;right: 20px;top: 50%;transform: translate(0, -50%);"]],
+            onclick: () => {
+                cE({
+                    tagName: "a",
+                    attr: [["download", src.substring(src.lastIndexOf("/") + 1)], ["href", src]]
+                }).click();
+            },
+            innerText: "save"
+        }));
+        imageUtilWrap.append(cE({
+            tagName: "div",
+            attr: [["style", "display: inline-block;position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);z-index:1002;font: 15px/1 Anodina,sans-serif;user-select:none;"]],
+            onclick: () => {
+                removeZoomImage()
+            },
+            innerText: src.substring(src.lastIndexOf("/") + 1).length > 25 ? src.substring(src.lastIndexOf("/") + 1).substring(0, 10) + "..." + src.substring(src.lastIndexOf("/") + 1).substring(src.substring(src.lastIndexOf("/") + 1).length - 10) : src.substring(src.lastIndexOf("/") + 1)
+        }));
+        document.body.append(imageUtilWrap);
+        let bottomZoomImageUtilCtrlWrap = cE({
+            tagName: "div",
+            attr: [["style", "position:fixed;left:0;bottom:0;width:100%;height:48px;font-size:0;background:var(--white);z-index:1001;user-select:none;"]]
+        })
+        bottomZoomImageUtilCtrlWrap.append(cE({
+            tagName: "div",
+            attr: [["style", "display:inline-block;width:25%;text-align:center;vertical-align:middle;"]],
+            innerHTML: "<span class='mi' style='line-height: 48px'>rotate_left</span>",
+            onclick: () => {
+                if ($("#zoomImage")[0].style.transform.includes("rotate")) {
+                    let degree = Int($("#zoomImage")[0].style.transform.match(/\d+deg/)[0].replace(/deg/, ""));
+                    $("#zoomImage")[0].style.transform = $("#zoomImage")[0].style.transform.replace(/rotate\(\d+deg\)/, "rotate(") + (degree - 90 < 0 ? degree + 270 : degree - 90).toString() + "deg)";
+                } else
+                    $("#zoomImage")[0].style.transform += "rotate(270deg)";
+            }
+        }));
+        let scale_big = () => {
+            if ($("#zoomImage")[0].style.transform.includes("scale")) {
+                let degree = parseFloat($("#zoomImage")[0].style.transform.match(/scale\([-+]?[0-9]*\.?[0-9]*/)[0].replace(/scale\(/, ""));
+                if (degree + 0.25 >= 1.75) {
+                    scaleBig.onclick = () => {
+                    };
+                    scaleBig.children[0].style.color = "var(--grey)";
+                }
+                if (degree >= 0.25) {
+                    scaleSmall.children[0].style.color = "var(--black)";
+                    scaleSmall.onclick = () => {
+                        scale_small()
+                    }
+                }
+                $("#zoomImage")[0].style.transform = $("#zoomImage")[0].style.transform.replace(/scale\([-+]?[0-9]*\.?[0-9]*\)/, "scale(") + (degree + 0.25).toString() + ")";
+            } else
+                $("#zoomImage")[0].style.transform += "scale(1.25)";
+        }
+        let scaleBig = cE({
+            tagName: "div",
+            attr: [["style", "display:inline-block;width:25%;text-align:center;vertical-align:middle;"]],
+            innerHTML: "<span class='mi' style='line-height: 48px'>add</span>",
+            onclick: () => {
+                scale_big();
+            }
+        });
+        bottomZoomImageUtilCtrlWrap.append(scaleBig);
+        let scale_small = () => {
+            if ($("#zoomImage")[0].style.transform.includes("scale")) {
+                let degree = parseFloat($("#zoomImage")[0].style.transform.match(/scale\([-+]?[0-9]*\.?[0-9]*/)[0].replace(/scale\(/, ""));
+                if (degree - 0.25 <= 0.25) {
+                    scaleSmall.onclick = () => {
+                    };
+                    scaleSmall.children[0].style.color = "var(--grey)";
+                }
+                if (degree <= 1.75) {
+                    scaleBig.children[0].style.color = "var(--black)";
+                    scaleBig.onclick = () => {
+                        scale_big()
+                    }
+                }
+                $("#zoomImage")[0].style.transform = $("#zoomImage")[0].style.transform.replace(/scale\([-+]?[0-9]*\.?[0-9]*\)/, "scale(") + (degree - 0.25).toString() + ")";
+            } else
+                $("#zoomImage")[0].style.transform += "scale(0.75)";
+        }
+        let scaleSmall = cE({
+            tagName: "div",
+            attr: [["style", "display:inline-block;width:25%;text-align:center;vertical-align:middle;"]],
+            innerHTML: "<span class='mi' style='line-height: 48px'>remove</span>",
+            onclick: () => {
+                scale_small();
+            }
+        });
+        bottomZoomImageUtilCtrlWrap.append(scaleSmall);
+        bottomZoomImageUtilCtrlWrap.append(cE({
+            tagName: "div",
+            attr: [["style", "display:inline-block;width:25%;text-align:center;vertical-align:middle;"]],
+            innerHTML: "<span class='mi' style='line-height: 48px'>rotate_right</span>",
+            onclick: () => {
+                if ($("#zoomImage")[0].style.transform.includes("rotate")) {
+                    let degree = Int($("#zoomImage")[0].style.transform.match(/\d+deg/)[0].replace(/deg/, ""));
+                    $("#zoomImage")[0].style.transform = $("#zoomImage")[0].style.transform.replace(/rotate\(\d+deg\)/, "rotate(") + (degree - 90 > 360 ? degree - 270 : degree + 90).toString() + "deg)";
+                } else
+                    $("#zoomImage")[0].style.transform += "rotate(90deg)";
+            }
+        }));
+        document.body.append(bottomZoomImageUtilCtrlWrap)
     };
     const loadList = () => {
         (async () => {
@@ -251,7 +252,10 @@
                 if (e.type === "img")
                     contentArea.appendChild(cE({
                         tagName: "img",
-                        attr: [["class", "pg-img-contentImage"], ["src", "./assets/media/images/" + e.imgSrc], ["alt", e.imgDescription]]
+                        attr: [["class", "pg-img-contentImage"], ["src", "./assets/media/images/" + e.imgSrc], ["alt", e.imgDescription]],
+                        onclick: () => {
+                            zoomImage("./assets/media/images/" + e.imgSrc);
+                        }
                     }));
                 else if (e.type === "expandable") {
                     let container = cE({

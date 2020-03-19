@@ -1,0 +1,185 @@
+@charset "UTF-8";
+
+@font-face {
+    font-family: Anodina;
+    src: url("../font/Anodina-Regular.otf");
+}
+
+@font-face {
+    font-family: Anodina;
+    font-weight: 600;
+    src: url("../font/Anodina-Bold.otf");
+}
+
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url("../font/MaterialIcons-Regular.woff2") format('woff2')
+}
+
+.mi {
+    font-family: 'Material Icons', sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+:root {
+    --grey: #888;
+    --black: #000;
+    --white: #fff;
+    --light: #ddd;
+    --dark: #222;
+    --theme: #009688;
+}
+
+html, body, #pg-app {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+p {
+    font: 400 16px/28px Anodina, sans-serif;
+    color: var(--dark);
+}
+
+#pg-app {
+    display: inline-flex;
+    margin-top: 48px;
+    height: calc(100% - 72px);
+    overflow-y: scroll;
+}
+
+.leftpane {
+    width: 20%;
+}
+
+.rightpane {
+    width: 80%;
+}
+
+h3.articleListTitle {
+    font: 600 20px/2 Anodina, sans-serif;
+    margin-bottom: 0;
+}
+
+h3.articleListTitle small {
+    font: 300 14px/2 Anodina, sans-serif;
+    color: var(--grey);
+}
+
+small.timeString {
+    font: 200 12px/1 Anodina, sans-serif;
+}
+
+.pg-content-articleListContent {
+    display: block;
+    width: calc(100% - 30px);
+    padding: 10px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--light);
+}
+
+.pg-content-articleListContent p {
+    font: 16px/1.5 Anodina, sans-serif;
+}
+
+.pg-content-articleListContent img {
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .leftpane {
+        display: none;
+    }
+
+    .rightpane {
+        margin: 0 auto;
+    }
+
+    .pg-content-articleListContent {
+        width: calc(100% - 20px);
+        margin: 0;
+    }
+}
+
+@media (min-width: 1024px) {
+    #pg-app {
+        width: 1024px;
+        margin: 0 auto;
+    }
+
+    .pg-img-headbanner, .pg-img-contentImage {
+        width: 50%;
+        display: block;
+        margin: 0 auto;
+    }
+}
+
+/* post */
+.pg-img-headbanner, .pg-img-contentImage {
+    width: 75%;
+    display: block;
+    margin: 0 auto;
+}
+
+.pg-post-metainfo {
+    margin-top: 0;
+    font: 13px/1 Anodina, sans-serif;
+    color: var(--grey);
+}
+
+.pg-title-header {
+    margin-bottom: 5px;
+    font: 800 28px/42px Anodina, sans-serif;
+}
+
+.pg-content-subtitle {
+    font: 800 18px/1 Anodina, sans-serif;
+}
+
+/* Plugin - Expand */
+.pg-app-plugin-expand-selector {
+    padding: 10px;
+    display: inline-block;
+    border-bottom: 3px solid var(--dark);
+    margin-right: 10px;
+}
+
+.pg-app-plugin-expand-selector.active {
+    border-color: var(--theme)
+}
+
+.pg-app-plugin-expand-content.active {
+    display: block;
+    opacity: 1;
+}
+
+.pg-app-plugin-expand-content {
+    display: none;
+    opacity: 0;
+}
+
+.pg-app-plugin-expand {
+    padding: 20px 0;
+}

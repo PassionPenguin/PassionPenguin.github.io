@@ -82,6 +82,19 @@
       "innerHTML": "JetBrains Toolbox是由JetBrains提供的管理工具。由于Android Studio是基于Intellij IDE且他们的合作，故大家可以通过Toolbox一键安装且管理。\n顺带说一句，Kotlin这款语言就是JetBrains领导开发的。\n使用这款软件的好处在乎，它可以顺带方便的安装其他JetBrains家的软件（大家都听过CLion或WebStorm或Intellij Idea吧），同时也可以直接更新Android Studio等软件，且可以全局管理这群IDEs。"
     },
     {
+      "innerHTML": "如果您以前已经安装了Android Studio，您可以选择卸载（当然不必要，可以直接覆盖更新，点击Check for updates即可）"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/The-Ctrl-Panel-of-JetBrains-Toolbox.png",
+      "imgDescription": "The Ctrl Panel."
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/UninstallAndroidStudioFromToolboxPanel.png",
+      "imgDescription": "Remove from the index ctrl panel."
+    },
+    {
       "innerHTML": "打开Toolbox，找到AndroidStudio，然后您可以直接点击Install或者点击右侧的倒三角，选择您希望安装的AndroidStudio版本。"
     },
     {
@@ -96,6 +109,163 @@
       "type": "img",
       "imgSrc": "How-to-install-android-studio/JetBrainsToolbox-AS-Downloading.png",
       "imgDescription": "Downloading the Android Studio"
+    },
+    {
+      "innerHTML": "安装成功后，一般来说会有通知弹出："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Successfully-Installed-Tip.png",
+      "imgDescription": "Downloading the Android Studio"
+    },
+    {
+      "innerHTML": "安装成功后，一般来说会有通知弹出："
+    },
+    {
+      "type": "subtitle",
+      "innerHTML": "配置IDE",
+      "id": "configIDE"
+    },
+    {
+      "innerHTML": "一般来说安装IDE，可能需要安装SDK和其他信息，按照推介点选了的安装，一路按继续即可。"
+    },
+    {
+      "innerHTML": "待全部内容安装完成后，打开IDE，会有一下弹窗提示导入配置，如果您曾经安装过Android Studio或和您有别人配置好了的个人偏好设置数据包，您可以导入信息。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/ImportConfigs.png",
+      "imgDescription": "Import Configs Dialog."
+    },
+    {
+      "innerHTML": "如果您曾经安装了AndroidStudio的版本并且没有删除旧版信息，会有如下的弹窗提示您删除"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/RemoveUnunsedContentsWithAndroidStudio.png",
+      "imgDescription": "Remove Unused Prev Contents Dialog."
+    },
+    {
+      "type": "subtitle",
+      "innerHTML": "初步设置",
+      "id": "basicConfigs"
+    },
+    {
+      "innerHTML": "首先有可能会有一个弹窗显示：Unable to access Android SDK add-on list，不需要管，直接叉掉"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Unable-to-access-sdk-addon-list.png",
+      "imgDescription": "Unable to access SDK add-on list."
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/FetchingSdkList.png",
+      "imgDescription": "FetchingSdkList"
+    },
+    {
+      "innerHTML": "首先会是选择 Android Studio 的设置类型，Standard 为标准模式，想省事的可以选择这个选项，会跳过后续的一些设置步骤。这里我们习惯性选择 Standard 标准模式（没错我怕费事）。"
+    },
+    {
+      "innerHTML": "如果您没有安装SDK，那么会有以下提示："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/No-SDK-found.png",
+      "imgDescription": "No-SDK-found"
+    },
+    {
+      "innerHTML": "这里是进行 SDK 组件设置，因为我已经安装了 Android SDK 和 Android Virtual Device 所以这里已经不需要再进行安装了。如果你没有安装的话，在左侧选项中勾选你需要安装的项目，建议全部勾选。同时在下面的 Android SDK Location 中设置 Android SDK 的本地路径，设置完毕后点击 Next 进行安装。\n您也可以在后续的Settings>Appearance & Behavior>System Settings>Android SDK中自定义安装特定SDK。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Setup-Wizard.png",
+      "imgDescription": "Setup-Wizard"
+    },
+    {
+      "innerHTML": "这里是对你之前的选择，进行确认的，如果需要修改设置的话，点击 Previous 返回上一条进行修改。如果确认如此设置的话，点击 Finish 进行设置，等待完成即可。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Verify-Settings.png",
+      "imgDescription": "Verify Settings Dialog."
+    },
+    {
+      "innerHTML": "然后进程将会开始："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Operation-Started.png",
+      "imgDescription": "Operation-Started"
+    },
+    {
+      "innerHTML": "下载的速度大概保持在全速（100 mbps 的接入网络速度下 10 MB/s）："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Download-Speed.png",
+      "imgDescription": "Download-Speed"
+    },
+    {
+      "innerHTML": "在运行一段时间（下载以后），会有up-to-date的结束语～："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/SDK-Downloaded.png",
+      "imgDescription": "SDK-Downloaded"
+    },
+    {
+      "innerHTML": "然后我们就进入了主页："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/EnterInterfaceDialog.png",
+      "imgDescription": "EnterInterfaceDialog"
+    },
+    {
+      "innerHTML": "我们顺便一起换一款样式吧，首先打开plugin："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/OpenPluginToggle.png",
+      "imgDescription": "OpenPluginToggle"
+    },
+    {
+      "innerHTML": "选择Marketplace，可能需要稍等一定时间加载数据，我们直接输入Material Theme："
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/MarketplaceInterface.png",
+      "imgDescription": "MarketplaceInterface"
+    },
+    {
+      "innerHTML": "点击Install（插件名称即为Material Theme），大家也可以搜索其他的插件并安装。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/MaterialTheme.png",
+      "imgDescription": "MaterialTheme"
+    },
+    {
+      "innerHTML": "安装完成以后会有Restart IDE的按钮，点击，并确认"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/Restart.png",
+      "imgDescription": "Restart"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/RestartDialog.png",
+      "imgDescription": "RestartDialog"
+    },
+    {
+      "innerHTML": "重启后按照Wizard窗口一路配置样式等插件下去即可，这里推介Atom One Light。\n以后若有需要修改的，您可以直接在菜单栏选择Tools>Material Theme>Material Theme Chooser"
+    },
+    {
+      "type": "img",
+      "imgSrc": "How-to-install-android-studio/MaterialThemeConfigure.png",
+      "imgDescription": "RestartDialog"
     }
   ]
 }

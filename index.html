@@ -330,6 +330,12 @@
                     e.setAttribute("href", "javascript:;");
                 }
             });
+
+            contentArea.appendChild(cE({
+                tagName: "p",
+                attr: [["style", "margin:36px 0;text-align:center;font:14px/1 Anodina,sans-serif;color:var(--grey);"]],
+                innerHTML: "Copyright &copy; PassionPenguin. Open Source at <a href='https://github.com/passionpenguin/passionpenguin.github.io'>GitHub</a>."
+            }));
         })();
     }
     window.onload = window.onpopstate = () => {

@@ -183,3 +183,7 @@ small.timeString {
 .pg-app-plugin-expand {
     padding: 20px 0;
 }
+
+a, a:link, a:active, a:visited {
+    color: var(--theme);
+}

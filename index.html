@@ -302,10 +302,34 @@
                     })); else
                     contentArea.appendChild(cE({
                         tagName: "p",
-                        attr: [["class", "pg-content"]], innerHTML: e.innerHTML
+                        attr: [["class", "pg-content"], e.id !== undefined ? ["id", e.id] : ["id", ""]],
+                        innerHTML: e.innerHTML
                     }));
             });
             hljs.initHighlighting();
+
+            [...$("a[href^='#']")].forEach(e => {
+                let href = e.getAttribute("href");
+                e.onclick = (i) => {
+                    i.preventDefault();
+                    const tag = $(href)[0].offsetTop;
+                    const cur = $("#pg-app")[0].scrollTop;
+                    console.log(tag, cur);
+                    const diff = cur - tag + 512;
+                    let k = 0;
+                    const dif = Math.abs(diff) / 25;
+                    let interval = setInterval(() => {
+                        if (k > 25)
+                            clearInterval(interval);
+                        if (diff > 0)
+                            $("#pg-app")[0].scrollTop = $("#pg-app")[0].scrollTop - dif;
+                        else
+                            $("#pg-app")[0].scrollTop = $("#pg-app")[0].scrollTop + dif;
+                        k++;
+                    }, 4);
+                    e.setAttribute("href", "javascript:;");
+                }
+            });
         })();
     }
     window.onload = window.onpopstate = () => {

@@ -203,8 +203,8 @@
 
             const data = await fetch("./articles.json");
             const articleContents = await data.json();
-
-            articleContents.forEach((article) => {
+            for (let i = articleContents.length - 1; i >= 0; i--) {
+                let article = articleContents[i];
                 contentArea.appendChild(cE({
                     tagName: "div", attr: [["class", "pg-content-articleListContent"]],
                     innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
@@ -217,7 +217,7 @@
                         loadPost();
                     }
                 }));
-            });
+            }
         })();
     }
     const loadPost = () => {

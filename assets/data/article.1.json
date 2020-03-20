@@ -1,0 +1,135 @@
+{
+  "title": "Android Studio首次运行创建项目及简介",
+  "author": "@PassionPenguin",
+  "postTime": "1584672329394",
+  "imgSrc": "FirstRun-Introducation.png",
+  "imgDescription": "Android Studio首次运行创建项目及简介Banner图",
+  "content": [
+    {
+      "innerHTML": "在上一章我们简要介绍了如何安装并配置Android Studio，您已经在您的开发环境中设置了AS，现在让我们了解这款IDE的用户界面等信息吧。"
+    },
+    {
+      "type": "subtitle",
+      "innerHTML": "首次进入代码编写界面 Gradle Setup",
+      "id": "SetupGradle"
+    },
+    {
+      "innerHTML": "首次进入Android Studio并打开一个新的项目，您将需要下载Gradle及其相关组件。这个过程取决于您的网络连接速度，在大多数情况下是很快的，鄙人前两次花了2分钟，到截图的这一次却花了20多分钟，完全取决于互联网的当前接入速度。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/Gradle-Build-Dialog.png",
+      "imgDescription": "Gradle Build Dialog"
+    },
+    {
+      "innerHTML": "Gradle是一个基于Apache Ant和Apache Maven概念的项目自动化建构工具。Gradle 构建脚本使用的是 Groovy 或 Kotlin 的特定领域语言来编写的，而不是传统的XML。<br>当前官方支持的语言为Java、Groovy、Scala、C++、Swift、JavaScript等语言以及Spring框架。"
+    },
+    {
+      "innerHTML": "过去 Java 开发者常用 Maven 和 Ant 等工具进行封装布署的自动化，或是两者兼用，不过这两个包彼此有优缺点，如果频繁改变相依包版本，使用 Ant 相当麻烦，如果琐碎工作很多，Maven 功能不足，而且两者都使用 XML 描述，相当不利于设计 if、switch 等判断式，即使写了可读性也不佳，而 Gradle 改良了过去 Maven、Ant 带给开发者的问题，至今也成为 Android Studio 内置的封装布署工具。"
+    },
+    {
+      "innerHTML": "喝杯茶动一动做点东西吃，回来就安装设置完成了相关组件："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/ConfiureSuccessful.png",
+      "imgDescription": "Gradle ConfiureSuccessful"
+    },
+    {
+      "innerHTML": "如下图所示，我们看到的就是Android Studio的基础界面，首先我们来介绍一下文件管理界面。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/explorer.png",
+      "imgDescription": "files explorer"
+    },
+    {
+      "innerHTML": "一般来说，大家所看到的文件管理界面是Gradle Build完成以后分门别类排序好了的文件夹，一般分为app（下面包涵manifests、java、res）、Gradle Scripts两部分。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/AndroidFiles.png",
+      "imgDescription": "AndroidFiles"
+    },
+    {
+      "innerHTML": "如果大家点击顶部右侧的倒三角，会出现如此的一个选单，切换选单，内容分别为："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/ChangeStructure.png",
+      "imgDescription": "ChangeStructure"
+    },
+    {
+      "innerHTML": "<b>Project<b><br>显示整个项目的文件，按照实际文件排序方法："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/Project.png",
+      "imgDescription": "Project"
+    },
+    {
+      "innerHTML": "<b>Packages<b><br>显示整个项目的包，例如Java包，例如各类图片mipmap，各类数值："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/PackagesFiles.png",
+      "imgDescription": "PackagesFiles"
+    },
+    {
+      "innerHTML": "<b>Production<b><br>显示正式产品的文件，按照实际文件排序方法，不包括Tests部分的文件："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/ProductionFiles.png",
+      "imgDescription": "ProductionFiles"
+    },
+    {
+      "innerHTML": "<b>Tests<b><br>显示测试的文件，按照实际文件排序方法，不包括Producition部分的文件："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/TestsFiles.png",
+      "imgDescription": "TestsFiles"
+    },
+    {
+      "innerHTML": "<b>Production Source Files<b><br>显示项目的源文件，按照实际文件排序方法，不包括诸如APK生成、Gradle数据："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/ProjectSrcFiles.png",
+      "imgDescription": "ProjectSrcFiles"
+    },
+    {
+      "innerHTML": "<b>Production Non Source Files<b><br>显示不属于项目的源文件，按照实际文件排序方法，诸如APK生成、Gradle数据："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/ProjectNonSrcFiles.png",
+      "imgDescription": "ProjectNonSrcFiles"
+    },
+    {
+      "innerHTML": "<b>Problems<b><br>显示问题界面，包括所有Insepctro发现语法等出错、提醒的文件："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/Problems.png",
+      "imgDescription": "Problems"
+    },
+    {
+      "innerHTML": "<b>Open Files<b><br>显示当前所打开的所有文件的归属，按照实际文件排序方法："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/OpenFiles.png",
+      "imgDescription": "OpenFiles"
+    },
+    {
+      "innerHTML": "<b>Android<b><br>这个就是最常见的也是默认的，在上面已经解释了（一般来说，大家所看到的文件管理界面是Gradle Build完成以后分门别类排序好了的文件夹，一般分为app（下面包涵manifests、java、res）、Gradle Scripts两部分。）："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/AndroidFiles.png",
+      "imgDescription": "AndroidFiles"
+    }
+  ]
+}

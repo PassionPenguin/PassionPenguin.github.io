@@ -17,6 +17,38 @@
       "innerHTML": "首次进入Android Studio并打开一个新的项目，您将需要下载Gradle及其相关组件。这个过程取决于您的网络连接速度，在大多数情况下是很快的，鄙人前两次花了2分钟，到截图的这一次却花了20多分钟，完全取决于互联网的当前接入速度。"
     },
     {
+      "innerHTML": "首先我们来创建一个项目，这个是打开AS的第一个用户界面："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/EnterInterface.png",
+      "imgDescription": "EnterInterface"
+    },
+    {
+      "innerHTML": "会出现如此的窗口，拖动找到EmptyActivity："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/SelectProjectTemplate.png",
+      "imgDescription": "EnterInterface"
+    },
+    {
+      "innerHTML": "继续点击Next，到配置应用元数据的界面："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/ConfigureProject.png",
+      "imgDescription": "ConfigureProject"
+    },
+    {
+      "innerHTML": "Name写应用名称，Package name写包名，通常是域名+公司/组织/个人名称+应用名，Save Location写项目保存的地址，Language写语言，为Java/Kotlin，Bytecode Level写编译功能性（越高编译慢，越低少功能），Minimum SDK选择最低支持的Android系统版本，Help Me Choose里面有用户版本分布图可供查看："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/SDKGraph.png",
+      "imgDescription": "SDKGraph"
+    },
+    {
       "type": "img",
       "imgSrc": "FirstRun-Introducation/Gradle-Build-Dialog.png",
       "imgDescription": "Gradle Build Dialog"

@@ -248,7 +248,7 @@
     {
       "type": "img",
       "imgSrc": "FirstRun-Introducation/TopLeftToolBar.png",
-      "imgDescription": "TopRightToolBar"
+      "imgDescription": "TopLeftToolBar"
     },
     {
       "innerHTML": "<b>上 - 右侧</b>一般包括运行项目（debug、run、pause、profiler等）、AVD、SDK、Gradle、Structure，如果开启了VCS版本控制，会有VCS相关的按钮。"
@@ -256,11 +256,6 @@
     {
       "type": "img",
       "imgSrc": "FirstRun-Introducation/TopRightToolBar.png",
-      "imgDescription": "TopRightToolBar"
-    },
-    {
-      "type": "img",
-      "imgSrc": "FirstRun-Introducation/TopLeftToolBar.png",
       "imgDescription": "TopRightToolBar"
     },
     {

@@ -128,7 +128,7 @@ small.timeString {
     }
 
     .pg-img-headbanner, .pg-img-contentImage {
-        width: 50%;
+        max-width: 50%;
         display: block;
         margin: 0 auto;
     }
@@ -136,7 +136,7 @@ small.timeString {
 
 /* post */
 .pg-img-headbanner, .pg-img-contentImage {
-    width: 75%;
+    max-width: 75%;
     display: block;
     margin: 0 auto;
 }

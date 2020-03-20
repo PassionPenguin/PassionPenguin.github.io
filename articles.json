@@ -3,9 +3,18 @@
     "title": "如何安装Android Studio套件",
     "author": "@PassionPenguin",
     "postTime": "1584581819269",
-    "shortDescription": "Android Studio是由Google与Jetbrains共同开发的针对安卓的一款开发工具。",
+    "shortDescription": "Android Studio是由Google与Jetbrains共同开发的针对安卓的一款开发工具，对于Android的开发很友好很方便，本文章将带着大家一起了解怎么安装Android Studio套件。",
     "imgSrc": "./assets/media/images/How-to-install-android-studio.png",
     "imgDescription": "AndroidStudio安装指南Banner图",
+    "articleid": 0
+  },
+  {
+    "title": "Android Studio首次运行创建项目及简介",
+    "author": "@PassionPenguin",
+    "postTime": "1584672329394",
+    "shortDescription": "本文章将带着大家一起开始Android Studio之旅，首先是我们的AS第一次运行，创建一个项目并配置Gradle，对基本界面的介绍。",
+    "imgSrc": "./assets/media/images/FirstRun-Introducation.png",
+    "imgDescription": "Android Studio首次运行创建项目及简介Banner图",
     "articleid": 0
   }
 ]

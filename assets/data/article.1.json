@@ -46,7 +46,7 @@
     {
       "type": "subtitle",
       "innerHTML": "文件管理器",
-      "id": "FilesExplorer"
+      "id": "FileExplorer"
     },
     {
       "innerHTML": "一般来说，大家所看到的文件管理界面是Gradle Build完成以后分门别类排序好了的文件夹，一般分为app（下面包涵manifests、java、res）、Gradle Scripts两部分。"
@@ -201,6 +201,83 @@
       "type": "img",
       "imgSrc": "FirstRun-Introducation/CodingInterface.png",
       "imgDescription": "CodingInterface"
+    },
+    {
+      "type": "toolbar",
+      "innerHTML": "快捷操作",
+      "id": "Toolbar"
+    },
+    {
+      "innerHTML": "让我们一起了解一下Android Studio里面存在的Toolbar吧，在主窗口的四周围绕着一圈Toolbar，方便大家进行窗口和动作的快捷操作："
+    },
+    {
+      "innerHTML": "<b>上 - 左侧</b><br>指示当前打开的这个文件的所属"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/TopLeftToolBar.png",
+      "imgDescription": "TopRightToolBar"
+    },
+    {
+      "innerHTML": "<b>上 - 右侧</b>一般包括运行项目（debug、run、pause、profiler等）、AVD、SDK、Gradle、Structure，如果开启了VCS版本控制，会有VCS相关的按钮。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/TopRightToolBar.png",
+      "imgDescription": "TopRightToolBar"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/TopLeftToolBar.png",
+      "imgDescription": "TopRightToolBar"
+    },
+    {
+      "innerHTML": "<b>右 - 上侧</b>包括了Gradle、助手、多设备布局兼容性。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/RightTopToolBar.png",
+      "imgDescription": "RightTopToolBar"
+    },
+    {
+      "innerHTML": "<b>右 - 下侧</b>仅有的Device File Explorer（管理接入设备的文件，可查看属于当前项目的文件夹内容（包括私有目录））。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/RightBottomToolBar.png",
+      "imgDescription": "RightBottomToolBar"
+    },
+    {
+      "innerHTML": "<b>下 - 右侧</b>包括LayoutInspector和实时记录（例如Gradle Build、错误记录、Make Project之类的操作）。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/BottomRightToolBar.png",
+      "imgDescription": "BottomRightToolBar"
+    },
+    {
+      "innerHTML": "<b>下 - 左侧</b>包括了Terminal（系统级别的，例如zsh、sh、bash、cmd）、Build（记录）、Logcat（日志）、TODO、Debug、Profiler等。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/BottomRightToolBar.png",
+      "imgDescription": "BottomRightToolBar"
+    },
+    {
+      "innerHTML": "<b>左 - 下侧</b>包括了Structure、Build Variants、Favourite三个快捷按钮。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/LeftBottomToolBar.png",
+      "imgDescription": "LeftBottomToolBar"
+    },
+    {
+      "innerHTML": "<b>左 - 上侧</b>包括了资源管理（例如drawable mipmap color layout string navigation等）、Project（总的文件浏览器）。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/LeftTopToolBar.png",
+      "imgDescription": "LeftTopToolBar"
     }
   ]
 }

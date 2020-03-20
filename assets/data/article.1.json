@@ -10,7 +10,7 @@
     },
     {
       "type": "subtitle",
-      "innerHTML": "首次进入代码编写界面 Gradle Setup",
+      "innerHTML": "首次进入自执行 Gradle Setup",
       "id": "SetupGradle"
     },
     {
@@ -42,6 +42,11 @@
       "type": "img",
       "imgSrc": "FirstRun-Introducation/explorer.png",
       "imgDescription": "files explorer"
+    },
+    {
+      "type": "subtitle",
+      "innerHTML": "文件管理器",
+      "id": "FilesExplorer"
     },
     {
       "innerHTML": "一般来说，大家所看到的文件管理界面是Gradle Build完成以后分门别类排序好了的文件夹，一般分为app（下面包涵manifests、java、res）、Gradle Scripts两部分。"
@@ -130,6 +135,72 @@
       "type": "img",
       "imgSrc": "FirstRun-Introducation/AndroidFiles.png",
       "imgDescription": "AndroidFiles"
+    },
+    {
+      "type": "subtitle",
+      "innerHTML": "代码/设计界面介绍",
+      "id": "Coding-Design-Interface"
+    },
+    {
+      "innerHTML": "接下来，我们来介绍一下代码和设计界面，他一般处于窗口的最中央。"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/CodingInterface.png",
+      "imgDescription": "CodingInterface"
+    },
+    {
+      "innerHTML": "里面的内容基本分了几部分，XMLLayout布局，其中XMLLayout布局又分为三种：Code Only、Split、Design：<br><b>Code Only 直接编写代码</b><br>一般来说，对于我这种习惯了HTML的人，选择Code Only的方式直接编写XML语法的代码，自带上色和提示等："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/CodeOnly-Design-Panel.png",
+      "imgDescription": "CodeOnly"
+    },
+    {
+      "innerHTML": "<b>Split Mode 混合模式</b><br>除非性能好，渲染快，不然基本上和Dreamweaver一样的两不好，除非屏幕够大，否则输入XML太卡，拖动控件控件界面又太小"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/SplitDesignPanel.png",
+      "imgDescription": "SplitDesignPanel"
+    },
+    {
+      "innerHTML": "<b>Design Only 控件界面</b><br>这个界面适合快速拖动控件并定位，适合快速添加Attributs："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/Design-Panel.png",
+      "imgDescription": "CodingInterface"
+    },
+    {
+      "innerHTML": "<b>Design Only 控件界面</b><br>这个界面适合快速拖动控件并定位，适合快速添加Attributs："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/Design-Panel.png",
+      "imgDescription": "CodingInterface"
+    },
+    {
+      "innerHTML": "以上的所有功能您都能够在XML Layout文件的右上角找到切换，注意到，将指针悬浮到标签上会有不同的提示："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/DifferentMode.png",
+      "imgDescription": "DifferentMode"
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/Design-Panel.png",
+      "imgDescription": "CodingInterface"
+    },
+    {
+      "innerHTML": "然后是Java/Kotlin代码窗口，如图："
+    },
+    {
+      "type": "img",
+      "imgSrc": "FirstRun-Introducation/CodingInterface.png",
+      "imgDescription": "CodingInterface"
     }
   ]
 }

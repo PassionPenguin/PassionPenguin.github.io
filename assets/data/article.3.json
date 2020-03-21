@@ -1,12 +1,12 @@
 {
-  "title": "ADB的使用教程",
+  "title": "ADB的配置教程",
   "author": "@PassionPenguin",
   "postTime": "1584790187581",
   "imgSrc": "ADB-Setup.png",
-  "imgDescription": "ADB的使用教程Banner图",
+  "imgDescription": "ADB的配置教程Banner图",
   "content": [
     {
-      "innerHTML": "在上一章我们简要介绍了如何使用AVD安卓虚拟设备模拟，在这一章中，我们将一起了解如何调适您的真实手机。"
+      "innerHTML": "在上一章我们简要介绍了如何使用AVD安卓虚拟设备模拟，在这一章中，我们将一起了解如何安装调试您的真实手机的工具ADB。方法有二，分别是<a href='#AndroidStudio'>使用Android Studio自带的ADB</a>和<a href='#CLI'>使用CLI命令行界面</a>"
     },
     {
       "type": "subtitle",

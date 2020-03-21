@@ -80,7 +80,7 @@
         $("#pg-app")[0].style.filter = "blur(10px)";
         document.body.append(cE({
             tagName: "img",
-            attr: [["src", src], ["style", "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;max-width:100%;max-height:100%;z-index:1000;user-select:none;"], ["id", "zoomImage"]]
+            attr: [["src", src], ["style", "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);max-width:100%;max-height:calc(100% - 96px);z-index:1000;user-select:none;"], ["id", "zoomImage"]]
         }));
         let imageUtilWrap = cE({
             tagName: "div",

@@ -126,6 +126,9 @@
         "1. 如果您有brew，那么您可以选择输入：<br><pre><code class='bash'>brew cask install android-platform-tools</code></pre>（该命令安装为全局性安装，安装后无需到指定目录）<br>2. 您也可以选择下载<a href='https://dl.google.com/android/repository/platform-tools-latest-darwin.zip'>ADB Zip文件压缩包</a><br>2. 解压缩到一个容易访问到的地点，例如/User/YourName/adb<br>3. 打开Terminal，输入例如:<br><pre><code class='bash'>cd /Users/YourName/adb\nadb devices</code></pre>您的设备上应该会出现一个确认框询问是否允许USB调试，确认即可。确认后在命令行中再次输入adb devices应当会出现您的设备。",
         "1. 如果您有apt，那么您可以选择输入：<br><pre><code class='bash'>sudo apt-get install android-tools-adb</code></pre>（该命令安装为全局性安装，安装后无需到指定目录）<br>如果您有yum，那么您可以选择输入：<br><pre><code class='bash'>sudo yum install android-tools</code></pre>（该命令安装为全局性安装，安装后无需到指定目录）<br>2. 您也可以选择下载<a href='https://dl.google.com/android/repository/platform-tools-latest-linux.zip'>ADB Zip文件压缩包</a><br>2. 解压缩到一个容易访问到的地点，例如/User/YourName/adb<br>3. 打开Terminal，输入例如:<br><pre><code class='bash'>cd /Users/YourName/adb\nadb devices</code></pre><br>您的设备上应该会出现一个确认框询问是否允许USB调试，确认即可。确认后在命令行中再次输入adb devices应当会出现您的设备。"
       ]
+    },
+    {
+      "innerHTML": "值得注意的是，如果您的设备突然断开或者突然无法使用，您可以将设备连接方式在MTP、PTP、充电三种之间互相切换直到重新检测。"
     }
   ]
 }

@@ -203,40 +203,41 @@
 
             const data = await fetch("./articles.json");
             const articleContents = await data.json();
-            for (let i = articleContents.length - 1; i >= 0; i--) {
-                let article = articleContents[i];
-                contentArea.appendChild(cE({
-                    tagName: "div", attr: [["class", "pg-content-articleListContent"]],
-                    innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
-                    onclick: () => {
-                        history.pushState({
-                            "mod": "viewpost",
-                            "postid": article.articleid
-                        }, article.title, "?mod=viewpost&postid=" + article.articleid)
-                        contentArea.innerHTML = "";
-                        loadPost();
-                    }
-                }));
+            for (let k = 0; k < articleContents.length; k++) {
+                let articles = articleContents[k];
+                for (let i = articles.subArticles.length - 1; i >= 0; i--) {
+                    let article = articles.subArticles[i];
+                    contentArea.appendChild(cE({
+                        tagName: "div", attr: [["class", "pg-content-articleListContent"]],
+                        innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
+                        onclick: () => {
+                            history.pushState({
+                                "mod": "viewpost",
+                                "postid": article.articleid
+                            }, article.title, "?mod=viewpost&postid=" + article.articleid + "&category=" + articles.category)
+                            contentArea.innerHTML = "";
+                            loadPost();
+                        }
+                    }));
+                }
             }
         })();
     }
     const loadPost = () => {
 
         (async () => {
-            let postid = null;
-            if (history.state === null) postid = $_GET()["postid"]
-            else postid = history.state.postid;
             history.pushState({
                 "mod": "viewpost",
-                "postid": postid
-            }, "Main Page", "?mod=viewpost&postid=" + $_GET()['postid'])
+                "postid": $_GET()["postid"],
+                "category": $_GET()["category"]
+            }, "Main Page", "?mod=viewpost&postid=" + $_GET()['postid'] + "&category=" + $_GET()["category"])
 
-            const data = await fetch("./assets/data/article." + $_GET()['postid'] + ".json");
+            const data = await fetch("./assets/data/" + $_GET()["category"] + ".article." + $_GET()['postid'] + ".json");
             const article = await data.json();
 
             contentArea.appendChild(cE({
                 tagName: "img",
-                attr: [["class", "pg-img-headbanner"], ["src", "./assets/media/images/" + article.imgSrc], ["alt", article.imgDescription]]
+                attr: [["class", "pg-img-headbanner"], ["src", "./assets/media/images/" + $_GET()['category'] + "/" + article.imgSrc], ["alt", article.imgDescription]]
             }));
             contentArea.appendChild(cE({
                 tagName: "h2",
@@ -252,9 +253,9 @@
                 if (e.type === "img")
                     contentArea.appendChild(cE({
                         tagName: "img",
-                        attr: [["class", "pg-img-contentImage"], ["src", "./assets/media/images/" + e.imgSrc], ["alt", e.imgDescription]],
+                        attr: [["class", "pg-img-contentImage"], ["src", "./assets/media/images/" + $_GET()['category'] + "/" + e.imgSrc], ["alt", e.imgDescription]],
                         onclick: () => {
-                            zoomImage("./assets/media/images/" + e.imgSrc);
+                            zoomImage("./assets/media/images/" + $_GET()['category'] + "/" + e.imgSrc);
                         }
                     }));
                 else if (e.type === "expandable") {

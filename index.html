@@ -33,14 +33,21 @@
         let toggleMask = $(".ToggleMask")[0];
         let pane = $('.leftpane')[0];
         let content = $("#content")[0];
+        let rmMask = () => {
+            toggleMask.style.display = "none";
+            pane.classList.remove("active");
+            content.style.filter = "unset";
+            window.removeEventListener("click", rmMask);
+        }
         if (!pane.classList.contains("active")) {
             toggleMask.style.display = "unset";
             pane.classList.add("active");
             content.style.filter = "blur(20px)";
+            setTimeout(() => {
+                window.addEventListener("click", rmMask);
+            }, 500)
         } else {
-            toggleMask.style.display = "none";
-            pane.classList.remove("active");
-            content.style.filter = "unset";
+            rmMask();
         }
     }
 

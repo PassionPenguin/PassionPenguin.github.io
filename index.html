@@ -244,7 +244,8 @@
                 innerHTML: "<span class='mi' onclick='ToggleMask()'>close</span><span>PassionPenguin</span>"
             }));
             selector.onclick = () => {
-                ToggleMask()
+                if (pane.classList.contains("active"))
+                    ToggleMask()
             };
             for (let k = 0; k < articleContents.length; k++) {
                 let articles = articleContents[k];

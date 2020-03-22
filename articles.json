@@ -37,6 +37,33 @@
         "imgSrc": "ADB-Setup.png",
         "imgDescription": "ADB的配置教程Banner图",
         "articleid": 3
+      },
+      {
+        "title": "Hello World程序制作",
+        "author": "@PassionPenguin",
+        "postTime": "1584807433806",
+        "shortDescription": "在这一章中，我们将创作我们的第一个APP。",
+        "imgSrc": "HelloWorldTemplate.png",
+        "imgDescription": "Hello World程序制作",
+        "articleid": 4
+      },
+      {
+        "title": "启动另外一个Activity",
+        "author": "@PassionPenguin",
+        "postTime": "1584861859645",
+        "shortDescription": "在这一章中，我们将用按钮触发启动第二个Activity并显示输入框的内容。",
+        "imgSrc": "StartingActivity.png",
+        "imgDescription": "启动另外一个Activity",
+        "articleid": 5
+      },
+      {
+        "title": "权限相关",
+        "author": "@PassionPenguin",
+        "postTime": "1584866616265",
+        "shortDescription": "常见权限获取查看设置",
+        "imgSrc": "Permission.png",
+        "imgDescription": "ADB的配置教程Banner图",
+        "articleid": 6
       }
     ]
   }

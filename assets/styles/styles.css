@@ -150,6 +150,7 @@ small.timeString {
     display: inline-block;
     border-bottom: 3px solid var(--dark);
     margin-right: 10px;
+    font: 16px/1 Anodina, sans-serif;
 }
 
 .pg-app-plugin-expand-selector.active {

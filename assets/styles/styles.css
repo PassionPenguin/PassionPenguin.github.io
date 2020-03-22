@@ -183,7 +183,8 @@ a, a:link, a:active, a:visited {
 }
 
 span.selectorName {
-    font: 18px/2 Anodina, sans-serif;
+    font: 900 14px/2 Anodina, sans-serif;
+    text-transform: capitalize;
     color: var(--theme);
 }
 

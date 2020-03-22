@@ -29,7 +29,7 @@
 </body>
 <script src="./assets/scripts/highlight.pack.js"></script>
 <script>
-    const ToggleMask = (type) => {
+    const ToggleMask = () => {
         let toggleMask = $(".ToggleMask")[0];
         let pane = $('.leftpane')[0];
         let content = $("#content")[0];
@@ -37,15 +37,19 @@
             toggleMask.style.display = "none";
             pane.classList.remove("active");
             content.style.filter = "unset";
-            window.removeEventListener("click", rmMask);
+            setTimeout(() => {
+                pane.removeEventListener("click", rmMask);
+                toggleMask.removeEventListener("click", rmMask);
+            }, 1)
         }
         if (!pane.classList.contains("active")) {
             toggleMask.style.display = "unset";
             pane.classList.add("active");
             content.style.filter = "blur(20px)";
             setTimeout(() => {
-                window.addEventListener("click", rmMask);
-            }, 500)
+                pane.addEventListener("click", rmMask);
+                toggleMask.addEventListener("click", rmMask);
+            }, 1)
         } else {
             rmMask();
         }

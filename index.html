@@ -209,7 +209,7 @@
                     let article = articles.subArticles[i];
                     contentArea.appendChild(cE({
                         tagName: "div", attr: [["class", "pg-content-articleListContent"]],
-                        innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
+                        innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='" + article.type + "/" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
                         onclick: () => {
                             history.pushState({
                                 "mod": "viewpost",

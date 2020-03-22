@@ -46,6 +46,30 @@
     transition: 250ms ease-in-out;
 }
 
+.text-theme {
+    color: var(--theme) !important;
+}
+
+.text-dark {
+    color: var(--dark) !important;
+}
+
+.text-light {
+    color: var(--light) !important;
+}
+
+.text-grey {
+    color: var(--grey) !important;
+}
+
+.text-white {
+    color: var(--white) !important;
+}
+
+.text-black {
+    color: var(--black) !important;
+}
+
 :root {
     --grey: #888;
     --black: #000;

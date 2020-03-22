@@ -244,7 +244,7 @@
                 innerHTML: "<span class='mi' onclick='ToggleMask()'>close</span><span>PassionPenguin</span>"
             }));
             selector.onclick = () => {
-                if (pane.classList.contains("active"))
+                if ($(".leftpane")[0].classList.contains("active"))
                     ToggleMask()
             };
             for (let k = 0; k < articleContents.length; k++) {
@@ -283,6 +283,14 @@
                     }));
                 }
             }
+
+            window.onpopstate = $("#pg-topSelector")[0].children[0].onclick = (e) => {
+                if ($_GET()["mod"] === "viewpost" && history.length > 2) {
+                    window.contentArea = $("#content")[0];
+                    contentArea.innerHTML = "";
+                    loadList();
+                } else e.preventDefault()
+            }
         })();
     }
     const loadPost = () => {
@@ -307,7 +315,8 @@
                 innerHTML: "<span class='mi' onclick='ToggleMask()'>close</span><span>PassionPenguin</span>"
             }));
             selector.onclick = () => {
-                ToggleMask()
+                if ($(".leftpane")[0].classList.contains("active"))
+                    ToggleMask()
             };
             for (let k = 0; k < articleContents.length; k++) {
                 let articles = articleContents[k];
@@ -431,12 +440,22 @@
 
             contentArea.appendChild(cE({
                 tagName: "p",
-                attr: [["style", "margin:36px 0;text-align:center;font:14px/1 Anodina,sans-serif;color:var(--grey);"]],
-                innerHTML: "Copyright &copy; PassionPenguin. Open Source at <a href='https://github.com/passionpenguin/passionpenguin.github.io'>GitHub</a>."
+                attr: [["style", "margin:36px 0 72px 0;text-align:center;font:14px/1.5 Anodina,sans-serif;color:var(--grey);"]],
+                innerHTML: "Copyright &copy; PassionPenguin.<br>Open Source at <a href='https://github.com/passionpenguin/passionpenguin.github.io'>GitHub</a>."
             }));
             [...$("pre code")].forEach(e => {
                 hljs.highlightBlock(e);
-            })
+            });
+            let categoryId = articleContents.map(i => i.category).indexOf($_GET()["category"]);
+            $(".pg-selector")[categoryId].children[articleContents[categoryId].subArticles.length - (Int($_GET()['postid']))].classList.add("text-dark");
+
+            window.onpopstate = $("#pg-topSelector")[0].children[0].onclick = (e) => {
+                if ($_GET()["mod"] === "viewpost" && history.length > 2) {
+                    window.contentArea = $("#content")[0];
+                    contentArea.innerHTML = "";
+                    loadList();
+                } else e.preventDefault()
+            }
         })();
     }
     window.onload = () => {
@@ -445,13 +464,6 @@
         if ($_GET()["mod"] !== "viewpost")
             loadList();
         else loadPost();
-    }
-    window.onpopstate = $("#pg-topSelector")[0].onclick = (e) => {
-        if ($_GET()["mod"] === "viewpost" && history.length > 2) {
-            window.contentArea = $("#content")[0];
-            contentArea.innerHTML = "";
-            loadList();
-        } else e.preventDefault()
     }
 </script>
 </html>

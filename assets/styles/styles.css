@@ -42,6 +42,10 @@
     font-feature-settings: 'liga';
 }
 
+* {
+    transition: 250ms ease-in-out;
+}
+
 :root {
     --grey: #888;
     --black: #000;
@@ -67,12 +71,14 @@ p {
     display: block;
     overflow-y: scroll;
     font-size: 0;
+    margin-top: 44px;
 }
 
 .leftpane {
     width: 25%;
     display: inline-block;
     vertical-align: top;
+    background: var(--white);
 }
 
 #selectors {
@@ -114,35 +120,6 @@ small.timeString {
 
 .pg-content-articleListContent img {
     width: 100%;
-}
-
-@media (max-width: 1280px) {
-    .leftpane {
-        display: none;
-    }
-
-    .rightpane {
-        margin: 0 auto;
-        display: block;
-    }
-
-    .pg-content-articleListContent {
-        width: calc(100% - 20px);
-        margin: 0;
-    }
-}
-
-@media (min-width: 1280px) {
-    #pg-app {
-        width: 1280px;
-        margin: 0 auto;
-    }
-
-    .pg-img-headbanner, .pg-img-contentImage {
-        max-width: 50%;
-        display: block;
-        margin: 0 auto;
-    }
 }
 
 /* post */
@@ -212,11 +189,87 @@ span.selectorName {
 #pg-topSelector {
     color: var(--dark);
     display: block;
-    font: 20px/1 Anodina, sans-serif;
-    margin: 20px 0;
-    text-align: center;
+    font: 16px/1 Anodina, sans-serif;
+    margin: 14px 0;
 }
 
 #pg-topSelector span {
     vertical-align: middle;
+}
+
+.topBar {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.topBar span.mi {
+    margin: 10px;
+    vertical-align: middle;
+}
+
+.topBar > :nth-child(2) {
+    font: 16px/1 Anodina, sans-serif;
+    vertical-align: middle;
+}
+
+#pg-topSelector :nth-child(2) {
+    margin-left: 10px;
+}
+
+@media (max-width: 1280px) {
+    .leftpane:not(.active) {
+        left: -200%;
+    }
+
+    .leftpane {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 200px;
+        z-index: 1001;
+        height: 100%;
+        transition: 0.5s cubic-bezier(0.65, 0.05, 0.36, 1);
+    }
+
+    .rightpane {
+        margin: 0 auto;
+        display: block;
+    }
+
+    .pg-content-articleListContent {
+        width: calc(100% - 20px);
+        margin: 0;
+    }
+}
+
+@media (min-width: 1280px) {
+    #pg-app {
+        width: 1280px;
+        margin: 0 auto;
+    }
+
+    .pg-img-headbanner, .pg-img-contentImage {
+        max-width: 50%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .topBar {
+        display: none;
+    }
+
+    #pg-app {
+        margin-top: 0;
+    }
+
+    #pg-topSelector span.mi {
+        display: none;
+    }
+
+    #pg-topSelector :nth-child(2) {
+        margin-left: 0;
+    }
 }

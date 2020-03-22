@@ -203,10 +203,35 @@
 
             const data = await fetch("./articles.json");
             const articleContents = await data.json();
+            let selector = $("#selectors")[0];
+            selector.innerHTML = "";
+            selector.appendChild(cE({
+                tagName: "div",
+                attr: [["id", "pg-topSelector"]],
+                innerHTML: "PassionPenguin"
+            }));
             for (let k = 0; k < articleContents.length; k++) {
                 let articles = articleContents[k];
+                let selectorBox = cE({
+                    tagName: "div",
+                    attr: [["class", "pg-selector"]],
+                    innerHTML: "<span class='selectorName'>" + articles.category + "</span"
+                });
+                selector.appendChild(selectorBox);
                 for (let i = articles.subArticles.length - 1; i >= 0; i--) {
                     let article = articles.subArticles[i];
+                    selectorBox.appendChild(cE({
+                        tagName: "div",
+                        attr: [["class", "pg-selector-child"]],
+                        innerText: article.title, onclick: () => {
+                            history.pushState({
+                                "mod": "viewpost",
+                                "postid": article.articleid
+                            }, article.title, "?mod=viewpost&postid=" + article.articleid + "&category=" + articles.category)
+                            contentArea.innerHTML = "";
+                            loadPost();
+                        }
+                    }));
                     contentArea.appendChild(cE({
                         tagName: "div", attr: [["class", "pg-content-articleListContent"]],
                         innerHTML: "<h3 class='articleListTitle'>" + article.title + " <small>" + article.author + "</small></h3><small class='timeString'>" + new Date(Int(article.postTime)).toLocaleString("zh-CN", {timeZone: "Asia/Hong_Kong"}) + "</small></h3><p>" + article.shortDescription + "</p><img src='./assets/media/images/" + articles.category + "/" + article.imgSrc + "' alt='" + article.imgDescription + "' />",
@@ -235,6 +260,39 @@
             const data = await fetch("./assets/data/" + $_GET()["category"] + ".article." + $_GET()['postid'] + ".json");
             const article = await data.json();
 
+            const datas = await fetch("./articles.json");
+            const articleContents = await datas.json();
+            let selector = $("#selectors")[0];
+            selector.innerHTML = "";
+            selector.appendChild(cE({
+                tagName: "div",
+                attr: [["id", "pg-topSelector"]],
+                innerHTML: "<span class='mi'>chevron_left</span> <span>PassionPenguin</span>"
+            }));
+            for (let k = 0; k < articleContents.length; k++) {
+                let articles = articleContents[k];
+                let selectorBox = cE({
+                    tagName: "div",
+                    attr: [["class", "pg-selector"]],
+                    innerHTML: "<span class='selectorName'>" + articles.category + "</span"
+                });
+                selector.appendChild(selectorBox);
+                for (let i = articles.subArticles.length - 1; i >= 0; i--) {
+                    let article = articles.subArticles[i];
+                    selectorBox.appendChild(cE({
+                        tagName: "div",
+                        attr: [["class", "pg-selector-child"]],
+                        innerText: article.title, onclick: () => {
+                            history.pushState({
+                                "mod": "viewpost",
+                                "postid": article.articleid
+                            }, article.title, "?mod=viewpost&postid=" + article.articleid + "&category=" + articles.category)
+                            contentArea.innerHTML = "";
+                            loadPost();
+                        }
+                    }));
+                }
+            }
             contentArea.appendChild(cE({
                 tagName: "img",
                 attr: [["class", "pg-img-headbanner"], ["src", "./assets/media/images/" + $_GET()['category'] + "/" + article.imgSrc], ["alt", article.imgDescription]]
@@ -339,14 +397,19 @@
             }));
         })();
     }
-    window.onload = window.onpopstate = () => {
+    window.onload = () => {
         window.contentArea = $("#content")[0];
         contentArea.innerHTML = "";
-
-        if ($_GET()["mod"] === "viewpost")
-            loadPost();
-        else
+        if ($_GET()["mod"] !== "viewpost")
             loadList();
+        else loadPost();
+    }
+    window.onpopstate = $("#pg-topSelector")[0].onclick = (e) => {
+        if ($_GET()["mod"] === "viewpost" && history.length > 2) {
+            window.contentArea = $("#content")[0];
+            contentArea.innerHTML = "";
+            loadList();
+        } else e.preventDefault()
     }
 </script>
 </html>

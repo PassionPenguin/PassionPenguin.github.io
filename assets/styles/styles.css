@@ -64,16 +64,26 @@ p {
 }
 
 #pg-app {
-    display: inline-flex;
+    display: block;
     overflow-y: scroll;
+    font-size: 0;
 }
 
 .leftpane {
-    width: 20%;
+    width: 25%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#selectors {
+    width: calc(100% - 20px);
+    margin: 0 10px;
 }
 
 .rightpane {
-    width: 80%;
+    width: 75%;
+    display: inline-block;
+    vertical-align: top;
 }
 
 h3.articleListTitle {
@@ -106,13 +116,14 @@ small.timeString {
     width: 100%;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
     .leftpane {
         display: none;
     }
 
     .rightpane {
         margin: 0 auto;
+        display: block;
     }
 
     .pg-content-articleListContent {
@@ -121,9 +132,9 @@ small.timeString {
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
     #pg-app {
-        width: 1024px;
+        width: 1280px;
         margin: 0 auto;
     }
 
@@ -184,4 +195,28 @@ small.timeString {
 
 a, a:link, a:active, a:visited {
     color: var(--theme);
+}
+
+span.selectorName {
+    font: 18px/2 Anodina, sans-serif;
+    color: var(--theme);
+}
+
+.pg-selector-child {
+    padding-left: 10px;
+    font: 14px/1.5 Anodina, sans-serif;
+    margin: 5px 0;
+    color: var(--grey);
+}
+
+#pg-topSelector {
+    color: var(--dark);
+    display: block;
+    font: 20px/1 Anodina, sans-serif;
+    margin: 20px 0;
+    text-align: center;
+}
+
+#pg-topSelector span {
+    vertical-align: middle;
 }

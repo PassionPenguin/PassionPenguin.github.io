@@ -43,7 +43,13 @@
             left: 0;
             top: 0;
         }
+
+        #resSvg path {
+            stroke-width: 5px;
+            fill: transparent;
+        }
     </style>
+    <link href="/assets/styles/styles.css" rel="stylesheet">
 </head>
 <body>
 <div id="pg-app">
@@ -51,7 +57,7 @@
         <svg id="resSvg" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
     <div id="grid"
-         style="background:url('grid.png') repeat;width:200vw;height:200vh;position:absolute;left:0;top:0;z-index:-1; background-size: 50px;"></div>
+         style="background:url('grid.png') repeat;width:200vw;height:200vh;position:absolute;left:0;top:0;z-index:0; background-size: 50px;"></div>
     <div id="cursor"></div>
 </div>
 </body>
@@ -77,8 +83,8 @@
         if (data.innerHTML !== undefined)
             e.innerHTML = data.innerHTML;
         if (data.onclick !== undefined)
-            e.onclick = () => {
-                data.onclick()
+            e.onclick = (e) => {
+                data.onclick(e)
             };
         return e;
     };
@@ -91,46 +97,106 @@
         e.stopPropagation();
     }
     window.state = {
-        newPath: true, pathId: -1, prevX: null, prevY: null, prevPath: "", prev_prevX: null, prev_prevY: null
+        newPath: true,
+        pathId: -1,
+        prevX: null,
+        prevY: null,
+        prevPath: null,
+        prev_status: null, prevPathArr: [], prevType: null
+    };
+    const promptDirection = (x, y, returnFunc) => {
+        document.body.appendChild(cE({
+            type: "div",
+            attr: [["id", "dirPromptMask"], ["style", "position:fixed;left:0;top:0;width:100%;height:100%;background:#00000022;z-index:1;"]],
+            onclick: () => {
+                document.body.removeChild(dirPrompt);
+                document.body.removeChild(pg.$("#dirPromptMask")[0]);
+            }
+        }))
+        let dirPrompt = cE({
+            type: "div",
+            attr: [["class", "pg-prompt"], ["style", "left:" + x + "px;top:" + y + "px;position:fixed;width:150px;height:150px;background:#fff;transform: translate(-50%,-50%);font-size:0;z-index:2;"]]
+        });
+        for (let i = 0; i < 9; i++)
+            dirPrompt.appendChild(cE({
+                type: "div",
+                attr: [["style", "width:50px;height:50px;vertical-align:middle;"], ["class", "mi"]],
+                onclick: (e) => {
+                    e.stopPropagation();
+                    document.body.removeChild(dirPrompt);
+                    document.body.removeChild(pg.$("#dirPromptMask")[0]);
+                    returnFunc(i);
+                },
+                innerHTML: "<span style='transform: rotate(" + ((i < 3 ? i + 1 : i === 3 ? 0 : i === 5 ? 4 : i === 6 ? i + 1 : i === 7 ? 6 : 4) * 45) + "deg);display:block;width:100%;height:100%;text-align:center;line-height:50px;'>" + (i === 4 ? "" : "chevron_left") + "</span>"
+            }));
+        document.body.appendChild(dirPrompt)
     };
     pg.$("#grid")[0].onclick = (e) => {
         let svg = pg.$("#resSvg")[0];
         let curX = min(e.offsetX);
         let curY = min(e.offsetY);
+        let path;
         if (state.newPath) {
             state.newPath = false;
             state.pathId++;
             let path = document.createElementNS(svg.namespaceURI, "path");
             path.setAttributeNS(null, "d", "M" + curX + " " + curY);
-            path.setAttributeNS(null, "style", "stroke: #000;stroke-width: 5px;fill:transparent;");
+            path.setAttributeNS(null, "style", "stroke: #000;");
             svg.appendChild(path);
-            state.prev_prevPath = state.prevPath = "M" + curX + " " + curY;
-            state.prevX = state.prev_prevX = curX;
-            state.prevY = state.prev_prevY = curY;
-            return;
+            path = state.prevPath = "M" + curX + " " + curY;
+            path.onclick = () => {
+
+            };
+            state.prev_status = "point";
+            state.prevX = curX;
+            state.prevY = curY;
+            state.prevType = "";
         }
-        let path = state.prevPath;
-        console.log(curX, curY, state, state.prevY, state.prev_prevY);
-        if (curX === state.prevX && curX === state.prev_prevX || curY === state.prevY && curY === state.prev_prevY) {
-            // 保持直線
-            path += " L" + curX + " " + curY;
-        } else if (curX === state.prevX) {
-            // 垂直向上下直角
-            path = state.prev_prevPath + (state.prev_prevX === curX ? "" : ("L " + (state.prevX + ((curX - state.prevX) > 0 ? -50 : 50))) + " " + state.prevY) + " C " + curX + " " + state.prevY + ", " + curX + " " + state.prevY + ", " + curX + " " + (state.prevY + ((curY - state.prevY) > 0 ? 50 : -50)) + " L " + curX + " " + curY;
-        } else if (curY === state.prevY) {
-            // 水平向左右直角
-            path = state.prev_prevPath + (state.prev_prevY === curY ? "" : ("L " + state.prevX + " " + (state.prevY + ((curY - state.prevY) > 0 ? -50 : 50)))) + " C " + state.prevX + " " + curY + ", " + state.prevX + " " + curY + ", " + (state.prevX + ((curX - state.prevX) > 0 ? 50 : -50)) + " " + curY + " L " + curX + " " + curY;
-        } else {
-            path += " L" + curX + " " + curY;
-        }
-        svg.children[state.pathId].setAttributeNS(null, "d", path);
-        console.log("{x:" + curX + ",y:" + curY + "}");
-        state.prev_prevX = state.prevX;
-        state.prev_prevY = state.prevY;
-        state.prevX = curX;
-        state.prevY = curY;
-        state.prev_prevPath = state.prevPath;
-        state.prevPath = path;
+        let func = () => {
+            promptDirection(curX, curY, (type) => {
+                path = state.prevPath;
+                if (type === 0 || type === 2 || type === 6 || type === 8) {
+                    let x = (type === 0 || type === 6) ? state.prevX - 50 : state.prevX + 50,
+                        y = (type === 0 || type === 2) ? state.prevY - 50 : state.prevY + 50;
+
+                    // 直角 1
+                    if (state.prev_status === "rotateline" && state.prevType !== type) {
+                        path = path.substring(0, path.lastIndexOf("L") !== -1 ? path.lastIndexOf("L") : path.length) + " C " + state.prevX + " " + state.prevY + ", " + state.prevX + " " + state.prevY + ", " + x + " " + y;
+                    }
+                    // 斜线
+                    else if (state.prev_status === "vertline")
+                        path = path.substring(0, path.lastIndexOf("L") !== -1 ? path.lastIndexOf("L") : path.length) + " C " + state.prevX + " " + state.prevY + ", " + state.prevX + " " + state.prevY + ", " + x + " " + y;
+                    else path += "L " + x + " " + y;
+                    state.prevX = x;
+                    state.prevY = y;
+                    state.prev_status = "rotateline";
+                    state.prevType = type;
+                } else if (type === 1 || type === 3 || type === 5 || type === 7) {
+                    let x = (type === 1 || type === 7) ? state.prevX : type === 3 ? state.prevX - 50 : state.prevX + 50,
+                        y = (type === 3 || type === 5) ? state.prevY : type === 1 ? state.prevY - 50 : state.prevY + 50;
+                    if (state.prev_status === "rotateline") {
+                        path = path.substring(0, path.lastIndexOf("L") !== -1 ? path.lastIndexOf("L") : path.length) + "C " + state.prevX + " " + state.prevY + ", " + state.prevX + " " + state.prevY + ", " + x + " " + y;
+                    } else if (state.prev_status === "vertline") {
+                        if (state.prevType === type)
+                            path += "L" + x + " " + y;
+                        else
+                            path = path.substring(0, path.lastIndexOf("L") !== -1 ? path.lastIndexOf("L") : path.length) + "C " + state.prevX + " " + state.prevY + ", " + state.prevX + " " + state.prevY + ", " + x + " " + y;
+                    }
+                    state.prevX = x;
+                    state.prevY = y;
+                    state.prev_status = "vertline";
+                    state.prevType = type;
+                }
+
+                pg.$("#resSvg path")[state.pathId].setAttributeNS(null, "d", path);
+                state.prevPath = path;
+                setTimeout(func, 500);
+                state.prevPath = path;
+                state.prevPathArr.push(path);
+                state.prevType = type;
+            });
+        };
+        func();
     }
 </script>
 </html>

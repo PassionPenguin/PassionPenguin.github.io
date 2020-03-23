@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>PassionPenguin/mapGenerator</title>
+    <style>
+        body {
+            background: rgba(0, 0, 0, .5);
+        }
+
+        #drawable {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: -2;
+        }
+
+        #cursor {
+            overflow: hidden;
+            width: 5px;
+            height: 5px;
+            background: darkred;
+            position: fixed;
+            z-index: 1000;
+            transition: 50ms;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #pg-app {
+        }
+
+        #resSvg {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="pg-app">
+    <div id="drawable">
+        <svg id="resSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div id="grid"
+         style="background:url('grid.png') repeat;width:200vw;height:200vh;position:absolute;left:0;top:0;z-index:-1; background-size: 50px;"></div>
+    <div id="cursor"></div>
+</div>
+</body>
+<script>
+    const pg = {
+        $: (e) => {
+            return document.querySelectorAll(e);
+        }
+    };
+    const Int = (val) => {
+        return parseInt(val)
+    };
+    const cE = (data) => {
+        if (data === undefined)
+            data = {type: "div", attr: [], innerText: undefined, innerHTML: undefined, onclick: undefined}
+        let e = document.createElement(data.type);
+        if (data.attr !== undefined)
+            data.attr.forEach((attr) => {
+                e.setAttribute(attr[0], attr[1]);
+            });
+        if (data.innerText !== undefined)
+            e.innerText = data.innerText;
+        if (data.innerHTML !== undefined)
+            e.innerHTML = data.innerHTML;
+        if (data.onclick !== undefined)
+            e.onclick = () => {
+                data.onclick()
+            };
+        return e;
+    };
+
+    const min = (val) => {
+        return val % 25 > 12.5 ? val + (25 - val % 25) : val - val % 25;
+    };
+    pg.$("#grid")[0].onmousemove = (e) => {
+        pg.$("#cursor")[0].setAttribute("style", "left:" + min(e.offsetX) + "px; top:" + min(e.offsetY) + "px;");
+        e.stopPropagation();
+    }
+    window.state = {
+        newPath: true, pathId: -1, prevX: null, prevY: null, prevPath: "", prev_prevX: null, prev_prevY: null
+    };
+    pg.$("#grid")[0].onclick = (e) => {
+        let svg = pg.$("#resSvg")[0];
+        let curX = min(e.offsetX);
+        let curY = min(e.offsetY);
+        if (state.newPath) {
+            state.newPath = false;
+            state.pathId++;
+            let path = document.createElementNS(svg.namespaceURI, "path");
+            path.setAttributeNS(null, "d", "M" + curX + " " + curY);
+            path.setAttributeNS(null, "style", "stroke: #000;stroke-width: 5px;fill:transparent;");
+            svg.appendChild(path);
+            state.prev_prevPath = state.prevPath = "M" + curX + " " + curY;
+            state.prevX = state.prev_prevX = curX;
+            state.prevY = state.prev_prevY = curY;
+            return;
+        }
+        let path = state.prevPath;
+        console.log(curX, curY, state, state.prevY, state.prev_prevY);
+        if (curX === state.prevX && curX === state.prev_prevX || curY === state.prevY && curY === state.prev_prevY) {
+            // 保持直線
+            path += " L" + curX + " " + curY;
+        } else if (curX === state.prevX) {
+            // 垂直向上下直角
+            path = state.prev_prevPath + (state.prev_prevX === curX ? "" : ("L " + (state.prevX + ((curX - state.prevX) > 0 ? -50 : 50))) + " " + state.prevY) + " C " + curX + " " + state.prevY + ", " + curX + " " + state.prevY + ", " + curX + " " + (state.prevY + ((curY - state.prevY) > 0 ? 50 : -50)) + " L " + curX + " " + curY;
+        } else if (curY === state.prevY) {
+            // 水平向左右直角
+            path = state.prev_prevPath + (state.prev_prevY === curY ? "" : ("L " + state.prevX + " " + (state.prevY + ((curY - state.prevY) > 0 ? -50 : 50)))) + " C " + state.prevX + " " + curY + ", " + state.prevX + " " + curY + ", " + (state.prevX + ((curX - state.prevX) > 0 ? 50 : -50)) + " " + curY + " L " + curX + " " + curY;
+        } else {
+            path += " L" + curX + " " + curY;
+        }
+        svg.children[state.pathId].setAttributeNS(null, "d", path);
+        console.log("{x:" + curX + ",y:" + curY + "}");
+        state.prev_prevX = state.prevX;
+        state.prev_prevY = state.prevY;
+        state.prevX = curX;
+        state.prevY = curY;
+        state.prev_prevPath = state.prevPath;
+        state.prevPath = path;
+    }
+</script>
+</html>

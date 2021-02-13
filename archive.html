@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Archive - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/main.css">
+</head>
+<body>
+<div class="container">
+
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.js"></script>
+<script>
+    init();
+
+    function post(e) {
+        let container = ce({
+            name: "div", classList: ["post"], onclick: () => {
+                openUrl(`post.html?name=${e['url']}`);
+            }
+        });
+        const date = new Date(e["time"]);
+        container.appendChild(ce({name: "h2", classList: ["title"], innerHTML: e["title"]}));
+        container.appendChild(ce({
+            name: "p",
+            classList: ["meta"],
+            innerHTML: date.toDateString()
+        }));
+        container.appendChild(ce({name: "p", classList: ["description"], innerHTML: e["description"]}));
+        $(".container")[0].appendChild(container);
+    }
+
+    fetch("config/translation.json")
+        .then(response => response.json())
+        .then(data => {
+            data["translation"].forEach(e => {
+                post(e);
+            });
+        });
+</script>
+</html>

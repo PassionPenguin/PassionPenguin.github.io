@@ -1,0 +1,71 @@
+@use "components/header";
+@use "basic";
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: rgb(158, 32, 34);
+    --textColor: #fff;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    &::before {
+        background: url("/assets/images/404.png") no-repeat 0 0;
+        background-size: cover;
+        opacity: .3;
+        content: " ";
+        display: block;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 0;
+    }
+}
+
+.tips {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    text-align: center;
+}
+
+.tips h2 {
+    font: 700 128px/1 basic.$fontFamily;
+    color: #efefef;
+    margin: 0;
+}
+
+.tips h3 {
+    font: 700 24px/1 basic.$fontFamily;
+    color: #ccc;
+    margin: 12px 0;
+}
+
+.tips h4 a {
+    color: #efefef;
+    text-decoration: none;
+    font: 16px/1 basic.$fontFamily;
+    padding: 12px 0;
+    display: block;
+}
+
+@media screen and (min-width: 1440px) {
+    .tips {
+        top: 50%;
+        left: 75%;
+        transform: translate(-50%, -50%);
+        text-align: left;
+    }
+
+
+    .container::before {
+        opacity: .7;
+    }
+}

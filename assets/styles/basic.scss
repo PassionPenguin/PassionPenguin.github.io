@@ -1,0 +1,22 @@
+$fontFamily: "SF Compact Rounded", sans-serif;
+
+* {
+    transition: ease-in-out 500ms;
+}
+
+:root {
+    --textColor: #000;
+    --background: #efefef;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([light]) {
+        --textColor: #fff;
+        --background: #000;
+    }
+}
+
+:root[dark] {
+    --textColor: #fff;
+    --background: #000;
+}

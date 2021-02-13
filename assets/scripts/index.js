@@ -62,58 +62,71 @@ function toggleDarkMode() {
 }
 
 function init() {
-    /*
-    <a href="./" class="title">霜羽 Hoarfroster</a>
-    <span class="mode"></span>
-    <span class="github"></span>
-    <span class="bilibili"></span>
-    <span class="zhihu"></span>
-    <span class="juejin"></span>
-     */
+    fetch("data/strings.json")
+        .then(response => response.json())
+        .then(data => {
+            window.resourceString = data;
 
-    if (getCookie("darkmode") === "1") document.documentElement.setAttribute("dark", "");
-    if (getCookie("darkmode") === "0") document.documentElement.setAttribute("light", "");
-    if (getCookie("darkmode") === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.documentElement.setAttribute("dark", "");
-    }
+            (function initResources() {
+                $("[resource]").forEach(e => {
+                    if (e.attributes["resource"].value === "randText")
+                        e.innerText = resourceString["randText" + (Math.floor(Math.random() * Math.floor(3)) + 1)]
+                    else e.innerText = resourceString[e.attributes["resource"].value];
+                });
+            }());
+        });
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (getCookie("darkmode") === null)
-            if (e.matches) {
-                document.documentElement.setAttribute("dark", "");
-            } else {
-                document.documentElement.removeAttribute("dark");
-                document.documentElement.setAttribute("light", "");
+    (function initDarkMode() {
+        if (getCookie("darkmode") === "1") document.documentElement.setAttribute("dark", "");
+        if (getCookie("darkmode") === "0") document.documentElement.setAttribute("light", "");
+        if (getCookie("darkmode") === null && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute("dark", "");
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (getCookie("darkmode") === null)
+                if (e.matches) {
+                    document.documentElement.setAttribute("dark", "");
+                } else {
+                    document.documentElement.removeAttribute("dark");
+                    document.documentElement.setAttribute("light", "");
+                }
+        });
+    })();
+
+    (function initHeader() {
+        const container = ce({name: "div", classList: ["header"]})
+        container.appendChild(ce({
+            name: "a",
+            attrs: [["href", "/"]],
+            classList: ["title"],
+            innerHTML: "霜羽 Hoarfroster"
+        }))
+        container.appendChild(ce({
+            name: "span", classList: ["mode"], onclick: () => {
+                toggleDarkMode()
             }
-    });
-
-    const container = ce({name: "div", classList: ["header"]})
-    container.appendChild(ce({name: "a", attrs: [["href", "/"]], classList: ["title"], innerHTML: "霜羽 Hoarfroster"}))
-    container.appendChild(ce({
-        name: "span", classList: ["mode"], onclick: () => {
-            toggleDarkMode()
-        }
-    }))
-    container.appendChild(ce({
-        name: "span", classList: ["github"], onclick: () => {
-            openUrl("https://github.com/PassionPenguin")
-        }
-    }))
-    container.appendChild(ce({
-        name: "span", classList: ["bilibili"], onclick: () => {
-            openUrl("https://space.bilibili.com/201469972")
-        }
-    }))
-    container.appendChild(ce({
-        name: "span", classList: ["zhihu"], onclick: () => {
-            openUrl("https://www.zhihu.com/people/shuang-yu-29-75")
-        }
-    }))
-    container.appendChild(ce({
-        name: "span", classList: ["juejin"], onclick: () => {
-            openUrl("https://juejin.cn/user/474638410324526")
-        }
-    }))
-
-    document.body.appendChild(container);
+        }))
+        container.appendChild(ce({
+            name: "span", classList: ["github"], onclick: () => {
+                openUrl("https://github.com/PassionPenguin")
+            }
+        }))
+        container.appendChild(ce({
+            name: "span", classList: ["bilibili"], onclick: () => {
+                openUrl("https://space.bilibili.com/201469972")
+            }
+        }))
+        container.appendChild(ce({
+            name: "span", classList: ["zhihu"], onclick: () => {
+                openUrl("https://www.zhihu.com/people/shuang-yu-29-75")
+            }
+        }))
+        container.appendChild(ce({
+            name: "span", classList: ["juejin"], onclick: () => {
+                openUrl("https://juejin.cn/user/474638410324526")
+            }
+        }))
+        document.body.appendChild(container);
+    })();
 }

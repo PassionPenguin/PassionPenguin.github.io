@@ -142,12 +142,16 @@ html, body {
   margin: 12px 0;
 }
 
+.tips h4 {
+  color: #efefef;
+  text-decoration: none;
+  font: 16px/1.8 "SF Compact Rounded", sans-serif;
+  padding: 6px 0;
+  display: block;
+}
 .tips h4 a {
   color: #efefef;
   text-decoration: none;
-  font: 16px/1 "SF Compact Rounded", sans-serif;
-  padding: 12px 0;
-  display: block;
 }
 
 @media screen and (min-width: 1440px) {

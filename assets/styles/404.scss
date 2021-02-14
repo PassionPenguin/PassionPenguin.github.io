@@ -48,12 +48,17 @@ html, body {
     margin: 12px 0;
 }
 
-.tips h4 a {
+.tips h4 {
     color: #efefef;
     text-decoration: none;
-    font: 16px/1 basic.$fontFamily;
-    padding: 12px 0;
+    font: 16px/1.8 basic.$fontFamily;
+    padding: 6px 0;
     display: block;
+
+    a {
+        color: #efefef;
+        text-decoration: none;
+    }
 }
 
 @media screen and (min-width: 1440px) {

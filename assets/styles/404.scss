@@ -1,5 +1,6 @@
-@use "components/header";
-@use "basic";
+@import "components/header";
+@import "components/footer";
+@import "basic";
 
 html, body {
     width: 100%;
@@ -37,13 +38,13 @@ html, body {
 }
 
 .tips h2 {
-    font: 700 128px/1 basic.$fontFamily;
+    font: 700 128px/1 $fontFamily;
     color: #efefef;
     margin: 0;
 }
 
 .tips h3 {
-    font: 700 24px/1 basic.$fontFamily;
+    font: 700 24px/1 $fontFamily;
     color: #ccc;
     margin: 12px 0;
 }
@@ -51,7 +52,7 @@ html, body {
 .tips h4 {
     color: #efefef;
     text-decoration: none;
-    font: 16px/1.8 basic.$fontFamily;
+    font: 16px/1.8 $fontFamily;
     padding: 6px 0;
     display: block;
 

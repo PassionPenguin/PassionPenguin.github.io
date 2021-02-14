@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="lightHeaderBar">
+<html lang="en" class="lightHeaderBar indexPage">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -15,12 +15,52 @@
         <h2 resource="randText"></h2>
     </div>
 </div>
-<div class="container">
+<div class="container postList">
+    <h3>最近的文章～</h3>
 </div>
 <div class="footer"></div>
 </body>
 <script src="/assets/scripts/index.js"></script>
 <script>
     init();
+
+    function post(e) {
+        let container = ce({name: "div", classList: ["post"]});
+        const date = new Date(e["time"]);
+        container.appendChild(ce({
+            name: "h2", classList: ["title"], innerHTML: e["title"] + e["tags"].map(el => {
+                let href = window.location.href;
+                let splitSearch = window.location.search.split(';');
+                let src;
+                if (window.location.search !== "")
+                    if (splitSearch['sort'] !== undefined)
+                        if (splitSearch['sort'].match(RegExp("label%3A*")) !== null)
+                            src = window.location.href + window.location.search.replace(RegExp("label%3A*(&|\\+|$)"), `label%3A${el}`);
+                        else src = window.location.href + window.location.search.split("+").concat([`label%3A${el}`]).join("+");
+                    else src = window.location.href + window.location.search + `&sort=label%3A${el}`;
+                else src = window.location.href + `?sort%3A${el}`
+                return `<a href='${src}' class="${el} label">${el}</a>`
+            }).join(""), onclick: () => {
+                openUrl(`/archive/${e['url'].replace('md', 'html')}`);
+            }
+        }));
+        container.appendChild(ce({
+            name: "p",
+            classList: ["meta"],
+            innerHTML: date.toDateString()
+        }));
+        container.appendChild(ce({name: "p", classList: ["description"], innerHTML: e["description"]}));
+        $(".container")[0].appendChild(container);
+    }
+
+    fetch("config/translation.json")
+        .then(response => response.json())
+        .then(data => {
+            data["translation"].concat(data["review"]).sort((a, b) => {
+                return (new Date(b['time'])) - (new Date(a['time']));
+            }).splice(0, 10).forEach(e => {
+                post(e);
+            });
+        });
 </script>
 </html>

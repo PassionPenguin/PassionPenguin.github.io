@@ -1,6 +1,7 @@
-@use "components/header";
-@use "basic";
-@import "markdown/style";
+@import "components/header";
+@import "components/footer";
+@import "basic";
+@import "markdown/index";
 
 html, body {
     width: 100%;
@@ -8,22 +9,10 @@ html, body {
     margin: 0;
     background: var(--background);
     color: var(--textColor);
-    font-family: basic.$fontFamily;
+    font-family: $fontFamily;
 }
 
 .container {
     padding: 24px 48px;
     margin-top: 64px;
-}
-
-@media screen and (max-width: 1080px) {
-    .container.post {
-        max-width: 768px;
-    }
-}
-
-@media screen and (max-width: 1440px) {
-    .container.post {
-        max-width: 1280px;
-    }
 }

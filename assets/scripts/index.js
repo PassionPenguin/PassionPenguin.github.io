@@ -18,6 +18,10 @@ window.ce = ({name, classList, id, innerHTML, attrs, onclick}) => {
     return e;
 }
 
+Object.with = (exec) => {
+    return exec(this);
+}
+
 HTMLAllCollection.forEach = Array.prototype.forEach;
 
 function setCookie(name, value, days) {
@@ -141,4 +145,11 @@ function init() {
         }))
         document.body.appendChild(container);
     })();
+
+    window.addEventListener("scroll", (evt) => {
+        if (window.scrollY > 48) document.documentElement.setAttribute("scroll", "");
+        else document.documentElement.removeAttribute("scroll");
+    });
+
+    $(".footer")[0].innerHTML = `<div class="flex-content"><p>霜羽 Hoarfroster</p><ul><li>Archive</li><li>Repos</li><li>About</li><li>Contact</li></ul><ul><li>GitHub</li><li>掘金翻译计划</li><li>知乎</li><li>BiliBili</li></ul></div><div class="bottom"><a href='/' class="title">&copy; 霜羽 Hoarfroster</a><span>Powered Hoarfroster, 由衷感谢一切亲人、朋友、老师～</span></div>`
 }

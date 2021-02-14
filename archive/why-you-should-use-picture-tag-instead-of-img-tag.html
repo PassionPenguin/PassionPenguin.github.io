@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>为什么你应该使用 Picture 标签而不是 Img 标签 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/why-you-should-use-picture-tag-instead-of-img-tag-b9841e86bf8b">Why You Should Use Picture Tag Instead of  Img Tag</a></li>
+<li>原文作者：<a href="https://medium.com/@chameeradulanga">Chameera Dulanga</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/why-you-should-use-picture-tag-instead-of-img-tag.md">https://github.com/xitu/gold-miner/blob/master/article/2021/why-you-should-use-picture-tag-instead-of-img-tag.md</a></li>
+<li>译者：<a href="https://github.com/plusmultiply0">plusmultiply0</a></li>
+<li>校对者：<a href="https://github.com/Usualminds">Usualminds</a>、<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+</ul>
+</blockquote>
+<h1>为什么你应该使用 Picture 标签而不是 Img 标签</h1>
+<p><img src="https://cdn-images-1.medium.com/max/5760/1*Sv9aXzgr2N6IiblcW_lFPg.jpeg" alt=""></p>
+<p>现代 web 应用程序中，在用户界面中使用大量图片和动画是一件很常见的事情。这些现代设计聚焦于提升应用的用户体验，但是如果没有做好设备对图片的响应式支持，其效果可能适得其反。</p>
+<p>作为开发者，我们需要完成所有的需求。但是，在大多数情况下，我们可能会错过一些能产生巨大影响的细节，因为我们是以一个更高的视角来解决问题。</p>
+<p>选择 <code>picture</code> 还是 <code>img</code> 标签就是这么一个小细节，如果你做出了正确的选择，那么就可以同时提升用户体验和应用性能。</p>
+<p>本文接下来会讨论 <code>picture</code> 与 <code>img</code> 标签之间的差异，以及 <code>picture</code> 标签优于  <code>img</code> 标签之处。</p>
+<h2>为什么 Img 标签不能满足现代 web 应用的需求？</h2>
+<p>众所周知，<code>img</code> 标签在很长的一段的时期内都是 HTML 的核心标签之一，这毫无疑问是因为它的简单和易用。</p>
+<blockquote>
+<p><strong>然而，屏幕尺寸和分辨率的发展以及复杂的用户需求，让 <code>img</code> 标签在响应式和跨设备应用程序的使用中出现了一些问题。</strong></p>
+</blockquote>
+<p>所有的问题都可以被归结为两个主要方面：</p>
+<ol>
+<li>分辨率切换（Resolution Switching）—— 如何为窄屏设备提供较小尺寸的图片。</li>
+<li>美术设计（Art Direction）—— 如何为不同尺寸的屏幕显示不同的图片。</li>
+</ol>
+<p>现在，让我们来看看如何解决上述问题，并了解下 <code>picture</code> 标签的额外功能。</p>
+<h2>使用 srcset 和 sizes 属性实现分辨率切换</h2>
+<p>正如我先前提到的，现代的 web 设计师经常使用高分辨率的图像来吸引用户的注意力。但是作为开发者，我们必须谨慎地选择合适的 HTML 元素。</p>
+<blockquote>
+<p><strong>假设你对高分辨率图片使用了 <code>img</code> 标签。在这种情况下，相同的图片会在运行了该应用程序的每个设备上应用，并且会影响低分辨率设备（如：移动设备）的性能。</strong></p>
+</blockquote>
+<p>这个可能会导致更长的图片加载时间以及自上而下的图片逐部分加载。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Atpq5fQFaAWBzVRgsMt75w.gif" alt="Top to bottom image loading issue"></p>
+<p>通过使用 <code>picture</code> 标签的 <code>srcset</code> 和 <code>sizes</code> 属性，可以轻松的解决这个问题。</p>
+<pre class="hljs" v-pre><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span>
+
+      <span class="hljs-attr">srcset</span>=<span class="hljs-string">"small-car-image.jpg 400w,
+              medium-car-image.jpg 800w,
+              large-car-image.jpg 1200w"</span>
+
+      <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 1280px) 1200px,
+             (min-width: 768px) 400px,
+             100vw"</span>&gt;</span>
+
+   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"medium-car-image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Car"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p><code>srcset</code> 属性接受多个带有宽度像素值的图片，浏览器根据这些像素值来选择要显示的图片。在上面的例子中，为相同的图片提供了 3 个不同大小的版本。</p>
+<p><code>sizes</code> 属性定义了图片在屏幕上会占据的空间大小。在上面的例子中，如果屏幕的最小尺寸是 1280px ，则图像会占据 1200px 的宽度。</p>
+<blockquote>
+<p><strong>话虽如此，最好不要只因为分辨率切换就使用 picture 标签，因为现在的 img 标签也能做到同样的事情（并且有更多的浏览器支持）。</strong></p>
+</blockquote>
+<pre class="hljs" v-pre><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"small-car-image.jpg 400w,
+             medium-car-image.jpg 800w,
+             large-car-image.jpg 1200w"</span>
+
+     <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 1280px) 1200px,
+            (min-width: 768px) 400px,
+            100vw"</span>
+     
+     <span class="hljs-attr">src</span>=<span class="hljs-string">"medium-car-image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Car"</span>&gt;</span>
+</code></pre>
+<p>然而，在大多数情况下，我们需要同时处理分辨率切换和美术设计，那么 <code>picture</code> 标签就是最好的选择。</p>
+<p>所以，让我们来看看如何使用 <code>picture</code> 标签来实现美术设计。</p>
+<h2>使用 media 属性实现美术设计</h2>
+<p>美术设计背后的主要思想是，基于设备的屏幕尺寸显示不同的图片。在大多数情况下，一张在大屏设备上看起来很好的图，会在当你切换到移动设备时被裁剪或者看起来很小。</p>
+<blockquote>
+<p><strong>我们可以通过为不同的屏幕尺寸提供图片的不同版本来解决这个问题。这些不同的版本可以是横向的、纵向的、或者同一图像的任意自定义版本。</strong></p>
+</blockquote>
+<p>使用 <code>picture</code> 标签，并在其中使用多个 <code>source</code> 标签，我们可以轻松的处理分辨率切换。</p>
+<pre class="hljs" v-pre><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+   
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">....</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">....</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">....</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p>接着，我们可以使用 <code>media</code> 属性来定义这些 <code>source</code> 标签会被使用的情况（媒体条件）。我们也可以用类似于上一节讨论的方式那样来使用 <code>srcset</code> 和 <code>sizes</code> 属性。</p>
+<p>下面的代码是将 <code>picture</code> 标签用于美术设计和分辨率切换的示例。</p>
+<pre class="hljs" v-pre><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+     
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(orientation: landscape)"</span>
+             
+      <span class="hljs-attr">srcset</span>=<span class="hljs-string">"land-small-car-image.jpg 200w,
+              land-medium-car-image.jpg 600w,
+              land-large-car-image.jpg 1000w"</span>
+             
+      <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 700px) 500px,
+             (min-width: 600px) 400px,
+             100vw"</span>&gt;</span>
+     
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(orientation: portrait)"</span>
+             
+      <span class="hljs-attr">srcset</span>=<span class="hljs-string">"port-small-car-image.jpg 700w,
+              port-medium-car-image.jpg 1200w,
+              port-large-car-image.jpg 1600w"</span>
+             
+      <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 768px) 700px,
+             (min-width: 1024px) 600px,
+             500px"</span>&gt;</span>
+     
+   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"land-medium-car-image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Car"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p>如果屏幕方向是水平时，浏览器会从第一个图片集（srcset）中显示图片。而当屏幕方面是竖直时，浏览器会使用第二个图片集（srcset）。除此之外，你也可以在 <code>media</code> 属性中设置 <code>max-width</code> 和 <code>min-width</code> 参数：</p>
+<pre class="hljs" v-pre><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(max-width: 767px)"</span> <span class="hljs-attr">....</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(min-width: 768px)"</span> <span class="hljs-attr">....</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p>最后的 <code>img</code> 标签是用来向后兼容那些不支持 <code>picture</code> 标签的浏览器。</p>
+<h2>实现图像格式切换</h2>
+<p>随着科技的快速发展，每天都会产生不同的现代图片格式。其中一些格式，如：<code>webp</code>、<code>svg</code> 以及 <code>avif</code> 可以提供更好的用户体验。</p>
+<p>另一方面，一些浏览器不支持这些现代图像格式。如果我们不使用兼容的图像格式，有时就会适得其反。</p>
+<blockquote>
+<p><strong>我们可以轻松的解决这个问题，因为 picture 标签支持我们在其中使用多个 source。</strong></p>
+</blockquote>
+<pre class="hljs" v-pre><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"test.avif"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"image/avif"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"test.webp"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"image/webp"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"test.png"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"test image"</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p>上面的例子包含了 <code>avif</code>、<code>webp</code> 和 <code>png</code> 三种图像格式。首先，浏览器会尝试加载 <code>avif</code> 格式。如果失败了，浏览器会接着尝试 <code>webp</code> 格式。如果这两种格式都不支持，浏览器就会使用 <code>png</code> 格式的图片。</p>
+<blockquote>
+<p><strong>当 Chrome 声明其浏览器开发者工具（DevTools）将会在渲染选项卡（Rendering）中提供两种新的模拟方式以模拟部分支持的图像类型时，有关 <code>picture</code> 标签的事情开始变得有趣起来了。</strong></p>
+</blockquote>
+<p>从 Chrome 88 开始，你可以使用其浏览器开发者工具（DevTools）来检查浏览器对于图像格式的兼容情况。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2562/1*GAFavZjkfi4FUDRkkPMA4Q.png" alt="Using Chrome DevTools for Image Compatibility Emulations"></p>
+<h2>总结</h2>
+<p>虽然我们讨论了为什么 <code>picture</code> 标签相比 <code>img</code> 标签更好。但是，我必须声明的是， <code>img</code> 标签并没有消亡，短期内也不会。</p>
+<p>如果我们能有效的使用 <code>srcset</code> 和 <code>sizes</code> 等属性，我们就能最大限度的用好 <code>img</code> 标签。比如，我们能仅使用 <code>img</code> 标签来实现分辨率切换。</p>
+<p>另一方面，我们可以借助 <code>picture</code> 标签使用媒体查询和其他的属性来轻松解决分辨率切换和美术设计。</p>
+<p>适配图像格式切换与 Chrome DevTools 对其的支持都可以被视为 <code>picture</code> 标签的优势。</p>
+<p>这两个标签各有利弊。所以，我们必须仔细思考并基于我们的需求使用最合适的标签。</p>
+<p>感谢您的阅读！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.js"></script>
+<script>init()</script>
+</html>

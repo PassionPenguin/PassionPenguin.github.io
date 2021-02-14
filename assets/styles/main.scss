@@ -12,22 +12,41 @@ html, body {
 
 .container {
     padding: 24px 48px;
+
+    &.postList {
+        max-width: 768px;
+        margin: 0 auto;
+    }
 }
 
 .banner {
     width: 100%;
-    height: calc(100vw * .25);
+    height: calc(100vw * .75);
     position: relative;
 
-    &::before {
-        background: url("/assets/images/main.png") no-repeat 0 0;
-        background-size: cover;
-        content: " ";
-        display: block;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 0;
+    .image {
+        &::before {
+            background: url("/assets/images/main.png") no-repeat 0 0;
+            background-size: cover;
+            content: " ";
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 0;
+        }
+
+        &::after {
+            content: " ";
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 0;
+            filter: blur(6px);
+            background-size: cover;
+            background: #00000044 fixed center top/cover;
+        }
     }
 
     .tips {
@@ -39,6 +58,54 @@ html, body {
 
         * {
             color: #fff;
+        }
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .banner {
+        height: calc(100vw * .25);
+    }
+
+    .banner h2 {
+        font-size: 24px;
+    }
+}
+
+.postList {
+    .post {
+        margin: 16px;
+
+        h2 {
+            display: inline-block;
+            margin: 0;
+            font-size: 22px;
+
+            &:hover, &:focus {
+                color: basic.$primaryColor;
+                cursor: pointer;
+            }
+        }
+
+        .meta {
+            margin: 2px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .description {
+            margin-top: 6px;
+            color: #666;
+            cursor: pointer;
+            font-size: 16px;
+
+            &:hover, &:focus {
+                color: #222;
+            }
         }
     }
 }

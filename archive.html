@@ -9,12 +9,13 @@
 </head>
 <body>
 <div class="banner">
+    <div class="image"></div>
     <div class="tips">
         <h1>小羽的小窝</h1>
         <h2>这里，就是小羽的文章啦～</h2>
     </div>
 </div>
-<div class="container"></div>
+<div class="container postList"></div>
 <div class="footer"></div>
 </body>
 <script src="/assets/scripts/index.js"></script>
@@ -22,13 +23,13 @@
     init();
 
     function post(e) {
-        let container = ce({
-            name: "div", classList: ["post"], onclick: () => {
-                openUrl(`post.html?name=${e['url']}`);
-            }
-        });
+        let container = ce({name: "div", classList: ["post"]});
         const date = new Date(e["time"]);
-        container.appendChild(ce({name: "h2", classList: ["title"], innerHTML: e["title"]}));
+        container.appendChild(ce({
+            name: "h2", classList: ["title"], innerHTML: e["title"], onclick: () => {
+                openUrl(`/archive/${e['url'].replace('md', 'html')}`);
+            }
+        }));
         container.appendChild(ce({
             name: "p",
             classList: ["meta"],
@@ -41,7 +42,7 @@
     fetch("config/translation.json")
         .then(response => response.json())
         .then(data => {
-            data["translation"].forEach(e => {
+            data["translation"].concat(data["review"]).forEach(e => {
                 post(e);
             });
         });

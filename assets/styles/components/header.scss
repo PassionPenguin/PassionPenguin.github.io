@@ -5,12 +5,18 @@
     box-sizing: border-box;
     z-index: 1;
     top: 0;
+    background: var(--background);
 
-    a.title {
+    a.title, a.archive, a.about {
         color: var(--textColor);
         font: 16px/1 "SF Compact", sans-serif;
         cursor: pointer;
         text-decoration: none;
+        padding-right: 8px;
+    }
+
+    span.github, span.bilibili, span.zhihu, span.juejin {
+        display: none;
     }
 
     span.github, span.bilibili, span.zhihu, span.juejin, span.mode {
@@ -50,6 +56,14 @@
     }
 }
 
+@media screen and (min-width: 768px) {
+    .header {
+        span.github, span.bilibili, span.zhihu, span.juejin {
+            display: block;
+        }
+    }
+}
+
 html.lightHeaderBar .header {
     span.mode::before {
         background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z'/%3E%3C/svg%3E") 0 0/100% no-repeat;
@@ -61,7 +75,7 @@ html[dark] .header span.mode::before {
 }
 
 html[dark] .header, .lightHeaderBar .header {
-    a.title {
+    a.title, a.archive, a.about {
         color: #fff;
     }
 

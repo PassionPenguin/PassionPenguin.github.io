@@ -103,6 +103,18 @@ function init() {
             innerHTML: "霜羽 Hoarfroster"
         }))
         container.appendChild(ce({
+            name: "a",
+            attrs: [["href", "/archive.html"]],
+            classList: ["archive"],
+            innerHTML: "Archive"
+        }))
+        container.appendChild(ce({
+            name: "a",
+            attrs: [["href", "/about.html"]],
+            classList: ["about"],
+            innerHTML: "About"
+        }))
+        container.appendChild(ce({
             name: "span", classList: ["mode"], onclick: () => {
                 toggleDarkMode()
             }

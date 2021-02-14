@@ -1,0 +1,29 @@
+@use "components/header";
+@use "basic";
+@import "markdown/style";
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background: var(--background);
+    color: var(--textColor);
+    font-family: basic.$fontFamily;
+}
+
+.container {
+    padding: 24px 48px;
+    margin-top: 64px;
+}
+
+@media screen and (max-width: 1080px) {
+    .container.post {
+        max-width: 768px;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .container.post {
+        max-width: 1280px;
+    }
+}

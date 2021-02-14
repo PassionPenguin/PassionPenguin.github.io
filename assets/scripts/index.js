@@ -151,5 +151,33 @@ function init() {
         else document.documentElement.removeAttribute("scroll");
     });
 
-    $(".footer")[0].innerHTML = `<div class="flex-content"><p>霜羽 Hoarfroster</p><ul><li>Archive</li><li>Repos</li><li>About</li><li>Contact</li></ul><ul><li>GitHub</li><li>掘金翻译计划</li><li>知乎</li><li>BiliBili</li></ul></div><div class="bottom"><a href='/' class="title">&copy; 霜羽 Hoarfroster</a><span>Powered Hoarfroster, 由衷感谢一切亲人、朋友、老师～</span></div>`
+    $(".footer")[0].innerHTML =
+        `<div class="container">
+            <div class="flex-content">
+                <p>霜羽 Hoarfroster</p>
+                <ul>
+                    <li class="title">本站链接</li>
+                    <li><a href="/archive.html">Archive</a></li>
+                    <li><a href="/repos.html">Repos</a></li>
+                    <li><a href="/about.html">About</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li class="title">其他账号</li>
+                    <li><a href="https://github.com/PassionPenguin">GitHub</a></li>
+                    <li><a href="https://juejin.cn/user/474638410324526">掘金</a></li>
+                    <li><a href="https://www.zhihu.com/people/shuang-yu-29-75">知乎</a></li>
+                    <li><a href="https://space.bilibili.com/201469972">BiliBili</a></li>
+                </ul>
+                <ul>
+                    <li class="title">Repos</li>
+                    <li><a href="https://github.com/PassionPenguin/Ditiezu">地铁族 APP</a></li>
+                    <li><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+                    <li><a href="https://github.com/xitu/Annual-Survey">年度总结系列文章</a></li>
+                    <li><a href="https://github.com/wongchito/RailMapGenerator">RailMapGenerator</a></li>
+                </ul>
+            </div>
+            <div class="bottom">
+                <a href='/' class="title">&copy; 霜羽 Hoarfroster</a>
+                <span>Powered Hoarfroster, 由衷感谢一切亲人、朋友、老师～</span>
+            </div>
+        </div>`
 }

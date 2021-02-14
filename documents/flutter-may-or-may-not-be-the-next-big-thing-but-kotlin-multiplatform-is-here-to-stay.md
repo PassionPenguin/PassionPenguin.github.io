@@ -24,7 +24,7 @@ Google 对 Flutter 的强烈支持只会使 Android 开发人员更加担忧 Kot
 
 这里是它们的简要概括：
 
-- [Michael Long ](undefined) 在 “[isn’t the next big thing](https://medium.com/better-programming/why-flutter-isnt-the-next-big-thing-e268488521f4)” 文章中提到了一些挺有说服力的观点。Flutter 在 iOS  开发上永远都是二等公民，而且 Google 比任何人都擅长怎么快速杀死某项产品和技术。
+- [Michael Long ](undefined) 在 “[isn’t the next big thing](https://medium.com/better-programming/why-flutter-isnt-the-next-big-thing-e268488521f4)” 文章中提到了一些挺有说服力的观点。Flutter 在 iOS 开发上永远都是二等公民，而且 Google 比任何人都擅长怎么快速杀死某项产品和技术。
 - [Erik van Baaren](undefined) 在 “[is in fact the next big thing](https://medium.com/better-programming/why-flutter-is-in-fact-the-next-big-thing-in-app-development-8f514dd3a252)” 文章中提到了 Dart 与 Fuchsia（也许是 Android 系统的未来）兼容的方式，这是对上面意见的强烈反驳。
 
 他们的争论虽然很有意思，但是谁也不能决定 Flutter 是否是下一件大事。

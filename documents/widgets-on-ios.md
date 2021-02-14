@@ -11,9 +11,7 @@
 
 ![source: [computer world](https://www.computerworld.com/article/3564605/ios-14-how-to-use-widgets-on-ipad-and-iphone.html)](https://cdn-images-1.medium.com/max/2400/1*TRYbj13rl7VonfzuVL46RQ.jpeg)
 
-本文旨在介绍 widget。我们将在本文中广泛探究 WidgetKit SDK，并带你了解构建 widget 所需的组件和流程。
-本文需要你已经熟悉 SwiftUI，因为构建 widget 的过程中会大量使用它。由于 widget 自身并不是一个完整的应用程序，因此它不使用应用代理（app delegates）或导航栈（navigation stacks）。此外，widget 不能独立存在，而是需要依赖一个父应用程序。
-总而言之，widget 为用户提供了应用信息的快照。操作系统会在你设置的时刻快速触发 widget 以刷新其视图。
+本文旨在介绍 widget。我们将在本文中广泛探究 WidgetKit SDK，并带你了解构建 widget 所需的组件和流程。 本文需要你已经熟悉 SwiftUI，因为构建 widget 的过程中会大量使用它。由于 widget 自身并不是一个完整的应用程序，因此它不使用应用代理（app delegates）或导航栈（navigation stacks）。此外，widget 不能独立存在，而是需要依赖一个父应用程序。 总而言之，widget 为用户提供了应用信息的快照。操作系统会在你设置的时刻快速触发 widget 以刷新其视图。
 
 #### 使用要求
 
@@ -24,9 +22,7 @@
 
 ## 基本配置
 
-如前文所述，widget 必须依赖于一个父应用程序。所以，让我们先来创建一个单页面应用。
-对于生命周期选项，我选择了 SwiftUI，这将使用 @main 属性来确定代码入口。
-完成构建应用后，我们现在需要添加一个 widget 扩展 以存放 widget 的代码。
+如前文所述，widget 必须依赖于一个父应用程序。所以，让我们先来创建一个单页面应用。 对于生命周期选项，我选择了 SwiftUI，这将使用 @main 属性来确定代码入口。 完成构建应用后，我们现在需要添加一个 widget 扩展 以存放 widget 的代码。
 
 > **Select File -> New -> Target -> Widget extension.**
 
@@ -40,8 +36,7 @@
 
 ![](https://cdn-images-1.medium.com/max/2000/1*ynPcdI0jU-bWjNmypreylA.png)
 
-现在，选择 widget 扩展下的 swift 文件，你会发现 Xcode 已经生成了代码的骨架。让我们来了解一下骨架的各个部分。
-首先看 Widget 类型的结构体，它将是你在安装过程中输入的 widget 文件的名称。此结构体前有 ‘@main’ 属性，表明这里是 widget 的入口。让我们更细致地了解一下各个配置属性。
+现在，选择 widget 扩展下的 swift 文件，你会发现 Xcode 已经生成了代码的骨架。让我们来了解一下骨架的各个部分。 首先看 Widget 类型的结构体，它将是你在安装过程中输入的 widget 文件的名称。此结构体前有 ‘@main’ 属性，表明这里是 widget 的入口。让我们更细致地了解一下各个配置属性。
 
 ```Swift
        StaticConfiguration(kind: kind, provider: Provider()) { entry in
@@ -67,8 +62,7 @@
 
 #### 支持不同尺寸的 widget
 
-WidgetKit 支持小、中、大三种尺寸。
-在 widget 启动时可以使用 **‘supportedFamilies’** 选项来确定你打算支持的尺寸，默认情况下，所有尺寸都会被启用。
+WidgetKit 支持小、中、大三种尺寸。 在 widget 启动时可以使用 **‘supportedFamilies’** 选项来确定你打算支持的尺寸，默认情况下，所有尺寸都会被启用。
 
 ```
 supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
@@ -120,9 +114,7 @@ func placeholder(in context: Context) -> SimpleEntry
 这也是你可以进行异步网络通信的地方。小部件可以通过网络通信或者主机应用程序共享的容器来获取数据。这些通信调用完成后，widget 将显示获取到的数据。
 
 **时间线重载策略**
-OS 使用 ‘TimelineReloadPolicy’（时间线重载策略）来确定何时需要更新 widget 到下一组视图。
-“**.atEnd**” 重载策略下 OS 会在没有更多时间线条目（entries）的时候重新加载新的条目。我在示例代码中创建了一个以1分钟为间隔的时间线，并添加了五个视图条目。这样，widget 会在每分钟都更新显示为相应的时间。5分钟后，系统将调用 “**getTimeline**” 方法来获取下一组视图。
-TimelineReloadPolicy 还提供诸如 “**after(date)**” 和 “**never**” 之类的选项，前者会在指定时间更新时间线，后者则是设置完全不更新时间线。
+OS 使用 ‘TimelineReloadPolicy’（时间线重载策略）来确定何时需要更新 widget 到下一组视图。 “**.atEnd**” 重载策略下 OS 会在没有更多时间线条目（entries）的时候重新加载新的条目。我在示例代码中创建了一个以1分钟为间隔的时间线，并添加了五个视图条目。这样，widget 会在每分钟都更新显示为相应的时间。5分钟后，系统将调用 “**getTimeline**” 方法来获取下一组视图。 TimelineReloadPolicy 还提供诸如 “**after(date)**” 和 “**never**” 之类的选项，前者会在指定时间更新时间线，后者则是设置完全不更新时间线。
 
 ```Swift
 struct Provider: TimelineProvider {
@@ -153,10 +145,10 @@ struct Provider: TimelineProvider {
 ```
 
 运行项目，并在主屏幕上长按并单击左上角的 “+”。从选项中选中你的 widget 应用，并选择要添加的 widget 样式，并点击 “Add Widget”。这时，你应该可以看到 widget 显示着当前时间。
+
 ## Widget 的动态配置
 
-到目前为止，我们的 widget 基本是静态的，用户无法与它交互，也无法在运行时决定 widget 显示的内容。使用 Intent 配置，我们将能够使我们的 widget 动态化。
-在我们最初的项目设置中，取消选中了 “**Include Configuration Intent**” 选项来让 widget 可自定义，现在让我们看看如何使 widget 更具交互性。
+到目前为止，我们的 widget 基本是静态的，用户无法与它交互，也无法在运行时决定 widget 显示的内容。使用 Intent 配置，我们将能够使我们的 widget 动态化。 在我们最初的项目设置中，取消选中了 “**Include Configuration Intent**” 选项来让 widget 可自定义，现在让我们看看如何使 widget 更具交互性。
 
 在本次演示中，我们将实现一个 widget，它的功能是可以让用户从一个有关城市的列表中进行选择。
 
@@ -176,9 +168,7 @@ struct Provider: TimelineProvider {
 
 我们的自定义 intent definition 就完成了。下一步我们需要让我们的 widget 可以访问到这个 intent。为此，需要在 **Project Targets** 中的 **Supported Intents** 里选择我们创建的 intent。
 
-现在，我们需要将 widget 从静态配置更新为 Intent 配置。
-为此，让我们创建一个新的 Provider 实例。创建类型为 **IntentTimelineProvider** 的 “ConfigurableProvider”，并沿用了和 TimelineProvider 相同的三个函数，注意，参数中添加了 **configuration**，这个新参数的类型就是我们前文定义的 CityNamesIntent。
-这个新的配置参数可以用于获取用户选择的值，并相应地更新或修改时间线。
+现在，我们需要将 widget 从静态配置更新为 Intent 配置。 为此，让我们创建一个新的 Provider 实例。创建类型为 **IntentTimelineProvider** 的 “ConfigurableProvider”，并沿用了和 TimelineProvider 相同的三个函数，注意，参数中添加了 **configuration**，这个新参数的类型就是我们前文定义的 CityNamesIntent。 这个新的配置参数可以用于获取用户选择的值，并相应地更新或修改时间线。
 
 ```Swift
 struct ConfigurableProvider: IntentTimelineProvider {
@@ -212,8 +202,7 @@ struct ConfigurableProvider: IntentTimelineProvider {
 }
 ```
 
-我们要做的最后一件事是将小部件的定义从 StaticConfiguration 更新为 IntentConfiguration。
-在 **Static_Widget** 的定义部分中，把 StaticConfiguration 替换为 IntentConfiguration。它需要一个 intent 实例，把 **CityNameIntent** 传给它。对于 Provider，请使用我们创建的 **ConfigurableProvider**。其余的保持不变。
+我们要做的最后一件事是将小部件的定义从 StaticConfiguration 更新为 IntentConfiguration。 在 **Static_Widget** 的定义部分中，把 StaticConfiguration 替换为 IntentConfiguration。它需要一个 intent 实例，把 **CityNameIntent** 传给它。对于 Provider，请使用我们创建的 **ConfigurableProvider**。其余的保持不变。
 
 ```Swift
 @main
@@ -236,8 +225,7 @@ struct Static_Widget: Widget {
 }
 ```
 
-到这里，用户就可以配置我们的 widget 了。运行应用，长按 widget 并选择 “Edit Widget”，你将看到一个我们提供的城市名称列表。
-进行任何选择后，你可以在 Provider 中获取选定值，并相应地更改视图。
+到这里，用户就可以配置我们的 widget 了。运行应用，长按 widget 并选择 “Edit Widget”，你将看到一个我们提供的城市名称列表。 进行任何选择后，你可以在 Provider 中获取选定值，并相应地更改视图。
 
 ![](https://cdn-images-1.medium.com/max/2000/1*iLhD0gNJKOIsZ5ICLtQ5lQ.png)
 

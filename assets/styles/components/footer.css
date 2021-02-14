@@ -1,13 +1,13 @@
 .footer {
-  display: flex;
+    display: flex;
 }
 
 .footer > * {
-  flex-grow: 1;
-  margin: 0 auto;
-  display: inline-block;
-  list-style: none;
-  padding: 24px;
+    flex-grow: 1;
+    margin: 0 auto;
+    display: inline-block;
+    list-style: none;
+    padding: 24px;
 }
 
 /*# sourceMappingURL=footer.css.map */

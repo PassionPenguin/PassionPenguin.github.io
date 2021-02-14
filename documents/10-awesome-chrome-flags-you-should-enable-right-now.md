@@ -22,6 +22,7 @@ Chrome Flag 是实验性功能，其中大部分的 Flag 都是默认被禁用�
 ![chrome://flags/#enable-reader-mode](https://cdn-images-1.medium.com/max/2000/0*TkZOJVvj8nX1dh9c.gif)
 
 ## Focus Mode 沉浸模式（译者注：似乎没了）
+
 沉浸模式会在新的窗口中打开选项卡，该窗口省略了选项卡条和搜索栏以提供更简洁的界面。
 
 ![chrome://flags/#focus-mode](https://cdn-images-1.medium.com/max/2000/0*HTBhDshB0IkpRZo5.gif)
@@ -35,6 +36,7 @@ Chrome Flag 是实验性功能，其中大部分的 Flag 都是默认被禁用�
 ![chrome://flags/#impulse-scroll-animations](https://cdn-images-1.medium.com/max/2000/0*mTrSM7M_NaV4CUCw.gif)
 
 ## Tab Groups 选项卡组
+
 > 译者注：无须再在 chrome://flags 中启用，已默认在 Canary 中启用
 
 选项卡组功能用于将多个选项卡分组并在一起管理，就像合并不同类型的奶酪一样。

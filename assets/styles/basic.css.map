@@ -1,1 +1,10 @@
-{"version":3,"sourceRoot":"","sources":["basic.scss"],"names":[],"mappings":"AAAA;EACI","file":"basic.css"}
+{
+    "version": 3,
+    "sourceRoot": "",
+    "sources": [
+        "basic.scss"
+    ],
+    "names": [],
+    "mappings": "AAAA;EACI",
+    "file": "basic.css"
+}

@@ -648,8 +648,6 @@ CacheStorage API 允许我们从跨域网站获取和缓存数据。CacheStorage
 </html>
 ```
 
-
-
 相关演示参见[浏览器存储演示](https://github.com/techforum-repo/youttubedata/tree/master/browser-storage-demos)（这个演示是在 Node.js 上使用 Express.js 构建的）。
 
 在用户浏览器上存储数据有多样的选择 —— 根据你的使用场景进行选择。

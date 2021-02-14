@@ -142,8 +142,7 @@ class HomeViewController: UIViewController {
 
 有两种方法可以尝试：
 
-1. 在原始 ViewModel 中给绑定了 `Driver` （或`Observable`）的 `@Published` 的变量绑定一个新的 `ObservableObject`。
-2.在 SwiftUI 的视图内，将每个 `Driver` 适配为 `Publisher` 并绑定到 `@State`。
+1. 在原始 ViewModel 中给绑定了 `Driver` （或`Observable`）的 `@Published` 的变量绑定一个新的 `ObservableObject`。 2.在 SwiftUI 的视图内，将每个 `Driver` 适配为 `Publisher` 并绑定到 `@State`。
 
 ## 由 `Observable` 到 `@Published` 的迁移
 
@@ -225,6 +224,7 @@ extension HomeViewModel {
 ---
 
 ## `Observable` 到 `@State`
+
 第二种方法只需要设置较少的代码，并且基于 SwiftUI 变成可以使用外部状态的另一种方式：使用 View 的 `onReceive` 方法，将值分配给本地的 `@State`。
 
 这里的好处是我们可以直接在 SwiftUI 视图中使用原始的 ViewModel：

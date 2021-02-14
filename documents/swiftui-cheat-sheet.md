@@ -39,7 +39,7 @@ SwiftUI 引入了一系列新的属性包装器让你的代码可以通过它们
 
 ### …它需要对自己的某个属性进行读/写访问以供私有使用时。
 
-就像是 UIButton 上的 `isHighlighted` 属性。其他对象不需要知道按钮什么时候高亮显示，也不需要对该属性进行赋值操作。如果你要在 SwiftUI 中从头开始实现一个按钮，那么使用  @State 包装器修饰你的 `isHighlighted` 属性将是一个很好的选择。
+就像是 UIButton 上的 `isHighlighted` 属性。其他对象不需要知道按钮什么时候高亮显示，也不需要对该属性进行赋值操作。如果你要在 SwiftUI 中从头开始实现一个按钮，那么使用 @State 包装器修饰你的 `isHighlighted` 属性将是一个很好的选择。
 
 ```swift
 struct CustomButton<Label>: View where Label : View {
@@ -166,7 +166,7 @@ struct MyView: View {
 
 ### …它依赖于一个引用类型对象，该对象可以很容易地传递给视图的构造器。
 
-这个场景与前面的场景几乎相同，除了视图之外还有其他一些对象负责初始化和配置可观察对象。如果某些 UIKit 代码负责呈现你的 SwiftUI 视图，则可能会出现这种情况，特别是如果可观察对象在没有引用其他 SwiftUI 视图时，在不能（或不应该）访问依赖项的情况下被访问。 
+这个场景与前面的场景几乎相同，除了视图之外还有其他一些对象负责初始化和配置可观察对象。如果某些 UIKit 代码负责呈现你的 SwiftUI 视图，则可能会出现这种情况，特别是如果可观察对象在没有引用其他 SwiftUI 视图时，在不能（或不应该）访问依赖项的情况下被访问。
 
 ```swift
 struct MyView: View {
@@ -352,7 +352,6 @@ extension EnvironmentValues {
 
 * 你应该使用修饰符 `.environment()`  注册每个实例，而**不是**使用修饰符 `.environmentObject()`  注册。
 * 您需要一个符合 `DynamicProperty` 的自定义属性包装器，它拥有一个私有的 `@ObservedObject` 属性，该属性的值在初始化过程中通过从一个`Environment<T>` 结构的单次实例（用作实例，而不是属性包装器）中提取出来。
-  
 
 这样，视图就可以观察同一类的多个对象：
 
@@ -411,8 +410,8 @@ MyView()
 
 #### 参考
 
-[1] <a name="note1"></a> 每个 `@propertyWrapper` ——一致性类型都将提供 `projectedValue `属性的选项。由具体实现来决定值的类型。 此例中 `State<T>` 的预期值是 `Binding<T>`。每当使用一个新的属性包装器时，你都应该跳转到它生成的界面，更深入地发现它的预期值。 
-    
+[1] <a name="note1"></a> 每个 `@propertyWrapper` ——一致性类型都将提供 `projectedValue `属性的选项。由具体实现来决定值的类型。 此例中 `State<T>` 的预期值是 `Binding<T>`。每当使用一个新的属性包装器时，你都应该跳转到它生成的界面，更深入地发现它的预期值。
+
 
 > 如果发现译文存在错误或其他需要改进的地方，欢迎到 [掘金翻译计划](https://github.com/xitu/gold-miner) 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 **本文永久链接** 即为本文在 GitHub 上的 MarkDown 链接。
 

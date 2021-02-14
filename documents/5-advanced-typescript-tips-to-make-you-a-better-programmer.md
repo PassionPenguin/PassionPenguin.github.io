@@ -203,6 +203,7 @@ const myFunc = (): string | void => {
    console.log('blah')
 }
 ```
+
 ```ts
 // 如果我们忘记指定了函数的返回值，编译器会返回 null
 const myFunc = (): string | null => {

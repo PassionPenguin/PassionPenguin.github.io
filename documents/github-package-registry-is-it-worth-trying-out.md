@@ -138,8 +138,8 @@ module.export = () => {
 1. 在项目根目录创建一个本地 .npmrc 文件，并添加 `@OWNER:registry=https://npm.pkg.github.com/`，这与我们在创建软件包时的操作类似。
 2. 使用 Yarn 或 NPM 将包添加到项目中。例如使用 Yarn：`yarn add @ChameeraD/pkg-git-demo`。
 3. 最后，可以将包导入到代码中并使用：
-`import demoPkg from ‘@ChameeraD/pkg-git-demo’;`
-`demoPkg();`
+   `import demoPkg from ‘@ChameeraD/pkg-git-demo’;`
+   `demoPkg();`
 
 ![Screenshot by Author: Output log by of the package](https://cdn-images-1.medium.com/max/2196/1*_xmY-6FUmxr8zJG6Znlh0w.png)
 

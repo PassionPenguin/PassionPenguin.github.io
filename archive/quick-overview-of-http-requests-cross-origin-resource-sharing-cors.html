@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>简述 HTTP 请求与跨域资源共享 CORS - Hoarfroster</title>
     <link rel="stylesheet" href="/assets/styles/post.css">
+    <link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css">
 </head>
 <body>
 <div class="container post markdown-body"><blockquote>
@@ -59,9 +61,7 @@
 <li><strong>表头</strong>：上文已经简要说明过。</li>
 <li><strong>请求体</strong>（可选）： 向服务器发出 POST、PUT、PATCH 请求时，需要发送一个请求体报文，该报文告诉服务器你想要发送什么数据。示例：</li>
 </ol>
-<pre class="hljs" v-pre><code>axios.post(‘/users’, 
-{<span class="hljs-attr">id</span>: “<span class="hljs-number">5</span>fddfefc4fbd19494493cd71”, <span class="hljs-attr">name</span>: <span class="hljs-string">"username"</span>} <span class="hljs-comment">// 这部分是请求体</span>
-).then(<span class="hljs-built_in">console</span>.log)
+<pre class="hljs" v-pre><code>axios.post(<span class="hljs-string">'/users'</span>, {<span class="hljs-attr">id</span>: <span class="hljs-string">"5fddfefc4fbd19494493cd71"</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"username"</span>} <span class="hljs-comment">/* 这部分是请求体 */</span>).then(<span class="hljs-built_in">console</span>.log)
 </code></pre>
 <ul>
 <li><strong>axios</strong> 是一个发送请求的库。浏览器还提供了一个叫做 <strong>fetch</strong> 的函数，可以用来发送请求。另外还有一个用于发送请求的过时请求库。</li>
@@ -102,14 +102,14 @@
 <p><strong>Access-Control-Allow-Methods</strong> — 这是一个逗号分隔的字符串，它告诉浏览器跨域请求中允许使用哪种请求方法。如果请求方法未包含在此响应头中，则不会发送请求。</p>
 <p>使用一段 Node.js 代码设置表头：</p>
 <pre class="hljs" v-pre><code>router.options(<span class="hljs-string">'/api/*'</span>, (req, res) =&gt; {
-  res.header(<span class="hljs-string">'Access-Control-Allow-Credentials'</span>, <span class="hljs-literal">true</span>)
-  res.header(<span class="hljs-string">'Access-Control-Allow-Origin'</span>, req.headers.origin)
-  res.header(<span class="hljs-string">'Access-Control-Allow-Methods'</span>, <span class="hljs-string">'GET, PUT, POST, PATCH, DELETE'</span>)
-  res.header(
-    <span class="hljs-string">'Access-Control-Allow-Headers'</span>,
-    <span class="hljs-string">'Origin, X-Requested-With, Content-Type, Accept, Credentials'</span>
-  )
-  res.send(<span class="hljs-string">'ok'</span>)
+    res.header(<span class="hljs-string">'Access-Control-Allow-Credentials'</span>, <span class="hljs-literal">true</span>)
+    res.header(<span class="hljs-string">'Access-Control-Allow-Origin'</span>, req.headers.origin)
+    res.header(<span class="hljs-string">'Access-Control-Allow-Methods'</span>, <span class="hljs-string">'GET, PUT, POST, PATCH, DELETE'</span>)
+    res.header(
+        <span class="hljs-string">'Access-Control-Allow-Headers'</span>,
+        <span class="hljs-string">'Origin, X-Requested-With, Content-Type, Accept, Credentials'</span>
+    )
+    res.send(<span class="hljs-string">'ok'</span>)
 })
 </code></pre>
 <h2>总结</h2>

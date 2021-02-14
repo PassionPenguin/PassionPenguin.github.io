@@ -69,9 +69,7 @@ URL 路径就像你的目录路径。它为用户和搜索引擎提供了解当�
 3. **请求体**（可选）： 向服务器发出 POST、PUT、PATCH 请求时，需要发送一个请求体报文，该报文告诉服务器你想要发送什么数据。示例：
 
 ```js
-axios.post(‘/users’, 
-{id: “5fddfefc4fbd19494493cd71”, name: "username"} // 这部分是请求体
-).then(console.log)
+axios.post('/users', {id: "5fddfefc4fbd19494493cd71", name: "username"} /* 这部分是请求体 */).then(console.log)
 ```
 
 * **axios** 是一个发送请求的库。浏览器还提供了一个叫做 **fetch** 的函数，可以用来发送请求。另外还有一个用于发送请求的过时请求库。
@@ -126,14 +124,14 @@ axios.post(‘/users’,
 
 ```js
 router.options('/api/*', (req, res) => {
-  res.header('Access-Control-Allow-Credentials', true)
-  res.header('Access-Control-Allow-Origin', req.headers.origin)
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, PATCH, DELETE')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Credentials'
-  )
-  res.send('ok')
+    res.header('Access-Control-Allow-Credentials', true)
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, PATCH, DELETE')
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Credentials'
+    )
+    res.send('ok')
 })
 ```
 

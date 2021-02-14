@@ -3,7 +3,7 @@
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
 > * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/why-you-should-use-picture-tag-instead-of-img-tag.md](https://github.com/xitu/gold-miner/blob/master/article/2021/why-you-should-use-picture-tag-instead-of-img-tag.md)
 > * 译者：[plusmultiply0](https://github.com/plusmultiply0)
-> * 校对者：[Usualminds](https://github.com/Usualminds)、[霜羽 Hoarfroster](https://github.com/PassionPenguin)
+> * 校对者：[Usualminds](https://github.com/Usualminds)、苏苏的 [霜羽 Hoarfroster](https://github.com/PassionPenguin)
 
 # 为什么你应该使用 Picture 标签而不是 Img 标签
 

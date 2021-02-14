@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>掌握这 5 个 TypeScript 高级技巧，成为更好的开发者 - Hoarfroster</title>
     <link rel="stylesheet" href="/assets/styles/post.css">
+    <link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css">
 </head>
 <body>
 <div class="container post markdown-body"><blockquote>
@@ -74,7 +76,7 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 <p>这样处理就很棒，如果你哪天遇到了比较复杂返回结果数据集，比如 API 返回结果。接着你可以根据每个属性的 readonly 标识符，识别其为简单的数据集。</p>
 <p>Typescript 支持在类型声明后加上 <code>as const</code>，这样我们就相当于给每个属性添加 <code>readonly</code>。</p>
 <pre class="hljs" v-pre><code><span class="hljs-keyword">let</span> t = {
- myProperty: <span class="hljs-string">"hi"</span> 
+ myProperty: <span class="hljs-string">"hi"</span>,
  myArr: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
 } <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span> 
 </code></pre>
@@ -147,14 +149,14 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 </code></pre>
 <p>现在，我必须 <strong>明确地声明 <code>bar</code> 的取值为 <code>null</code>。</strong> 我的意图不会被混淆 — <code>bar</code> 没有明确的取值。</p>
 <p>这不仅适用于接口声明 —— 我还会在函数不返回任何内容时使用它。这在编译时很有帮助:</p>
-<pre class="hljs" v-pre><code><span class="hljs-comment">//如果我们忘记指定了函数的返回值，编译器会返回默认值</span>
+<pre class="hljs" v-pre><code><span class="hljs-comment">// 如果我们忘记指定了函数的返回值，编译器会返回默认值</span>
 <span class="hljs-keyword">const</span> myFunc = (): <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">void</span> =&gt;</span> {
    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'blah'</span>)
 }
-
-<span class="hljs-comment">//如果我们忘记指定了函数的返回值，编译器会返回 null</span>
+</code></pre>
+<pre class="hljs" v-pre><code><span class="hljs-comment">// 如果我们忘记指定了函数的返回值，编译器会返回 null</span>
 <span class="hljs-keyword">const</span> myFunc = (): <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">null</span> =&gt;</span> {
- <span class="hljs-comment">//编译错误时不会返回 null</span>
+ <span class="hljs-comment">// 编译错误时不会返回 null</span>
 }
 </code></pre>
 <h4>5. Utility Types</h4>

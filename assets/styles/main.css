@@ -184,6 +184,7 @@ html, body {
   color: #666;
   cursor: pointer;
   font-size: 16px;
+  margin-bottom: 48px;
 }
 .postList .post .description:hover, .postList .post .description:focus {
   color: #222;

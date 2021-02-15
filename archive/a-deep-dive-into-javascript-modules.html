@@ -1,155 +1,264 @@
-<!doctype html><html lang=en article><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>深入了解 JavaScript 模块 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://blog.bitsrc.io/a-deep-dive-into-javascript-modules-550ad88d8839>A Deep Dive Into JavaScript Modules</a><li>原文作者：<a href=https://medium.com/@deleteman123>Fernando Doglio</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/a-deep-dive-into-javascript-modules.md>https://github.com/xitu/gold-miner/blob/master/article/2021/a-deep-dive-into-javascript-modules.md</a><li>译者：<a href=https://github.com/regon-cao>regon-cao</a><li>校对者：<a href=https://github.com/PassionPenguin>PassionPenguin</a><a href=https://github.com/Ashira97>Ashira97</a></ul></blockquote><h1>深入了解 JavaScript 模块</h1><p><img src=https://cdn-images-1.medium.com/max/3840/1*Dya93Aqh8dXO4ngaaxHsug.jpeg alt="Image by HeungSoon from Pixabay"><p>所有 JavaScript 开发人员都知道如何导入模块，如果你以前没有这么做过，那么你还没有看过基本的 “helloworld” 示例。模块是 JavaScript 生态系统的基石。<p>但是你知道 JavaScript 中有不同的模块系统吗？如果你一直使用 Node.js 开发, 你能够很熟练地使用<code>require</code>，如果你一直和 React 打交道，你可能更多的是一个<code>import</code>开发者。事实上，它们都能完成任务，但是完成的方式并不相同。<p>了解 JS 模块类型之间的各种差异的最佳方法是从大家熟悉的地方开始，在这里，也就是从这门语言的新标准 ES6 开始。因为不是所有的运行时都兼容 ES6，所以在需要时我会用 Babel 将代码转换成运行时环境所需的风格。<p>基础代码如下：<pre class=hljs><code><span class=hljs-keyword>import</span> _ <span class=hljs-keyword>from</span> <span class=hljs-string>&#x27;lodash&#x27;</span>
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>深入了解 JavaScript 模块 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/a-deep-dive-into-javascript-modules-550ad88d8839">A Deep Dive Into JavaScript Modules</a></li>
+<li>原文作者：<a href="https://medium.com/@deleteman123">Fernando Doglio</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/a-deep-dive-into-javascript-modules.md">https://github.com/xitu/gold-miner/blob/master/article/2021/a-deep-dive-into-javascript-modules.md</a></li>
+<li>译者：<a href="https://github.com/regon-cao">regon-cao</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a> <a href="https://github.com/Ashira97">Ashira97</a></li>
+</ul>
+</blockquote>
+<h1>深入了解 JavaScript 模块</h1>
+<p><img src="https://cdn-images-1.medium.com/max/3840/1*Dya93Aqh8dXO4ngaaxHsug.jpeg" alt="Image by HeungSoon from Pixabay"></p>
+<p>所有 JavaScript 开发人员都知道如何导入模块，如果你以前没有这么做过，那么你还没有看过基本的 “helloworld” 示例。模块是 JavaScript 生态系统的基石。</p>
+<p>但是你知道 JavaScript 中有不同的模块系统吗？如果你一直使用 Node.js 开发, 你能够很熟练地使用 <code>require</code>，如果你一直和 React 打交道，你可能更多的是一个 <code>import</code> 开发者。事实上，它们都能完成任务，但是完成的方式并不相同。</p>
+<p>了解 JS 模块类型之间的各种差异的最佳方法是从大家熟悉的地方开始，在这里，也就是从这门语言的新标准 ES6 开始。因为不是所有的运行时都兼容 ES6，所以在需要时我会用 Babel 将代码转换成运行时环境所需的风格。</p>
+<p>基础代码如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> _ <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;lodash&#x27;</span>
 
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> dummyFunction = <span class=hljs-function>() =&gt;</span> {
-  <span class=hljs-keyword>return</span> _.camelCase(<span class=hljs-string>&#x27;dummy&#x27;</span>);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> dummyFunction = <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">return</span> _.camelCase(<span class="hljs-string">&#x27;dummy&#x27;</span>);
 }
-</code></pre><p>如你所见，代码并不复杂，我们没有做很多事情，只是导入<code>lodash</code>库并从我们自己的模块中导出一个函数。<p>为了用 Babel 编译它，我将使用以下配置：<pre class=hljs><code>{
+</code></pre>
+<p>如你所见，代码并不复杂，我们没有做很多事情，只是导入 <code>lodash</code> 库并从我们自己的模块中导出一个函数。</p>
+<p>为了用 Babel 编译它，我将使用以下配置：</p>
+<pre class="hljs"><code>{
     &quot;presets&quot;: [
       [&quot;@babel/preset-env&quot;, {
           &quot;modules&quot;: &quot;&lt;my module system&gt;&quot;
       }]
     ]
  }
-</code></pre><h2>CommonJS</h2><p>如果你是一个 Node.js 开发者，你以前可能用过它。CommonJS 是 Node 采用的标准，而它使用的是<code>require</code>函数。<p>我们示例的输出如下：<pre class=hljs><code><span class=hljs-meta>&quot;use strict&quot;</span>;
+</code></pre>
+<h2>CommonJS</h2>
+<p>如果你是一个 Node.js 开发者，你以前可能用过它。CommonJS 是 Node 采用的标准，而它使用的是 <code>require</code> 函数。</p>
+<p>我们示例的输出如下：</p>
+<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
 
-<span class=hljs-built_in>Object</span>.defineProperty(<span class=hljs-built_in>exports</span>, <span class=hljs-string>&quot;__esModule&quot;</span>, {
-  <span class=hljs-attr>value</span>: <span class=hljs-literal>true</span>
+<span class="hljs-built_in">Object</span>.defineProperty(<span class="hljs-built_in">exports</span>, <span class="hljs-string">&quot;__esModule&quot;</span>, {
+  <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span>
 });
-<span class=hljs-built_in>exports</span>.dummyFunction = <span class=hljs-keyword>void</span> <span class=hljs-number>0</span>;
+<span class="hljs-built_in">exports</span>.dummyFunction = <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>;
 
-<span class=hljs-keyword>var</span> _lodash = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;lodash&quot;</span>);
+<span class="hljs-keyword">var</span> _lodash = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;lodash&quot;</span>);
 
-<span class=hljs-keyword>var</span> dummyFunction = <span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>dummyFunction</span>(<span class=hljs-params></span>) </span>{
-  <span class=hljs-keyword>return</span> (<span class=hljs-number>0</span>, _lodash.camelCase)(<span class=hljs-string>&#x27;dummy&#x27;</span>);
+<span class="hljs-keyword">var</span> dummyFunction = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dummyFunction</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> (<span class="hljs-number">0</span>, _lodash.camelCase)(<span class="hljs-string">&#x27;dummy&#x27;</span>);
 };
 
-<span class=hljs-built_in>exports</span>.dummyFunction = dummyFunction;
-</code></pre><p>我们首先看到，它向<code>exports</code>对象添加了两个属性。这个对象将会包含“公共”代码。换句话说，任何不属于此对象的内容都无法从外部访问。此对象可以作为<code>require</code>函数的返回值。如果向其中添加属性，在加载模块时可以直接访问它们：<pre class=hljs><code><span class=hljs-comment>//yourmodule.js</span>
-<span class=hljs-built_in>exports</span>.prop1 = <span class=hljs-number>42</span>;
-<span class=hljs-built_in>exports</span>.myFn = <span class=hljs-function>() =&gt;</span> <span class=hljs-built_in>console</span>.log(<span class=hljs-number>42</span>);
+<span class="hljs-built_in">exports</span>.dummyFunction = dummyFunction;
+</code></pre>
+<p>我们首先看到，它向 <code>exports</code> 对象添加了两个属性。这个对象将会包含“公共”代码。换句话说，任何不属于此对象的内容都无法从外部访问。此对象可以作为 <code>require</code> 函数的返回值。如果向其中添加属性，在加载模块时可以直接访问它们：</p>
+<pre class="hljs"><code><span class="hljs-comment">//yourmodule.js</span>
+<span class="hljs-built_in">exports</span>.prop1 = <span class="hljs-number">42</span>;
+<span class="hljs-built_in">exports</span>.myFn = <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-number">42</span>);
 
-<span class=hljs-comment>//... 客户端的代码</span>
-<span class=hljs-keyword>const</span> { prop1, myFn } = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./yourmodule.js&quot;</span>);
-</code></pre><p>上面代码示例的第二个重点是，我们添加了<code>__esModule</code>属性（值为<code>true</code>）。导入端的辅助函数可以在处理默认导出时利用此属性来确定如何访问所需的方法。<p>你知道的，CommonJS 没有“默认”导出的概念，如果你像下面一样使用<code>require</code>，那么<code>exports</code>上的所有属性都将被导出：<pre class=hljs><code><span class=hljs-keyword>const</span> myModule = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;yourmdoule.js&quot;</span>);
-</code></pre><p>你将得到一个包含一系列属性和方法的对象（即导出的所有内容）。但是，ES6 定义了一种方法来区分默认导出的内容和单独导出的内容。所以你可以这样做：<pre class=hljs><code><span class=hljs-comment>//mymodule.js</span>
+<span class="hljs-comment">//... 客户端的代码</span>
+<span class="hljs-keyword">const</span> { prop1, myFn } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./yourmodule.js&quot;</span>);
+</code></pre>
+<p>上面代码示例的第二个重点是，我们添加了 <code>__esModule</code> 属性（值为 <code>true</code>）。导入端的辅助函数可以在处理默认导出时利用此属性来确定如何访问所需的方法。</p>
+<p>你知道的，CommonJS 没有“默认”导出的概念，如果你像下面一样使用 <code>require</code>，那么 <code>exports</code> 上的所有属性都将被导出：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> myModule = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;yourmdoule.js&quot;</span>);
+</code></pre>
+<p>你将得到一个包含一系列属性和方法的对象（即导出的所有内容）。但是，ES6 定义了一种方法来区分默认导出的内容和单独导出的内容。所以你可以这样做：</p>
+<pre class="hljs"><code><span class="hljs-comment">//mymodule.js</span>
 
-<span class=hljs-keyword>import</span> { camelCase } <span class=hljs-keyword>from</span> <span class=hljs-string>&#x27;lodash&#x27;</span>;
+<span class="hljs-keyword">import</span> { camelCase } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;lodash&#x27;</span>;
 
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> dummyFunction = <span class=hljs-function>() =&gt;</span> {
-  <span class=hljs-keyword>return</span> camelCase(<span class=hljs-string>&#x27;dummy&#x27;</span>);
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> dummyFunction = <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">return</span> camelCase(<span class="hljs-string">&#x27;dummy&#x27;</span>);
 };
 
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>const</span> dummyConst = <span class=hljs-number>42</span>;
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> dummyConst = <span class="hljs-number">42</span>;
 
-<span class=hljs-keyword>export</span> <span class=hljs-keyword>default</span> {
-  <span class=hljs-attr>mainMethod</span>: <span class=hljs-function><span class=hljs-keyword>function</span>(<span class=hljs-params></span>) </span>{
-    <span class=hljs-comment>//你的逻辑...</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">mainMethod</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">//你的逻辑...</span>
   }
 }
-</code></pre><p>这段代码导出 3 个东西：<ul><li>默认导出包含一个<code>mainMethod</code>方法的对象。<li>同时也导出一个<code>dummyFunction</code>函数和一个<code>dummyConst</code>值。</ul><p>在导入端，你可以这样做：<pre class=hljs><code><span class=hljs-keyword>import</span> myModule, {dummyFunction} <span class=hljs-keyword>from</span> <span class=hljs-string>&#x27;mymodule.js&#x27;</span>
+</code></pre>
+<p>这段代码导出 3 个东西：</p>
+<ul>
+<li>默认导出包含一个 <code>mainMethod</code> 方法的对象。</li>
+<li>同时也导出一个 <code>dummyFunction</code> 函数和一个 <code>dummyConst</code> 值。</li>
+</ul>
+<p>在导入端，你可以这样做：</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> myModule, {dummyFunction} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;mymodule.js&#x27;</span>
 
 myModule.mainMethod()
 dummyFunction()
-</code></pre><p>这就是 ES6 和 CommonJS 提供的默认导出之间的主要区别。上面的代码不能直接转译成 CommonJS，因为它没有默认导出的概念。然而，诸如 Babel 之类的工具会通过添加 “相互操作” 代码（比如<code>__esModule</code>属性）来解决这个问题。<p>因此，当把上面的代码段转译后，可以得到下面的：<pre class=hljs><code><span class=hljs-meta>&quot;use strict&quot;</span>;
+</code></pre>
+<p>这就是 ES6 和 CommonJS 提供的默认导出之间的主要区别。上面的代码不能直接转译成 CommonJS，因为它没有默认导出的概念。然而，诸如 Babel 之类的工具会通过添加 “相互操作” 代码（比如 <code>__esModule</code> 属性）来解决这个问题。</p>
+<p>因此，当把上面的代码段转译后，可以得到下面的：</p>
+<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
 
-<span class=hljs-keyword>var</span> _sample = _interopRequireWildcard(<span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./sample1&quot;</span>));
+<span class="hljs-keyword">var</span> _sample = _interopRequireWildcard(<span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./sample1&quot;</span>));
 
-<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>_getRequireWildcardCache</span>(<span class=hljs-params></span>) </span>{
-    <span class=hljs-keyword>if</span> (<span class=hljs-keyword>typeof</span> <span class=hljs-built_in>WeakMap</span> !== <span class=hljs-string>&quot;function&quot;</span>) <span class=hljs-keyword>return</span> <span class=hljs-literal>null</span>;
-    <span class=hljs-keyword>var</span> cache = <span class=hljs-keyword>new</span> <span class=hljs-built_in>WeakMap</span>();
-    _getRequireWildcardCache = <span class=hljs-function><span class=hljs-keyword>function</span> (<span class=hljs-params></span>) </span>{
-        <span class=hljs-keyword>return</span> cache;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_getRequireWildcardCache</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">WeakMap</span> !== <span class="hljs-string">&quot;function&quot;</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+    <span class="hljs-keyword">var</span> cache = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>();
+    _getRequireWildcardCache = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> cache;
     };
-    <span class=hljs-keyword>return</span> cache;
+    <span class="hljs-keyword">return</span> cache;
 }
 
-<span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>_interopRequireWildcard</span>(<span class=hljs-params>obj</span>) </span>{
-    <span class=hljs-keyword>if</span> (obj &amp;&amp; obj.__esModule) {
-        <span class=hljs-keyword>return</span> obj;
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_interopRequireWildcard</span>(<span class="hljs-params">obj</span>) </span>{
+    <span class="hljs-keyword">if</span> (obj &amp;&amp; obj.__esModule) {
+        <span class="hljs-keyword">return</span> obj;
     }
-    <span class=hljs-keyword>if</span> (obj === <span class=hljs-literal>null</span> || <span class=hljs-keyword>typeof</span> obj !== <span class=hljs-string>&quot;object&quot;</span> &amp;&amp; <span class=hljs-keyword>typeof</span> obj !== <span class=hljs-string>&quot;function&quot;</span>) {
-        <span class=hljs-keyword>return</span> {
-            <span class=hljs-attr>default</span>: obj
+    <span class="hljs-keyword">if</span> (obj === <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span> obj !== <span class="hljs-string">&quot;object&quot;</span> &amp;&amp; <span class="hljs-keyword">typeof</span> obj !== <span class="hljs-string">&quot;function&quot;</span>) {
+        <span class="hljs-keyword">return</span> {
+            <span class="hljs-attr">default</span>: obj
         };
     }
-    <span class=hljs-keyword>var</span> cache = _getRequireWildcardCache();
-    <span class=hljs-keyword>if</span> (cache &amp;&amp; cache.has(obj)) {
-        <span class=hljs-keyword>return</span> cache.get(obj);
+    <span class="hljs-keyword">var</span> cache = _getRequireWildcardCache();
+    <span class="hljs-keyword">if</span> (cache &amp;&amp; cache.has(obj)) {
+        <span class="hljs-keyword">return</span> cache.get(obj);
     }
-    <span class=hljs-keyword>var</span> newObj = {};
-    <span class=hljs-keyword>var</span> hasPropertyDescriptor = <span class=hljs-built_in>Object</span>.defineProperty &amp;&amp; <span class=hljs-built_in>Object</span>.getOwnPropertyDescriptor;
-    <span class=hljs-keyword>for</span> (<span class=hljs-keyword>var</span> key <span class=hljs-keyword>in</span> obj) {
-        <span class=hljs-keyword>if</span> (<span class=hljs-built_in>Object</span>.prototype.hasOwnProperty.call(obj, key)) {
-            <span class=hljs-keyword>var</span> desc = hasPropertyDescriptor ? <span class=hljs-built_in>Object</span>.getOwnPropertyDescriptor(obj, key) : <span class=hljs-literal>null</span>;
-            <span class=hljs-keyword>if</span> (desc &amp;&amp; (desc.get || desc.set)) {
-                <span class=hljs-built_in>Object</span>.defineProperty(newObj, key, desc);
-            } <span class=hljs-keyword>else</span> {
+    <span class="hljs-keyword">var</span> newObj = {};
+    <span class="hljs-keyword">var</span> hasPropertyDescriptor = <span class="hljs-built_in">Object</span>.defineProperty &amp;&amp; <span class="hljs-built_in">Object</span>.getOwnPropertyDescriptor;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> obj) {
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.prototype.hasOwnProperty.call(obj, key)) {
+            <span class="hljs-keyword">var</span> desc = hasPropertyDescriptor ? <span class="hljs-built_in">Object</span>.getOwnPropertyDescriptor(obj, key) : <span class="hljs-literal">null</span>;
+            <span class="hljs-keyword">if</span> (desc &amp;&amp; (desc.get || desc.set)) {
+                <span class="hljs-built_in">Object</span>.defineProperty(newObj, key, desc);
+            } <span class="hljs-keyword">else</span> {
                 newObj[key] = obj[key];
             }
         }
     }
     newObj.default = obj;
-    <span class=hljs-keyword>if</span> (cache) {
+    <span class="hljs-keyword">if</span> (cache) {
         cache.set(obj, newObj);
     }
-    <span class=hljs-keyword>return</span> newObj;
+    <span class="hljs-keyword">return</span> newObj;
 }
 
 _sample.default.mainMethod();
 
-<span class=hljs-built_in>console</span>.log((<span class=hljs-number>0</span>, _sample.dummyFunction)());
-</code></pre><p>我知道这看起来有很多代码，但现在只关注最后两行。请注意，我们的<code>mainMethod</code>是默认导出的函数，它位于名为<code>default</code>的新属性中。我们没有声明这个属性，它是 Babel 为了实现与 CommonJS 兼容而添加的属性。还要注意<code>dummyFunction</code>方法不在<code>default</code>属性中，因为它是作为单独的实体导出的，实际上也是单独导入的。<p><code>__interopRequiredWilcard</code>辅助函数负责将要使用的对象以正确格式返回（换句话说，如果还没有<code>default</code>属性，它会添加该属性）。<h4>CommonJS 和 ES6 之间还有什么不同？</h4><p>如你所见，ES6 定义了一个<code>export default</code>语句，这在 CommonJS 世界中毫无意义。但还有其他什么不同呢？<p>另一个主要区别是，虽然它们看起来是相同的，但<code>require</code>和<code>import</code>的工作方式却不同。<p>一个主要区别是，<code>require</code>在代码中的任何地方都能动态执行，但<code>import</code>不能。你可以将<code>require</code>语句视为函数调用，因此，它需要运行才能执行。但是<code>import</code>语句是静态的，它在解析文件时执行。与<code>require</code>的工作方式相比，这是一个重大的性能改进。<p>但是，也有一个缺点：由于<code>require</code>在运行时工作，我们可以动态定义导入路由，例如：<pre class=hljs><code><span class=hljs-keyword>const</span> myMod = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./src/&quot;</span> + pathToFile);
-</code></pre><p>假设 pathToFile 是一个自定义的字符串，require 会正常工作，但是 import 不允许这么做，因为在解析 import 语句的时候还没有运行时执行环境。<h2>AMD（异步模块定义）</h2><p>它代表了<a href=https://en.wikipedia.org/wiki/Asynchronous_module_definition>异步模块定义</a>，这是一种为前端项目加载模块的模式。过去，在浏览器中定义一系列代码依赖的唯一方法是添加一堆<code>script</code>标记，并确保它们的顺序正确。一旦文档及其所有资源被完全加载，你的代码就可以运行了。<p>它是可行的，但还需要一点样板代码才能工作。AMD 就这样诞生了。<p>它简化了为模块声明特定依赖项的任务，并确保在执行代码之前加载所有依赖项。<p>它还增加了一个主要的改进：这种方法不必包含所有应用程序的依赖项，也不必在执行一行代码之前加载它们，而是让你可以精确地指定要为代码的每个部分加载哪些依赖项。这反过来又为具有很多外部依赖关系的大型应用带来了性能上的大幅提升。<p>回到我们的例子，如果我们想添加相同且简单的 ES6 模块，但使用 AMD，我们会这样做：<pre class=hljs><code>define([<span class=hljs-string>&#x27;lodash&#x27;</span>], <span class=hljs-function><span class=hljs-keyword>function</span>(<span class=hljs-params>_lodash</span>) </span>{
+<span class="hljs-built_in">console</span>.log((<span class="hljs-number">0</span>, _sample.dummyFunction)());
+</code></pre>
+<p>我知道这看起来有很多代码，但现在只关注最后两行。请注意，我们的 <code>mainMethod</code> 是默认导出的函数，它位于名为 <code>default</code> 的新属性中。我们没有声明这个属性，它是 Babel 为了实现与 CommonJS 兼容而添加的属性。还要注意 <code>dummyFunction</code> 方法不在 <code>default</code> 属性中，因为它是作为单独的实体导出的，实际上也是单独导入的。</p>
+<p><code>__interopRequiredWilcard</code> 辅助函数负责将要使用的对象以正确格式返回（换句话说，如果还没有 <code>default</code> 属性，它会添加该属性）。</p>
+<h4>CommonJS 和 ES6 之间还有什么不同？</h4>
+<p>如你所见，ES6 定义了一个 <code>export default</code> 语句，这在 CommonJS 世界中毫无意义。但还有其他什么不同呢？</p>
+<p>另一个主要区别是，虽然它们看起来是相同的，但 <code>require</code> 和 <code>import</code> 的工作方式却不同。</p>
+<p>一个主要区别是，<code>require</code> 在代码中的任何地方都能动态执行，但 <code>import</code> 不能。你可以将 <code>require</code> 语句视为函数调用，因此，它需要运行才能执行。但是 <code>import</code> 语句是静态的，它在解析文件时执行。与 <code>require</code> 的工作方式相比，这是一个重大的性能改进。</p>
+<p>但是，也有一个缺点：由于 <code>require</code> 在运行时工作，我们可以动态定义导入路由，例如：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> myMod = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./src/&quot;</span> + pathToFile);
+</code></pre>
+<p>假设 pathToFile 是一个自定义的字符串，require 会正常工作，但是 import 不允许这么做，因为在解析 import 语句的时候还没有运行时执行环境。</p>
+<h2>AMD（异步模块定义）</h2>
+<p>它代表了<a href="https://en.wikipedia.org/wiki/Asynchronous_module_definition">异步模块定义</a>，这是一种为前端项目加载模块的模式。过去，在浏览器中定义一系列代码依赖的唯一方法是添加一堆 <code>script</code> 标记，并确保它们的顺序正确。一旦文档及其所有资源被完全加载，你的代码就可以运行了。</p>
+<p>它是可行的，但还需要一点样板代码才能工作。AMD 就这样诞生了。</p>
+<p>它简化了为模块声明特定依赖项的任务，并确保在执行代码之前加载所有依赖项。</p>
+<p>它还增加了一个主要的改进：这种方法不必包含所有应用程序的依赖项，也不必在执行一行代码之前加载它们，而是让你可以精确地指定要为代码的每个部分加载哪些依赖项。这反过来又为具有很多外部依赖关系的大型应用带来了性能上的大幅提升。</p>
+<p>回到我们的例子，如果我们想添加相同且简单的 ES6 模块，但使用 AMD，我们会这样做：</p>
+<pre class="hljs"><code>define([<span class="hljs-string">&#x27;lodash&#x27;</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">_lodash</span>) </span>{
 
-  <span class=hljs-keyword>const</span> dummyFunction = <span class=hljs-function>() =&gt;</span> {
-    <span class=hljs-keyword>return</span> _lodash.camelCase(<span class=hljs-string>&#x27;dummy&#x27;</span>);
+  <span class="hljs-keyword">const</span> dummyFunction = <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">return</span> _lodash.camelCase(<span class="hljs-string">&#x27;dummy&#x27;</span>);
   }
 
-  <span class=hljs-keyword>return</span> {
+  <span class="hljs-keyword">return</span> {
     dummyFunction
   }
 })
-</code></pre><p>使用 AMD 的框架将提供一个<code>define</code>函数，该函数接受第一个参数，即依赖项列表。一旦加载了依赖项，我们的函数就会被执行。还要注意我们是如何去掉<code>export</code>语句的，因为函数返回的任何内容都将被导出。<p>这解决了前端世界的两个主要问题：<ol><li>在我们需要它们之前，所有依赖项都已正确加载。<li>我们的代码在安全作用域内运行。通过在函数中编写模块，我们可以避免命名冲突，特别是在依赖项之间。</ol><p>请记住，AMD 只是一个标准，因此你需要一个实现它的框架为你提供 API，<a href=https://requirejs.org/ >RequireJS</a>就是其中一个框架。<h2>UMD（通用模块定义）</h2><p>就像 AMD 试图定义更好的模块加载模式一样，<a href=https://github.com/umdjs/umd>UMD</a>定义了通用模块定义。换言之，它试图提供一种方法，以一种稍后可以由多个加载程序加载的格式编写模块。<p>一个 UMD 声明主要是由两个部分组成：<ol><li>一个立即执行函数，它接收两个参数：<code>root</code>是对全局作用域的引用，<code>factory</code>函数是模块的代码。<li>我们的<code>factory</code>函数。它接收依赖项并可以在单独的作用域内执行，就像 AMD 模式一样。</ol><p>在初始化的立即执行函数中，我们将添加一些样板逻辑，根据我们的需要决定使用哪个模块加载程序。<p>一旦我们将原始代码转换成 UMD，请查看 Babel 的输出：<pre class=hljs><code>(<span class=hljs-function><span class=hljs-keyword>function</span> (<span class=hljs-params><span class=hljs-built_in>global</span>, factory</span>) </span>{
-  <span class=hljs-keyword>if</span> (<span class=hljs-keyword>typeof</span> define === <span class=hljs-string>&quot;function&quot;</span> &amp;&amp; define.amd) {
-    define([<span class=hljs-string>&quot;exports&quot;</span>, <span class=hljs-string>&quot;lodash&quot;</span>], factory);
-  } <span class=hljs-keyword>else</span> <span class=hljs-keyword>if</span> (<span class=hljs-keyword>typeof</span> <span class=hljs-built_in>exports</span> !== <span class=hljs-string>&quot;undefined&quot;</span>) {
-    factory(<span class=hljs-built_in>exports</span>, <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;lodash&quot;</span>));
-  } <span class=hljs-keyword>else</span> {
-    <span class=hljs-keyword>var</span> mod = {
-      <span class=hljs-attr>exports</span>: {}
+</code></pre>
+<p>使用 AMD 的框架将提供一个 <code>define</code> 函数，该函数接受第一个参数，即依赖项列表。一旦加载了依赖项，我们的函数就会被执行。还要注意我们是如何去掉 <code>export</code> 语句的，因为函数返回的任何内容都将被导出。</p>
+<p>这解决了前端世界的两个主要问题：</p>
+<ol>
+<li>在我们需要它们之前，所有依赖项都已正确加载。</li>
+<li>我们的代码在安全作用域内运行。通过在函数中编写模块，我们可以避免命名冲突，特别是在依赖项之间。</li>
+</ol>
+<p>请记住，AMD 只是一个标准，因此你需要一个实现它的框架为你提供 API，<a href="https://requirejs.org/">RequireJS</a>就是其中一个框架。</p>
+<h2>UMD（通用模块定义）</h2>
+<p>就像 AMD 试图定义更好的模块加载模式一样，<a href="https://github.com/umdjs/umd">UMD</a>定义了通用模块定义。换言之，它试图提供一种方法，以一种稍后可以由多个加载程序加载的格式编写模块。</p>
+<p>一个 UMD 声明主要是由两个部分组成：</p>
+<ol>
+<li>一个立即执行函数，它接收两个参数：<code>root</code> 是对全局作用域的引用，<code>factory</code> 函数是模块的代码。</li>
+<li>我们的 <code>factory</code> 函数。它接收依赖项并可以在单独的作用域内执行，就像 AMD 模式一样。</li>
+</ol>
+<p>在初始化的立即执行函数中，我们将添加一些样板逻辑，根据我们的需要决定使用哪个模块加载程序。</p>
+<p>一旦我们将原始代码转换成 UMD，请查看 Babel 的输出：</p>
+<pre class="hljs"><code>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-built_in">global</span>, factory</span>) </span>{
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">&quot;function&quot;</span> &amp;&amp; define.amd) {
+    define([<span class="hljs-string">&quot;exports&quot;</span>, <span class="hljs-string">&quot;lodash&quot;</span>], factory);
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">exports</span> !== <span class="hljs-string">&quot;undefined&quot;</span>) {
+    factory(<span class="hljs-built_in">exports</span>, <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;lodash&quot;</span>));
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">var</span> mod = {
+      <span class="hljs-attr">exports</span>: {}
     };
-    factory(mod.exports, <span class=hljs-built_in>global</span>.lodash);
-    <span class=hljs-built_in>global</span>.sample1 = mod.exports;
+    factory(mod.exports, <span class="hljs-built_in">global</span>.lodash);
+    <span class="hljs-built_in">global</span>.sample1 = mod.exports;
   }
-})(<span class=hljs-keyword>typeof</span> globalThis !== <span class=hljs-string>&quot;undefined&quot;</span> ? globalThis : <span class=hljs-keyword>typeof</span> self !== <span class=hljs-string>&quot;undefined&quot;</span> ? self : <span class=hljs-built_in>this</span>, <span class=hljs-function><span class=hljs-keyword>function</span> (<span class=hljs-params>_exports, _lodash</span>) </span>{
-<span class=hljs-meta>  &quot;use strict&quot;</span>;
+})(<span class="hljs-keyword">typeof</span> globalThis !== <span class="hljs-string">&quot;undefined&quot;</span> ? globalThis : <span class="hljs-keyword">typeof</span> self !== <span class="hljs-string">&quot;undefined&quot;</span> ? self : <span class="hljs-built_in">this</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">_exports, _lodash</span>) </span>{
+<span class="hljs-meta">  &quot;use strict&quot;</span>;
 
-  <span class=hljs-built_in>Object</span>.defineProperty(_exports, <span class=hljs-string>&quot;__esModule&quot;</span>, {
-    <span class=hljs-attr>value</span>: <span class=hljs-literal>true</span>
+  <span class="hljs-built_in">Object</span>.defineProperty(_exports, <span class="hljs-string">&quot;__esModule&quot;</span>, {
+    <span class="hljs-attr">value</span>: <span class="hljs-literal">true</span>
   });
-  _exports.dummyFunction = <span class=hljs-keyword>void</span> <span class=hljs-number>0</span>;
+  _exports.dummyFunction = <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>;
 
-  <span class=hljs-keyword>const</span> dummyFunction = <span class=hljs-function>() =&gt;</span> {
-    <span class=hljs-keyword>return</span> (<span class=hljs-number>0</span>, _lodash.camelCase)(<span class=hljs-string>&#x27;dummy&#x27;</span>);
+  <span class="hljs-keyword">const</span> dummyFunction = <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">return</span> (<span class="hljs-number">0</span>, _lodash.camelCase)(<span class="hljs-string">&#x27;dummy&#x27;</span>);
   };
 
   _exports.dummyFunction = dummyFunction;
 
 });
-</code></pre><p>立即执行函数首先检查 AMD 是否已定义（它查找<code>define</code>函数），如果未定义，则查找<code>exports</code>关键字是否可用。这意味着此时我们正在和一个 CommonJs 加载器打交道。<p>最后，如果没有定义它们，那么它将继续创建一个公共对象，该对象稍后将被分配给全局作用域。这里的全局作用域由<code>global</code>变量（接收到的第一个参数）引用。<p>第二个函数，如你所见，包含我们的示例模块，几乎没有被改动过。唯一的区别是它现在接收两个参数，一个是<code>__exports</code>，我们将在其中添加我们要导出的内容，另一个是<code>__lodash</code>，包含我们声明的依赖项（lodash）。<p>这种模式可能需要添加更多的代码来包装你的模块，但它将确保可以与多个系统兼容。如果你要分发一个供许多用户使用的库，那么这绝对是一个有趣的选择。另一方面，如果你只是为自己的系统创建一个模块，那么额外的工作和代码行可能不值得。<h2>SystemJS</h2><p>我将在这里介绍的最后一个模块加载器是<a href=https://github.com/systemjs/systemjs>SystemJS</a>。它提供了将 ES6 兼容的代码加载到不兼容的运行时环境的另一种方法。换句话说，通过使用自定义的<code>import</code>函数，你可以直接加载 ES6 代码，而无需将其转换为任何内容。<p>你可以写出下面的代码：<pre class=hljs><code><span class=hljs-keyword>var</span> SystemJS = <span class=hljs-built_in>require</span>(<span class=hljs-string>&#x27;systemjs&#x27;</span>);
+</code></pre>
+<p>立即执行函数首先检查 AMD 是否已定义（它查找 <code>define</code> 函数），如果未定义，则查找 <code>exports</code> 关键字是否可用。这意味着此时我们正在和一个 CommonJs 加载器打交道。</p>
+<p>最后，如果没有定义它们，那么它将继续创建一个公共对象，该对象稍后将被分配给全局作用域。这里的全局作用域由 <code>global</code> 变量（接收到的第一个参数）引用。</p>
+<p>第二个函数，如你所见，包含我们的示例模块，几乎没有被改动过。唯一的区别是它现在接收两个参数，一个是<code>__exports</code>，我们将在其中添加我们要导出的内容，另一个是<code>__lodash</code>，包含我们声明的依赖项（lodash）。</p>
+<p>这种模式可能需要添加更多的代码来包装你的模块，但它将确保可以与多个系统兼容。如果你要分发一个供许多用户使用的库，那么这绝对是一个有趣的选择。另一方面，如果你只是为自己的系统创建一个模块，那么额外的工作和代码行可能不值得。</p>
+<h2>SystemJS</h2>
+<p>我将在这里介绍的最后一个模块加载器是 <a href="https://github.com/systemjs/systemjs">SystemJS</a>。它提供了将 ES6 兼容的代码加载到不兼容的运行时环境的另一种方法。换句话说，通过使用自定义的 <code>import</code> 函数，你可以直接加载 ES6 代码，而无需将其转换为任何内容。</p>
+<p>你可以写出下面的代码：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> SystemJS = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;systemjs&#x27;</span>);
 
 SystemJS.config({
-    <span class=hljs-attr>map</span>: {
-        <span class=hljs-string>&#x27;traceur&#x27;</span>: <span class=hljs-string>&#x27;node_modules/traceur/bin/traceur.js&#x27;</span>,
+    <span class="hljs-attr">map</span>: {
+        <span class="hljs-string">&#x27;traceur&#x27;</span>: <span class="hljs-string">&#x27;node_modules/traceur/bin/traceur.js&#x27;</span>,
     }
 });
 
-SystemJS.import(<span class=hljs-string>&#x27;./mymodule.js&#x27;</span>)
-    .then(<span class=hljs-function><span class=hljs-keyword>function</span>(<span class=hljs-params>main</span>) </span>{
-        <span class=hljs-keyword>var</span> t = main.dummyFunction();
-        <span class=hljs-built_in>console</span>.log(t);
+SystemJS.import(<span class="hljs-string">&#x27;./mymodule.js&#x27;</span>)
+    .then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">main</span>) </span>{
+        <span class="hljs-keyword">var</span> t = main.dummyFunction();
+        <span class="hljs-built_in">console</span>.log(t);
     })
-    .catch(<span class=hljs-function><span class=hljs-keyword>function</span>(<span class=hljs-params>e</span>) </span>{
-        <span class=hljs-built_in>console</span>.error(e)
+    .catch(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>{
+        <span class="hljs-built_in">console</span>.error(e)
     });
-</code></pre><p><code>traceu</code>依赖包是 SystemJS 所必需的，因此我们需要它，但是代码的其余部分正在加载并使用我们在本文开头声明的模块（它只使用 ES6 类型的导出和导入）。<p>如果我们希望在一个不兼容的运行时环境重用所有与 ES6 兼容的代码，那么这绝对是一个不错的选择。<hr><p>在编写和使用 JavaScript 模块时，有很多选择，这取决于你的需要和偏好，但说实话，在不久的将来，所有运行时都应该迁移到与 ES6 兼容的版本，因为这是语言未来的发展方向。这反过来意味着，除非你是为过时的系统编写代码，否则最好选择原生支持的格式。<p><strong>现在，让我来问你：哪一个是你最喜欢的模块加载器？</strong><blockquote><p>如果发现译文存在错误或其他需要改进的地方，欢迎到<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>对译文进行修改并 PR，也可获得相应奖励积分。文章开头的<strong>本文永久链接</strong>即为本文在 GitHub 上的 MarkDown 链接。</blockquote><hr><blockquote><p><a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>是一个翻译优质互联网技术文章的社区，文章来源为<a href=https://juejin.im>掘金</a>上的英文分享文章。内容覆盖<a href=https://github.com/xitu/gold-miner#android>Android</a>、<a href=https://github.com/xitu/gold-miner#ios>iOS</a>、<a href=https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF>前端</a>、<a href=https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF>后端</a>、<a href=https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE>区块链</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81>产品</a>、<a href=https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1>设计</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD>人工智能</a>等领域，想要查看更多优质译文请持续关注<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>、<a href=http://weibo.com/juejinfanyi>官方微博</a>、<a href=https://zhuanlan.zhihu.com/juejinfanyi>知乎专栏</a>。</blockquote></div><div class=footer></div><script src=/assets/scripts/index.min.js></script><script>init()</script>
+</code></pre>
+<p><code>traceu</code> 依赖包是 SystemJS 所必需的，因此我们需要它，但是代码的其余部分正在加载并使用我们在本文开头声明的模块（它只使用 ES6 类型的导出和导入）。</p>
+<p>如果我们希望在一个不兼容的运行时环境重用所有与 ES6 兼容的代码，那么这绝对是一个不错的选择。</p>
+<hr>
+<p>在编写和使用 JavaScript 模块时，有很多选择，这取决于你的需要和偏好，但说实话，在不久的将来，所有运行时都应该迁移到与 ES6 兼容的版本，因为这是语言未来的发展方向。这反过来意味着，除非你是为过时的系统编写代码，否则最好选择原生支持的格式。</p>
+<p><strong>现在，让我来问你：哪一个是你最喜欢的模块加载器？</strong></p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

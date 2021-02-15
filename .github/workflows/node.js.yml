@@ -25,9 +25,14 @@ jobs:
 
     - run: |
           npm i -g markdown-html-gen
+          npm i ls-minifier -g
           cd documents
-          for f in *.md; do md2html -o ../archive $f; done
           # documents/*.md => archive/*.html
+          cd ../archive
+          ls-minifier *.html --silent --override --html-compressor=html-minifier
+          for f in *.md; do md2html -o ../archive $f; done
+          # exit if no files need to be committed
+          [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && kill -SIGINT $$;
           
     - name: setup git config
       run: |
@@ -40,6 +45,5 @@ jobs:
       run: |
         # Stage the file, commit and push
         git add *
-        [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && kill -SIGINT $$;
         git commit -m "Build Resources"
         git push origin master

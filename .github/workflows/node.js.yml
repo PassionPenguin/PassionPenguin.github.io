@@ -16,28 +16,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-
       - name: NPM Install
       - run: |
           npm i -g markdown-html-gen
           npm i -g ls-minifier
-
       - name: setup git config
         run: |
           git config user.name "Hoarfroster Bot"
           git config user.email "<penguin.zhang@qq.com>"
-
       - name: Generate HTML Pages with Markdown Files
         run: |
           cd documents
           # documents/*.md => archive/*.html
           for f in *.md; do md2html -o ../archive $f; done
-
       - name: Commit Generated HTML Pages
         run: |
           if [[ -n $(git status -uno --porcelain) ]]
@@ -46,7 +41,6 @@ jobs:
             git commit -m "Build Pages"
             git push origin master --force
           fi
-
       - name: Compress Files
         run: |
           # compress html files
@@ -55,7 +49,6 @@ jobs:
           cd ../
           ls-minifier **/*.css --silent --css-compressor=yui
           ls-minifier **/*.js --silent --js-compressor=gcc
-
       - name: Commit Compressed Files
         run: |
           if [[ -n $(git status -uno --porcelain) ]]

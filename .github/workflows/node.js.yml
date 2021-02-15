@@ -33,7 +33,7 @@ jobs:
           cd ../archive
           ls-minifier *.html --silent --override --html-compressor=html-minifier
           # exit if no files need to be committed
-          [[ -n $(git status -uno --porcelain) ]] && exit
+          [[ -n $(git status -uno --porcelain) ]] && exit 0
           
     - name: setup git config
       run: |

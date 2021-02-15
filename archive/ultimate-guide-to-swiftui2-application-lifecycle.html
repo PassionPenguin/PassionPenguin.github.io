@@ -7,54 +7,43 @@
     <title>SwiftUI 2 应用生命周期的终极指导 - Hoarfroster</title>
     <link rel="stylesheet" href="/assets/styles/post.css">
     <link rel="stylesheet"
-            href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css">
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css">
 </head>
 <body>
-<div class="container post markdown-body">
-    <blockquote>
-        <ul>
-            <li>原文地址：<a href="https://peterfriese.dev/ultimate-guide-to-swiftui2-application-lifecycle/">The Ultimate Guide to the SwiftUI 2 Application Life Cycle</a>
-            </li>
-            <li>原文作者：<a href="https://peterfriese.dev/">Peter Friese</a></li>
-            <li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
-            <li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/ultimate-guide-to-swiftui2-application-lifecycle.md">https://github.com/xitu/gold-miner/blob/master/article/2021/ultimate-guide-to-swiftui2-application-lifecycle.md</a>
-            </li>
-            <li>译者：<a href="https://github.com/zhuzilin">zhuzilin</a></li>
-            <li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/zenblo">zenblo</a>
-            </li>
-        </ul>
-    </blockquote>
-    <p>
-        <img src="https://cdn-images-1.medium.com/max/2880/1*nhb0C-BMierO2SW0bvtKqA.png" alt="Image based on Rocket by Icongeek26 on The Noun Project">
-    </p>
-    <h1>SwiftUI 2 应用生命周期的终极指导</h1>
-    <p>在很长一段时间里，iOS 开发者们都是使用
-        <code>AppDelegate</code> 作为应用的主要入口。随着 SwiftUI 2 在 WWDC 2020 上发布，苹果公司引入了一个新的应用生命周期。新的生命周期几乎（几乎）完全与
-        <code>AppDelegate</code> 无关，为类 DSL 方法铺平了道路。</p>
-    <p>在本文中，我会讨论引入新的生命周期的原因，以及你该如何在已有的应用或新的应用中使用它。</p>
-    <h2>指定应用入口</h2>
-    <p>我们的第一个问题是，该如何告诉编译器哪里是应用的入口呢？<a href="https://github.com/apple/swift-evolution/blob/master/proposals/0281-main-attribute.md">SE-0281</a> 详述了**基于类型的程序入口（Type-Based Program Entry Points）**的工作方式：
-    </p>
-    <blockquote>
-        <p>Swift 编译器将识别标注了 <code>@main</code> 属性的类型为程序的入口。标有 <code>@main</code> 的类型有一个隐式要求：类型内部需要声明一个静态
-            <code>main()</code> 方法。</p>
-    </blockquote>
-    <p>创建新的 SwiftUI 应用时，应用的主类（main class）如下所示：</p>
-    <pre class="hljs" v-pre><code><span class="hljs-keyword">import</span> SwiftUI
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://peterfriese.dev/ultimate-guide-to-swiftui2-application-lifecycle/">The Ultimate Guide to the SwiftUI 2 Application Life Cycle</a></li>
+<li>原文作者：<a href="https://peterfriese.dev/">Peter Friese</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/ultimate-guide-to-swiftui2-application-lifecycle.md">https://github.com/xitu/gold-miner/blob/master/article/2021/ultimate-guide-to-swiftui2-application-lifecycle.md</a></li>
+<li>译者：<a href="https://github.com/zhuzilin">zhuzilin</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/zenblo">zenblo</a></li>
+</ul>
+</blockquote>
+<p><img src="https://cdn-images-1.medium.com/max/2880/1*nhb0C-BMierO2SW0bvtKqA.png" alt="Image based on Rocket by Icongeek26 on The Noun Project"></p>
+<h1>SwiftUI 2 应用生命周期的终极指导</h1>
+<p>在很长一段时间里，iOS 开发者们都是使用 <code>AppDelegate</code> 作为应用的主要入口。随着 SwiftUI 2 在 WWDC 2020 上发布，苹果公司引入了一个新的应用生命周期。新的生命周期几乎（几乎）完全与 <code>AppDelegate</code> 无关，为类 DSL 方法铺平了道路。</p>
+<p>在本文中，我会讨论引入新的生命周期的原因，以及你该如何在已有的应用或新的应用中使用它。</p>
+<h2>指定应用入口</h2>
+<p>我们的第一个问题是，该如何告诉编译器哪里是应用的入口呢？<a href="https://github.com/apple/swift-evolution/blob/master/proposals/0281-main-attribute.md">SE-0281</a> 详述了**基于类型的程序入口（Type-Based Program Entry Points）**的工作方式：</p>
+<blockquote>
+<p>Swift 编译器将识别标注了 <code>@main</code> 属性的类型为程序的入口。标有 <code>@main</code> 的类型有一个隐式要求：类型内部需要声明一个静态 <code>main()</code> 方法。</p>
+</blockquote>
+<p>创建新的 SwiftUI 应用时，应用的主类（main class）如下所示：</p>
+<pre class="hljs" v-pre><code><span class="hljs-keyword">import</span> SwiftUI
 
-@main
+<span class="hljs-keyword">@main</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SwiftUIAppLifeCycleApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
   }
 }
 </code></pre>
-    <p>那么 SE-0281 提到的静态 <code>main()</code> 函数在哪儿呢？</p>
-    <p>实际上，框架可以（并且应该）为用户提供方便的默认实现。你会从上面的代码片段注意到 <code>SwiftUIAppLifeCycleApp</code> 遵循 <code>App</code> 协议。对于
-        <code>App</code> 协议，苹果提供了如下协议扩展：</p>
-    <pre class="hljs" v-pre><code><span class="hljs-meta">@available</span>(iOS <span class="hljs-number">14.0</span>, macOS <span class="hljs-number">11.0</span>, tvOS <span class="hljs-number">14.0</span>, watchOS <span class="hljs-number">7.0</span>, *)
+<p>那么 SE-0281 提到的静态 <code>main()</code> 函数在哪儿呢？</p>
+<p>实际上，框架可以（并且应该）为用户提供方便的默认实现。你会从上面的代码片段注意到 <code>SwiftUIAppLifeCycleApp</code> 遵循 <code>App</code> 协议。对于 <code>App</code> 协议，苹果提供了如下协议扩展：</p>
+<pre class="hljs" v-pre><code><span class="hljs-keyword">@available</span>(<span class="hljs-keyword">iOS</span> <span class="hljs-number">14.0</span>, <span class="hljs-keyword">macOS</span> <span class="hljs-number">11.0</span>, <span class="hljs-keyword">tvOS</span> <span class="hljs-number">14.0</span>, <span class="hljs-keyword">watchOS</span> <span class="hljs-number">7.0</span>, <span class="hljs-operator">*</span>)
 <span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">App</span> </span>{
 
     <span class="hljs-comment">/// 初始化并运行应用。</span>
@@ -63,167 +52,144 @@
     <span class="hljs-comment">/// [@main](https://docs.swift.org/swift-book/ReferenceManual/Attributes.html#ID626)</span>
     <span class="hljs-comment">/// 属性，系统会调用这个实现类的 `main()` 方法来启动应用。</span>
     <span class="hljs-comment">/// SwiftUI 提供了该方法的默认实现，从而能以适合平台的方式处理应用启动流程。</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span>
 }
 </code></pre>
-    <p>这下你就懂了吧 —— 这个协议扩展提供了处理应用启动的默认的实现。</p>
-    <p>由于 SwiftUI 框架不是开源的，所以我们看不到苹果是如何实现此功能的，但是
-        <a href="https://github.com/apple/swift-argument-parser">Swift Argument Parser</a> 是开源的，并且也用了这个办法。查看
-        <code>ParsableCommand</code> 的源码，就能了解它是如何用协议扩展来提供静态 <code>main</code> 函数的默认实现，并将其用作程序入口的：</p>
-    <pre class="hljs" v-pre><code><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">ParsableCommand</span> </span>{
-...
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-number">_</span> arguments: [String]?)</span></span> {
+<p>这下你就懂了吧 —— 这个协议扩展提供了处理应用启动的默认的实现。</p>
+<p>由于 SwiftUI 框架不是开源的，所以我们看不到苹果是如何实现此功能的，但是 <a href="https://github.com/apple/swift-argument-parser">Swift Argument Parser</a> 是开源的，并且也用了这个办法。查看 <code>ParsableCommand</code> 的源码，就能了解它是如何用协议扩展来提供静态 <code>main</code> 函数的默认实现，并将其用作程序入口的：</p>
+<pre class="hljs" v-pre><code><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">ParsableCommand</span> </span>{
+<span class="hljs-operator">...</span>
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">arguments</span>: [<span class="hljs-type">String</span>]<span class="hljs-operator">?</span>)</span> {
     <span class="hljs-keyword">do</span> {
-      <span class="hljs-keyword">var</span> command = <span class="hljs-keyword">try</span> parseAsRoot(arguments)
+      <span class="hljs-keyword">var</span> command <span class="hljs-operator">=</span> <span class="hljs-keyword">try</span> parseAsRoot(arguments)
       <span class="hljs-keyword">try</span> command.run()
     } <span class="hljs-keyword">catch</span> {
       exit(withError: error)
     }
   }
 
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> {
     <span class="hljs-keyword">self</span>.main(<span class="hljs-literal">nil</span>)
   }
 }
 </code></pre>
-    <p>如果上述这些听起来有点复杂，好消息是实际上在创建新的 SwiftUI 应用程序时你不必关心它：只需确保在 <strong>Life Cycle</strong> 下拉菜单中选择
-        <strong>SwiftUI App</strong> 来创建你的应用程序就行了：</p>
-    <p><img src="https://cdn-images-1.medium.com/max/2000/0*XWa5RgMK2WllmlHk.png" alt="创建一个新的 SwiftUI 项目"></p>
-    <p>让我们来看一些常见的情况。</p>
-    <h2>初始化资源 / 你最喜欢的 SDK 或框架</h2>
-    <p>大多数应用程序需要在启动时执行这些步骤：获取一些配置值，连接数据库或者初始化框架或第三方 SDK。</p>
-    <p>通常，您可以在 <code>ApplicationDelegate</code> 的
-        <code>application(_:didFinishLaunchingWithOptions:)</code> 方法中进行这些操作。由于已经没有应用委托了，我们需要找到其他方法来初始化我们的应用程序。根据您的特定需求，有以下策略：
-    </p>
-    <ul>
-        <li>为你的主类实现一个构造函数（initializer）（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID205">文档</a>）
-        </li>
-        <li>为存储属性设置初始值（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID206">文档</a>）
-        </li>
-        <li>用闭包设置属性的默认值（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID232">文档</a>）
-        </li>
-    </ul>
-    <pre class="hljs" v-pre><code>@main
+<p>如果上述这些听起来有点复杂，好消息是实际上在创建新的 SwiftUI 应用程序时你不必关心它：只需确保在 <strong>Life Cycle</strong> 下拉菜单中选择 <strong>SwiftUI App</strong> 来创建你的应用程序就行了：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*XWa5RgMK2WllmlHk.png" alt="创建一个新的 SwiftUI 项目"></p>
+<p>让我们来看一些常见的情况。</p>
+<h2>初始化资源 / 你最喜欢的 SDK 或框架</h2>
+<p>大多数应用程序需要在启动时执行这些步骤：获取一些配置值，连接数据库或者初始化框架或第三方 SDK。</p>
+<p>通常，您可以在 <code>ApplicationDelegate</code> 的 <code>application(_:didFinishLaunchingWithOptions:)</code> 方法中进行这些操作。由于已经没有应用委托了，我们需要找到其他方法来初始化我们的应用程序。根据您的特定需求，有以下策略：</p>
+<ul>
+<li>为你的主类实现一个构造函数（initializer）（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID205">文档</a>）</li>
+<li>为存储属性设置初始值（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID206">文档</a>）</li>
+<li>用闭包设置属性的默认值（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID232">文档</a>）</li>
+</ul>
+<pre class="hljs" v-pre><code><span class="hljs-keyword">@main</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorsApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-keyword">init</span>() {
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Colors application is starting up. App initialiser."</span>)
+  <span class="hljs-function"><span class="hljs-keyword">init</span>()</span> {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Colors application is starting up. App initialiser.&quot;</span>)
   }
-
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
+  
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
 }
 </code></pre>
-    <p>如果上述几种策略都无法满足你的需求，你可能还是需要一个 <code>AppDelegate</code>。后文会介绍如果能在应用中加入一个 AppDelegate。</p>
-    <h2>处理你的应用的生命周期</h2>
-    <p>了解你的应用程序处于哪种状态有时很有用。例如，你可能希望应用处于活动状态时立即获取新数据，或者在应用程序变为非活动状态并转换到后台后清除所有缓存。</p>
-    <p>通常，您可以在你的 <code>ApplicationDelegate</code> 上实现
-        <code>applicationDidBecomeActive</code>，<code>applicationWillResignActive</code> 或
-        <code>applicationDidEnterBackground</code>。</p>
-    <p>从 iOS 14.0 起，苹果提供了新的 API，该 API 允许以更优雅，更易维护的方式跟踪应用程序状态：<code>[ScenePhase](https://developer.apple.com/documentation/swiftui/scenephase)</code>。你的项目可以有多个场景（scene），不过有时只有一个场景。这些场景将由
-        <code>[WindowGroup](https://developer.apple.com/documentation/swiftui/windowgroup)</code> 展示。</p>
-    <p>SwiftUI 追踪环境中场景的状态，你可以使用 <code>@Environment</code> 属性包装器来获取 <code>scenePhase</code> 的值，然后使用
-        <code>onChange(of:)</code> modifier 来监听该值的变化：</p>
-    <pre class="hljs" v-pre><code>@main
+<p>如果上述几种策略都无法满足你的需求，你可能还是需要一个 <code>AppDelegate</code>。后文会介绍如果能在应用中加入一个 AppDelegate。</p>
+<h2>处理你的应用的生命周期</h2>
+<p>了解你的应用程序处于哪种状态有时很有用。例如，你可能希望应用处于活动状态时立即获取新数据，或者在应用程序变为非活动状态并转换到后台后清除所有缓存。</p>
+<p>通常，您可以在你的 <code>ApplicationDelegate</code> 上实现 <code>applicationDidBecomeActive</code>，<code>applicationWillResignActive</code> 或 <code>applicationDidEnterBackground</code>。</p>
+<p>从 iOS 14.0 起，苹果提供了新的 API，该 API 允许以更优雅，更易维护的方式跟踪应用程序状态：<code>[ScenePhase](https://developer.apple.com/documentation/swiftui/scenephase)</code>。你的项目可以有多个场景（scene），不过有时只有一个场景。这些场景将由 <code>[WindowGroup](https://developer.apple.com/documentation/swiftui/windowgroup)</code> 展示。</p>
+<p>SwiftUI 追踪环境中场景的状态，你可以使用 <code>@Environment</code> 属性包装器来获取 <code>scenePhase</code> 的值，然后使用 <code>onChange(of:)</code> modifier 来监听该值的变化：</p>
+<pre class="hljs" v-pre><code><span class="hljs-keyword">@main</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SwiftUIAppLifeCycleApp</span>: <span class="hljs-title">App</span> </span>{
-  @<span class="hljs-type">Environment</span>(\.scenePhase) <span class="hljs-keyword">var</span> scenePhase
-
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
+  <span class="hljs-meta">@Environment</span>(\.scenePhase) <span class="hljs-keyword">var</span> scenePhase
+  
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
     .onChange(of: scenePhase) { newScenePhase <span class="hljs-keyword">in</span>
       <span class="hljs-keyword">switch</span> newScenePhase {
       <span class="hljs-keyword">case</span> .active:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">"App is active"</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;App is active&quot;</span>)
       <span class="hljs-keyword">case</span> .inactive:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">"App is inactive"</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;App is inactive&quot;</span>)
       <span class="hljs-keyword">case</span> .background:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">"App is in background"</span>)
-      @unknown <span class="hljs-keyword">default</span>:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Oh - interesting: I received an unexpected new value."</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;App is in background&quot;</span>)
+      <span class="hljs-keyword">@unknown</span> <span class="hljs-keyword">default</span>:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Oh - interesting: I received an unexpected new value.&quot;</span>)
       }
     }
   }
 }
 </code></pre>
-    <p>值得注意的是，你可以从应用中的其他位置读取该值。当在应用的顶层读取该值时（如上面的代码片段所示），你将获得应用程序中所有阶段（phase）的汇总。<code>.inactive</code> 表示你应用中的所有场景均未激活。当在视图中读取
-        <code>scenePhase</code> 时，你将收到包含该视图的阶段值。请记住，你的应用程序在在同一时刻可能包含在不同阶段的多个场景。想了解有关场景阶段的更多详细信息，请阅读苹果的[文档]（https://developer.apple.com/documentation/swiftui/scenephase）。
-    </p>
-    <h2>处理深层链接（Deeplink）</h2>
-    <p>之前，在处理深层链接时，你需要实现 <code>application(_:open:options:)</code>，并将传入的 URL 转给最合适的处理程序。</p>
-    <p>新的应用生命周期模型可以更容易地处理深层链接。在最顶层的场景上添加 <code>onOpenURL</code> 就可以处理传入的 URL 了：</p>
-    <pre class="hljs" v-pre><code>@main
+<p>值得注意的是，你可以从应用中的其他位置读取该值。当在应用的顶层读取该值时（如上面的代码片段所示），你将获得应用程序中所有阶段（phase）的汇总。<code>.inactive</code> 表示你应用中的所有场景均未激活。当在视图中读取 <code>scenePhase</code> 时，你将收到包含该视图的阶段值。请记住，你的应用程序在在同一时刻可能包含在不同阶段的多个场景。想了解有关场景阶段的更多详细信息，请阅读苹果的[文档]（https://developer.apple.com/documentation/swiftui/scenephase）。</p>
+<h2>处理深层链接（Deeplink）</h2>
+<p>之前，在处理深层链接时，你需要实现 <code>application(_:open:options:)</code>，并将传入的 URL 转给最合适的处理程序。</p>
+<p>新的应用生命周期模型可以更容易地处理深层链接。在最顶层的场景上添加 <code>onOpenURL</code> 就可以处理传入的 URL 了：</p>
+<pre class="hljs" v-pre><code><span class="hljs-keyword">@main</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SwiftUIAppLifeCycleApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
         .onOpenURL { url <span class="hljs-keyword">in</span>
-          <span class="hljs-built_in">print</span>(<span class="hljs-string">"Received URL: \(url)"</span>)
+          <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Received URL: <span class="hljs-subst">\(url)</span>&quot;</span>)
         }
     }
   }
 }
 </code></pre>
-    <p>真正酷的是：你可以在整个应用程序中装上多个 URL 处理程序 —— 让进行深层链接变得很轻松，因为你可以在最合适的位置处理传入的链接。</p>
-    <p>可能的话，你应该使用
-        <a href="https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content">universal links</a>（或者
-        <a href="https://firebase.google.com/docs/dynamic-links">Firebase Dynamic Links</a>，它使用了
-        <a href="https://firebase.google.com/docs/dynamic-links/operating-system-integrations">universal links for iOS apps</a>），因为它们使用了关联域（associated domain）来创建网站和你的应用之间的链接 —— 这会让你可以安全地共享数据。
-    </p>
-    <p>不过，你仍可以使用<a href="https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content/defining_a_custom_url_scheme_for_your_app">自定义 URL scheme</a> 来链接应用内部的内容。
-    </p>
-    <p>无论哪种方式，触发应用中的深层链接的一种简单方法是在开发计算机上使用以下命令：</p>
-    <pre class="hljs" v-pre><code>xcrun simctl openurl booted &lt;your url&gt;
+<p>真正酷的是：你可以在整个应用程序中装上多个 URL 处理程序 —— 让进行深层链接变得很轻松，因为你可以在最合适的位置处理传入的链接。</p>
+<p>可能的话，你应该使用 <a href="https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content">universal links</a>（或者 <a href="https://firebase.google.com/docs/dynamic-links">Firebase Dynamic Links</a>，它使用了 <a href="https://firebase.google.com/docs/dynamic-links/operating-system-integrations">universal links for iOS apps</a>），因为它们使用了关联域（associated domain）来创建网站和你的应用之间的链接 —— 这会让你可以安全地共享数据。</p>
+<p>不过，你仍可以使用<a href="https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content/defining_a_custom_url_scheme_for_your_app">自定义 URL scheme</a> 来链接应用内部的内容。</p>
+<p>无论哪种方式，触发应用中的深层链接的一种简单方法是在开发计算机上使用以下命令：</p>
+<pre class="hljs" v-pre><code>xcrun simctl openurl booted &lt;your url&gt;
 </code></pre>
-    <p>
-        <img src="https://cdn-images-1.medium.com/max/2000/1*RMYt_zbKht6oqYJdTn9S_w.gif" alt="Demo: Opening deep links and continuing user activities">
-    </p>
-    <h2>继续用户 activity</h2>
-    <p>如果你的应用使用
-        <code>NSUserActivity</code> 来<a href="https://developer.apple.com/documentation/foundation/nsuseractivity">集成</a> Siri、Handoff 或 Spotlight，你需要处理用户继续进行的 activity。
-    </p>
-    <p>同样，新的应用生命周期模型通过提供两个 modifier 使你更容易实现这一点。这些 modifier 使你可以声明 activity 并让用户可以继续进行它们。</p>
-    <p>下面是一个展现如何声明 activity 的代码片段。在一个具体的视图里：</p>
-    <pre class="hljs" v-pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorDetailsView</span>: <span class="hljs-title">View</span> </span>{
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*RMYt_zbKht6oqYJdTn9S_w.gif" alt="Demo: Opening deep links and continuing user activities"></p>
+<h2>继续用户 activity</h2>
+<p>如果你的应用使用 <code>NSUserActivity</code> 来<a href="https://developer.apple.com/documentation/foundation/nsuseractivity">集成</a> Siri、Handoff 或 Spotlight，你需要处理用户继续进行的 activity。</p>
+<p>同样，新的应用生命周期模型通过提供两个 modifier 使你更容易实现这一点。这些 modifier 使你可以声明 activity 并让用户可以继续进行它们。</p>
+<p>下面是一个展现如何声明 activity 的代码片段。在一个具体的视图里：</p>
+<pre class="hljs" v-pre><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorDetailsView</span>: <span class="hljs-title">View</span> </span>{
   <span class="hljs-keyword">var</span> color: <span class="hljs-type">String</span>
-
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+  
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
     <span class="hljs-type">Image</span>(color)
       <span class="hljs-comment">// ...</span>
-      .userActivity(<span class="hljs-string">"showColor"</span>) { activity <span class="hljs-keyword">in</span>
-        activity.title = color
-        activity.isEligibleForSearch = <span class="hljs-literal">true</span>
-        activity.isEligibleForPrediction = <span class="hljs-literal">true</span>
+      .userActivity(<span class="hljs-string">&quot;showColor&quot;</span>) { activity <span class="hljs-keyword">in</span>
+        activity.title <span class="hljs-operator">=</span> color
+        activity.isEligibleForSearch <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+        activity.isEligibleForPrediction <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
         <span class="hljs-comment">// ...</span>
       }
   }
 }
 </code></pre>
-    <p>为了允许继续进行这个 activity，你可以在最顶层的导航视图中注册 <code>onContinueUserActivity</code> 闭包，如下所示：</p>
-    <pre class="hljs" v-pre><code><span class="hljs-keyword">import</span> SwiftUI
+<p>为了允许继续进行这个 activity，你可以在最顶层的导航视图中注册 <code>onContinueUserActivity</code> 闭包，如下所示：</p>
+<pre class="hljs" v-pre><code><span class="hljs-keyword">import</span> SwiftUI
 
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span>: <span class="hljs-title">View</span> </span>{
-  <span class="hljs-keyword">var</span> colors = [<span class="hljs-string">"Red"</span>, <span class="hljs-string">"Green"</span>, <span class="hljs-string">"Yellow"</span>, <span class="hljs-string">"Blue"</span>, <span class="hljs-string">"Pink"</span>, <span class="hljs-string">"Purple"</span>]
-
-  @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> selectedColor: <span class="hljs-type">String?</span> = <span class="hljs-literal">nil</span>
-
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+  <span class="hljs-keyword">var</span> colors <span class="hljs-operator">=</span> [<span class="hljs-string">&quot;Red&quot;</span>, <span class="hljs-string">&quot;Green&quot;</span>, <span class="hljs-string">&quot;Yellow&quot;</span>, <span class="hljs-string">&quot;Blue&quot;</span>, <span class="hljs-string">&quot;Pink&quot;</span>, <span class="hljs-string">&quot;Purple&quot;</span>]
+  
+  <span class="hljs-meta">@State</span> <span class="hljs-keyword">var</span> selectedColor: <span class="hljs-type">String</span>? <span class="hljs-operator">=</span> <span class="hljs-literal">nil</span>
+  
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
     <span class="hljs-type">NavigationView</span> {
       <span class="hljs-type">ScrollView</span> {
         <span class="hljs-type">LazyVGrid</span>(columns: columns) {
           <span class="hljs-type">ForEach</span>(colors, id: \.<span class="hljs-keyword">self</span>) { color <span class="hljs-keyword">in</span>
             <span class="hljs-type">NavigationLink</span>(destination: <span class="hljs-type">ColorDetailsView</span>(color: color),
                            tag: color,
-                           selection: $selectedColor) {
+                           selection: <span class="hljs-variable">$selectedColor</span>) {
               <span class="hljs-type">Image</span>(color)
             }
           }
         }
-        .onContinueUserActivity(<span class="hljs-string">"showColor"</span>) { userActivity <span class="hljs-keyword">in</span>
-          <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> color = userActivity.userInfo?[<span class="hljs-string">"colorName"</span>] <span class="hljs-keyword">as</span>? <span class="hljs-type">String</span> {
-            selectedColor = color
+        .onContinueUserActivity(<span class="hljs-string">&quot;showColor&quot;</span>) { userActivity <span class="hljs-keyword">in</span>
+          <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> color <span class="hljs-operator">=</span> userActivity.userInfo<span class="hljs-operator">?</span>[<span class="hljs-string">&quot;colorName&quot;</span>] <span class="hljs-keyword">as?</span> <span class="hljs-type">String</span> {
+            selectedColor <span class="hljs-operator">=</span> color
           }
         }
       }
@@ -231,68 +197,52 @@
   }
 }
 </code></pre>
-    <h2>请帮帮我 —— 上述的那些对我都不管用！</h2>
-    <p>新的应用声明周期（截止当前）并非支持 <code>AppDelegate</code> 的所有回调函数。如果上述这些都不满足你的需求，你可能还是需要一个 <code>AppDelegate</code>。</p>
-    <p>另一个需要 AppDelegate 的原因是你使用的第三方 SDK 会使用
-        <a href="https://pspdfkit.com/blog/2019/swizzling-in-swift/">method swizzling</a> 来把它们注入应用生命周期。<a href="https://firebase.google.com/">Firebase</a> 就是一个<a href="https://stackoverflow.com/a/62633158/281221">典型的例子</a>。
-    </p>
-    <p>为了帮助上述情况中的你摆脱困境，Swift 提供了一种将 <code>AppDelegate</code> 的一个实现类与你的
-        <code>App</code> 实现相连接的方法：<code>@UIApplicationDelegateAdaptor</code>。使用方法如下：</p>
-    <pre class="hljs" v-pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppDelegate</span>: <span class="hljs-title">NSObject</span>, <span class="hljs-title">UIApplicationDelegate</span> </span>{
-  <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">application</span><span class="hljs-params">(<span class="hljs-number">_</span> application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : <span class="hljs-keyword">Any</span>]? = <span class="hljs-literal">nil</span>)</span></span> -&gt; <span class="hljs-type">Bool</span> {
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Colors application is starting up. ApplicationDelegate didFinishLaunchingWithOptions."</span>)
+<h2>请帮帮我 —— 上述的那些对我都不管用！</h2>
+<p>新的应用声明周期（截止当前）并非支持 <code>AppDelegate</code> 的所有回调函数。如果上述这些都不满足你的需求，你可能还是需要一个 <code>AppDelegate</code>。</p>
+<p>另一个需要 AppDelegate 的原因是你使用的第三方 SDK 会使用 <a href="https://pspdfkit.com/blog/2019/swizzling-in-swift/">method swizzling</a> 来把它们注入应用生命周期。<a href="https://firebase.google.com/">Firebase</a> 就是一个<a href="https://stackoverflow.com/a/62633158/281221">典型的例子</a>。</p>
+<p>为了帮助上述情况中的你摆脱困境，Swift 提供了一种将 <code>AppDelegate</code> 的一个实现类与你的 <code>App</code> 实现相连接的方法：<code>@UIApplicationDelegateAdaptor</code>。使用方法如下：</p>
+<pre class="hljs" v-pre><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppDelegate</span>: <span class="hljs-title">NSObject</span>, <span class="hljs-title">UIApplicationDelegate</span> </span>{
+  <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">application</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">application</span>: <span class="hljs-type">UIApplication</span>,
+                   <span class="hljs-params">didFinishLaunchingWithOptions</span> <span class="hljs-params">launchOptions</span>: [<span class="hljs-type">UIApplication</span>.<span class="hljs-params">LaunchOptionsKey</span> : <span class="hljs-keyword">Any</span>]<span class="hljs-operator">?</span> <span class="hljs-operator">=</span> <span class="hljs-literal">nil</span>)</span> -&gt; <span class="hljs-type">Bool</span> {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Colors application is starting up. ApplicationDelegate didFinishLaunchingWithOptions.&quot;</span>)
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
   }
 }
 
-@main
+<span class="hljs-keyword">@main</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorsApp</span>: <span class="hljs-title">App</span> </span>{
-  @<span class="hljs-type">UIApplicationDelegateAdaptor</span>(<span class="hljs-type">AppDelegate</span>.<span class="hljs-keyword">self</span>) <span class="hljs-keyword">var</span> delegate
-
-  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
+  <span class="hljs-meta">@UIApplicationDelegateAdaptor</span>(<span class="hljs-type">AppDelegate</span>.<span class="hljs-keyword">self</span>) <span class="hljs-keyword">var</span> delegate
+  
+  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
   }
 }
 </code></pre>
-    <p>如果你是在复制现有的 <code>AppDelegate</code> 实现，不要忘记删除 <code>@main</code> 属性 —— 不然，编译器该向你抱怨存在多个应用入口了。</p>
-    <h2>总结</h2>
-    <p>至此，让我们讨论一下苹果为什么要进行这些改变。我觉得有以下的几个原因：</p>
-    <p>
-        <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0281-main-attribute.md#motivation">SE-0281</a> explicitly states that one of the design goals was
-        <strong>“to offer a more general purpose and lightweight mechanism for delegating a program’s entry point to a designated type.”</strong>
-    </p>
-    <p>苹果选择的基于 DSL 来处理应用生命周期的方法和 SwiftUI 的声明式 UI 搭建方法相契合。两者采用相同的概念可以更方便新加入的开发者们理解。</p>
-    <p>声明式方法的主要好处是：框架/平台将替代开发者承受实现特定功能的负担。如果需要进行任何更改，这种模式可以在不破坏许多开发人员的应用的情况下进行发布，这也使发布更改变得更容易 —— 理想情况下，开发人员无需更改其实现，因为框架将把一切都搞定。</p>
-    <p>总体而言，新的应用生命周期模型使实现应用程序的启动更加简单。你的代码将变得更加简洁，更易于维护 —— 要我说，这总是一件好事。</p>
-    <p>我希望本文能帮你了解新的应用生命周期的来龙去脉。如果你有关于本文的任何疑问或评论，欢迎<a href="https://twitter.com/peterfriese">在 Twitter 上关注</a>并私信我，或者在
-        <a href="https://github.com/peterfriese/Colors">GitHub 上的样例项目</a>中提 issue。</p>
-    <p>感谢你的阅读！</p>
-    <h2>扩展阅读</h2>
-    <p>想了解更多，请查看下面的这些资料：</p>
-    <ul>
-        <li>
-            <a href="https://github.com/apple/swift-evolution/blob/master/proposals/0281-main-attribute.md">Swift Evolution SE-0281 - @main: Type-Based Program Entry Points</a>
-        </li>
-        <li><a href="https://developer.apple.com/documentation/swiftui/app">The App Protocol</a></li>
-        <li>
-            <a href="https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content">Allowing Apps and Websites to Link to Your Content</a>
-        </li>
-    </ul>
-    <blockquote>
-        <p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的
-            <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
-    </blockquote>
-    <hr>
-    <blockquote>
-        <p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为
-            <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖
-            <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注
-            <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。
-        </p>
-    </blockquote>
+<p>如果你是在复制现有的 <code>AppDelegate</code> 实现，不要忘记删除 <code>@main</code> 属性 —— 不然，编译器该向你抱怨存在多个应用入口了。</p>
+<h2>总结</h2>
+<p>至此，让我们讨论一下苹果为什么要进行这些改变。我觉得有以下的几个原因：</p>
+<p><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0281-main-attribute.md#motivation">SE-0281</a> explicitly states that one of the design goals was <strong>“to offer a more general purpose and lightweight mechanism for delegating a program’s entry point to a designated type.”</strong></p>
+<p>苹果选择的基于 DSL 来处理应用生命周期的方法和 SwiftUI 的声明式 UI 搭建方法相契合。两者采用相同的概念可以更方便新加入的开发者们理解。</p>
+<p>声明式方法的主要好处是：框架/平台将替代开发者承受实现特定功能的负担。如果需要进行任何更改，这种模式可以在不破坏许多开发人员的应用的情况下进行发布，这也使发布更改变得更容易 —— 理想情况下，开发人员无需更改其实现，因为框架将把一切都搞定。</p>
+<p>总体而言，新的应用生命周期模型使实现应用程序的启动更加简单。你的代码将变得更加简洁，更易于维护 —— 要我说，这总是一件好事。</p>
+<p>我希望本文能帮你了解新的应用生命周期的来龙去脉。如果你有关于本文的任何疑问或评论，欢迎<a href="https://twitter.com/peterfriese">在 Twitter 上关注</a>并私信我，或者在 <a href="https://github.com/peterfriese/Colors">GitHub 上的样例项目</a>中提 issue。</p>
+<p>感谢你的阅读！</p>
+<h2>扩展阅读</h2>
+<p>想了解更多，请查看下面的这些资料：</p>
+<ul>
+<li><a href="https://github.com/apple/swift-evolution/blob/master/proposals/0281-main-attribute.md">Swift Evolution SE-0281 - @main: Type-Based Program Entry Points</a></li>
+<li><a href="https://developer.apple.com/documentation/swiftui/app">The App Protocol</a></li>
+<li><a href="https://developer.apple.com/documentation/xcode/allowing_apps_and_websites_to_link_to_your_content">Allowing Apps and Websites to Link to Your Content</a></li>
+</ul>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
 </div>
 <div class="footer"></div>
 </body>

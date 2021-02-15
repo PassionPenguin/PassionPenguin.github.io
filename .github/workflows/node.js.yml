@@ -35,7 +35,6 @@ jobs:
       - name: Generate HTML Pages with Markdown Files
           cd documents
           # documents/*.md => archive/*.html
-
           for f in *.md; do md2html -o ../archive $f; done
 
       - name: Commit Generated HTML Pages

@@ -51,7 +51,7 @@
         $(".container")[0].appendChild(container);
     }
 
-    fetch("config/translation.min.json")
+    fetch("config/article.min.json")
         .then(response => response.json())
         .then(data => {
             data.forEach(e => {

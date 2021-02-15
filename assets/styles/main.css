@@ -4720,7 +4720,7 @@ html, body {
     font-size: 24px;
   }
 
-  .indexPage .container {
+  .indexPage > .container {
     display: flex;
     flex-direction: row-reverse;
   }

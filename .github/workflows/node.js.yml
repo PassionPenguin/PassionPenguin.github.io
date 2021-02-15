@@ -36,6 +36,8 @@ jobs:
           cd documents
           # documents/*.md => archive/*.html
           for f in *.md; do md2html -o ../archive $f; done
+          cd ../archive
+          ls-minifier *.html --silent --override --html-compressor=html-minifier
 
       - name: Commit Generated HTML Pages
         run: |
@@ -48,9 +50,6 @@ jobs:
 
       - name: Compress Files
         run: |
-          # compress html files
-          cd ./archive
-          ls-minifier *.html --silent --override --html-compressor=html-minifier
           cd ../
           ls-minifier **/*.css --silent --css-compressor=yui
           ls-minifier **/*.js --silent --js-compressor=gcc

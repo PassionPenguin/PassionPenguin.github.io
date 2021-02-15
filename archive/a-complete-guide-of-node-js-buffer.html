@@ -1,11 +1,11 @@
-<!doctype html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Node.js 缓冲区的完整指南 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><link rel=stylesheet href=//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://medium.com/javascript-in-plain-english/a-complete-guide-of-node-js-buffer-3a38d2d949b1>A Complete Guide of Node.js Buffer</a><li>原文作者：<a href=https://medium.com/@harsh-patel>Harsh Patel</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/a-complete-guide-of-node-js-buffer.md>https://github.com/xitu/gold-miner/blob/master/article/2021/a-complete-guide-of-node-js-buffer.md</a><li>译者：<a href=https://github.com/PassionPenguin>霜羽 Hoarfroster</a><li>校对者：<a href=https://github.com/flashhu>flashhu</a>、<a href=https://github.com/regon-cao>regon-cao</a></ul></blockquote><h1>Node.js 缓冲区的完整指南</h1><p>二进制流是大量的二进制数据的集合。由于通常情况下二进制流的大小挺大的，因此二进制流一般不会一起运送，而会在运输前切分成小块然后逐一发送。<p>当数据处理单元暂时不再接收其他数据流时，剩余的数据将会被保留在缓存中，直到数据处理单元准备好接收更多数据为止。<p>Node.js 服务器一般需要在文件系统中进行读写，而文件在存储层面而言其实都是二进制流。除此之外，Node.js 还能与 TCP 流一起使用，让 TCP 流在不可靠的互联网络上提供可靠的端到端字节流保障通信。<p>发送给接收者的数据流会被缓冲，直到接收者准备接收更多要处理的数据为止。这就是 Node.js 处理临时数据部分的工作内容 —— 在 V8 引擎外部管理和存储二进制数据。<p>让我们一起深入缓冲区（<code>Buffer</code>）的各种使用方法，了解更多有关它们的信息以及一起学习如何在 Node.js 程序中使用它们吧。<p><img src=https://cdn-images-1.medium.com/max/2000/0*RbpNfHqVXY39GYeC.png alt=""><h2>Node.js Buffer 的方法</h2><p>Node.js 缓冲模块的最大优势，其实就是它是内置于 Node.js 中的，因此我们可以在任何我们想要使用它的地方使用它。<p>让我们一起浏览一些重要的 Node.js 缓冲模块的方法吧。<h4><code>Buffer.alloc()</code></h4><p>此方法将创建一个新的缓冲区，但是分配的大小不是固定的。当我们调用此方法时，可以自行分配大小（以字节为单位）。<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> buf = Buffer.alloc(<span class=hljs-number>6</span>)  <span class=hljs-comment>// 这会创建一个 6 字节的缓冲区</span>
+<!doctype html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Node.js 缓冲区的完整指南 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><link rel=stylesheet href=//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://medium.com/javascript-in-plain-english/a-complete-guide-of-node-js-buffer-3a38d2d949b1>A Complete Guide of Node.js Buffer</a><li>原文作者：<a href=https://medium.com/@harsh-patel>Harsh Patel</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/a-complete-guide-of-node-js-buffer.md>https://github.com/xitu/gold-miner/blob/master/article/2021/a-complete-guide-of-node-js-buffer.md</a><li>译者：<a href=https://github.com/PassionPenguin>霜羽 Hoarfroster</a><li>校对者：<a href=https://github.com/flashhu>flashhu</a>、<a href=https://github.com/regon-cao>regon-cao</a></ul></blockquote><h1>Node.js 缓冲区的完整指南</h1><p>二进制流是大量的二进制数据的集合。由于通常情况下二进制流的大小挺大的，因此二进制流一般不会一起运送，而会在运输前切分成小块然后逐一发送。<p>当数据处理单元暂时不再接收其他数据流时，剩余的数据将会被保留在缓存中，直到数据处理单元准备好接收更多数据为止。<p>Node.js 服务器一般需要在文件系统中进行读写，而文件在存储层面而言其实都是二进制流。除此之外，Node.js 还能与 TCP 流一起使用，让 TCP 流在不可靠的互联网络上提供可靠的端到端字节流保障通信。<p>发送给接收者的数据流会被缓冲，直到接收者准备接收更多要处理的数据为止。这就是 Node.js 处理临时数据部分的工作内容 —— 在 V8 引擎外部管理和存储二进制数据。<p>让我们一起深入缓冲区（<code>Buffer</code>）的各种使用方法，了解更多有关它们的信息以及一起学习如何在 Node.js 程序中使用它们吧。<p><img src=https://cdn-images-1.medium.com/max/2000/0*RbpNfHqVXY39GYeC.png alt=""><h2>Node.js Buffer 的方法</h2><p>Node.js 缓冲模块的最大优势，其实就是它是内置于 Node.js 中的，因此我们可以在任何我们想要使用它的地方使用它。<p>让我们一起浏览一些重要的 Node.js 缓冲模块的方法吧。<h4><code>Buffer.alloc()</code></h4><p>此方法将创建一个新的缓冲区，但是分配的大小不是固定的。当我们调用此方法时，可以自行分配大小（以字节为单位）。<pre class=hljs><code><span class=hljs-keyword>const</span> buf = Buffer.alloc(<span class=hljs-number>6</span>)  <span class=hljs-comment>// 这会创建一个 6 字节的缓冲区</span>
 
 <span class=hljs-built_in>console</span>.log(buf) <span class=hljs-comment>// &lt;Buffer 00 00 00 00 00 00&gt;</span>
-</code></pre><h4><code>Buffer.byteLength()</code></h4><p>如果我们想要获取缓冲区的长度，我们只需调用<code>Buffer.byteLength()</code>就行了。<pre class=hljs v-pre><code><span class=hljs-keyword>var</span> buf = Buffer.alloc(<span class=hljs-number>10</span>)
+</code></pre><h4><code>Buffer.byteLength()</code></h4><p>如果我们想要获取缓冲区的长度，我们只需调用<code>Buffer.byteLength()</code>就行了。<pre class=hljs><code><span class=hljs-keyword>var</span> buf = Buffer.alloc(<span class=hljs-number>10</span>)
 <span class=hljs-keyword>var</span> buffLen = Buffer.byteLength(buf) <span class=hljs-comment>// 检查缓冲区长度</span>
 
 <span class=hljs-built_in>console</span>.log(buffLen) <span class=hljs-comment>// 10</span>
-</code></pre><h4><code>Buffer.compare()</code></h4><p>通过使用<code>Buffer.compare()</code>我们可以比较两个缓冲区，此方法的返回值是<code>-1</code>，<code>0</code>，<code>1</code>中的一个。<p>译者注：<code>buf.compare(otherBuffer);</code>这一句调用会返回一个数字<code>-1</code>，<code>0</code>，<code>1</code>，分别对应<code>buf</code>在<code>otherBuffer</code>之前，之后或相同。<pre class=hljs v-pre><code><span class=hljs-keyword>var</span> buf1 = Buffer.from(<span class=hljs-string>&#x27;Harsh&#x27;</span>)
+</code></pre><h4><code>Buffer.compare()</code></h4><p>通过使用<code>Buffer.compare()</code>我们可以比较两个缓冲区，此方法的返回值是<code>-1</code>，<code>0</code>，<code>1</code>中的一个。<p>译者注：<code>buf.compare(otherBuffer);</code>这一句调用会返回一个数字<code>-1</code>，<code>0</code>，<code>1</code>，分别对应<code>buf</code>在<code>otherBuffer</code>之前，之后或相同。<pre class=hljs><code><span class=hljs-keyword>var</span> buf1 = Buffer.from(<span class=hljs-string>&#x27;Harsh&#x27;</span>)
 <span class=hljs-keyword>var</span> buf2 = Buffer.from(<span class=hljs-string>&#x27;Harsg&#x27;</span>)
 <span class=hljs-keyword>var</span> a = Buffer.compare(buf1, buf2)
 <span class=hljs-built_in>console</span>.log(a) <span class=hljs-comment>// 这会打印 0</span>
@@ -20,7 +20,7 @@
 <span class=hljs-keyword>var</span> buf2 = Buffer.from(<span class=hljs-string>&#x27;a&#x27;</span>)
 <span class=hljs-keyword>var</span> a = Buffer.compare(buf1, buf2)
 <span class=hljs-built_in>console</span>.log(a) <span class=hljs-comment>// 这会打印 1</span>
-</code></pre><h4><code>Buffer.concat()</code></h4><p>顾名思义，我们可以使用此函数连接两个缓冲区。当然，就像字符串一样，我们也可以连接两个以上的缓冲区。<pre class=hljs v-pre><code><span class=hljs-keyword>var</span> buffer1 = Buffer.from(<span class=hljs-string>&#x27;x&#x27;</span>)
+</code></pre><h4><code>Buffer.concat()</code></h4><p>顾名思义，我们可以使用此函数连接两个缓冲区。当然，就像字符串一样，我们也可以连接两个以上的缓冲区。<pre class=hljs><code><span class=hljs-keyword>var</span> buffer1 = Buffer.from(<span class=hljs-string>&#x27;x&#x27;</span>)
 <span class=hljs-keyword>var</span> buffer2 = Buffer.from(<span class=hljs-string>&#x27;y&#x27;</span>)
 <span class=hljs-keyword>var</span> buffer3 = Buffer.from(<span class=hljs-string>&#x27;z&#x27;</span>)
 <span class=hljs-keyword>var</span> arr = [buffer1, buffer2, buffer3]
@@ -33,23 +33,23 @@
 
 <span class=hljs-built_in>console</span>.log(buf)
 <span class=hljs-comment>// &lt;Buffer 78 79 7a&gt; concat successful</span>
-</code></pre><h4><code>Buffer.entries()</code></h4><p><code>Buffer.entries()</code>会用这一缓冲区的内容创建并返回一个 [index, byte] 形式的迭代器。<pre class=hljs v-pre><code><span class=hljs-keyword>var</span> buf = Buffer.from(<span class=hljs-string>&#x27;xyz&#x27;</span>)
+</code></pre><h4><code>Buffer.entries()</code></h4><p><code>Buffer.entries()</code>会用这一缓冲区的内容创建并返回一个 [index, byte] 形式的迭代器。<pre class=hljs><code><span class=hljs-keyword>var</span> buf = Buffer.from(<span class=hljs-string>&#x27;xyz&#x27;</span>)
 
 <span class=hljs-keyword>for</span> (a <span class=hljs-keyword>of</span> buf.entries()) {
     <span class=hljs-built_in>console</span>.log(a)
     <span class=hljs-comment>/* 这个会在控制台输出一个有缓冲区位置与内容的字节的数组 [ 0, 120 ][ 1, 121 ][ 2, 122 ] */</span>
 }
-</code></pre><h4><code>Buffer.fill()</code></h4><p>我们可以使用<code>Buffer.fill()</code>这个函数将数据插入或填充到缓冲区中。更多信息请参见下文。<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> b = Buffer.alloc(<span class=hljs-number>10</span>).fill(<span class=hljs-string>&#x27;a&#x27;</span>)
+</code></pre><h4><code>Buffer.fill()</code></h4><p>我们可以使用<code>Buffer.fill()</code>这个函数将数据插入或填充到缓冲区中。更多信息请参见下文。<pre class=hljs><code><span class=hljs-keyword>const</span> b = Buffer.alloc(<span class=hljs-number>10</span>).fill(<span class=hljs-string>&#x27;a&#x27;</span>)
 
 <span class=hljs-built_in>console</span>.log(b.toString())
 <span class=hljs-comment>// aaaaaaaaaa</span>
-</code></pre><h4><code>Buffer.includes()</code></h4><p>像字符串一样，它将确认缓冲区是否具有该值。我们可以使用<code>Buffer.includes()</code>方法来实现这一点，给定方法根据搜索返回一个布尔值，即<code>true</code>或<code>false</code>。<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> buf = Buffer.from(<span class=hljs-string>&#x27;this is a buffer&#x27;</span>)
+</code></pre><h4><code>Buffer.includes()</code></h4><p>像字符串一样，它将确认缓冲区是否具有该值。我们可以使用<code>Buffer.includes()</code>方法来实现这一点，给定方法根据搜索返回一个布尔值，即<code>true</code>或<code>false</code>。<pre class=hljs><code><span class=hljs-keyword>const</span> buf = Buffer.from(<span class=hljs-string>&#x27;this is a buffer&#x27;</span>)
 <span class=hljs-built_in>console</span>.log(buf.includes(<span class=hljs-string>&#x27;this&#x27;</span>))
 <span class=hljs-comment>// true</span>
 
 <span class=hljs-built_in>console</span>.log(buf.includes(Buffer.from(<span class=hljs-string>&#x27;a buffer example&#x27;</span>)))
 <span class=hljs-comment>// false</span>
-</code></pre><h4><code>Buffer.isEncoding()</code></h4><p>我们可能知道二进制文件必须进行编码，那么如果我们要检查数据类型是否支持字符编码该怎么办呢？我们可以使用<code>Buffer.isEncoding()</code>方法进行确认。如果支持，它将返回<code>true</code>。<pre class=hljs v-pre><code><span class=hljs-built_in>console</span>.log(Buffer.isEncoding(<span class=hljs-string>&#x27;hex&#x27;</span>))
+</code></pre><h4><code>Buffer.isEncoding()</code></h4><p>我们可能知道二进制文件必须进行编码，那么如果我们要检查数据类型是否支持字符编码该怎么办呢？我们可以使用<code>Buffer.isEncoding()</code>方法进行确认。如果支持，它将返回<code>true</code>。<pre class=hljs><code><span class=hljs-built_in>console</span>.log(Buffer.isEncoding(<span class=hljs-string>&#x27;hex&#x27;</span>))
 <span class=hljs-comment>// true</span>
 
 <span class=hljs-built_in>console</span>.log(Buffer.isEncoding(<span class=hljs-string>&#x27;utf-8&#x27;</span>))
@@ -60,12 +60,12 @@
 
 <span class=hljs-built_in>console</span>.log(Buffer.isEncoding(<span class=hljs-string>&#x27;hey&#x27;</span>))
 <span class=hljs-comment>// false</span>
-</code></pre><h4><code>Buffer.slice()</code></h4><p><code>buf.slice()</code>将用于使用缓冲区的选定元素创建一个新缓冲区 —— 对缓冲区进行切割时，将创建一个新缓冲区，其中包含要在新缓冲区切片中找到的项目的列表。<pre class=hljs v-pre><code><span class=hljs-keyword>var</span> a = Buffer.from(<span class=hljs-string>&#x27;uvwxyz&#x27;</span>);
+</code></pre><h4><code>Buffer.slice()</code></h4><p><code>buf.slice()</code>将用于使用缓冲区的选定元素创建一个新缓冲区 —— 对缓冲区进行切割时，将创建一个新缓冲区，其中包含要在新缓冲区切片中找到的项目的列表。<pre class=hljs><code><span class=hljs-keyword>var</span> a = Buffer.from(<span class=hljs-string>&#x27;uvwxyz&#x27;</span>);
 <span class=hljs-keyword>var</span> b = a.slice(<span class=hljs-number>2</span>, <span class=hljs-number>5</span>);
 
 <span class=hljs-built_in>console</span>.log(b.toString());
 <span class=hljs-comment>// wxy</span>
-</code></pre><h4><code>Buffer.swapX()</code></h4><p><code>Buffer.swapX()</code>用于交换缓冲区的字节顺序。使用<code>Buffer.swapX()</code>（此处<code>X</code>可以为 16, 32, 64）来交换 16 位，32 位和 64 位缓冲区对象的字节顺序。<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> buf1 = Buffer.from([<span class=hljs-number>0x1</span>, <span class=hljs-number>0x2</span>, <span class=hljs-number>0x3</span>, <span class=hljs-number>0x4</span>, <span class=hljs-number>0x5</span>, <span class=hljs-number>0x6</span>, <span class=hljs-number>0x7</span>, <span class=hljs-number>0x8</span>])
+</code></pre><h4><code>Buffer.swapX()</code></h4><p><code>Buffer.swapX()</code>用于交换缓冲区的字节顺序。使用<code>Buffer.swapX()</code>（此处<code>X</code>可以为 16, 32, 64）来交换 16 位，32 位和 64 位缓冲区对象的字节顺序。<pre class=hljs><code><span class=hljs-keyword>const</span> buf1 = Buffer.from([<span class=hljs-number>0x1</span>, <span class=hljs-number>0x2</span>, <span class=hljs-number>0x3</span>, <span class=hljs-number>0x4</span>, <span class=hljs-number>0x5</span>, <span class=hljs-number>0x6</span>, <span class=hljs-number>0x7</span>, <span class=hljs-number>0x8</span>])
 <span class=hljs-built_in>console</span>.log(buf1)
 <span class=hljs-comment>// &lt;Buffer 01 02 03 04 05 06 07 08&gt;</span>
 
@@ -83,7 +83,7 @@ buf1.swap32()
 buf1.swap64()
 <span class=hljs-built_in>console</span>.log(buf1)
 <span class=hljs-comment>// &lt;Buffer 06 05 08 07 02 01 04 03&gt;</span>
-</code></pre><h4><code>Buffer.json()</code></h4><p>它可以帮助我们从缓冲区创建 JSON 对象，而该方法将返回 JSON 缓冲区对象，<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> buf = Buffer.from([<span class=hljs-number>0x1</span>, <span class=hljs-number>0x2</span>, <span class=hljs-number>0x3</span>, <span class=hljs-number>0x4</span>, <span class=hljs-number>0x5</span>, <span class=hljs-number>0x6</span>, <span class=hljs-number>0x7</span>, <span class=hljs-number>0x8</span>]);
+</code></pre><h4><code>Buffer.json()</code></h4><p>它可以帮助我们从缓冲区创建 JSON 对象，而该方法将返回 JSON 缓冲区对象，<pre class=hljs><code><span class=hljs-keyword>const</span> buf = Buffer.from([<span class=hljs-number>0x1</span>, <span class=hljs-number>0x2</span>, <span class=hljs-number>0x3</span>, <span class=hljs-number>0x4</span>, <span class=hljs-number>0x5</span>, <span class=hljs-number>0x6</span>, <span class=hljs-number>0x7</span>, <span class=hljs-number>0x8</span>]);
 
 <span class=hljs-built_in>console</span>.log(buf.toJSON());
 <span class=hljs-comment>// {&quot;type&quot;:&quot;Buffer&quot;, data:[1, 2, 3, 4, 5, 6, 7, 8]}</span>

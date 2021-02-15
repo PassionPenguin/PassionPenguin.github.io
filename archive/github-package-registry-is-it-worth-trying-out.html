@@ -1,146 +1,23 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>GitHub Package Registry 值得尝试吗 - Hoarfroster</title>
-    <link rel="stylesheet" href="/assets/styles/post.css">
-    <link rel="stylesheet"
-      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css">
-</head>
-<body>
-<div class="container post markdown-body"><blockquote>
-<ul>
-<li>原文地址：<a href="https://blog.bitsrc.io/github-package-registry-is-it-worth-trying-out-62163aa3d518">GitHub Package Registry: Is it Worth Trying Out?</a></li>
-<li>原文作者：<a href="https://medium.com/@chameeradulanga">Chameera Dulanga</a></li>
-<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
-<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2020/github-package-registry-is-it-worth-trying-out.md">https://github.com/xitu/gold-miner/blob/master/article/2020/github-package-registry-is-it-worth-trying-out.md</a></li>
-<li>译者：<a href="https://github.com/zenblo">zenblo</a></li>
-<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a></li>
-</ul>
-</blockquote>
-<h1>GitHub Package Registry 值得尝试吗</h1>
-<p><img src="https://cdn-images-1.medium.com/max/10392/0*5jrNYn-hF3R_LkQi" alt="Photo by Nana Smirnova on Unsplash"></p>
-<p>GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随着完成对 GitHub 和 NPM 的收购，这一功能似乎是微软扩展 GitHub 生态系统的绝佳举措。同时，GitHub 使用以下标语来强调这一事实：</p>
-<blockquote>
-<p>GitHub Package Registry 能够更好地管理代码。 — GitHub</p>
-</blockquote>
-<p>但是仅凭这一点就值得去尝试吗？我们首先考虑是否真的需要另一个包管理器吗？</p>
-<p>让我们来了解更多内容。</p>
-<h2>是否值得尝试</h2>
-<p>如果你是 GitHub 的 4000 万用户中的一员，只需点击你的 <code>GitHub profile</code> 或 <code>GitHub Organization</code> 下的一个标签就可以访问 GitHub Package Registry。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2538/1*PowgC6YYeQ7J7oN1edD9Vw.png" alt="Screenshot of GitHub Package Registry under my profile"></p>
-<blockquote>
-<p>当我第一次尝试使用 GitHub Package Registry 时，我发现它直观且容易上手。我是从免费版开始，这对于一个几乎没有私有软件包的小型项目来说似乎已经足够使用。</p>
-</blockquote>
-<p>然而，你可能想知道 GitHub 包管理器是否会作为一个核心特性脱颖而出？到目前为止，GitHub 已经巧妙地将它放在其核心产品组合中。此外，GitHub 已经实现了一套具有较高影响力的功能体系让我们尝试使用。</p>
-<p>让我们来看一下它的一些特性，这些特性将它推向了一个新的高度。</p>
-<h3>1. 支持 5 种语言和客户端</h3>
-<p>与专注于 NodeJS 包的 NPM 不同，GitHub 包注册中心支持一系列包类型和客户端，如下所示：</p>
-<p><img src="https://cdn-images-1.medium.com/max/3056/1*CNuP0W1N0Uebuajvx46A1w.png" alt="Support for package registries, Source: [GitHub](http://Support for package registries)"></p>
-<p>在即将到来的版本更新中，我们可以期待它会支持更多的开发工具和客户端。</p>
-<blockquote>
-<p><a href="https://github.blog/2019-06-03-github-package-registry-will-support-swift-packages/">对 Swift 的支持</a>已经处于测试阶段，我们能预期它会在几个月后上线。</p>
-</blockquote>
-<p>由于 GitHub Package Registry 支持多种包格式，从而为托管不同的软件包带来了方便，在有不同技术栈的微服务项目中也能很好地使用。</p>
-<h3>2. 集成工作流与 GitHub Actions</h3>
-<p>结合 GitHub API、GitHub Actions 和 WebHooks，可以开发实现端到端 DevOps 工作流集成，包括 CI/CD 管道。你还可以使用 GraphQL 和 WebHooks 自定义发布前和发布后的工作流。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*PECyA1fWltGS1dZo9g7f-w.png" alt="GitHub Package Management Tasks in GitHub Actions Marketplace"></p>
-<blockquote>
-<p>你已经可以在 GitHub Actions 中找到预先构建的任务，以简化 GitHub Package Management 流程。</p>
-</blockquote>
-<p>简而言之，通过与 GitHub Actions 本地集成，你可以在一个地方自动化整个包生命周期及操作。</p>
-<h3>3. 用户和工具的访问控制</h3>
-<p>这允许在一个位置管理代码仓库和包。它还简化了 CI/CD 管道的访问控制。此外，GitHub 认证可以用来访问源代码和私有包。</p>
-<blockquote>
-<p>因为 GitHub 包继承了与代码仓库相关联的权限，你不需要维护单独的包注册表权限。</p>
-</blockquote>
-<p>你还可以根据需求选择将包托管为公共或私有。</p>
-<h3>4. 在一个地方监管项目代码和包</h3>
-<p>与其他包管理器类似，Github Package Registry 允许在下载之前查看包内容、下载统计数据和历史版本，以便在下载前有更好地了解。</p>
-<blockquote>
-<p>因为我们可以通过查看 GitHub 项目的 stars 和 forks 来了解它的活跃度，所以有助于找到合适的包以便我们在代码中使用。</p>
-</blockquote>
-<p>即使有了 NPM 包，我还是习惯去 GitHub 看项目的 star 数量、贡献者数量，并查看最近提交的日期记录，现在你可以在一个地方找到这些内容。</p>
-<h2>已在其他地方托管包的情况处理</h2>
-<p>好消息是你不必这样担心，特别是对于公共软件包。假设你的私有软件包依赖于任何其他公共软件包注册中心，例如 NPM。一旦将根软件包移至 GitHub Package Registry，这些依赖关系仍将完好保持运行。实际上，将 NPM 软件包移至 GitHub Package Registry 后，只需更改注册表 URL 地址和访问控制机制。</p>
-<p>让我们来看一个简单的示例，以便了解如何使用 GitHub Package Registry 发布 NPM 软件包并逐步使用它。</p>
-<h3>Step 1：验证 GitHub Package Registry</h3>
-<p>首先，你需要有一个 GitHub 访问令牌才能向 GitHub 注册表验证你的身份。你既可以使用现有的令牌，也可以使用 <a href="https://github.com/settings/tokens/new">https://github.com/settings/tokens/new</a> 创建一个令牌。在这里，我将令牌命名为 <strong>githubReg</strong>。</p>
-<p><img src="https://cdn-images-1.medium.com/max/4046/1*mBJOGUKYRHObEQvd4c4iZA.png" alt="Screenshot by Author: Creating a new access token"></p>
-<p>你需要设置 .npmrc 文件，该文件是有关 NPM 客户端如何与 NPM 注册表本身进行通信的配置。打开终端并运行 <code>code .npmr</code>。它将打开一个空白文件，并用你的 access_token 替换以下对应内容。</p>
-<pre class="hljs"><code>//npm.pkg.github.com/:_authToken=TOKEN
-</code></pre>
-<p>然后初始化一个新的 NPM 项目，打开 VSCode 并运行 <code>npm init</code> 命令。</p>
-<h3>Step 2：进行打包发布</h3>
-<p>在项目的根目录中创建一个本地 .nmprc 文件，并添加以下内容。在这里，将 OWNER 替换为你的用户名或组织名。</p>
-<pre class="hljs"><code>@OWNER:registry=https://npm.pkg.github.com/
-</code></pre>
-<p>创建 JavaScript 主程序文件并编写一个简单函数。在这里，我在根目录中创建了一个名为 index.js 的文件来测试该软件包。</p>
-<pre class="hljs"><code>module.export = () =&gt; {
+<!doctype html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>GitHub Package Registry 值得尝试吗 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><link rel=stylesheet href=//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://blog.bitsrc.io/github-package-registry-is-it-worth-trying-out-62163aa3d518>GitHub Package Registry: Is it Worth Trying Out?</a><li>原文作者：<a href=https://medium.com/@chameeradulanga>Chameera Dulanga</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2020/github-package-registry-is-it-worth-trying-out.md>https://github.com/xitu/gold-miner/blob/master/article/2020/github-package-registry-is-it-worth-trying-out.md</a><li>译者：<a href=https://github.com/zenblo>zenblo</a><li>校对者：<a href=https://github.com/PassionPenguin>PassionPenguin</a></ul></blockquote><h1>GitHub Package Registry 值得尝试吗</h1><p><img src=https://cdn-images-1.medium.com/max/10392/0*5jrNYn-hF3R_LkQi alt="Photo by Nana Smirnova on Unsplash"><p>GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随着完成对 GitHub 和 NPM 的收购，这一功能似乎是微软扩展 GitHub 生态系统的绝佳举措。同时，GitHub 使用以下标语来强调这一事实：<blockquote><p>GitHub Package Registry 能够更好地管理代码。 — GitHub</blockquote><p>但是仅凭这一点就值得去尝试吗？我们首先考虑是否真的需要另一个包管理器吗？<p>让我们来了解更多内容。<h2>是否值得尝试</h2><p>如果你是 GitHub 的 4000 万用户中的一员，只需点击你的<code>GitHub profile</code>或<code>GitHub Organization</code>下的一个标签就可以访问 GitHub Package Registry。<p><img src=https://cdn-images-1.medium.com/max/2538/1*PowgC6YYeQ7J7oN1edD9Vw.png alt="Screenshot of GitHub Package Registry under my profile"><blockquote><p>当我第一次尝试使用 GitHub Package Registry 时，我发现它直观且容易上手。我是从免费版开始，这对于一个几乎没有私有软件包的小型项目来说似乎已经足够使用。</blockquote><p>然而，你可能想知道 GitHub 包管理器是否会作为一个核心特性脱颖而出？到目前为止，GitHub 已经巧妙地将它放在其核心产品组合中。此外，GitHub 已经实现了一套具有较高影响力的功能体系让我们尝试使用。<p>让我们来看一下它的一些特性，这些特性将它推向了一个新的高度。<h3>1. 支持 5 种语言和客户端</h3><p>与专注于 NodeJS 包的 NPM 不同，GitHub 包注册中心支持一系列包类型和客户端，如下所示：<p><img src=https://cdn-images-1.medium.com/max/3056/1*CNuP0W1N0Uebuajvx46A1w.png alt="Support for package registries, Source: [GitHub](http://Support for package registries)"><p>在即将到来的版本更新中，我们可以期待它会支持更多的开发工具和客户端。<blockquote><p><a href=https://github.blog/2019-06-03-github-package-registry-will-support-swift-packages/ >对 Swift 的支持</a>已经处于测试阶段，我们能预期它会在几个月后上线。</blockquote><p>由于 GitHub Package Registry 支持多种包格式，从而为托管不同的软件包带来了方便，在有不同技术栈的微服务项目中也能很好地使用。<h3>2. 集成工作流与 GitHub Actions</h3><p>结合 GitHub API、GitHub Actions 和 WebHooks，可以开发实现端到端 DevOps 工作流集成，包括 CI/CD 管道。你还可以使用 GraphQL 和 WebHooks 自定义发布前和发布后的工作流。<p><img src=https://cdn-images-1.medium.com/max/2000/1*PECyA1fWltGS1dZo9g7f-w.png alt="GitHub Package Management Tasks in GitHub Actions Marketplace"><blockquote><p>你已经可以在 GitHub Actions 中找到预先构建的任务，以简化 GitHub Package Management 流程。</blockquote><p>简而言之，通过与 GitHub Actions 本地集成，你可以在一个地方自动化整个包生命周期及操作。<h3>3. 用户和工具的访问控制</h3><p>这允许在一个位置管理代码仓库和包。它还简化了 CI/CD 管道的访问控制。此外，GitHub 认证可以用来访问源代码和私有包。<blockquote><p>因为 GitHub 包继承了与代码仓库相关联的权限，你不需要维护单独的包注册表权限。</blockquote><p>你还可以根据需求选择将包托管为公共或私有。<h3>4. 在一个地方监管项目代码和包</h3><p>与其他包管理器类似，Github Package Registry 允许在下载之前查看包内容、下载统计数据和历史版本，以便在下载前有更好地了解。<blockquote><p>因为我们可以通过查看 GitHub 项目的 stars 和 forks 来了解它的活跃度，所以有助于找到合适的包以便我们在代码中使用。</blockquote><p>即使有了 NPM 包，我还是习惯去 GitHub 看项目的 star 数量、贡献者数量，并查看最近提交的日期记录，现在你可以在一个地方找到这些内容。<h2>已在其他地方托管包的情况处理</h2><p>好消息是你不必这样担心，特别是对于公共软件包。假设你的私有软件包依赖于任何其他公共软件包注册中心，例如 NPM。一旦将根软件包移至 GitHub Package Registry，这些依赖关系仍将完好保持运行。实际上，将 NPM 软件包移至 GitHub Package Registry 后，只需更改注册表 URL 地址和访问控制机制。<p>让我们来看一个简单的示例，以便了解如何使用 GitHub Package Registry 发布 NPM 软件包并逐步使用它。<h3>Step 1：验证 GitHub Package Registry</h3><p>首先，你需要有一个 GitHub 访问令牌才能向 GitHub 注册表验证你的身份。你既可以使用现有的令牌，也可以使用<a href=https://github.com/settings/tokens/new>https://github.com/settings/tokens/new</a>创建一个令牌。在这里，我将令牌命名为<strong>githubReg</strong>。<p><img src=https://cdn-images-1.medium.com/max/4046/1*mBJOGUKYRHObEQvd4c4iZA.png alt="Screenshot by Author: Creating a new access token"><p>你需要设置 .npmrc 文件，该文件是有关 NPM 客户端如何与 NPM 注册表本身进行通信的配置。打开终端并运行<code>code .npmr</code>。它将打开一个空白文件，并用你的 access_token 替换以下对应内容。<pre class=hljs><code>//npm.pkg.github.com/:_authToken=TOKEN
+</code></pre><p>然后初始化一个新的 NPM 项目，打开 VSCode 并运行<code>npm init</code>命令。<h3>Step 2：进行打包发布</h3><p>在项目的根目录中创建一个本地 .nmprc 文件，并添加以下内容。在这里，将 OWNER 替换为你的用户名或组织名。<pre class=hljs><code>@OWNER:registry=https://npm.pkg.github.com/
+</code></pre><p>创建 JavaScript 主程序文件并编写一个简单函数。在这里，我在根目录中创建了一个名为 index.js 的文件来测试该软件包。<pre class=hljs><code>module.export = () =&gt; {
    console.log(&quot;hello new one&quot;);
 }
-</code></pre>
-<p>接着，你需要验证软件包的名称，并将项目仓库添加到项目 package.json 文件中，然后将所有更改推送到 git。</p>
-<p><strong>注意：</strong> 这里你需要创建自己的项目仓库，并将其细节添加到下面的文件中。</p>
-<pre class="hljs" v-pre><code>{
-   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;@ChameeraD/pkg-git-demo&quot;</span>,
-   <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
-   <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
-   <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;index.js&quot;</span>,
-   <span class="hljs-attr">&quot;scripts&quot;</span>: {
-      <span class="hljs-attr">&quot;test&quot;</span>: <span class="hljs-string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>
+</code></pre><p>接着，你需要验证软件包的名称，并将项目仓库添加到项目 package.json 文件中，然后将所有更改推送到 git。<p><strong>注意：</strong>这里你需要创建自己的项目仓库，并将其细节添加到下面的文件中。<pre class=hljs v-pre><code>{
+   <span class=hljs-attr>&quot;name&quot;</span>: <span class=hljs-string>&quot;@ChameeraD/pkg-git-demo&quot;</span>,
+   <span class=hljs-attr>&quot;version&quot;</span>: <span class=hljs-string>&quot;1.0.0&quot;</span>,
+   <span class=hljs-attr>&quot;description&quot;</span>: <span class=hljs-string>&quot;&quot;</span>,
+   <span class=hljs-attr>&quot;main&quot;</span>: <span class=hljs-string>&quot;index.js&quot;</span>,
+   <span class=hljs-attr>&quot;scripts&quot;</span>: {
+      <span class=hljs-attr>&quot;test&quot;</span>: <span class=hljs-string>&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>
    },
-   <span class="hljs-attr">&quot;repository&quot;</span>: {
-      <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;git://github.com/ChameeraD/pkg-git-demo.git.&quot;</span>
+   <span class=hljs-attr>&quot;repository&quot;</span>: {
+      <span class=hljs-attr>&quot;url&quot;</span>: <span class=hljs-string>&quot;git://github.com/ChameeraD/pkg-git-demo.git.&quot;</span>
    },
-   <span class="hljs-attr">&quot;publishConfig&quot;</span>: {
-      <span class="hljs-attr">&quot;registry&quot;</span>:<span class="hljs-string">&quot;https://npm.pkg.github.com/&quot;</span>
+   <span class=hljs-attr>&quot;publishConfig&quot;</span>: {
+      <span class=hljs-attr>&quot;registry&quot;</span>:<span class=hljs-string>&quot;https://npm.pkg.github.com/&quot;</span>
    },   
-   <span class="hljs-attr">&quot;author&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
-   <span class="hljs-attr">&quot;license&quot;</span>: <span class="hljs-string">&quot;ISC&quot;</span>
+   <span class=hljs-attr>&quot;author&quot;</span>: <span class=hljs-string>&quot;&quot;</span>,
+   <span class=hljs-attr>&quot;license&quot;</span>: <span class=hljs-string>&quot;ISC&quot;</span>
 }
-</code></pre>
-<p>最后，使用 <code>npm publish</code> 发布包。</p>
-<blockquote>
-<p><strong>注意：</strong> 可以创建使用其他 npm 包依赖的 GitHub 软件包。 <a href="https://github.com/GitSquared/edex-ui">eDEX-UI</a> 是一个跨平台的终端仿真器和系统监视器，外观和给人感觉就像是科幻计算机界面，它是一个托管在 GitHub 注册表中的软件包。但是，如果深入研究软件包的实现，会发现它们使用 npm 依赖，像 <strong><code>electron</code>、<code>electron-rebuild</code>、<code>node-abi</code> 和 <code>node-json-minify</code></strong>。</p>
-</blockquote>
-<h3>Step 03：将包作为依赖项使用</h3>
-<p>你可以将包添加到任何项目中。</p>
-<ol>
-<li>在项目根目录创建一个本地 .npmrc 文件，并添加 <code>@OWNER:registry=https://npm.pkg.github.com/</code>，这与我们在创建软件包时的操作类似。</li>
-<li>使用 Yarn 或 NPM 将包添加到项目中。例如使用 Yarn：<code>yarn add @ChameeraD/pkg-git-demo</code>。</li>
-<li>最后，可以将包导入到代码中并使用：
-<code>import demoPkg from ‘@ChameeraD/pkg-git-demo’;</code>
-<code>demoPkg();</code></li>
-</ol>
-<p><img src="https://cdn-images-1.medium.com/max/2196/1*_xmY-6FUmxr8zJG6Znlh0w.png" alt="Screenshot by Author: Output log by of the package"></p>
-<p>尽管 GitHub 包管理器具有很多功能特性，但它也有局限性。</p>
-<h2>GitHub 包管理器局限性</h2>
-<p>为了保持内容简短集中，我将只列举那些影响大多数开发人员的内容。</p>
-<h3>仅支持特定范围的 NPM 包</h3>
-<p>将非作用域的软件包从 npm 迁移到 GitHub package registry 可能会很麻烦，因为 GitHub 仅支持 npm 作用域软件包（例如 <code>npm install @source/my-package</code>）。</p>
-<p>如果你想移动任何没有作用域的现存软件包，则需要添加作用域并修改代码的导入才能正常使用。</p>
-<h3>软件包迁移较困难</h3>
-<p>由于不同技术（<a href="https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages">Docker</a>、<a href="https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages">.NET</a>）之间存在差异，从多个软件包注册中心进行迁移可能很困难。</p>
-<p>如果你已经使用了任何其他包注册表，可能会由于包更新而出现版本问题。例如，如果你在 npm 和 GitHub 注册表中都维护一个包，那么你也需要维护它的版本。因此，最好在知道依赖关系的情况下规划迁移，并使用单个包注册表。</p>
-<h3>较差的自定义性</h3>
-<p>它的自定义性较差，用户无法使用自定义身份验证机制，不能使用自托管注册表。缺少这些功能将限制开发人员离线和在较差网络条件下工作。</p>
-<h2>结论</h2>
-<p>将软件包发布到 GitHub Package Registry 是一种全新的体验，它具有将源代码和软件包保存在一个地方的简单性。</p>
-<p>当前重点是支持多种类型的软件包（已经支持多种类型），而且 GitHub Package Registry 逐渐完善对所有软件包类型的支持。此外，如果你已经将 GitHub 作为项目仓库，那么使用 GitHub Package Registry 就更方便。</p>
-<p>感谢你的阅读！</p>
-<blockquote>
-<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
-</blockquote>
-</div>
-<div class="footer"></div>
-</body>
-<script src="/assets/scripts/index.js"></script>
-<script>init()</script>
-</html>
+</code></pre><p>最后，使用<code>npm publish</code>发布包。<blockquote><p><strong>注意：</strong>可以创建使用其他 npm 包依赖的 GitHub 软件包。<a href=https://github.com/GitSquared/edex-ui>eDEX-UI</a>是一个跨平台的终端仿真器和系统监视器，外观和给人感觉就像是科幻计算机界面，它是一个托管在 GitHub 注册表中的软件包。但是，如果深入研究软件包的实现，会发现它们使用 npm 依赖，像<strong><code>electron</code>、<code>electron-rebuild</code>、<code>node-abi</code>和<code>node-json-minify</code></strong>。</blockquote><h3>Step 03：将包作为依赖项使用</h3><p>你可以将包添加到任何项目中。<ol><li>在项目根目录创建一个本地 .npmrc 文件，并添加<code>@OWNER:registry=https://npm.pkg.github.com/</code>，这与我们在创建软件包时的操作类似。<li>使用 Yarn 或 NPM 将包添加到项目中。例如使用 Yarn：<code>yarn add @ChameeraD/pkg-git-demo</code>。<li>最后，可以将包导入到代码中并使用：<code>import demoPkg from ‘@ChameeraD/pkg-git-demo’;</code><code>demoPkg();</code></ol><p><img src=https://cdn-images-1.medium.com/max/2196/1*_xmY-6FUmxr8zJG6Znlh0w.png alt="Screenshot by Author: Output log by of the package"><p>尽管 GitHub 包管理器具有很多功能特性，但它也有局限性。<h2>GitHub 包管理器局限性</h2><p>为了保持内容简短集中，我将只列举那些影响大多数开发人员的内容。<h3>仅支持特定范围的 NPM 包</h3><p>将非作用域的软件包从 npm 迁移到 GitHub package registry 可能会很麻烦，因为 GitHub 仅支持 npm 作用域软件包（例如<code>npm install @source/my-package</code>）。<p>如果你想移动任何没有作用域的现存软件包，则需要添加作用域并修改代码的导入才能正常使用。<h3>软件包迁移较困难</h3><p>由于不同技术（<a href=https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages>Docker</a>、<a href=https://docs.github.com/en/free-pro-team@latest/packages/using-github-packages-with-your-projects-ecosystem/configuring-docker-for-use-with-github-packages>.NET</a>）之间存在差异，从多个软件包注册中心进行迁移可能很困难。<p>如果你已经使用了任何其他包注册表，可能会由于包更新而出现版本问题。例如，如果你在 npm 和 GitHub 注册表中都维护一个包，那么你也需要维护它的版本。因此，最好在知道依赖关系的情况下规划迁移，并使用单个包注册表。<h3>较差的自定义性</h3><p>它的自定义性较差，用户无法使用自定义身份验证机制，不能使用自托管注册表。缺少这些功能将限制开发人员离线和在较差网络条件下工作。<h2>结论</h2><p>将软件包发布到 GitHub Package Registry 是一种全新的体验，它具有将源代码和软件包保存在一个地方的简单性。<p>当前重点是支持多种类型的软件包（已经支持多种类型），而且 GitHub Package Registry 逐渐完善对所有软件包类型的支持。此外，如果你已经将 GitHub 作为项目仓库，那么使用 GitHub Package Registry 就更方便。<p>感谢你的阅读！<blockquote><p>如果发现译文存在错误或其他需要改进的地方，欢迎到<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>对译文进行修改并 PR，也可获得相应奖励积分。文章开头的<strong>本文永久链接</strong>即为本文在 GitHub 上的 MarkDown 链接。</blockquote><hr><blockquote><p><a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>是一个翻译优质互联网技术文章的社区，文章来源为<a href=https://juejin.im>掘金</a>上的英文分享文章。内容覆盖<a href=https://github.com/xitu/gold-miner#android>Android</a>、<a href=https://github.com/xitu/gold-miner#ios>iOS</a>、<a href=https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF>前端</a>、<a href=https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF>后端</a>、<a href=https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE>区块链</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81>产品</a>、<a href=https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1>设计</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD>人工智能</a>等领域，想要查看更多优质译文请持续关注<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>、<a href=http://weibo.com/juejinfanyi>官方微博</a>、<a href=https://zhuanlan.zhihu.com/juejinfanyi>知乎专栏</a>。</blockquote></div><div class=footer></div><script src=/assets/scripts/index.js></script><script>init()</script>

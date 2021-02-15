@@ -1,218 +1,104 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>掌握这 5 个 TypeScript 高级技巧，成为更好的开发者 - Hoarfroster</title>
-    <link rel="stylesheet" href="/assets/styles/post.css">
-    <link rel="stylesheet"
-      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css">
-</head>
-<body>
-<div class="container post markdown-body"><blockquote>
-<ul>
-<li>原文地址：<a href="https://levelup.gitconnected.com/5-advanced-typescript-tips-to-make-you-a-better-programmer-bd4070aa2ab4">5 Advanced TypeScript Tips To Make You a Better Programmer</a></li>
-<li>原文作者：<a href="https://medium.com/@anth-oleinik">Anthony Oleinik</a></li>
-<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
-<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md">https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md</a></li>
-<li>译者：<a href="https://github.com/Usualminds">Usualminds</a></li>
-<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/zenblo">zenblo</a></li>
-</ul>
-</blockquote>
-<h1>掌握这 5 个 TypeScript 高级技巧，成为更好的开发者</h1>
-<p><img src="https://cdn-images-1.medium.com/max/3200/0*RKICUYO863Mu_2mX.png" alt="Beautiful :)"></p>
-<p>Typescript 是一门神奇的语言 —— 相比 JavaScript 可以实现的所有功能，它只用十分之一的调试时间就可以完成，主要包括以下几点：</p>
-<ul>
-<li>通过编写强类型和可读性更高的代码来减少 bug</li>
-<li>代码中可以集成更多有价值的功能，从而避免重复造轮子</li>
-</ul>
-<p>以下 5 条 TypeScript 的高级使用技巧，可让你写出更好的 TypeScript 代码。</p>
-<h4>1. is 运算符 / 类型保护</h4>
-<p>Swagger 极大地帮助我们了解后端可以提供什么样的服务 —— 但是，通常情况下，开发者往往会得到和约定不一致的 API，其中某些 API 属性可能存在，也可能不存在，或者是根据状态返回不同的对象。</p>
-<p>不幸的是，如果你不知道 API 会返回什么结果，就无法在编译时捕获它们，但我们可以做的是，使其在运行时更加易于处理（和上报！）。</p>
-<p>API 调用一般是 TypeScript 错误的出处 —— 我们通常会将 API 调用的返回结果像下面这样强制转换：</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">const</span> myApiResult = <span class="hljs-keyword">await</span> callApi(<span class="hljs-string">&quot;url.com/endpoint&quot;</span>) <span class="hljs-keyword">as</span> IApiResult
-</code></pre>
-<p>甚至更糟糕…</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">const</span> myApiResult = <span class="hljs-keyword">await</span> callApi(<span class="hljs-string">&quot;url.com/endpoint&quot;</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>
-</code></pre>
-<p>这两种方法都会导致编译器关闭，但是第一种方法明显比第二种方法的健壮性更高 —— 事实上，第二种方法处理的返回结果和 JavaScript 没什么区别。</p>
-<p>但如果 API 返回的结果不是 <code>IApiResult</code> 类型怎么办？其返回值类型和我们期望的不同，我们可以定义一个随机的 <code>MyApiResult</code> 类型？其结果显而易见会存在问题，并且会 100% 地导致输入类型错误。</p>
-<p>我们可以使用 TS 的类型保护来处理以上问题:</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">interface</span> IApiResponse { 
-   <span class="hljs-attr">bar</span>: <span class="hljs-built_in">string</span>
+<!doctype html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>掌握这 5 个 TypeScript 高级技巧，成为更好的开发者 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><link rel=stylesheet href=//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://levelup.gitconnected.com/5-advanced-typescript-tips-to-make-you-a-better-programmer-bd4070aa2ab4>5 Advanced TypeScript Tips To Make You a Better Programmer</a><li>原文作者：<a href=https://medium.com/@anth-oleinik>Anthony Oleinik</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md>https://github.com/xitu/gold-miner/blob/master/article/2021/5-advanced-typescript-tips-to-make-you-a-better-programmer.md</a><li>译者：<a href=https://github.com/Usualminds>Usualminds</a><li>校对者：<a href=https://github.com/PassionPenguin>PassionPenguin</a>、<a href=https://github.com/zenblo>zenblo</a></ul></blockquote><h1>掌握这 5 个 TypeScript 高级技巧，成为更好的开发者</h1><p><img src=https://cdn-images-1.medium.com/max/3200/0*RKICUYO863Mu_2mX.png alt="Beautiful :)"><p>Typescript 是一门神奇的语言 —— 相比 JavaScript 可以实现的所有功能，它只用十分之一的调试时间就可以完成，主要包括以下几点：<ul><li>通过编写强类型和可读性更高的代码来减少 bug<li>代码中可以集成更多有价值的功能，从而避免重复造轮子</ul><p>以下 5 条 TypeScript 的高级使用技巧，可让你写出更好的 TypeScript 代码。<h4>1. is 运算符 / 类型保护</h4><p>Swagger 极大地帮助我们了解后端可以提供什么样的服务 —— 但是，通常情况下，开发者往往会得到和约定不一致的 API，其中某些 API 属性可能存在，也可能不存在，或者是根据状态返回不同的对象。<p>不幸的是，如果你不知道 API 会返回什么结果，就无法在编译时捕获它们，但我们可以做的是，使其在运行时更加易于处理（和上报！）。<p>API 调用一般是 TypeScript 错误的出处 —— 我们通常会将 API 调用的返回结果像下面这样强制转换：<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> myApiResult = <span class=hljs-keyword>await</span> callApi(<span class=hljs-string>&quot;url.com/endpoint&quot;</span>) <span class=hljs-keyword>as</span> IApiResult
+</code></pre><p>甚至更糟糕…<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> myApiResult = <span class=hljs-keyword>await</span> callApi(<span class=hljs-string>&quot;url.com/endpoint&quot;</span>) <span class=hljs-keyword>as</span> <span class=hljs-built_in>any</span>
+</code></pre><p>这两种方法都会导致编译器关闭，但是第一种方法明显比第二种方法的健壮性更高 —— 事实上，第二种方法处理的返回结果和 JavaScript 没什么区别。<p>但如果 API 返回的结果不是<code>IApiResult</code>类型怎么办？其返回值类型和我们期望的不同，我们可以定义一个随机的<code>MyApiResult</code>类型？其结果显而易见会存在问题，并且会 100% 地导致输入类型错误。<p>我们可以使用 TS 的类型保护来处理以上问题:<pre class=hljs v-pre><code><span class=hljs-keyword>interface</span> IApiResponse { 
+   <span class=hljs-attr>bar</span>: <span class=hljs-built_in>string</span>
 }
 
-<span class="hljs-keyword">const</span> callFooApi = <span class="hljs-keyword">async</span> (): <span class="hljs-built_in">Promise</span>&lt;IApiResponse&gt; =&gt; {
- <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> httpRequest(<span class="hljs-string">&#x27;foo.api/barEndpoint&#x27;</span>) <span class="hljs-comment">// 返回值类型未知</span>
- <span class="hljs-keyword">if</span> (responseIsbar(response)) {
-   <span class="hljs-keyword">return</span> response
- } <span class="hljs-keyword">else</span> {
-   <span class="hljs-keyword">throw</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&quot;response is not of type IApiResponse&quot;</span>)
+<span class=hljs-keyword>const</span> callFooApi = <span class=hljs-keyword>async</span> (): <span class=hljs-built_in>Promise</span>&lt;IApiResponse&gt; =&gt; {
+ <span class=hljs-keyword>let</span> response = <span class=hljs-keyword>await</span> httpRequest(<span class=hljs-string>&#x27;foo.api/barEndpoint&#x27;</span>) <span class=hljs-comment>// 返回值类型未知</span>
+ <span class=hljs-keyword>if</span> (responseIsbar(response)) {
+   <span class=hljs-keyword>return</span> response
+ } <span class=hljs-keyword>else</span> {
+   <span class=hljs-keyword>throw</span> <span class=hljs-built_in>Error</span>(<span class=hljs-string>&quot;response is not of type IApiResponse&quot;</span>)
  }
 }
 
-<span class="hljs-keyword">const</span> responseIsBar = (response: unknown): response is IApiResponse =&gt; {
-    <span class="hljs-keyword">return</span> (response <span class="hljs-keyword">as</span> IApiResponse).bar !== <span class="hljs-literal">undefined</span>
-        &amp;&amp; <span class="hljs-keyword">typeof</span> (response <span class="hljs-keyword">as</span> IApiResponse).bar === <span class="hljs-string">&quot;string&quot;</span>
+<span class=hljs-keyword>const</span> responseIsBar = (response: unknown): response is IApiResponse =&gt; {
+    <span class=hljs-keyword>return</span> (response <span class=hljs-keyword>as</span> IApiResponse).bar !== <span class=hljs-literal>undefined</span>
+        &amp;&amp; <span class=hljs-keyword>typeof</span> (response <span class=hljs-keyword>as</span> IApiResponse).bar === <span class=hljs-string>&quot;string&quot;</span>
 }
-</code></pre>
-<p>通过 <code>responseIsBar</code> 方法，我们可以提前判断返回值类型是否为 <code> IApiResponse</code> ，从而防止出现类型转换错误。</p>
-<p>实际使用场景中，你可以提示用户“服务器返回异常，请重试”，或者提示与之类似的错误信息，而不是显示 <code>属性 'bar' 不存在</code>。</p>
-<p><code>is</code> 操作符的一般含义是：<code>value is type</code> 实际上是一个布尔值，当输入 <code>true</code> 时，意味着告诉了 TypeScript 返回值的类型确实是我们所期望的类型。</p>
-<h4>2. As Const / Readonly</h4>
-<p>这是一个更简洁的类型语法糖。很多人都知道，在给接口赋值时，可以通过 <code>readonly</code> 声明使该属性只能被读取而不能被写入</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">interface</span> MyInterface {
-  <span class="hljs-keyword">readonly</span> myProperty: <span class="hljs-built_in">string</span>
+</code></pre><p>通过<code>responseIsBar</code>方法，我们可以提前判断返回值类型是否为<code>IApiResponse</code>，从而防止出现类型转换错误。<p>实际使用场景中，你可以提示用户“服务器返回异常，请重试”，或者提示与之类似的错误信息，而不是显示<code>属性 'bar' 不存在</code>。<p><code>is</code>操作符的一般含义是：<code>value is type</code>实际上是一个布尔值，当输入<code>true</code>时，意味着告诉了 TypeScript 返回值的类型确实是我们所期望的类型。<h4>2. As Const / Readonly</h4><p>这是一个更简洁的类型语法糖。很多人都知道，在给接口赋值时，可以通过<code>readonly</code>声明使该属性只能被读取而不能被写入<pre class=hljs v-pre><code><span class=hljs-keyword>interface</span> MyInterface {
+  <span class=hljs-keyword>readonly</span> myProperty: <span class=hljs-built_in>string</span>
 }
 
-<span class="hljs-keyword">let</span> t: MyInterface = {
-  <span class="hljs-attr">myProperty</span>: <span class="hljs-string">&#x27;hi&#x27;</span>
+<span class=hljs-keyword>let</span> t: MyInterface = {
+  <span class=hljs-attr>myProperty</span>: <span class=hljs-string>&#x27;hi&#x27;</span>
 }
 
-t.myProperty = <span class="hljs-string">&quot;bye&quot;</span> <span class="hljs-comment">// 编译错误, myProperty 是只读属性.</span>
-</code></pre>
-<p>这样处理就很棒，如果你哪天遇到了比较复杂返回结果数据集，比如 API 返回结果。接着你可以根据每个属性的 readonly 标识符，识别其为简单的数据集。</p>
-<p>Typescript 支持在类型声明后加上 <code>as const</code>，这样我们就相当于给每个属性添加 <code>readonly</code>。</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">let</span> t = {
- <span class="hljs-attr">myProperty</span>: <span class="hljs-string">&quot;hi&quot;</span>,
- <span class="hljs-attr">myArr</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
-} <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span> 
-</code></pre>
-<p>现在，T 的所有属性值都是不可修改的。例如，<code>t.myArr.push(1)</code> 不能编译，给 <code>myProperty</code> 属性重新赋值同样也不能编译。</p>
-<p>我认为对我们最有帮助的场景与之前一样 —— 不同的是，在这里我们不是返回一个接口，而是想通过代理的方法修改 API 对象中的部分属性，使其成为一个数据对象，所以，结合前面的技巧:</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">const</span> callFooApi = <span class="hljs-keyword">async</span> () =&gt; {
- <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> httpRequest(<span class="hljs-string">&#x27;foo.api/barEndpoint&#x27;</span>) <span class="hljs-comment">// 返回值类型未知</span>
- <span class="hljs-keyword">if</span> (responseIsbar(response)) {
-   <span class="hljs-comment">// 过滤掉不需要掉数据，在这里对数据进行自定义格式化处理</span>
-   <span class="hljs-keyword">return</span> {
-      <span class="hljs-attr">firstLastName</span>: [response.firstName, response.lastName]
-   } <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span>
- } <span class="hljs-keyword">else</span> {
-   <span class="hljs-keyword">throw</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&quot;response is not of type IApiResponse&quot;</span>)
+t.myProperty = <span class=hljs-string>&quot;bye&quot;</span> <span class=hljs-comment>// 编译错误, myProperty 是只读属性.</span>
+</code></pre><p>这样处理就很棒，如果你哪天遇到了比较复杂返回结果数据集，比如 API 返回结果。接着你可以根据每个属性的 readonly 标识符，识别其为简单的数据集。<p>Typescript 支持在类型声明后加上<code>as const</code>，这样我们就相当于给每个属性添加<code>readonly</code>。<pre class=hljs v-pre><code><span class=hljs-keyword>let</span> t = {
+ <span class=hljs-attr>myProperty</span>: <span class=hljs-string>&quot;hi&quot;</span>,
+ <span class=hljs-attr>myArr</span>: [<span class=hljs-number>1</span>, <span class=hljs-number>2</span>, <span class=hljs-number>3</span>]
+} <span class=hljs-keyword>as</span> <span class=hljs-keyword>const</span> 
+</code></pre><p>现在，T 的所有属性值都是不可修改的。例如，<code>t.myArr.push(1)</code>不能编译，给<code>myProperty</code>属性重新赋值同样也不能编译。<p>我认为对我们最有帮助的场景与之前一样 —— 不同的是，在这里我们不是返回一个接口，而是想通过代理的方法修改 API 对象中的部分属性，使其成为一个数据对象，所以，结合前面的技巧:<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> callFooApi = <span class=hljs-keyword>async</span> () =&gt; {
+ <span class=hljs-keyword>let</span> response = <span class=hljs-keyword>await</span> httpRequest(<span class=hljs-string>&#x27;foo.api/barEndpoint&#x27;</span>) <span class=hljs-comment>// 返回值类型未知</span>
+ <span class=hljs-keyword>if</span> (responseIsbar(response)) {
+   <span class=hljs-comment>// 过滤掉不需要掉数据，在这里对数据进行自定义格式化处理</span>
+   <span class=hljs-keyword>return</span> {
+      <span class=hljs-attr>firstLastName</span>: [response.firstName, response.lastName]
+   } <span class=hljs-keyword>as</span> <span class=hljs-keyword>const</span>
+ } <span class=hljs-keyword>else</span> {
+   <span class=hljs-keyword>throw</span> <span class=hljs-built_in>Error</span>(<span class=hljs-string>&quot;response is not of type IApiResponse&quot;</span>)
  }
 }
-</code></pre>
-<p>使用这个方法的开发者想必都会喜出望外 —— 它不仅可以识别返回值类型（来自 <code>response </code> 的类型变量），而且数据还是不可变的（immutable）。当我们调用 API 时，可以通过这个简单的方法验证返回值是否符合我们的期望。这对每个开发者而言都是一种进步！</p>
-<p>做一个小提示，如果你只想进行类型声明，而不想让其属性只读，你可以这样做：<code>type MyTypeReadonly = Readonly&lt;MyType&gt;</code> 。我们将会在后面的第 5 点更深入地讨论这个问题。</p>
-<h4>3. 扩展性更好的 Switch Case</h4>
-<p>扩展枚举（enum）通常是一件叫人头疼的事情，因为我们需要在所有使用枚举的地方都添加新的 Case。如果我们忘记了其中某一个跳转条件，我们的程序就会跳转到默认情况 (如果有的话) 或者失败，这可能会导致出乎意料的问题。</p>
-<p>没有人喜欢这样。</p>
-<p>许多语言解决这个问题的方法是：必须有明确 Switch 和 Case 场景，或者显式声明一个 <code>default</code> 状态。Typescript 编译器不支持这种情况，但我们可以这样创建 <code>switch case</code>：如果我们扩展了枚举（enum）或其他可能的值，我们的程序就不会编译，直到我们显式地处理了这种情况。</p>
-<p>我们所说的方法如下：</p>
-<pre class="hljs" v-pre><code><span class="hljs-built_in">enum</span> Directions {
+</code></pre><p>使用这个方法的开发者想必都会喜出望外 —— 它不仅可以识别返回值类型（来自<code>response</code>的类型变量），而且数据还是不可变的（immutable）。当我们调用 API 时，可以通过这个简单的方法验证返回值是否符合我们的期望。这对每个开发者而言都是一种进步！<p>做一个小提示，如果你只想进行类型声明，而不想让其属性只读，你可以这样做：<code>type MyTypeReadonly = Readonly&lt;MyType&gt;</code>。我们将会在后面的第 5 点更深入地讨论这个问题。<h4>3. 扩展性更好的 Switch Case</h4><p>扩展枚举（enum）通常是一件叫人头疼的事情，因为我们需要在所有使用枚举的地方都添加新的 Case。如果我们忘记了其中某一个跳转条件，我们的程序就会跳转到默认情况 (如果有的话) 或者失败，这可能会导致出乎意料的问题。<p>没有人喜欢这样。<p>许多语言解决这个问题的方法是：必须有明确 Switch 和 Case 场景，或者显式声明一个<code>default</code>状态。Typescript 编译器不支持这种情况，但我们可以这样创建<code>switch case</code>：如果我们扩展了枚举（enum）或其他可能的值，我们的程序就不会编译，直到我们显式地处理了这种情况。<p>我们所说的方法如下：<pre class=hljs v-pre><code><span class=hljs-built_in>enum</span> Directions {
    Left,
    Right
 }
 
-<span class="hljs-keyword">const</span> turnTowards = randomEnum(Direction)
+<span class=hljs-keyword>const</span> turnTowards = randomEnum(Direction)
 
-<span class="hljs-keyword">switch</span> (turnTowards) {
-      <span class="hljs-keyword">case</span> Directions.Right:
-         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;we\&#x27;re going right!&#x27;</span>)
-         <span class="hljs-keyword">break</span>
-      <span class="hljs-keyword">case</span> Directions.Left:
-         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Turning left!&#x27;</span>)
-         <span class="hljs-keyword">break</span>
+<span class=hljs-keyword>switch</span> (turnTowards) {
+      <span class=hljs-keyword>case</span> Directions.Right:
+         <span class=hljs-built_in>console</span>.log(<span class=hljs-string>&#x27;we\&#x27;re going right!&#x27;</span>)
+         <span class=hljs-keyword>break</span>
+      <span class=hljs-keyword>case</span> Directions.Left:
+         <span class=hljs-built_in>console</span>.log(<span class=hljs-string>&#x27;Turning left!&#x27;</span>)
+         <span class=hljs-keyword>break</span>
 }
-</code></pre>
-<p>即使是初级的开发者也可以看懂我们这个程序到意思是向左转或向右转。在这里添加默认（default）语句似乎并不必要，这里只有两个枚举值。但是请记住，我们编写代码不仅仅是为了完成它，而且要考虑代码到可维护性！</p>
-<p>假设两年后，另一个开发人员决定添加一个新的方向：Forward 。现在，枚举（enum）看起来是这样的：</p>
-<pre class="hljs" v-pre><code><span class="hljs-built_in">enum</span> Directions {
+</code></pre><p>即使是初级的开发者也可以看懂我们这个程序到意思是向左转或向右转。在这里添加默认（default）语句似乎并不必要，这里只有两个枚举值。但是请记住，我们编写代码不仅仅是为了完成它，而且要考虑代码到可维护性！<p>假设两年后，另一个开发人员决定添加一个新的方向：Forward 。现在，枚举（enum）看起来是这样的：<pre class=hljs v-pre><code><span class=hljs-built_in>enum</span> Directions {
    Left,
    Right,
    Forward
 }
-</code></pre>
-<p>程序里的 <code>switch case</code> 知道这一点，但它<strong>不在乎</strong>。它会很自然地尝试打开 <code>goingTowards</code> ，如果它遇到 forward，它也会很自然地出错。两年是很长的一段时间，开发者忘记了之前都在哪里使用了 <code>switch case</code> 代码。对此，我们可以添加一个针对默认值的异常处理，让其在编译时抛出异常，这样总比运行时错误好。</p>
-<p>所以我们可以添加默认情况如下：</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">default</span>:
-   <span class="hljs-keyword">const</span> exhaustiveCheck: <span class="hljs-built_in">never</span> = myDirection
-   <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(exhaustiveCheck)
-</code></pre>
-<p>如果我们处理了 <code>Forward</code> 这个情况，那么一切都正常。如果我们不这样做，那么我们的程序将无法编译！( <code>throw</code> 这一行是可选的，我这样做只是为了关闭 eslint 对未使用变量的校验报错)</p>
-<p>这降低了我们每次改变枚举（enum）时的记忆负担，我们可以通过编译器找到它们。</p>
-<h4>4. 使用 Null 代替 ? 操作符</h4>
-<p>许多使用过其他语言的开发者都会认为 <code>null === undefined</code>，事实并非如此（不用担心，这个技巧会变得更好）</p>
-<p><code>undefined</code> 是可以通过 JavaScript 赋值的 —— 例如，如果我们有一个文本框，它没有输入值，那它就是 <code>undefined</code>。可以把 <code>undefined</code> 看作是 JavaScript 的一个自动触发的空值。</p>
-<p>我们通常很难判断一个字段是设计里本来就没有，还是无意中留下的。如果我专门为一个字段设置默认值，我会用 <code>null</code>。这样，每个人都知道这个字段是专门置空的。</p>
-<p>这里有一个例子：</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">interface</span> Foo {
-   bar?: <span class="hljs-built_in">string</span>
+</code></pre><p>程序里的<code>switch case</code>知道这一点，但它<strong>不在乎</strong>。它会很自然地尝试打开<code>goingTowards</code>，如果它遇到 forward，它也会很自然地出错。两年是很长的一段时间，开发者忘记了之前都在哪里使用了<code>switch case</code>代码。对此，我们可以添加一个针对默认值的异常处理，让其在编译时抛出异常，这样总比运行时错误好。<p>所以我们可以添加默认情况如下：<pre class=hljs v-pre><code><span class=hljs-keyword>default</span>:
+   <span class=hljs-keyword>const</span> exhaustiveCheck: <span class=hljs-built_in>never</span> = myDirection
+   <span class=hljs-keyword>throw</span> <span class=hljs-keyword>new</span> <span class=hljs-built_in>Error</span>(exhaustiveCheck)
+</code></pre><p>如果我们处理了<code>Forward</code>这个情况，那么一切都正常。如果我们不这样做，那么我们的程序将无法编译！(<code>throw</code>这一行是可选的，我这样做只是为了关闭 eslint 对未使用变量的校验报错)<p>这降低了我们每次改变枚举（enum）时的记忆负担，我们可以通过编译器找到它们。<h4>4. 使用 Null 代替 ? 操作符</h4><p>许多使用过其他语言的开发者都会认为<code>null === undefined</code>，事实并非如此（不用担心，这个技巧会变得更好）<p><code>undefined</code>是可以通过 JavaScript 赋值的 —— 例如，如果我们有一个文本框，它没有输入值，那它就是<code>undefined</code>。可以把<code>undefined</code>看作是 JavaScript 的一个自动触发的空值。<p>我们通常很难判断一个字段是设计里本来就没有，还是无意中留下的。如果我专门为一个字段设置默认值，我会用<code>null</code>。这样，每个人都知道这个字段是专门置空的。<p>这里有一个例子：<pre class=hljs v-pre><code><span class=hljs-keyword>interface</span> Foo {
+   bar?: <span class=hljs-built_in>string</span>
 }
-</code></pre>
-<p>属性 <code>bar</code> 以问号结尾，意味着这个字段可能是 <code>undefined</code>，因此 <code>let baz: Foo = {}</code> 会通过编译（另外, <code>let baz: Foo = {bar: null} </code> 也能通过编译）。然而开发者无法通过上述代码知道我是故意让 <code>bar</code> 取空值还是无意的。 一个更好表述我声明意图的示例如下：</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">interface</span> Foo {
-  <span class="hljs-attr">bar</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>
+</code></pre><p>属性<code>bar</code>以问号结尾，意味着这个字段可能是<code>undefined</code>，因此<code>let baz: Foo = {}</code>会通过编译（另外,<code>let baz: Foo = {bar: null}</code>也能通过编译）。然而开发者无法通过上述代码知道我是故意让<code>bar</code>取空值还是无意的。 一个更好表述我声明意图的示例如下：<pre class=hljs v-pre><code><span class=hljs-keyword>interface</span> Foo {
+  <span class=hljs-attr>bar</span>: <span class=hljs-built_in>string</span> | <span class=hljs-literal>null</span>
 }
-</code></pre>
-<p>现在，我必须 <strong>明确地声明 <code>bar</code> 的取值为 <code>null</code>。</strong> 我的意图不会被混淆 — <code>bar</code> 没有明确的取值。</p>
-<p>这不仅适用于接口声明 —— 我还会在函数不返回任何内容时使用它。这在编译时很有帮助:</p>
-<pre class="hljs" v-pre><code><span class="hljs-comment">// 如果我们忘记指定了函数的返回值，编译器会返回默认值</span>
-<span class="hljs-keyword">const</span> myFunc = (): <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">void</span> =&gt;</span> {
-   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;blah&#x27;</span>)
+</code></pre><p>现在，我必须<strong>明确地声明<code>bar</code>的取值为<code>null</code>。</strong>我的意图不会被混淆 —<code>bar</code>没有明确的取值。<p>这不仅适用于接口声明 —— 我还会在函数不返回任何内容时使用它。这在编译时很有帮助:<pre class=hljs v-pre><code><span class=hljs-comment>// 如果我们忘记指定了函数的返回值，编译器会返回默认值</span>
+<span class=hljs-keyword>const</span> myFunc = (): <span class=hljs-built_in>string</span> | <span class=hljs-function><span class=hljs-params>void</span> =&gt;</span> {
+   <span class=hljs-built_in>console</span>.log(<span class=hljs-string>&#x27;blah&#x27;</span>)
 }
-</code></pre>
-<pre class="hljs" v-pre><code><span class="hljs-comment">// 如果我们忘记指定了函数的返回值，编译器会返回 null</span>
-<span class="hljs-keyword">const</span> myFunc = (): <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">null</span> =&gt;</span> {
- <span class="hljs-comment">// 编译错误时不会返回 null</span>
+</code></pre><pre class=hljs v-pre><code><span class=hljs-comment>// 如果我们忘记指定了函数的返回值，编译器会返回 null</span>
+<span class=hljs-keyword>const</span> myFunc = (): <span class=hljs-built_in>string</span> | <span class=hljs-function><span class=hljs-params>null</span> =&gt;</span> {
+ <span class=hljs-comment>// 编译错误时不会返回 null</span>
 }
-</code></pre>
-<h4>5. Utility Types</h4>
-<p>如果你在大型的 TS 项目里写过代码，你就会发现接口声明无处不在。有些接口与其他接口名称一样，有些接口属性重复，有些接口属性和名称都一样。</p>
-<p>如果真是这样的话，先不用惊慌。你正在按照预期使用 TS：那就是类型安全。但是，如果你没有利用 TS 的内置类型，那你可能写了太多的重复代码。下面是 <a href="https://www.typescriptlang.org/docs/handbook/utility-types.html">你至少应该知道存在的内建类型的链接</a>，以便你可以在代码中使用。</p>
-<p>我将介绍我最喜欢的和最常用的一些内置类型，但是你知道的越多，你就能把你的代码写得越好。</p>
-<p><strong>Partial</strong></p>
-<p>将所有类型字段设置为可选。当你想要对一个对象执行更新时，这是很有用的，例如:</p>
-<pre class="hljs" v-pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updateBook</span>&lt;<span class="hljs-title">T</span> <span class="hljs-title">extends</span> <span class="hljs-title">Book</span>&gt;(<span class="hljs-params">book: T, updates: Partial&lt;T&gt;</span>) </span>{
-   <span class="hljs-keyword">const</span> updatedBook = {...book, ...updates }
+</code></pre><h4>5. Utility Types</h4><p>如果你在大型的 TS 项目里写过代码，你就会发现接口声明无处不在。有些接口与其他接口名称一样，有些接口属性重复，有些接口属性和名称都一样。<p>如果真是这样的话，先不用惊慌。你正在按照预期使用 TS：那就是类型安全。但是，如果你没有利用 TS 的内置类型，那你可能写了太多的重复代码。下面是<a href=https://www.typescriptlang.org/docs/handbook/utility-types.html>你至少应该知道存在的内建类型的链接</a>，以便你可以在代码中使用。<p>我将介绍我最喜欢的和最常用的一些内置类型，但是你知道的越多，你就能把你的代码写得越好。<p><strong>Partial</strong><p>将所有类型字段设置为可选。当你想要对一个对象执行更新时，这是很有用的，例如:<pre class=hljs v-pre><code><span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>updateBook</span>&lt;<span class=hljs-title>T</span> <span class=hljs-title>extends</span> <span class=hljs-title>Book</span>&gt;(<span class=hljs-params>book: T, updates: Partial&lt;T&gt;</span>) </span>{
+   <span class=hljs-keyword>const</span> updatedBook = {...book, ...updates }
    notifyServer(updatedBook)
-   <span class="hljs-keyword">return</span> updatedBook
+   <span class=hljs-keyword>return</span> updatedBook
 }
-</code></pre>
-<p><strong>Readonly</strong></p>
-<p>它将所有字段设置为只读。我使用它作为返回值，主要是在返回数据时。</p>
-<pre class="hljs" v-pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateData</span>(<span class="hljs-params"></span>): <span class="hljs-title">Readonly</span>&lt;<span class="hljs-title">T</span>&gt;
-</span></code></pre>
-<p><strong>NonNullable</strong></p>
-<p>创建一个新类型，不包含 null / undefined 属性。如果我们正在增加或填写一些数据，这是很有用的，可以保证它是有值的。</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">interface</span> IPerson {
-  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>
+</code></pre><p><strong>Readonly</strong><p>它将所有字段设置为只读。我使用它作为返回值，主要是在返回数据时。<pre class=hljs v-pre><code><span class=hljs-function><span class=hljs-keyword>function</span> <span class=hljs-title>generateData</span>(<span class=hljs-params></span>): <span class=hljs-title>Readonly</span>&lt;<span class=hljs-title>T</span>&gt;
+</span></code></pre><p><strong>NonNullable</strong><p>创建一个新类型，不包含 null / undefined 属性。如果我们正在增加或填写一些数据，这是很有用的，可以保证它是有值的。<pre class=hljs v-pre><code><span class=hljs-keyword>interface</span> IPerson {
+  <span class=hljs-attr>name</span>: <span class=hljs-built_in>string</span>
 }
 
-<span class="hljs-keyword">type</span> MaybePerson = Person | <span class="hljs-literal">null</span>
+<span class=hljs-keyword>type</span> MaybePerson = Person | <span class=hljs-literal>null</span>
 
-<span class="hljs-keyword">const</span> fillMaybePerson = (maybe: MaybePerson): NonNullable&lt;MaybePerson&gt; ...
-</code></pre>
-<p><strong>ReturnType</strong></p>
-<p>Type 是函数的返回类型。如果你写的 API 涉及到了函数，并且不想约束函数，这很有用。</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">const</span> getMoney = (): <span class="hljs-function"><span class="hljs-params">number</span> =&gt;</span> {
-  <span class="hljs-keyword">return</span> <span class="hljs-number">100000</span>
+<span class=hljs-keyword>const</span> fillMaybePerson = (maybe: MaybePerson): NonNullable&lt;MaybePerson&gt; ...
+</code></pre><p><strong>ReturnType</strong><p>Type 是函数的返回类型。如果你写的 API 涉及到了函数，并且不想约束函数，这很有用。<pre class=hljs v-pre><code><span class=hljs-keyword>const</span> getMoney = (): <span class=hljs-function><span class=hljs-params>number</span> =&gt;</span> {
+  <span class=hljs-keyword>return</span> <span class=hljs-number>100000</span>
 }
 
-ReturnType&lt;getMoney&gt; <span class="hljs-comment">//number</span>
-</code></pre>
-<p><strong>Required</strong></p>
-<p>从接口声明中移除具有 <code>?</code> 属性的值。</p>
-<pre class="hljs" v-pre><code><span class="hljs-keyword">interface</span> T {
-  maybeName?: <span class="hljs-built_in">string</span>
+ReturnType&lt;getMoney&gt; <span class=hljs-comment>//number</span>
+</code></pre><p><strong>Required</strong><p>从接口声明中移除具有<code>?</code>属性的值。<pre class=hljs v-pre><code><span class=hljs-keyword>interface</span> T {
+  maybeName?: <span class=hljs-built_in>string</span>
 }
 
-<span class="hljs-keyword">type</span> CertainT = Required&lt;T&gt; <span class="hljs-comment">// 等价于 { maybeName: string }</span>
-</code></pre>
-<hr>
-<p>关于 TS，我要说的就这么多了！如果你在任何地方发现了错误，请告诉我，这样我可以在其他人学到错误知识之前修复它。如果你认为我遗漏了什么知识点，也请让告诉我！</p>
-<blockquote>
-<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
-</blockquote>
-<hr>
-<blockquote>
-<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
-</blockquote>
-</div>
-<div class="footer"></div>
-</body>
-<script src="/assets/scripts/index.js"></script>
-<script>init()</script>
-</html>
+<span class=hljs-keyword>type</span> CertainT = Required&lt;T&gt; <span class=hljs-comment>// 等价于 { maybeName: string }</span>
+</code></pre><hr><p>关于 TS，我要说的就这么多了！如果你在任何地方发现了错误，请告诉我，这样我可以在其他人学到错误知识之前修复它。如果你认为我遗漏了什么知识点，也请让告诉我！<blockquote><p>如果发现译文存在错误或其他需要改进的地方，欢迎到<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>对译文进行修改并 PR，也可获得相应奖励积分。文章开头的<strong>本文永久链接</strong>即为本文在 GitHub 上的 MarkDown 链接。</blockquote><hr><blockquote><p><a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>是一个翻译优质互联网技术文章的社区，文章来源为<a href=https://juejin.im>掘金</a>上的英文分享文章。内容覆盖<a href=https://github.com/xitu/gold-miner#android>Android</a>、<a href=https://github.com/xitu/gold-miner#ios>iOS</a>、<a href=https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF>前端</a>、<a href=https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF>后端</a>、<a href=https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE>区块链</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81>产品</a>、<a href=https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1>设计</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD>人工智能</a>等领域，想要查看更多优质译文请持续关注<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>、<a href=http://weibo.com/juejinfanyi>官方微博</a>、<a href=https://zhuanlan.zhihu.com/juejinfanyi>知乎专栏</a>。</blockquote></div><div class=footer></div><script src=/assets/scripts/index.js></script><script>init()</script>

@@ -4708,6 +4708,9 @@ html[dark] .icon.fork::before {
   margin-top: 0;
   margin-bottom: 16px;
 }
+.markdown-body pre {
+  tab-size: 4;
+}
 .markdown-body pre code {
   background: transparent;
 }

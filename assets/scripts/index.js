@@ -525,22 +525,30 @@ function toggleDarkMode() {
         document.documentElement.removeAttribute("light");
         setCookie("darkmode", "1", "60");
     }
+    if (document.documentElement.hasAttribute('article') !== undefined) {
+        $("link[href^='//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one']")[0].remove()
+        document.head.appendChild(ce({
+            name: "link",
+            attrs: [["rel", "stylesheet"], ["href", `//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-${document.documentElement.hasAttribute('dark') ? 'dark' : 'light'}.min.css`]]
+        }))
+    }
 }
 
 function init() {
-    fetch("data/strings.json")
-        .then(response => response.json())
-        .then(data => {
-            window.resourceString = data;
+    if (document.documentElement.classList.contains('indexPage'))
+        fetch("data/strings.json")
+            .then(response => response.json())
+            .then(data => {
+                window.resourceString = data;
 
-            (function initResources() {
-                $("[resource]").forEach(e => {
-                    if (e.attributes["resource"].value === "randText")
-                        e.innerText = resourceString["randText" + (Math.floor(Math.random() * Math.floor(3)) + 1)]
-                    else e.innerText = resourceString[e.attributes["resource"].value];
-                });
-            }());
-        });
+                (function initResources() {
+                    $("[resource]").forEach(e => {
+                        if (e.attributes["resource"].value === "randText")
+                            e.innerText = resourceString["randText" + (Math.floor(Math.random() * Math.floor(3)) + 1)]
+                        else e.innerText = resourceString[e.attributes["resource"].value];
+                    });
+                }());
+            });
 
     (function initDarkMode() {
         if (getCookie("darkmode") === "1") document.documentElement.setAttribute("dark", "");
@@ -557,7 +565,19 @@ function init() {
                     document.documentElement.removeAttribute("dark");
                     document.documentElement.setAttribute("light", "");
                 }
+            if (document.documentElement.hasAttribute('article') !== undefined) {
+                $("link[href^='//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one']")[0].remove()
+                document.head.appendChild(ce({
+                    name: "link",
+                    attrs: [["rel", "stylesheet"], ["href", `//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-${document.documentElement.hasAttribute('dark') ? 'dark' : 'light'}.min.css`]]
+                }))
+            }
         });
+        if (document.documentElement.hasAttribute('article') !== undefined)
+            document.head.appendChild(ce({
+                name: "link",
+                attrs: [["rel", "stylesheet"], ["href", `//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-${document.documentElement.hasAttribute('dark') ? 'dark' : 'light'}.min.css`]]
+            }))
     })();
 
     (function initHeader() {

@@ -66,7 +66,11 @@
         margin-bottom: 16px;
     }
 
-    pre code {
-        background: transparent;
+    pre {
+        tab-size: 4;
+
+        code {
+            background: transparent;
+        }
     }
 }

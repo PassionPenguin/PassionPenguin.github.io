@@ -48,6 +48,7 @@ jobs:
           fi
 
       - name: Compress Files
+        run: |
           # compress html files
           cd ../archive
           ls-minifier *.html --silent --override --html-compressor=html-minifier

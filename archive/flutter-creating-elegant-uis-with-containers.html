@@ -1,4 +1,4 @@
-<!doctype html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>使用 Flutter 的 Container 控件构建优美的用户界面 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><link rel=stylesheet href=//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://maneesha-erandi.medium.com/flutter-creating-elegant-uis-with-containers-1d05ca90fccf>Flutter — Creating Elegant UIs with Containers</a><li>原文作者：<a href=https://medium.com/@maneesha-erandi>Maneesha Erandi</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-creating-elegant-uis-with-containers.md>https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-creating-elegant-uis-with-containers.md</a><li>译者：<a href=https://github.com/PassionPenguin>霜羽 Hoarfroster</a><li>校对者：<a href=https://github.com/zenblo>zenblo</a></ul></blockquote><h1>使用 Flutter 的<code>Container</code>控件构建优美的用户界面</h1><p>当我们使用 Flutter 构建绝佳的 UI 界面的时候，<code>Container</code>扮演着重要的角色。我真的极度喜欢在任何地方添加<code>Container</code>控件，而这也是因为它确实能够在快速简单地创建 UI 界面上帮上我大忙。<p>我真心希望本文内容能对初学者们有所帮助！<p>让我们一起看看我们能够怎样利用<code>Container</code>控件让我们的 UI 更加有吸引力吧！<p>要生成一个简简单单的正方形或矩形，我们可以创造一个<code>Container</code>控件并给它制定一个宽度和高度（我们可以看到下面的例子就避免了使用子控件去绘制形状）。<p><img src=https://cdn-images-1.medium.com/max/2078/1*mzCSaRJfZi8BiBHYUrUbqg.png alt=""><pre class=hljs v-pre><code>Widget squareContainer() {
+<!doctype html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>使用 Flutter 的 Container 控件构建优美的用户界面 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><link rel=stylesheet href=//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://maneesha-erandi.medium.com/flutter-creating-elegant-uis-with-containers-1d05ca90fccf>Flutter — Creating Elegant UIs with Containers</a><li>原文作者：<a href=https://medium.com/@maneesha-erandi>Maneesha Erandi</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-creating-elegant-uis-with-containers.md>https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-creating-elegant-uis-with-containers.md</a><li>译者：<a href=https://github.com/PassionPenguin>霜羽 Hoarfroster</a><li>校对者：<a href=https://github.com/zenblo>zenblo</a></ul></blockquote><h1>使用 Flutter 的<code>Container</code>控件构建优美的用户界面</h1><p>当我们使用 Flutter 构建绝佳的 UI 界面的时候，<code>Container</code>扮演着重要的角色。我真的极度喜欢在任何地方添加<code>Container</code>控件，而这也是因为它确实能够在快速简单地创建 UI 界面上帮上我大忙。<p>我真心希望本文内容能对初学者们有所帮助！<p>让我们一起看看我们能够怎样利用<code>Container</code>控件让我们的 UI 更加有吸引力吧！<p>要生成一个简简单单的正方形或矩形，我们可以创造一个<code>Container</code>控件并给它制定一个宽度和高度（我们可以看到下面的例子就避免了使用子控件去绘制形状）。<p><img src=https://cdn-images-1.medium.com/max/2078/1*mzCSaRJfZi8BiBHYUrUbqg.png alt=""><pre class=hljs><code>Widget squareContainer() {
   <span class=hljs-keyword>return</span> Container(
     color: Colors.purpleAccent,
     width: <span class=hljs-number>100</span>,
@@ -13,7 +13,7 @@ Widget rectContainer() {
     height: <span class=hljs-number>100</span>,
   );
 }
-</code></pre><p>而下面的例子展示了如何给<code>Container</code>控件加上圆角。首先操作的两个控件是使用了<code>BoxDecoration</code>圆角化控件的。我们同样可以通过使用<code>BoxDecoration</code>绘制一个圆形，就像第三个控件那样：<p><img src=https://cdn-images-1.medium.com/max/2202/1*lK_CjuIIFxIMSrijjme1qg.png alt=""><pre class=hljs v-pre><code>Widget roundedContainer() {
+</code></pre><p>而下面的例子展示了如何给<code>Container</code>控件加上圆角。首先操作的两个控件是使用了<code>BoxDecoration</code>圆角化控件的。我们同样可以通过使用<code>BoxDecoration</code>绘制一个圆形，就像第三个控件那样：<p><img src=https://cdn-images-1.medium.com/max/2202/1*lK_CjuIIFxIMSrijjme1qg.png alt=""><pre class=hljs><code>Widget roundedContainer() {
   <span class=hljs-keyword>return</span> Container(
     width: <span class=hljs-number>100</span>,
     height: <span class=hljs-number>50</span>,
@@ -40,7 +40,7 @@ Widget circleContainer() {
     decoration: BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle),
   );
 }
-</code></pre><p>如果我们用<code>Container</code>控件包裹一个有<code>onTap</code>功能（本例中为<code>InkWell</code>控件）的子控件，我们甚至可以构建一个自定义的按钮：<p><img src=https://cdn-images-1.medium.com/max/2000/1*0CUGG-lyqxr-iP4wb9PRNQ.png alt=""><pre class=hljs v-pre><code>Widget containerButton() {
+</code></pre><p>如果我们用<code>Container</code>控件包裹一个有<code>onTap</code>功能（本例中为<code>InkWell</code>控件）的子控件，我们甚至可以构建一个自定义的按钮：<p><img src=https://cdn-images-1.medium.com/max/2000/1*0CUGG-lyqxr-iP4wb9PRNQ.png alt=""><pre class=hljs><code>Widget containerButton() {
   <span class=hljs-keyword>return</span> InkWell(
     onTap: () {},
     child: Container(
@@ -54,7 +54,7 @@ Widget circleContainer() {
         )),
   );
 }
-</code></pre><p>我们还可以通过使用<code>Border.all()</code>来生成边框装饰我们的<code>Container</code>控件。<code>BoxShadow</code>则可以给我们的<code>Container</code>添加所设置的阴影，如控件二：<p><img src=https://cdn-images-1.medium.com/max/2000/1*SAcNvyxyzu-ofhDJ9_qhWg.png alt=""><pre class=hljs v-pre><code>Widget containerWithBorders() {
+</code></pre><p>我们还可以通过使用<code>Border.all()</code>来生成边框装饰我们的<code>Container</code>控件。<code>BoxShadow</code>则可以给我们的<code>Container</code>添加所设置的阴影，如控件二：<p><img src=https://cdn-images-1.medium.com/max/2000/1*SAcNvyxyzu-ofhDJ9_qhWg.png alt=""><pre class=hljs><code>Widget containerWithBorders() {
   <span class=hljs-keyword>return</span> Container(
     width: <span class=hljs-number>100</span>,
     height: <span class=hljs-number>100</span>,
@@ -83,7 +83,7 @@ Widget containerWithShadow() {
     ),
   );
 }
-</code></pre><p>在一个<code>Container</code>控件中，我们可以通过使用<code>BoxDecoration</code>以及<code>DecorationImage</code>给它添加装饰图片。这里大家可以试着找找两张图片中<code>Container</code>的区别，探究添加的装饰是如何被应用到控件上的：<p><img src=https://cdn-images-1.medium.com/max/2224/1*W0xtgxhy3hLNkrcHbZEGhQ.png alt=""><pre class=hljs v-pre><code>Widget containerImgDecoration() {
+</code></pre><p>在一个<code>Container</code>控件中，我们可以通过使用<code>BoxDecoration</code>以及<code>DecorationImage</code>给它添加装饰图片。这里大家可以试着找找两张图片中<code>Container</code>的区别，探究添加的装饰是如何被应用到控件上的：<p><img src=https://cdn-images-1.medium.com/max/2224/1*W0xtgxhy3hLNkrcHbZEGhQ.png alt=""><pre class=hljs><code>Widget containerImgDecoration() {
   <span class=hljs-keyword>return</span> Container(
     width: <span class=hljs-number>150</span>,
     height: <span class=hljs-number>150</span>,
@@ -103,7 +103,7 @@ Widget containerImg() {
     child: Image(image: AssetImage(<span class=hljs-string>&quot;assets/images/img.jpg&quot;</span>), fit: BoxFit.cover),
   );
 }
-</code></pre><p>我们可以添加多彩的标题背景，让我们的 UI 更有吸引力。下面是三个使用<code>Container</code>控件构造的标题栏的例子：<p><img src=https://cdn-images-1.medium.com/max/2458/1*I5-WNUcfc8gRxQiiTD59zQ.png alt=""><p><img src=https://cdn-images-1.medium.com/max/2422/1*F3DS06d7jMIPJxwqVQlWKg.png alt=""><p><img src=https://cdn-images-1.medium.com/max/2484/1*0LAhQZtJZx2bgvHFgEvELw.png alt=""><pre class=hljs v-pre><code>Widget containerHeaderOne({width}) {
+</code></pre><p>我们可以添加多彩的标题背景，让我们的 UI 更有吸引力。下面是三个使用<code>Container</code>控件构造的标题栏的例子：<p><img src=https://cdn-images-1.medium.com/max/2458/1*I5-WNUcfc8gRxQiiTD59zQ.png alt=""><p><img src=https://cdn-images-1.medium.com/max/2422/1*F3DS06d7jMIPJxwqVQlWKg.png alt=""><p><img src=https://cdn-images-1.medium.com/max/2484/1*0LAhQZtJZx2bgvHFgEvELw.png alt=""><pre class=hljs><code>Widget containerHeaderOne({width}) {
   <span class=hljs-keyword>return</span> Container(
     width: width,
     height: <span class=hljs-number>200</span>,

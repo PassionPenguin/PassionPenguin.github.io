@@ -32,8 +32,6 @@ jobs:
           # compress html files
           cd ../archive
           ls-minifier *.html --silent --override --html-compressor=html-minifier
-          # exit if no files need to be committed
-          [[ -n $(git status -uno --porcelain) ]] && exit
           
     - name: setup git config
       run: |
@@ -45,6 +43,9 @@ jobs:
     - name: commit
       run: |
         # Stage the file, commit and push
-        git add *
-        git commit -m "Build Resources"
-        git push origin master
+        if [[ -n $(git status -uno --porcelain) ]]
+        then
+          git add *
+          git commit -m "Build Resources"
+          git push origin master --force
+        fi

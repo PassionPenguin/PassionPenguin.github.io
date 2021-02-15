@@ -84,12 +84,19 @@ html, body {
         }
     }
 
-    .container {
-        &.postList {
-            display: flex;
-            flex-direction: row-reverse;
-        }
+    .indexPage .postList {
+        display: flex;
+        flex-direction: row-reverse;
+    }
 
+    html:not(.indexPage) .postList {
+        max-width: 768px;
+        width: calc(100% - 96px);
+        padding: 24px 48px;
+        margin: 0 auto;
+    }
+
+    .container {
         .intro {
             display: inline-block;
             flex-grow: 1;

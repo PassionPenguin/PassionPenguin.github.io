@@ -40,5 +40,6 @@ jobs:
       run: |
         # Stage the file, commit and push
         git add *
+        [[ -z $(git status -uno --porcelain) ]] && echo "this branch is clean, no need to push..." && kill -SIGINT $$;
         git commit -m "Build Resources"
         git push origin master

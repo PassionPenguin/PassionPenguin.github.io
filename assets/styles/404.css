@@ -1559,7 +1559,7 @@ html[dark] .header .juejin::before, html.lightHeaderBar:not([scroll][light]) .he
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='19.03' overflow='visible'%3E%3Cstyle%3E.st0%7Bfill:%23fff%7D%3C/style%3E%3Cpath class='st0' d='M11.94 0L9.7 1.87l2.24 1.74 2.24-1.74zM6.22 4.6l5.72 4.35 5.72-4.35 1.49 1.12-7.21 5.72-7.21-5.72z'/%3E%3Cpath class='st0' d='M1.49 8.46l10.45 8.2 10.57-8.2L24 9.58l-12.06 9.45L0 9.58z'/%3E%3C/svg%3E") 2px 4px/20px no-repeat;
 }
 
-html[scroll]:not([dark]) .mode::before {
+html[scroll]:not([dark]) .mode::before, html[light] .mode::before {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z'/%3E%3C/svg%3E") 0 0/100% no-repeat;
 }
 

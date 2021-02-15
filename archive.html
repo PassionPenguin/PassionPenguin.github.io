@@ -18,7 +18,7 @@
 <div class="container postList"></div>
 <div class="footer"></div>
 </body>
-<script src="/assets/scripts/index.js"></script>
+<script src="/assets/scripts/index.min.js"></script>
 <script>
     init();
 
@@ -51,10 +51,10 @@
         $(".container")[0].appendChild(container);
     }
 
-    fetch("config/translation.json")
+    fetch("config/translation.min.json")
         .then(response => response.json())
         .then(data => {
-            data["translation"].concat(data["review"]).forEach(e => {
+            data.forEach(e => {
                 post(e);
             });
         });

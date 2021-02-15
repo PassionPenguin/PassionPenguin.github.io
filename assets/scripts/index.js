@@ -536,7 +536,7 @@ function toggleDarkMode() {
 
 function init() {
     if (document.documentElement.classList.contains('indexPage'))
-        fetch("data/strings.json")
+        fetch("data/strings.min.json")
             .then(response => response.json())
             .then(data => {
                 window.resourceString = data;

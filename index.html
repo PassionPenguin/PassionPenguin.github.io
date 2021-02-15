@@ -31,7 +31,7 @@
 </div>
 <div class="footer"></div>
 </body>
-<script src="/assets/scripts/index.js"></script>
+<script src="/assets/scripts/index.min.js"></script>
 <script>
     init();
 
@@ -64,10 +64,10 @@
         $(".container .posts")[0].appendChild(container);
     }
 
-    fetch("config/translation.json")
+    fetch("config/translation.min.json")
         .then(response => response.json())
         .then(data => {
-            data["translation"].concat(data["review"]).sort((a, b) => {
+            data.sort((a, b) => {
                 return (new Date(b['time'])) - (new Date(a['time']));
             }).splice(0, 10).forEach(e => {
                 post(e);

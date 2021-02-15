@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Page Automator
 
 on:
   push:
@@ -8,44 +8,58 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [15.x]
+        node-version: [ 15.x ]
 
     steps:
-    - uses: actions/checkout@master
-      
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@master
 
-    - run: |
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: NPM Install
+      - run: |
           npm i -g markdown-html-gen
-          npm i ls-minifier -g
+          npm i -g ls-minifier
+
+      - name: setup git config
+        run: |
+          git config user.name "Hoarfroster Bot"
+          git config user.email "<penguin.zhang@qq.com>"
+
+      - name: Generate HTML Pages with Markdown Files
           cd documents
           # documents/*.md => archive/*.html
+
           for f in *.md; do md2html -o ../archive $f; done
+
+      - name: Commit Generated HTML Pages
+        run: |
+          if [[ -n $(git status -uno --porcelain) ]]
+          then
+            git add *
+            git commit -m "Build Pages"
+            git push origin master --force
+          fi
+
+      - name: Compress Files
           # compress html files
           cd ../archive
           ls-minifier *.html --silent --override --html-compressor=html-minifier
-          
-    - name: setup git config
-      run: |
-        git config user.name "Hoarfroster Bot"
-        git config user.email "<penguin.zhang@qq.com>"
-        
-    - uses: nadock/verified_commits_check@v1
-      
-    - name: commit
-      run: |
-        # Stage the file, commit and push
-        if [[ -n $(git status -uno --porcelain) ]]
-        then
-          git add *
-          git commit -m "Build Resources"
-          git push origin master --force
-        fi
+          cd ../
+          ls-minifier **/*.css --silent --css-compressor=yui
+          ls-minifier **/*.js --silent --js-compressor=gcc
+
+      - name: Commit Compressed Files
+        run: |
+          if [[ -n $(git status -uno --porcelain) ]]
+          then
+            git add *
+            git commit -m "Compress Files"
+            git push origin master --force
+          fi

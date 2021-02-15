@@ -16,7 +16,18 @@
     </div>
 </div>
 <div class="container postList">
-    <h3>最近的文章～</h3>
+    <div class="intro">
+        <h3>霜羽 Hoarfroster</h3>
+        <p>哈喽～这里是霜羽呀，很高兴遇见你嗷～<br/>初次见面，请多多指教～</p>
+        <p>霜羽现在生活在魔都广州，正在努力学习 + 为
+            <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 翻译文章。起初学习 Web 端开发，现在正在学习移动端开发以及数据分析，正在努力成为一名全栈开发者 ψ(｀∇´)ψ
+        </p>
+        <p>霜羽喜欢中长距离（50 KM+）公路骑行、烘培（蛋糕 + 少部分甜点）、计算机、滑雪（尤爱单板）。如果你想聊聊技术或者交个朋友，可以给我
+            <a href="mailto:penguin.zhang@qq.com">发个邮件</a>，也可以加一下我的微信 <code>PassionPenguin</code>。</p>
+    </div>
+    <div class="posts">
+        <h3>最近的文章～</h3>
+    </div>
 </div>
 <div class="footer"></div>
 </body>
@@ -50,7 +61,7 @@
             innerHTML: date.toDateString()
         }));
         container.appendChild(ce({name: "p", classList: ["description"], innerHTML: e["description"]}));
-        $(".container")[0].appendChild(container);
+        $(".container .posts")[0].appendChild(container);
     }
 
     fetch("config/translation.json")

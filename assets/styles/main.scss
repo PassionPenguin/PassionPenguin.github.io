@@ -15,8 +15,11 @@ html, body {
     padding: 24px 48px;
 
     &.postList {
-        max-width: 768px;
-        margin: 0 auto;
+        margin: 0 24px;
+    }
+
+    .intro {
+        display: none;
     }
 }
 
@@ -69,21 +72,47 @@ html, body {
 @media screen and (min-width: 768px) {
     .banner {
         height: calc(100vw * .25);
+
+        .tips {
+            h1 {
+                font-size: 36px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+        }
     }
 
-    .banner h2 {
-        font-size: 24px;
+    .container {
+        &.postList {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        .intro {
+            display: inline-block;
+            flex-grow: 1;
+            max-width: 300px;
+            margin: 0 48px;
+        }
+
+        .posts {
+            display: inline-block;
+            max-width: 768px;
+        }
     }
 }
 
 .postList {
     .post {
-        margin: 16px;
+        margin: 16px 0;
 
         h2 {
             display: inline-block;
             margin: 0;
             font-size: 22px;
+            line-height: 32px;
 
             &:hover, &:focus {
                 color: $primaryColor;
@@ -146,18 +175,6 @@ html, body {
             * {
                 color: #fff;
             }
-        }
-    }
-}
-
-@media screen and (min-width: 768px) {
-    .banner .tips {
-        h1 {
-            font-size: 36px;
-        }
-
-        h2 {
-            font-size: 24px;
         }
     }
 }

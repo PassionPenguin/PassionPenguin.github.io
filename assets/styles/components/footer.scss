@@ -6,8 +6,16 @@
 
     .container {
         max-width: 768px;
-        width: 100%;
+        width: calc(100% - 96px);
         margin: 0 auto;
+
+        & .flex-content p {
+            display: none;
+        }
+
+        p {
+            font-size: 24px;
+        }
     }
 
     .flex-content {
@@ -16,9 +24,8 @@
         & > * {
             flex-grow: 1;
             margin: 0 auto;
-            display: inline-block;
             list-style: none;
-            padding: 24px;
+            padding: 24px 0;
         }
 
         li {
@@ -41,14 +48,10 @@
                 }
             }
         }
-
-        & > p {
-            font-size: 24px;
-        }
     }
 
     .bottom {
-        padding: 24px;
+        padding: 24px 0;
 
         * {
             text-decoration: none;
@@ -63,8 +66,26 @@
 
 @media screen and (min-width: 640px) {
     .footer {
+        .bottom {
+            padding: 24px;
+        }
+
         .bottom, .flex-content {
             display: flex;
+        }
+
+        .flex-content {
+            & > * {
+                padding: 24px;
+            }
+
+            p {
+                display: inherit!important;
+            }
+        }
+
+        .container > p {
+            display: none;
         }
     }
 }

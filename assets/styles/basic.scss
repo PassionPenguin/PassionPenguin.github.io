@@ -1454,3 +1454,8 @@ $primaryColor: #0f75bc;
     --color-ansi-cyan: #76e3ea;
     --color-ansi-cyan-bright: #b3f0ff;
 }
+
+a {
+    color: var(--color-text-link);
+    text-decoration: none;
+}

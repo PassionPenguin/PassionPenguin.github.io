@@ -153,6 +153,7 @@ function init() {
 
     $(".footer")[0].innerHTML =
         `<div class="container">
+            <p>霜羽 Hoarfroster</p>
             <div class="flex-content">
                 <p>霜羽 Hoarfroster</p>
                 <ul>

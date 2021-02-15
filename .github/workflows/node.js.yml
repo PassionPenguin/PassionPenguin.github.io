@@ -49,7 +49,7 @@ jobs:
       - name: Compress Files
         run: |
           # compress html files
-          cd ../archive
+          cd ./archive
           ls-minifier *.html --silent --override --html-compressor=html-minifier
           cd ../
           ls-minifier **/*.css --silent --css-compressor=yui

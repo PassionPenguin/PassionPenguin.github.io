@@ -70,7 +70,7 @@ html[dark] .header, html.lightHeaderBar:not([scroll][light]) .header {
     }
 }
 
-html[scroll]:not([dark]) {
+html[scroll]:not([dark]), html[light] {
     .mode::before {
         background: url($blackDarkMode) 0 0/100% no-repeat;
     }

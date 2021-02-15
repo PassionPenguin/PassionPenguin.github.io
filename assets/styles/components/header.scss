@@ -34,13 +34,19 @@
     }
 }
 
-html.lightHeaderBar:not([scroll]) .header {
-    .mode::before {
+html.lightHeaderBar:not([scroll]) {
+    &[dark] .header .mode::before {
+        background: url($whiteLightMode) 0 0/100% no-repeat;
+    }
+
+    &[light] .header .mode::before {
         background: url($whiteDarkMode) 0 0/100% no-repeat;
     }
 
-    .title, .archive, .about {
-        color: var(--color-scale-white)
+    .header {
+        .title, .archive, .about {
+            color: var(--color-scale-white)
+        }
     }
 }
 

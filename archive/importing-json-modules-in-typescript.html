@@ -1,59 +1,116 @@
-<!doctype html><html lang=en article><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>在 TypeScript 中引入 JSON 模块 - Hoarfroster</title><link rel=stylesheet href=/assets/styles/post.css><div class="container post markdown-body"><blockquote><ul><li>原文地址：<a href=https://mariusschulz.com/blog/importing-json-modules-in-typescript>Importing JSON Modules in TypeScript</a><li>原文作者：<a href=https://mariusschulz.com/ >Marius Schulz</a><li>译文出自：<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a><li>本文永久链接：<a href=https://github.com/xitu/gold-miner/blob/master/article/2021/importing-json-modules-in-typescript.md>https://github.com/xitu/gold-miner/blob/master/article/2021/importing-json-modules-in-typescript.md</a><li>译者：<a href=https://github.com/PassionPenguin>霜羽 Hoarfroster</a><li>校对者：<a href=https://github.com/zenblo>zenblo</a>、<a href=https://github.com/regon-cao>regonCao</a></ul></blockquote><h1>在 TypeScript 中引入 JSON 模块</h1><p>TypeScript 2.9 版本引入了一个新的<code>--resolveJsonModule</code>编译选项，让我们可以在 TypeScript 模块内部引入 JSON 模块。<h2>通过<code>require</code>函数的调用引入 JSON 模块</h2><p>假设我们有一个用 TypeScript 编写的 Node 应用程序，并且假设我们要导入以下 JSON 文件：<pre class=hljs><code>{
-    <span class=hljs-attr>&quot;server&quot;</span>: {
-        <span class=hljs-attr>&quot;nodePort&quot;</span>: <span class=hljs-number>8080</span>
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在 TypeScript 中引入 JSON 模块 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://mariusschulz.com/blog/importing-json-modules-in-typescript">Importing JSON Modules in TypeScript</a></li>
+<li>原文作者：<a href="https://mariusschulz.com/">Marius Schulz</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/importing-json-modules-in-typescript.md">https://github.com/xitu/gold-miner/blob/master/article/2021/importing-json-modules-in-typescript.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/zenblo">zenblo</a>、<a href="https://github.com/regon-cao">regonCao</a></li>
+</ul>
+</blockquote>
+<h1>在 TypeScript 中引入 JSON 模块</h1>
+<p>TypeScript 2.9 版本引入了一个新的 <code>--resolveJsonModule</code> 编译选项，让我们可以在 TypeScript 模块内部引入 JSON 模块。</p>
+<h2>通过 <code>require</code> 函数的调用引入 JSON 模块</h2>
+<p>假设我们有一个用 TypeScript 编写的 Node 应用程序，并且假设我们要导入以下 JSON 文件：</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">&quot;server&quot;</span>: {
+        <span class="hljs-attr">&quot;nodePort&quot;</span>: <span class="hljs-number">8080</span>
     }
 }
-</code></pre><p>在 Node 中，我们可以调用<code>require</code>函数导入这一个 JSON 文件，就像是导入别的 CommonJS 模块一样：<pre class=hljs><code><span class=hljs-keyword>const</span> config = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./config.json&quot;</span>);
-</code></pre><p>这一个 JSON 文件会被自动的反序列化为普通的 JavaScript 对象，让我们可以轻松访问配置对象的属性：<pre class=hljs><code><span class=hljs-meta>&quot;use strict&quot;</span>;
+</code></pre>
+<p>在 Node 中，我们可以调用 <code>require</code> 函数导入这一个 JSON 文件，就像是导入别的 CommonJS 模块一样：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
+</code></pre>
+<p>这一个 JSON 文件会被自动的反序列化为普通的 JavaScript 对象，让我们可以轻松访问配置对象的属性：</p>
+<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
 
-<span class=hljs-keyword>const</span> express = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;express&quot;</span>);
-<span class=hljs-keyword>const</span> config = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./config.json&quot;</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
 
-<span class=hljs-keyword>const</span> app = express();
+<span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class=hljs-function>() =&gt;</span> {
-    <span class=hljs-built_in>console</span>.log(<span class=hljs-string>`在端口 <span class=hljs-subst>${config.server.nodePort}</span> 上监听...`</span>);
+app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
-</code></pre><p>迄今为止，一切都挺棒的！<h2>通过使用静态的<code>import</code>声明语句导入 JSON 文件</h2><p>现在如果说我们要使用原生的 ECMAScript 模块而不是 CommonJS 模块，那么我们必须将<code>require</code>的调用转换为静态的<code>import</code>声明：<pre class=hljs><code><span class=hljs-comment>// 因为所有的 ECMAScript 模块都默认使用 strict 模式</span>
-<span class=hljs-comment>// 我们不需要再声明 `use strict`</span>
+</code></pre>
+<p>迄今为止，一切都挺棒的！</p>
+<h2>通过使用静态的 <code>import</code> 声明语句导入 JSON 文件</h2>
+<p>现在如果说我们要使用原生的 ECMAScript 模块而不是 CommonJS 模块，那么我们必须将 <code>require</code> 的调用转换为静态的 <code>import</code> 声明：</p>
+<pre class="hljs"><code><span class="hljs-comment">// 因为所有的 ECMAScript 模块都默认使用 strict 模式</span>
+<span class="hljs-comment">// 我们不需要再声明 `use strict`</span>
 
-<span class=hljs-keyword>import</span> * <span class=hljs-keyword>as</span> express <span class=hljs-keyword>from</span> <span class=hljs-string>&quot;express&quot;</span>;
-<span class=hljs-keyword>import</span> * <span class=hljs-keyword>as</span> config <span class=hljs-keyword>from</span> <span class=hljs-string>&quot;./config.json&quot;</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;express&quot;</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> config <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./config.json&quot;</span>;
 
-<span class=hljs-keyword>const</span> app = express();
+<span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class=hljs-function>() =&gt;</span> {
-    <span class=hljs-built_in>console</span>.log(<span class=hljs-string>`在端口 <span class=hljs-subst>${config.server.nodePort}</span> 上监听...`</span>);
+app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
-</code></pre><p>现在，程序在第 2 行中出现了类型错误。TypeScript 不允许我们按照这种方式开箱即用地导入 JSON 模块。这是 TypeScript 团队的一项明智的设计决定：获取较大的 JSON 文件可能会<a href=https://github.com/Microsoft/TypeScript/pull/22167#issuecomment-385479553>消耗大量内存</a>。这就是为什么我们需要通过启用<code>--resolveJsonModule</code>编译器标志来选择使用该功能：<blockquote><p>让人们有意识地选择这个做法帮助着用户了解耗费的成本。</blockquote><p>让我们转到<strong>tsconfig.json</strong>文件并在其中启用该选项：<pre class=hljs><code>{
-    <span class=hljs-attr>&quot;compilerOptions&quot;</span>: {
-        <span class=hljs-attr>&quot;target&quot;</span>: <span class=hljs-string>&quot;es2015&quot;</span>,
-        <span class=hljs-attr>&quot;module&quot;</span>: <span class=hljs-string>&quot;commonjs&quot;</span>,
-        <span class=hljs-attr>&quot;strict&quot;</span>: <span class=hljs-literal>true</span>,
-        <span class=hljs-attr>&quot;moduleResolution&quot;</span>: <span class=hljs-string>&quot;node&quot;</span>,
-        <span class=hljs-attr>&quot;resolveJsonModule&quot;</span>: <span class=hljs-literal>true</span>
+</code></pre>
+<p>现在，程序在第 2 行中出现了类型错误。TypeScript 不允许我们按照这种方式开箱即用地导入 JSON 模块。这是 TypeScript 团队的一项明智的设计决定：获取较大的 JSON 文件可能会<a href="https://github.com/Microsoft/TypeScript/pull/22167#issuecomment-385479553">消耗大量内存</a>。这就是为什么我们需要通过启用 <code>--resolveJsonModule</code> 编译器标志来选择使用该功能：</p>
+<blockquote>
+<p>让人们有意识地选择这个做法帮助着用户了解耗费的成本。</p>
+</blockquote>
+<p>让我们转到 <strong>tsconfig.json</strong> 文件并在其中启用该选项：</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">&quot;compilerOptions&quot;</span>: {
+        <span class="hljs-attr">&quot;target&quot;</span>: <span class="hljs-string">&quot;es2015&quot;</span>,
+        <span class="hljs-attr">&quot;module&quot;</span>: <span class="hljs-string">&quot;commonjs&quot;</span>,
+        <span class="hljs-attr">&quot;strict&quot;</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">&quot;moduleResolution&quot;</span>: <span class="hljs-string">&quot;node&quot;</span>,
+        <span class="hljs-attr">&quot;resolveJsonModule&quot;</span>: <span class="hljs-literal">true</span>
     }
 }
-</code></pre><p>在声明了<code>--resolveJsonModule</code>以后，我们的 TypeScript 文件现在不会再出现类型错误。而且，我们现在还拥有了类型检查和自动补全功能！<p>如果使用上面显示的编译器选项编译 TypeScript 文件，则会得到以下 JavaScript 输出：<pre class=hljs><code><span class=hljs-meta>&quot;use strict&quot;</span>;
+</code></pre>
+<p>在声明了 <code>--resolveJsonModule</code> 以后，我们的 TypeScript 文件现在不会再出现类型错误。而且，我们现在还拥有了类型检查和自动补全功能！</p>
+<p>如果使用上面显示的编译器选项编译 TypeScript 文件，则会得到以下 JavaScript 输出：</p>
+<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
 
-<span class=hljs-built_in>Object</span>.defineProperty(<span class=hljs-built_in>exports</span>, <span class=hljs-string>&quot;__esModule&quot;</span>, {<span class=hljs-attr>value</span>: <span class=hljs-literal>true</span>});
+<span class="hljs-built_in">Object</span>.defineProperty(<span class="hljs-built_in">exports</span>, <span class="hljs-string">&quot;__esModule&quot;</span>, {<span class="hljs-attr">value</span>: <span class="hljs-literal">true</span>});
 
-<span class=hljs-keyword>const</span> express = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;express&quot;</span>);
-<span class=hljs-keyword>const</span> config = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./config.json&quot;</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
 
-<span class=hljs-keyword>const</span> app = express();
+<span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class=hljs-function>() =&gt;</span> {
-    <span class=hljs-built_in>console</span>.log(<span class=hljs-string>`在端口 <span class=hljs-subst>${config.server.nodePort}</span> 上监听...`</span>);
+app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
-</code></pre><p>注意，输出与我们的第一个方法（使用<code>require</code>） 几乎相同：<pre class=hljs><code><span class=hljs-meta>&quot;use strict&quot;</span>;
+</code></pre>
+<p>注意，输出与我们的第一个方法（使用 <code>require</code>） 几乎相同：</p>
+<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
 
-<span class=hljs-keyword>const</span> express = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;express&quot;</span>);
-<span class=hljs-keyword>const</span> config = <span class=hljs-built_in>require</span>(<span class=hljs-string>&quot;./config.json&quot;</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
 
-<span class=hljs-keyword>const</span> app = express();
+<span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class=hljs-function>() =&gt;</span> {
-    <span class=hljs-built_in>console</span>.log(<span class=hljs-string>`在端口 <span class=hljs-subst>${config.server.nodePort}</span> 上监听...`</span>);
+app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
-</code></pre><p>这就是在 TypeScript 模块中导入 JSON 模块的方法！我们仅需在配置文件中通过设置<code>resolveJsonModule</code>这个编译器选项的值为<code>true</code>即可启用这个功能！<blockquote><p>如果发现译文存在错误或其他需要改进的地方，欢迎到<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>对译文进行修改并 PR，也可获得相应奖励积分。文章开头的<strong>本文永久链接</strong>即为本文在 GitHub 上的 MarkDown 链接。</blockquote><hr><blockquote><p><a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>是一个翻译优质互联网技术文章的社区，文章来源为<a href=https://juejin.im>掘金</a>上的英文分享文章。内容覆盖<a href=https://github.com/xitu/gold-miner#android>Android</a>、<a href=https://github.com/xitu/gold-miner#ios>iOS</a>、<a href=https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF>前端</a>、<a href=https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF>后端</a>、<a href=https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE>区块链</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81>产品</a>、<a href=https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1>设计</a>、<a href=https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD>人工智能</a>等领域，想要查看更多优质译文请持续关注<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>、<a href=http://weibo.com/juejinfanyi>官方微博</a>、<a href=https://zhuanlan.zhihu.com/juejinfanyi>知乎专栏</a>。</blockquote></div><div class=footer></div><script src=/assets/scripts/index.min.js></script><script>init()</script>
+</code></pre>
+<p>这就是在 TypeScript 模块中导入 JSON 模块的方法！我们仅需在配置文件中通过设置 <code>resolveJsonModule</code> 这个编译器选项的值为 <code>true</code> 即可启用这个功能！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

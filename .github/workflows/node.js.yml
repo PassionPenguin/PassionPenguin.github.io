@@ -20,13 +20,20 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@master
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm i -g markdown-html-gen
     - run: cd documents && for f in *.md; do md2html -o ../archive $f; done
-    - run: git add .
-    - run: git commit -m "Build Resources"
-    - run: git push origin master
+    - name: setup git config
+      run: |
+        git config user.name "Hoarfroster Bot"
+        git config user.email "<penguin.zhang@qq.com>"
+    - name: commit
+      run: |
+        # Stage the file, commit and push
+        git add *
+        git commit -m "Build Resources"
+        git push origin master

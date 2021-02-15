@@ -33,6 +33,7 @@ jobs:
           git config user.email "<penguin.zhang@qq.com>"
 
       - name: Generate HTML Pages with Markdown Files
+        run: |
           cd documents
           # documents/*.md => archive/*.html
           for f in *.md; do md2html -o ../archive $f; done

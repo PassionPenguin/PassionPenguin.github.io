@@ -1,7 +1,7 @@
 @import "../basic";
 
 .footer {
-    background: #f0f0f0;
+    background: var(--color-auto-gray-1);
     margin-top: 32px;
 
     .container {
@@ -80,7 +80,7 @@
             }
 
             p {
-                display: inherit!important;
+                display: inherit !important;
             }
         }
 

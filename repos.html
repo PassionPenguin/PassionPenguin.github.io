@@ -1,12 +1,106 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="lightHeaderBar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Repo - Hoarfroster</title>
+    <title>Repos - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/main.css">
 </head>
 <body>
-<!-- TODO: REPOS -->
+<div class="banner">
+    <div class="image"></div>
+    <div class="tips">
+        <h1>小羽的小窝</h1>
+        <h2>小羽的项目真的少得可怜啊？</h2>
+    </div>
+</div>
+<div class="container repos">
+    <h3>精选 Selected</h3>
+    <ul class="selected-list">
+    </ul>
+    <h3>全部 Full List <small>（最多 100 个）</small></h3>
+    <ul class="full-list"></ul>
+</div>
+<div class="footer"></div>
 </body>
+<script src="/assets/scripts/index.js"></script>
+<script>
+    init();
+
+    function genCard(item) {
+        return ce({
+            name: "li", innerHTML:
+                `<a href="${item.url}" class="title">${item.name}</a>
+                 <p class="description">${item.description !== null ? item.description : ""}</p>
+                 <p class="meta">
+                 ${item.language !== null ?
+                    '<span class="language">' +
+                    '   <i style="background-color: ' +
+                    (languageColor[item.language] !== undefined ? languageColor[item.language].color : 'var(--color-auto-gray-6)') + '"></i><span>' + item.language + '</span></span>' : ''}
+                ${item.forks > 0 ?
+                    '<span class="fork icon"></span><a href="' + item.url + '/network/members">' + item.forks + '</a>' : ''}
+                ${item.stars > 0 ?
+                    '<span class="star icon"></span><a href="' + item.url + '/stargazers">' + item.stars + '</a>' : ''}</p>
+                `
+        })
+    }
+
+    (fullList = async () => {
+        const json = (readRepoData() !== null && JSON.parse(readRepoData())['time'] - new Date().getTime() < 60 * 60 * 1000) ? JSON.parse(readRepoData()) : await (async () => {
+            let fetchResult = await (await fetch("https://api.github.com/users/PassionPenguin/repos?per_page=100")).json();
+            console.log(fetchResult);
+            let tmp = fetchResult.map(e => {
+                return {
+                    name: e['name'],
+                    description: e['description'],
+                    url: e['html_url'],
+                    createdAt: e['created_at'],
+                    updatedAt: e['updated_at'],
+                    forks: e['forks'],
+                    stars: e['stargazers_count'],
+                    language: e['language']
+                }
+            });
+            let result = {
+                time: new Date().getTime(),
+                data: tmp
+            }
+            setRepoData(JSON.stringify(result), 1 / 24);
+            return result;
+        })();
+        json.data.forEach(e => {
+            $(".full-list")[0].appendChild(genCard(e));
+        });
+    })();
+
+    (selectedRepos = async () => {
+        const json = (readSelectedRepoData() !== null && JSON.parse(readSelectedRepoData())['time'] - new Date().getTime() < 60 * 60 * 1000) ? JSON.parse(readSelectedRepoData()) : await (async () => {
+            let list = ["xitu/gold-miner", "wongchito/RailMapGenerator", "PassionPenguin/GZMTR"];
+            let fetchResult = [];
+            for (let i = 0; i < list.length; i++) {
+                let tmp = await (await fetch("https://api.github.com/repos/" + list[i])).json();
+                fetchResult.push({
+                    name: tmp['name'],
+                    description: tmp['description'],
+                    url: tmp['html_url'],
+                    createdAt: tmp['created_at'],
+                    updatedAt: tmp['updated_at'],
+                    forks: tmp['forks'],
+                    stars: tmp['stargazers_count'],
+                    language: tmp['language']
+                });
+            }
+            let result = {
+                time: new Date().getTime(),
+                data: fetchResult
+            }
+            setSelectedRepoData(JSON.stringify(result), 1 / 24);
+            return result;
+        })();
+        json.data.forEach(e => {
+            $(".selected-list")[0].appendChild(genCard(e));
+        });
+    })();
+</script>
 </html>

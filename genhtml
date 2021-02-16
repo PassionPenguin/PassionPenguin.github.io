@@ -1,8 +1,0 @@
-#!/bin/zsh
-for f in documents/*.md
-do 
-if [ ! -f "./archive/${${f//md/html}//documents/}" ]
-	then 
-	echo "Generate ${f//md/html}"
-	md2html $f -o ./archive; fi
-done

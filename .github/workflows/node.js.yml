@@ -38,7 +38,7 @@ jobs:
               htmlpath=${f/md/html}
               htmlpath=${f/documents/archive}
               if [ ! -f htmlpath ]
-                then echo "Generate ${f//md/html}"
+                then echo "Generate $htmlpath"
                 md2html "$f" -o ./archive
               fi
             done

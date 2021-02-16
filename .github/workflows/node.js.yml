@@ -41,9 +41,7 @@ jobs:
                 then echo "Generate ${f//md/html}"
                 md2html "$f" -o ./archive
               fi
-              ls-minifier "$f" --silent --override --html-compressor=html-minifier
             done
-
 
       - name: Commit Generated HTML Pages
         run: |

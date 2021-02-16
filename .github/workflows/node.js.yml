@@ -33,13 +33,8 @@ jobs:
 
       - name: Generate HTML Pages with Markdown Files
         run: |
-          for f in documents/*.md
-            do if [ ! -f "./archive/${${f//md/html}//documents\//}" ]
-              then
-              echo "Generate ${f//md/html}"
-              md2html $f -o ./archive; fi
-              ls-minifier $f --silent --override --html-compressor=html-minifier
-            done
+          chmod +x ./.github/sh/page-generator.sh
+          ./.github/sh/page-generator.sh
 
       - name: Commit Generated HTML Pages
         run: |

@@ -1,32 +1,4 @@
-<!doctype html>
-<html lang="en" class="lightHeaderBar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Repos - Hoarfroster</title>
-    <link rel="stylesheet" href="/assets/styles/main.css">
-</head>
-<body>
-<div class="banner">
-    <div class="image"></div>
-    <div class="tips">
-        <h1>小羽的小窝</h1>
-        <h2>小羽的项目真的少得可怜啊？</h2>
-    </div>
-</div>
-<div class="container repos">
-    <h3>精选 Selected</h3>
-    <ul class="selected-list">
-    </ul>
-    <h3>全部 Full List <small>（最多 100 个）</small></h3>
-    <ul class="full-list"></ul>
-</div>
-<div class="footer"></div>
-</body>
-<script src="/assets/scripts/index.min.js"></script>
-<script>
-    init();
+<!doctype html><html lang=en class=lightHeaderBar><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Repos - Hoarfroster</title><link rel=stylesheet href=/assets/styles/main.css><div class=banner><div class=image></div><div class=tips><h1>小羽的小窝</h1><h2>小羽的项目真的少得可怜啊？</h2></div></div><div class="container repos"><h3>精选 Selected</h3><ul class=selected-list></ul><h3>全部 Full List<small>（最多 100 个）</small></h3><ul class=full-list></ul></div><div class=footer></div><script src=/assets/scripts/index.min.js></script><script>init();
 
     function genCard(item) {
         return ce({
@@ -101,6 +73,4 @@
         json.data.forEach(e => {
             $(".selected-list")[0].appendChild(genCard(e));
         });
-    })();
-</script>
-</html>
+    })();</script>

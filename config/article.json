@@ -1,14 +1,39 @@
 [
     {
-        "title": "10 个你应该现在启用的绝佳的 Chrome Flags",
-        "description": "如果您可以神奇地升级浏览器来使用 Chrome 普通用户不知道的功能，那会很酷吗？",
+        "title": "恭喜 Safari 荣获「第二个 Internet Explorer」的美誉",
+        "description": "如果你去问问一个程序员他对听到 IE 这个词的感受，一般来说，绝对是这样的 —— OMG 痛苦的要死！我当然也不是例外！我作为一名 Web 开发者已经有了十多年，在这段时间里面，开发过不少必须要兼容 IE 的项目。我清晰地认识到，某些奇葩浏览器不支持别的浏览器支持的常见功能这个问题，是如何令我们这群本已秃头的程序员们更加头秃沮丧的。或者说，有的时候，这种坑货浏览器甚至还会错误地将部分元素渲染在错误的地方！更糟糕的是，你可能有些时候还得去调试某些意料之外的错误的行为。",
         "translator": "PassionPenguin",
-        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2020/10-awesome-chrome-flags-you-should-enable-right-now.md",
+        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2021/safari-has-become-the-second-internet-explorer.md",
         "tags": [
+            "前端",
             "其他"
         ],
-        "time": "2021-01-27T17:28:00+0800",
-        "url": "10-awesome-chrome-flags-you-should-enable-right-now.md"
+        "time": "2021-02-16T15:11:23+0800",
+        "url": "safari-has-become-the-second-internet-explorer.md"
+    },
+    {
+        "title": "在 TypeScript 中引入 JSON 模块",
+        "description": "TypeScript 2.9 版本引入了一个新的 --resolveJsonModule 编译选项，让我们可以在 TypeScript 模块内部引入 JSON 模块。",
+        "translator": "PassionPenguin",
+        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2021/importing-json-modules-in-typescript.md",
+        "tags": [
+            "前端",
+            "后端"
+        ],
+        "time": "2021-02-13T15:56:00+0800",
+        "url": "importing-json-modules-in-typescript.md"
+    },
+    {
+        "title": "Flutter 中的交织动画",
+        "description": "交织动画由一个动画序列或重叠的动画组成，而要制作交织的动画，我们需要使用多个或多组动画对象。我们应该使用同一个 AnimationController 控制所有动画，每个动画对象都应该指定某个点或锚点在一段时间内的运动，并且对于要执行的动画的每个属性，我们都应该创建一个补间（Tween）。",
+        "translator": "PassionPenguin",
+        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2021/staggered-animation-in-flutter.md",
+        "tags": [
+            "Flutter",
+            "设计"
+        ],
+        "time": "2021-02-13T15:56:00",
+        "url": "staggered-animation-in-flutter.md"
     },
     {
         "title": "3 个鲜为人知的 Bash 技巧",
@@ -80,29 +105,6 @@
         "url": "how-to-slow-down-a-for-loop-in-javascript.md"
     },
     {
-        "title": "在 TypeScript 中引入 JSON 模块",
-        "description": "TypeScript 2.9 版本引入了一个新的 --resolveJsonModule 编译选项，让我们可以在 TypeScript 模块内部引入 JSON 模块。",
-        "translator": "PassionPenguin",
-        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2021/importing-json-modules-in-typescript.md",
-        "tags": [
-            "前端",
-            "后端"
-        ],
-        "time": "2021-02-13T15:56:00+0800",
-        "url": "importing-json-modules-in-typescript.md"
-    },
-    {
-        "title": "幻数并没有我们想象中的那么奇幻",
-        "description": "我真的不喜欢幻数这个词 —— 我看到太多人都理解错了。我见过这么一种代码审查，一看见代码中或者注释中有数字就评论：“哦，这是个幻数呢，请您务必给它取个名并放在代码头部”，我好多的代码里也会有这样的评论。",
-        "translator": "PassionPenguin",
-        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/TODO1/magic-numbers-are-not-that-magic.md",
-        "tags": [
-            "其他"
-        ],
-        "time": "2021-02-03T09:54:00+0800",
-        "url": "magic-numbers-are-not-that-magic.md"
-    },
-    {
         "title": "Python 中的列表和元组",
         "description": "要编写一个高效的程序，我们需要了解两件事事：首先是程序的输入内容是什么，其次是我们应该如何选择最合适的数据结构来处理该输入。",
         "translator": "PassionPenguin",
@@ -126,16 +128,37 @@
         "url": "should-you-compile-your-javascript-code.md"
     },
     {
-        "title": "Flutter 中的交织动画",
-        "description": "交织动画由一个动画序列或重叠的动画组成，而要制作交织的动画，我们需要使用多个或多组动画对象。我们应该使用同一个 AnimationController 控制所有动画，每个动画对象都应该指定某个点或锚点在一段时间内的运动，并且对于要执行的动画的每个属性，我们都应该创建一个补间（Tween）。",
+        "title": "Android 中意料之外的应用崩溃以及它们的解决方案",
+        "description": "如果问前端、后端甚至游戏开发人员之间存在什么共同点，那就是我们都讨厌应用产品出现 Bug，尤其是当这些错误导致应用崩溃时。而在应用发布后，监视应用程序中这些不断增加的崩溃是一种极其不愉快的体验。",
         "translator": "PassionPenguin",
-        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2021/staggered-animation-in-flutter.md",
+        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2020/unexpected-app-crashes-on-android-and-how-to-deal-with-them.md",
         "tags": [
-            "Flutter",
-            "设计"
+            "Android"
         ],
-        "time": "2021-02-13T15:56:00",
-        "url": "staggered-animation-in-flutter.md"
+        "time": "2021-02-04T16:12:00",
+        "url": "unexpected-app-crashes-on-android-and-how-to-deal-with-them.md"
+    },
+    {
+        "title": "幻数并没有我们想象中的那么奇幻",
+        "description": "我真的不喜欢幻数这个词 —— 我看到太多人都理解错了。我见过这么一种代码审查，一看见代码中或者注释中有数字就评论：“哦，这是个幻数呢，请您务必给它取个名并放在代码头部”，我好多的代码里也会有这样的评论。",
+        "translator": "PassionPenguin",
+        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/TODO1/magic-numbers-are-not-that-magic.md",
+        "tags": [
+            "其他"
+        ],
+        "time": "2021-02-03T09:54:00+0800",
+        "url": "magic-numbers-are-not-that-magic.md"
+    },
+    {
+        "title": "10 个你应该现在启用的绝佳的 Chrome Flags",
+        "description": "如果您可以神奇地升级浏览器来使用 Chrome 普通用户不知道的功能，那会很酷吗？",
+        "translator": "PassionPenguin",
+        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2020/10-awesome-chrome-flags-you-should-enable-right-now.md",
+        "tags": [
+            "其他"
+        ],
+        "time": "2021-01-27T17:28:00+0800",
+        "url": "10-awesome-chrome-flags-you-should-enable-right-now.md"
     },
     {
         "title": "UIKit 和 SwiftUI：我该选择哪一个运用在实际产品开发中？",
@@ -147,17 +170,6 @@
         ],
         "time": "2021-01-25T19:48:00",
         "url": "uikit-or-swiftui-which-should-you-use-in-production.md"
-    },
-    {
-        "title": "Android 中意料之外的应用崩溃以及它们的解决方案",
-        "description": "如果问前端、后端甚至游戏开发人员之间存在什么共同点，那就是我们都讨厌应用产品出现 Bug，尤其是当这些错误导致应用崩溃时。而在应用发布后，监视应用程序中这些不断增加的崩溃是一种极其不愉快的体验。",
-        "translator": "PassionPenguin",
-        "repoUrl": "https://github.com/xitu/gold-miner/blob/master/article/2020/unexpected-app-crashes-on-android-and-how-to-deal-with-them.md",
-        "tags": [
-            "Android"
-        ],
-        "time": "2021-02-04T16:12:00",
-        "url": "unexpected-app-crashes-on-android-and-how-to-deal-with-them.md"
     },
     {
         "title": "简述 HTTP 请求与跨域资源共享 CORS",

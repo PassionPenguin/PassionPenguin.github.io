@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 cd ../../
 for f in documents/*.md
   do if [ ! -f "./archive/${${f//md/html}//documents\//}" ]

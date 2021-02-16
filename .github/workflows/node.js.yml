@@ -33,11 +33,13 @@ jobs:
 
       - name: Generate HTML Pages with Markdown Files
         run: |
-          cd documents
-          # documents/*.md => archive/*.html
-          for f in *.md; do md2html -o ../archive $f; done
-          cd ../archive
-          ls-minifier *.html --silent --override --html-compressor=html-minifier
+          for f in documents/*.md
+            do if [ ! -f "./archive/${${f//md/html}//documents/}" ]
+              then
+              echo "Generate ${f//md/html}"
+              md2html $f -o ./archive; fi
+            done
+          ls-minifier archive/*.html --silent --override --html-compressor=html-minifier
 
       - name: Commit Generated HTML Pages
         run: |
@@ -50,7 +52,6 @@ jobs:
 
       - name: Compress Files
         run: |
-          cd ../
           ls-minifier **/*.css --silent --css-compressor=yui
           ls-minifier **/*.js --silent --js-compressor=gcc
 

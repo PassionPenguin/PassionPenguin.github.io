@@ -24,7 +24,7 @@ jobs:
       - name: NPM Install
         run: |
           npm i -g markdown-html-gen
-          npm i -g ls-minifier
+          npm i -g minify
 
       - name: setup git config
         run: |
@@ -35,11 +35,11 @@ jobs:
         run: |
           for f in documents/*.md
             do
-              htmlpath=${f/md/html}
               htmlpath=${f/documents/archive}
-              if [ ! -f htmlpath ]
-                then echo "Generate $htmlpath"
+              htmlpath=${htmlpath/md/html}
+              if [ ! -f htmlpath ]; then
                 md2html "$f" -o ./archive
+                echo "Generated $htmlpath"
               fi
             done
 
@@ -54,8 +54,8 @@ jobs:
 
       - name: Compress Files
         run: |
-          ls-minifier **/*.css --silent --css-compressor=yui
-          ls-minifier **/*.js --silent --js-compressor=gcc
+          for f in **/*.css; do minify $f > ${f/.css/.min.css}; done
+          for f in **/*.js; do minify $f > ${f/.js/.min.js}; done
 
       - name: Commit Compressed Files
         run: |

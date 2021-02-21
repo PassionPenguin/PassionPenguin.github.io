@@ -49,7 +49,7 @@ function post(e) {
         innerHTML: date.toDateString()
     }));
     container.appendChild(ce({name: "p", classList: ["description"], innerHTML: e["description"]}));
-    $(".container")[0].appendChild(container);
+    $(".container .posts")[0].appendChild(container);
 }
 
 fetch("config/article.min.json")

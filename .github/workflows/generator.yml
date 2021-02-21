@@ -18,8 +18,8 @@ jobs:
 
       - name: Build with Gradle
         run:  |
-        cd ./documents
-        ./gradlew build
+          cd ./documents
+          ./gradlew build
 
       - name: Use Node.js 15.x
         uses: actions/setup-node@v1

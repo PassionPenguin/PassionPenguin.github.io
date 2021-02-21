@@ -6,16 +6,17 @@
         container.appendChild(ce({
             name: "h2", classList: ["title"], innerHTML: e["title"] + e["tags"].map(el => {
                 let href = window.location.href;
-                let splitSearch = window.location.search.split(';');
+                let search = window.location.search;
+                let splitSearch = search.split(';');
                 let src;
-                if (window.location.search !== "")
+                if (search !== "")
                     if (splitSearch['sort'] !== undefined)
                         if (splitSearch['sort'].match(RegExp("label%3A*")) !== null)
-                            src = window.location.href + window.location.search.replace(RegExp("label%3A*(&|\\+|$)"), `label%3A${el}`);
-                        else src = window.location.href + window.location.search.split("+").concat([`label%3A${el}`]).join("+");
-                    else src = window.location.href + window.location.search + `&sort=label%3A${el}`;
-                else src = window.location.href + `?sort%3A${el}`
-                return `<a href='${src}' class="${el} label">${el}</a>`
+                            src = href + search.replace(RegExp("label%3A*(&|\\+|$)"), `label%3A${el.name}`);
+                        else src = href + search.split("+").concat([`label%3A${el.name}`]).join("+");
+                    else src = href + search + `&sort=label%3A${el.name}`;
+                else src = href + `?sort%3A${el.name}`
+                return `<a href='${src}' class="${el.name} label">${el.name}</a>`
             }).join(""), onclick: () => {
                 openUrl(`/archive/${e['url'].replace('md', 'html')}`);
             }

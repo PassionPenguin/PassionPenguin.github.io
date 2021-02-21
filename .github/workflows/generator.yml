@@ -15,9 +15,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: build
+
+      - name: Build with Gradle
+        run:  |
+        cd ./documents
+        ./gradlew build
 
       - name: Use Node.js 15.x
         uses: actions/setup-node@v1

@@ -23,8 +23,8 @@ jobs:
 
       - name: setup git config
         run: |
-          git config user.name "Hoarfroster Bot"
-          git config user.email "<penguin.zhang@qq.com>"
+          git config --global user.name "Hoarfroster Bot"
+          git config --global user.email "<penguin.zhang@qq.com>"
 
       - uses: actions/checkout@master
         with:

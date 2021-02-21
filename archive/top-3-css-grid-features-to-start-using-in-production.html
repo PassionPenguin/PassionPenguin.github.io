@@ -31,11 +31,11 @@
 <p>这是我一直以来最喜欢的 CSS Grid 功能，允许我们以声明的方式定义 Grid 布局。</p>
 <p>我们可以使用几行 CSS 行创建一个非常复杂且响应迅速的布局：</p>
 <pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Grid Playground<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>/&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span>&gt;</span><span class="css">
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/css&quot;</span>&gt;</span><span class="css">
         <span class="hljs-selector-tag">body</span> {
             <span class="hljs-attribute">color</span>: white;
             <span class="hljs-attribute">text-align</span>: center;
@@ -45,64 +45,64 @@
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
             <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100vh</span> - <span class="hljs-number">20px</span>);
             <span class="hljs-attribute">display</span>: grid;
-            <span class="hljs-attribute">grid-template-rows</span>: <span class="hljs-number">1</span>fr <span class="hljs-number">3</span>fr <span class="hljs-number">1</span>fr;
-            <span class="hljs-attribute">grid-template-areas</span>:
-                <span class="hljs-string">"navigation navigation navigation navigation"</span>
-                <span class="hljs-string">"left content content right"</span>
-                <span class="hljs-string">"footer footer footer footer"</span>;
+            grid-template-rows: <span class="hljs-number">1</span>fr <span class="hljs-number">3</span>fr <span class="hljs-number">1</span>fr;
+            grid-template-areas:
+                <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+                <span class="hljs-string">&quot;left content content right&quot;</span>
+                <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
         }
 
-        <span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">700px</span>) {
+        <span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width</span>: <span class="hljs-number">700px</span>) {
             <span class="hljs-selector-id">#grid</span> {
-                <span class="hljs-attribute">grid-template-rows</span>: <span class="hljs-number">1</span>fr <span class="hljs-number">3</span>fr <span class="hljs-number">1</span>fr <span class="hljs-number">1</span>fr <span class="hljs-number">1</span>fr;
-                <span class="hljs-attribute">grid-template-areas</span>:
-                    <span class="hljs-string">"navigation"</span>
-                    <span class="hljs-string">"content"</span>
-                    <span class="hljs-string">"left"</span>
-                    <span class="hljs-string">"right"</span>
-                    <span class="hljs-string">"footer"</span>;
+                grid-template-rows: <span class="hljs-number">1</span>fr <span class="hljs-number">3</span>fr <span class="hljs-number">1</span>fr <span class="hljs-number">1</span>fr <span class="hljs-number">1</span>fr;
+                grid-template-areas:
+                    <span class="hljs-string">&quot;navigation&quot;</span>
+                    <span class="hljs-string">&quot;content&quot;</span>
+                    <span class="hljs-string">&quot;left&quot;</span>
+                    <span class="hljs-string">&quot;right&quot;</span>
+                    <span class="hljs-string">&quot;footer&quot;</span>;
             }
         }
 
         <span class="hljs-selector-class">.navigation</span> {
             <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#471323</span>;
-            <span class="hljs-attribute">grid-area</span>: navigation;
+            grid-area: navigation;
         }
 
         <span class="hljs-selector-class">.content</span> {
             <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#5B2E48</span>;
-            <span class="hljs-attribute">grid-area</span>: content;
+            grid-area: content;
         }
 
         <span class="hljs-selector-class">.left</span> {
             <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#585563</span>;
-            <span class="hljs-attribute">grid-area</span>: left;
+            grid-area: left;
         }
 
         <span class="hljs-selector-class">.right</span> {
             <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#585563</span>;
-            <span class="hljs-attribute">grid-area</span>: right;
+            grid-area: right;
         }
 
         <span class="hljs-selector-class">.footer</span> {
             <span class="hljs-attribute">padding</span>: <span class="hljs-number">10px</span>;
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#CEB992</span>;
-            <span class="hljs-attribute">grid-area</span>: footer;
+            grid-area: footer;
         }
     </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"grid"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"navigation"</span>&gt;</span>Nav<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"left"</span>&gt;</span>Left<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"content"</span>&gt;</span>Content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"right"</span>&gt;</span>Right<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"footer"</span>&gt;</span>Footer<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;grid&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;navigation&quot;</span>&gt;</span>Nav<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;left&quot;</span>&gt;</span>Left<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;</span>Content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;right&quot;</span>&gt;</span>Right<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;footer&quot;</span>&gt;</span>Footer<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
@@ -117,11 +117,11 @@
     <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
     <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100vh</span> - <span class="hljs-number">20px</span>);
     <span class="hljs-attribute">display</span>: grid;
-    <span class="hljs-attribute">grid-template-rows</span>:<span class="hljs-number">1</span>fr <span class="hljs-number">2</span>fr <span class="hljs-number">1</span>fr;
-    <span class="hljs-attribute">grid-template-areas</span>:
-    <span class="hljs-string">"navigation navigation navigation navigation"</span>
-    <span class="hljs-string">". content content ."</span>
-    <span class="hljs-string">"footer footer footer footer"</span>;
+    grid-template-rows:<span class="hljs-number">1</span>fr <span class="hljs-number">2</span>fr <span class="hljs-number">1</span>fr;
+    grid-template-areas:
+    <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+    <span class="hljs-string">&quot;. content content .&quot;</span>
+    <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 </code></pre>
 <p><img src="https://cdn-images-1.medium.com/max/2074/1*frMRKP1wKAGbxlAuQVI_SQ.png" alt="在主要内容两边定义空白 Grid"></p>
@@ -135,12 +135,12 @@
     <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
     <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100vh</span> - <span class="hljs-number">20px</span>);
     <span class="hljs-attribute">display</span>: grid;
-    <span class="hljs-attribute">grid-template-areas</span>:
-    <span class="hljs-string">"navigation navigation navigation navigation"</span>
-    <span class="hljs-string">"left content content right"</span>
-    <span class="hljs-string">"content content content content"</span>
-    <span class="hljs-string">"left content content right"</span>
-    <span class="hljs-string">"footer footer footer footer"</span>;
+    grid-template-areas:
+    <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+    <span class="hljs-string">&quot;left content content right&quot;</span>
+    <span class="hljs-string">&quot;content content content content&quot;</span>
+    <span class="hljs-string">&quot;left content content right&quot;</span>
+    <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 </code></pre>
 <p>上面的示例不起作用。因为 <code>right</code> 和 <code>left</code> 的定义都重复了。删除 <code>content content content content</code> 一行，让 <code>left</code> 和 <code>right</code> 连接起来，就能够解决该问题。</p>
@@ -149,33 +149,33 @@
     <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
     <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100vh</span> - <span class="hljs-number">20px</span>);
     <span class="hljs-attribute">display</span>: grid;
-    <span class="hljs-attribute">grid-template-areas</span>:
-    <span class="hljs-string">"navigation navigation navigation navigation"</span>
-    <span class="hljs-string">"content right"</span>
-    <span class="hljs-string">"content content"</span>
-    <span class="hljs-string">"right"</span>
-    <span class="hljs-string">"footer"</span>;
+    grid-template-areas:
+    <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+    <span class="hljs-string">&quot;content right&quot;</span>
+    <span class="hljs-string">&quot;content content&quot;</span>
+    <span class="hljs-string">&quot;right&quot;</span>
+    <span class="hljs-string">&quot;footer&quot;</span>;
 }
 </code></pre>
 <p>上面的示例不起作用，因为我们定义了描述了一个非矩形区域，而 Grid 并非为此而建，也不支持它。</p>
 <p>提示：我们可以将 <code>grid-template-rows</code> 和 <code>grid-template-areas</code> 结合使用，但是结果将有所不同。我们必须选择一种适合我们特定场景的方案。</p>
 <pre class="hljs"><code><span class="hljs-comment">/* 方法 A */</span>
 <span class="hljs-selector-id">#grid</span> {
-    <span class="hljs-attribute">grid-template-rows</span>: <span class="hljs-number">1</span>fr <span class="hljs-number">3</span>fr <span class="hljs-number">1</span>fr;
-    <span class="hljs-attribute">grid-template-areas</span>:
-	  <span class="hljs-string">"navigation navigation navigation navigation"</span>
-	  <span class="hljs-string">"left content content right"</span>
-	  <span class="hljs-string">"footer footer footer footer"</span>;
+    grid-template-rows: <span class="hljs-number">1</span>fr <span class="hljs-number">3</span>fr <span class="hljs-number">1</span>fr;
+    grid-template-areas:
+	  <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+	  <span class="hljs-string">&quot;left content content right&quot;</span>
+	  <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 
 <span class="hljs-comment">/* 方法 B */</span>
 <span class="hljs-selector-id">#grid</span> {
-    <span class="hljs-attribute">grid-template-areas</span>:
-	  <span class="hljs-string">"navigation navigation navigation navigation"</span>
-	  <span class="hljs-string">"left content content right"</span>
-	  <span class="hljs-string">"left content content right"</span>
-	  <span class="hljs-string">"left content content right"</span>
-	  <span class="hljs-string">"footer footer footer footer"</span>;
+    grid-template-areas:
+	  <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+	  <span class="hljs-string">&quot;left content content right&quot;</span>
+	  <span class="hljs-string">&quot;left content content right&quot;</span>
+	  <span class="hljs-string">&quot;left content content right&quot;</span>
+	  <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 </code></pre>
 <p><img src="https://cdn-images-1.medium.com/max/2090/1*U9o4_M-wfMeBHindl1H4sw.png" alt="方法 A"></p>
@@ -183,8 +183,8 @@
 <p>提示：使用 <code>grid-template-area</code> 可以简单创建 Grid 线。这意味着即使使用 <code>grid-template-area</code>，我们仍然可以使用 Grid 线的位置逻辑。接下来，让我们简要介绍一下负索引 <code>-1</code>。</p>
 <pre class="hljs"><code><span class="hljs-selector-class">.customContent</span> {
     <span class="hljs-attribute">background-color</span>: white;
-    <span class="hljs-attribute">grid-row</span>: <span class="hljs-number">1</span> / -<span class="hljs-number">1</span>;
-    <span class="hljs-attribute">grid-column</span>: <span class="hljs-number">1</span>;
+    grid-row: <span class="hljs-number">1</span> / -<span class="hljs-number">1</span>;
+    grid-column: <span class="hljs-number">1</span>;
 }
 </code></pre>
 <p>添加负索引会使我们的 CSS 更强大。我们可能会对 Grid 线的数量不了解：通过负索引，我们可以将内容设置为扩展到最后一个 Grid 线。</p>
@@ -195,14 +195,14 @@
     <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
     <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100vh</span> - <span class="hljs-number">20px</span>);
     <span class="hljs-attribute">display</span>: grid;
-    <span class="hljs-attribute">row-gap</span>: <span class="hljs-number">5px</span>;
+    row-gap: <span class="hljs-number">5px</span>;
     <span class="hljs-attribute">column-gap</span>: <span class="hljs-number">15px</span>;
-    <span class="hljs-attribute">grid-template-areas</span>:
-    <span class="hljs-string">"navigation navigation navigation navigation"</span>
-    <span class="hljs-string">"left content content right"</span>
-    <span class="hljs-string">"content content content content"</span>
-    <span class="hljs-string">"left content content right"</span>
-    <span class="hljs-string">"footer footer footer footer"</span>;
+    grid-template-areas:
+    <span class="hljs-string">&quot;navigation navigation navigation navigation&quot;</span>
+    <span class="hljs-string">&quot;left content content right&quot;</span>
+    <span class="hljs-string">&quot;content content content content&quot;</span>
+    <span class="hljs-string">&quot;left content content right&quot;</span>
+    <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 </code></pre>
 <p><img src="https://cdn-images-1.medium.com/max/2000/1*aajG-IirnfyHHYyPb2YKsw.png" alt="使用 gap 功能"></p>
@@ -221,11 +221,11 @@
 <p>我们该如何解决？直接以响应方式构建 Grid 布局！我们可以让 Grid 容器通过使用 <code>auto-fill</code> 或 <code>auto-fit</code> 来确定列数。</p>
 <p>通过简单的更改，我们的三列布局现在可以响应视口的大小：</p>
 <pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Grid Playground<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>/&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span>&gt;</span><span class="css">
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;UTF-8&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/css&quot;</span>&gt;</span><span class="css">
         <span class="hljs-selector-tag">body</span> {
             <span class="hljs-attribute">color</span>: white;
             <span class="hljs-attribute">text-align</span>: center;
@@ -235,8 +235,8 @@
         <span class="hljs-selector-id">#grid</span> {
             <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
             <span class="hljs-attribute">display</span>: grid;
-            <span class="hljs-attribute">grid-template-columns</span>: <span class="hljs-built_in">repeat</span>(auto-fill, minmax(<span class="hljs-number">200px</span>, <span class="hljs-number">1</span>fr));
-            <span class="hljs-attribute">gap</span>: <span class="hljs-number">10px</span>;
+            grid-template-<span class="hljs-attribute">columns</span>: <span class="hljs-built_in">repeat</span>(auto-fill, <span class="hljs-built_in">minmax</span>(<span class="hljs-number">200px</span>, <span class="hljs-number">1</span>fr));
+            gap: <span class="hljs-number">10px</span>;
             <span class="hljs-attribute">padding</span>: <span class="hljs-number">20px</span>;
         }
 
@@ -247,27 +247,27 @@
     </span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"grid"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"item"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;grid&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;item&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
@@ -281,12 +281,12 @@
 <pre class="hljs"><code><span class="hljs-comment">/* 使用媒体查询 + CSS 变量去构建响应式的固定栏目布局 */</span>
 
 <span class="hljs-selector-class">.grid</span> {
-    <span class="hljs-attribute">--repeat</span>: auto-fit;
+    --repeat: auto-fit;
 }
 
-<span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width:</span> <span class="hljs-number">700px</span>) {
+<span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width</span>: <span class="hljs-number">700px</span>) {
     <span class="hljs-selector-class">.grid</span> {
-        <span class="hljs-attribute">--repeat</span>: <span class="hljs-number">3</span>;
+        --repeat: <span class="hljs-number">3</span>;
     }
 }
 

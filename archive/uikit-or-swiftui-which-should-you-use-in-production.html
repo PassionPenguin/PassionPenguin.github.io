@@ -74,18 +74,18 @@
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HomeViewModel</span> </span>{
     
     <span class="hljs-keyword">let</span> isLoadingData: <span class="hljs-type">Driver</span>&lt;<span class="hljs-type">Bool</span>&gt;
-    <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
+    <span class="hljs-keyword">let</span> disposeBag <span class="hljs-operator">=</span> <span class="hljs-type">DisposeBag</span>()
     
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">doSomething</span><span class="hljs-params">()</span></span> { ... }
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">doSomething</span>()</span> { <span class="hljs-operator">...</span> }
 }
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HomeViewController</span>: <span class="hljs-title">UIViewController</span> </span>{
     
-    <span class="hljs-keyword">let</span> loadingIndicator: <span class="hljs-type">UIActivityIndicatorView!</span>
-    <span class="hljs-keyword">let</span> viewModel = <span class="hljs-type">HomeViewModel</span>()
-    <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
+    <span class="hljs-keyword">let</span> loadingIndicator: <span class="hljs-type">UIActivityIndicatorView</span>!
+    <span class="hljs-keyword">let</span> viewModel <span class="hljs-operator">=</span> <span class="hljs-type">HomeViewModel</span>()
+    <span class="hljs-keyword">let</span> disposeBag <span class="hljs-operator">=</span> <span class="hljs-type">DisposeBag</span>()
     
-    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">viewDidLoad</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">viewDidLoad</span>()</span> {
         <span class="hljs-keyword">super</span>.viewDidLoad()
         
         viewModel
@@ -94,7 +94,7 @@
             .disposed(by: disposeBag)
     }
     
-    <span class="hljs-meta">@IBAction</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">handleButtonPressed</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">@IBAction</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">handleButtonPressed</span>()</span> {
         viewModel.doSomething()
     }
 }
@@ -110,40 +110,40 @@
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">HomeViewModel</span> </span>{
     <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Adapter</span>: <span class="hljs-title">ObservableObject</span> </span>{
         <span class="hljs-keyword">let</span> viewModel: <span class="hljs-type">HomeViewModel</span>
-        @<span class="hljs-type">Published</span> <span class="hljs-keyword">var</span> isLoadingData = <span class="hljs-literal">false</span>
+        <span class="hljs-meta">@Published</span> <span class="hljs-keyword">var</span> isLoadingData <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
     }
 }
 
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">HomeView</span>: <span class="hljs-title">View</span> </span>{
     <span class="hljs-keyword">let</span> adapter: <span class="hljs-type">HomeViewModel</span>.<span class="hljs-type">Adapter</span>
     
-    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
         <span class="hljs-keyword">if</span> adapter.isLoadingData {
             <span class="hljs-type">ProgressView</span>()
         }
-        <span class="hljs-type">Button</span>(<span class="hljs-string">"Do something!"</span>) {
+        <span class="hljs-type">Button</span>(<span class="hljs-string">&quot;Do something!&quot;</span>) {
             <span class="hljs-keyword">self</span>.adapter.viewModel.doSomething()
         }
     }
 }
 </code></pre>
 <p>原来的 ViewModel 和适配器之间的值的绑定代码应尽可能简洁。这是在 <code>Driver</code> 和 <code>Observable</code> 的情况下桥接的样子：</p>
-<pre class="hljs"><code><span class="hljs-keyword">let</span> observable: <span class="hljs-type">Observable</span>&lt;<span class="hljs-type">Bool</span>&gt; = ...
+<pre class="hljs"><code><span class="hljs-keyword">let</span> observable: <span class="hljs-type">Observable</span>&lt;<span class="hljs-type">Bool</span>&gt; <span class="hljs-operator">=</span> <span class="hljs-operator">...</span>
 observable
     .bind(to: <span class="hljs-keyword">self</span>.binder(\.isLoadingData))
     .disposed(by: disposeBag)
     
-<span class="hljs-keyword">let</span> driver: <span class="hljs-type">Driver</span>&lt;<span class="hljs-type">Bool</span>&gt; = ...
+<span class="hljs-keyword">let</span> driver: <span class="hljs-type">Driver</span>&lt;<span class="hljs-type">Bool</span>&gt; <span class="hljs-operator">=</span> <span class="hljs-operator">...</span>
 driver
     .drive(<span class="hljs-keyword">self</span>.binder(\.name))
     .disposed(by: disposeBag)
 </code></pre>
 <p>这里我们需要的是使用 RxSwift 的 <code>Binder</code>，它会将值分配给特定的 <code>@Published</code> 值。这是进行桥接的 <code>binder</code> 函数的代码片段：</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">ObservableObject</span> </span>{
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">binder</span>&lt;Value&gt;<span class="hljs-params">(<span class="hljs-number">_</span> keyPath: WritableKeyPath&lt;<span class="hljs-keyword">Self</span>, Value&gt;)</span></span> -&gt; <span class="hljs-type">Binder</span>&lt;<span class="hljs-type">Value</span>&gt; {
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">binder</span>&lt;<span class="hljs-type">Value</span>&gt;(<span class="hljs-keyword">_</span> <span class="hljs-params">keyPath</span>: <span class="hljs-type">WritableKeyPath</span>&lt;<span class="hljs-keyword">Self</span>, <span class="hljs-type">Value</span>&gt;)</span> -&gt; <span class="hljs-type">Binder</span>&lt;<span class="hljs-type">Value</span>&gt; {
         <span class="hljs-type">Binder</span>(<span class="hljs-keyword">self</span>) { (object, value) <span class="hljs-keyword">in</span>
-            <span class="hljs-keyword">var</span> _object = object
-            _object[keyPath: keyPath] = value
+            <span class="hljs-keyword">var</span> _object <span class="hljs-operator">=</span> object
+            _object[keyPath: keyPath] <span class="hljs-operator">=</span> value
         }
     }
 }
@@ -154,12 +154,12 @@ driver
     <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Adapter</span>: <span class="hljs-title">ObservableObject</span> </span>{
     
         <span class="hljs-keyword">let</span> viewModel: <span class="hljs-type">HomeViewModel</span>
-        <span class="hljs-keyword">private</span> <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">let</span> disposeBag <span class="hljs-operator">=</span> <span class="hljs-type">DisposeBag</span>()
         
-        @<span class="hljs-type">Published</span> <span class="hljs-keyword">var</span> isLoadingData = <span class="hljs-literal">false</span>
+        <span class="hljs-meta">@Published</span> <span class="hljs-keyword">var</span> isLoadingData <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
         
-        <span class="hljs-keyword">init</span>(viewModel: <span class="hljs-type">HomeViewModel</span>) {
-            <span class="hljs-keyword">self</span>.viewModel = viewModel
+        <span class="hljs-function"><span class="hljs-keyword">init</span>(<span class="hljs-params">viewModel</span>: <span class="hljs-type">HomeViewModel</span>)</span> {
+            <span class="hljs-keyword">self</span>.viewModel <span class="hljs-operator">=</span> viewModel
             viewModel.isLoadingData
                 .drive(<span class="hljs-keyword">self</span>.binder(\.isLoadingData))
                 .disposed(by: <span class="hljs-keyword">self</span>.disposeBag)
@@ -175,17 +175,17 @@ driver
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">HomeView</span>: <span class="hljs-title">View</span> </span>{
 
     <span class="hljs-keyword">let</span> viewModel: <span class="hljs-type">HomeViewModel</span>
-    @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> isLoadingData = <span class="hljs-literal">false</span>
+    <span class="hljs-meta">@State</span> <span class="hljs-keyword">var</span> isLoadingData <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
     
-    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
         <span class="hljs-keyword">if</span> isLoadingData {
             <span class="hljs-type">ProgressView</span>()
         }
-        <span class="hljs-type">Button</span>(<span class="hljs-string">"Do something!"</span>) {
+        <span class="hljs-type">Button</span>(<span class="hljs-string">&quot;Do something!&quot;</span>) {
             <span class="hljs-keyword">self</span>.viewModel.doSomething()
         }
         .onReceive(viewModel.isLoadingData.publisher) {
-            <span class="hljs-keyword">self</span>.isLoadingData = $<span class="hljs-number">0</span>
+            <span class="hljs-keyword">self</span>.isLoadingData <span class="hljs-operator">=</span> <span class="hljs-variable">$0</span>
         }
     }
 }
@@ -199,7 +199,7 @@ driver
     <span class="hljs-keyword">var</span> publisher: <span class="hljs-type">AnyPublisher</span>&lt;<span class="hljs-type">Element</span>, <span class="hljs-type">Never</span>&gt; {
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>.asObservable()
             .publisher
-            .<span class="hljs-keyword">catch</span> { <span class="hljs-number">_</span> <span class="hljs-keyword">in</span> <span class="hljs-type">Empty</span>&lt;<span class="hljs-type">Element</span>, <span class="hljs-type">Never</span>&gt;() }
+            .catch { <span class="hljs-keyword">_</span> <span class="hljs-keyword">in</span> <span class="hljs-type">Empty</span>&lt;<span class="hljs-type">Element</span>, <span class="hljs-type">Never</span>&gt;() }
             .eraseToAnyPublisher()
     }
 }
@@ -208,14 +208,14 @@ driver
 <p>如果您可以只支持 iOS 13+，则可以考虑在应用程序中使用 Combine 构建网络和其他非 UI 模块。</p>
 <p>即使将 Combine 与 UIKit 绑定起来有些不便，但从长远来看，当项目完全迁移到 SwiftUI 时，选择 Combine 作为驱动应用程序中数据的核心框架总是有所裨益的。</p>
 <p>而且同时，您可以在 <code>sink</code> 函数中更新 UIKit 视图：</p>
-<pre class="hljs"><code>viewModel.$userName
+<pre class="hljs"><code>viewModel.<span class="hljs-variable">$userName</span>
     .sink { [<span class="hljs-keyword">weak</span> <span class="hljs-keyword">self</span>] name <span class="hljs-keyword">in</span>
-        <span class="hljs-keyword">self</span>?.nameLabel.text = name
+        <span class="hljs-keyword">self</span><span class="hljs-operator">?</span>.nameLabel.text <span class="hljs-operator">=</span> name
     }
-    .store(<span class="hljs-keyword">in</span>: &amp;cancelBag)
+    .store(in: <span class="hljs-operator">&amp;</span>cancelBag)
 </code></pre>
 <p>或者，您可以利用上述 RxCombine 库将 RxCocoa 中可用的数据绑定转换为 <code>Publisher</code> 或 <code>Observable</code>。</p>
-<pre class="hljs"><code>viewModel.$userName <span class="hljs-comment">// Publisher</span>
+<pre class="hljs"><code>viewModel.<span class="hljs-variable">$userName</span> <span class="hljs-comment">// Publisher</span>
     .asObservable() <span class="hljs-comment">// Observable</span>
     .bind(to: nameLabel.rx.text) <span class="hljs-comment">// RxCocoa 绑定</span>
     .disposed(by: disposeBag)
@@ -225,27 +225,27 @@ driver
 <p>让我们一起回到原始的示例：</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HomeViewModel</span>: <span class="hljs-title">ObservableObject</span> </span>{
 
-    @<span class="hljs-type">Published</span> <span class="hljs-keyword">var</span> isLoadingData = <span class="hljs-literal">false</span>
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">doSomething</span><span class="hljs-params">()</span></span> { ... }
+    <span class="hljs-meta">@Published</span> <span class="hljs-keyword">var</span> isLoadingData <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">doSomething</span>()</span> { <span class="hljs-operator">...</span> }
 }
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HomeViewController</span>: <span class="hljs-title">UIViewController</span> </span>{
     
-    <span class="hljs-keyword">let</span> loadingIndicator: <span class="hljs-type">UIActivityIndicatorView!</span>
-    <span class="hljs-keyword">let</span> viewModel = <span class="hljs-type">HomeViewModel</span>()
-    <span class="hljs-keyword">let</span> disposeBag = <span class="hljs-type">DisposeBag</span>()
+    <span class="hljs-keyword">let</span> loadingIndicator: <span class="hljs-type">UIActivityIndicatorView</span>!
+    <span class="hljs-keyword">let</span> viewModel <span class="hljs-operator">=</span> <span class="hljs-type">HomeViewModel</span>()
+    <span class="hljs-keyword">let</span> disposeBag <span class="hljs-operator">=</span> <span class="hljs-type">DisposeBag</span>()
     
-    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">viewDidLoad</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">viewDidLoad</span>()</span> {
         <span class="hljs-keyword">super</span>.viewDidLoad()
         
         viewModel
-            .$isLoadingData <span class="hljs-comment">// 获取 Publisher</span>
+            .<span class="hljs-variable">$isLoadingData</span> <span class="hljs-comment">// 获取 Publisher</span>
             .asObservable() <span class="hljs-comment">// 转换到 Observable</span>
             .bind(to: loadingIndicator.rx.isAnimating) <span class="hljs-comment">// RxCocoa 绑定</span>
             .disposed(by: disposeBag)
     }
     
-    <span class="hljs-meta">@IBAction</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">handleButtonPressed</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">@IBAction</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">handleButtonPressed</span>()</span> {
         viewModel.doSomething()
     }
 }

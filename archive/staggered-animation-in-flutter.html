@@ -94,8 +94,8 @@
 <li>然后将这个控件与 <code>SingleTickerProviderStateMixin</code> Mixin，以让 <code>AnimationController</code> 确定它的动画时长为 3500 毫秒。</li>
 </ul>
 <p>控制器将会播放一个动画，然后会在 widget 树上创建一个无动画的部分。当在屏幕上检测到点击事件时，开始播放动画。动画一开始会顺序播放，然后会倒序播放。</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> <span class="hljs-string">'package:flutter/material.dart'</span>;
-<span class="hljs-keyword">import</span> <span class="hljs-string">'package:stag_animation/trekking/staggered_trekking.dart'</span>;
+<pre class="hljs"><code><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:flutter/material.dart&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:stag_animation/trekking/staggered_trekking.dart&#x27;</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaggeredTrekkingAnimation</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">StatefulWidget</span> </span>{
   <span class="hljs-meta">@override</span>
@@ -148,7 +148,7 @@
 </code></pre>
 <p>在 Staggered Trekking Enter 动画中，我们使用了补间去决定动画的进展。</p>
 <p>接下来，你会完成一个无状态的控件的 <a href="https://github.com/ShaiqAhmedkhan/Flutter_Staggered_Animation/blob/master/lib/trekking/staggered_trekking.dart">Staggered Trekking 动画</a>。我们会用 <code>build()</code> 函数为这个控件的动画初始化定义一个 <a href="https://api.flutter.cn/flutter/widgets/AnimatedBuilder-class.html"><strong>AnimatedBuilder</strong></a>。同时，我们需要创建一个名为 <code>_buildAnimation()</code> 的函数，负责更新用户界面，并将其分配给 <code>builder</code> 属性.</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> <span class="hljs-string">'package:flutter/material.dart'</span>;
+<pre class="hljs"><code><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;package:flutter/material.dart&#x27;</span>;
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaggeredTrekkingEnterAnimation</span> </span>{
   StaggeredTrekkingEnterAnimation(<span class="hljs-keyword">this</span>.controller)

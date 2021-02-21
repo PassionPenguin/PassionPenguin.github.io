@@ -28,7 +28,7 @@
 <p>我想在这里先解释一下为什么常见的解决方案不起作用。</p>
 <p>首先还是先要感谢 JavaScript 为我们提供的 <code>setTimeout</code> 方法，让我们能够实现在一定时间后执行某些代码的功能。咦？这似乎能够满足我们题目的要求啊 —— 我们只需要将 <code>setTimeout</code> 加入 For 循环体中，循环速度就会变慢：</p>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
-    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
         <span class="hljs-built_in">console</span>.log(i);
     }, <span class="hljs-number">1000</span>);
 }
@@ -43,7 +43,7 @@
 <p>而一旦设置的时间到了，所有的任务都会立即执行 —— 同时打印日志。</p>
 <p>即便我们按照下面的代码去重写代码，我们仍会看到相同的效果。</p>
 <pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100</span>; i++) {
-    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
     }, <span class="hljs-number">1000</span>);
     <span class="hljs-built_in">console</span>.log(i);
 }
@@ -54,7 +54,7 @@
 <p>其实解决方案很简单，只需要用一段简单的 <code>Promise</code> 语句就行了。</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> sleep = <span class="hljs-function">(<span class="hljs-params">time</span>) =&gt;</span> {
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> {
-        <span class="hljs-keyword">return</span> setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
             resolve()
         }, time)
     })
@@ -62,12 +62,12 @@
 </code></pre>
 <p>我们通过函数调用 <code>Promise</code>，而它会获取 <strong>setTimeout</strong> 应该被设置的时间（以毫秒为单位）。在一定时间后，所有 <code>timeout</code> 都会执行 <code>resolve</code> 函数。这意味着 <code>Promise</code> 被我们执行了。我们可以简化上面显示的代码：</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> sleep = <span class="hljs-function">(<span class="hljs-params">time</span>) =&gt;</span> {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> setTimeout(resolve, time))
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> <span class="hljs-built_in">setTimeout</span>(resolve, time))
 }
 </code></pre>
 <p>使用 <code>Promise</code> 可以实现我们需要的功能。现在让我们将它添加到 For 循环中：</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> sleep = <span class="hljs-function">(<span class="hljs-params">time</span>) =&gt;</span> {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> setTimeout(resolve, time))
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve</span>) =&gt;</span> <span class="hljs-built_in">setTimeout</span>(resolve, time))
 }
 
 <span class="hljs-keyword">const</span> doSomething = <span class="hljs-keyword">async</span> () =&gt; {

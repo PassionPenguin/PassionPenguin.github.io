@@ -29,7 +29,7 @@
 <p>开发者们能够使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API">CSS Painting API</a> 使用编写的 JavaScript 函数将图像绘制到 CSS 属性中，例如 <code>background-image</code>和 <code>border</code>。它提供了一组 API，使开发人员可以访问 CSSOM，CSS Houdini（<a href="https://github.com/w3c/css-houdini-drafts">Houdini</a>）的一部分 —— 新浏览器 API 的集合，为开发人员提供了对 CSS 本身的更底层的访问方法。）</p>
 <p>嵌入图像的传统方法如下。</p>
 <pre class="hljs"><code><span class="hljs-selector-tag">div</span> {
-    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">'assets/background.jpg'</span>);
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;assets/background.jpg&#x27;</span>);
 }
 </code></pre>
 <p>而如果使用 CSS Painting API，我们只需要调用 <code>paint()</code> 函数，并且传入一个 JavaScript 声明好的 Worklet：</p>
@@ -56,17 +56,17 @@
 <h4>第二步：定义 Worklet</h4>
 <p>Worklet 需要在外部 JavaScript 文件中被保存，而 Painting Worklet 应该是一个 <code>class</code>，例如 <code>class Bubble { …… }</code>，然后这个 Worklet 需要使用 <code>registerPaint()</code> 函数注册。</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bubble</span> </span>{
-    paint(context, canvas, properties) {
+    <span class="hljs-function"><span class="hljs-title">paint</span>(<span class="hljs-params">context, canvas, properties</span>)</span> {
         <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> ... */</span>
     }
 }
 
-registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
+registerPaint(<span class="hljs-string">&#x27;bubble&#x27;</span>, Bubble);
 </code></pre>
 <p><code>registerPaint()</code> 函数的第一个参数是我们向在 CSS 中使用的参考名。</p>
 <p>现在就让我们来绘制背景吧！</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bubble</span> </span>{
-    paint(context, canvas, properties) {
+    <span class="hljs-function"><span class="hljs-title">paint</span>(<span class="hljs-params">context, canvas, properties</span>)</span> {
         <span class="hljs-keyword">const</span> circleSize = <span class="hljs-number">10</span>;
         <span class="hljs-keyword">const</span> bodyWidth = canvas.width;
         <span class="hljs-keyword">const</span> bodyHeight = canvas.height;
@@ -76,7 +76,7 @@ registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
 
         <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; maxY; y++) {
             <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; maxX; x++) {
-                context.fillStyle = <span class="hljs-string">'#eee'</span>;
+                context.fillStyle = <span class="hljs-string">&#x27;#eee&#x27;</span>;
                 context.beginPath();
                 context.arc(x * circleSize * <span class="hljs-number">2</span> + circleSize, y * circleSize * <span class="hljs-number">2</span> + circleSize, circleSize, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI, <span class="hljs-literal">true</span>);
                 context.closePath();
@@ -86,16 +86,16 @@ registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
     }
 }
 
-registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
+registerPaint(<span class="hljs-string">&#x27;bubble&#x27;</span>, Bubble);
 </code></pre>
 <p>创建图像的运算是在 <code>paint()</code> 函数的内部进行的。我们将需要一些有关 Canvas 的知识来绘制上述图像。如果不熟悉，我们其实可以看一下 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial">Canvas API</a> 文档。</p>
 <h4>第三步：调用 Worklet</h4>
 <p>最后一步是在 HTML 文件中调用 Worklet。</p>
 <pre class="hljs"><code>
-<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"bubble-background"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;bubble-background&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
-    CSS.paintWorklet.addModule(<span class="hljs-string">'https://codepen.io/viduni94/pen/ZEpgMja.js'</span>);
+    CSS.paintWorklet.addModule(<span class="hljs-string">&#x27;https://codepen.io/viduni94/pen/ZEpgMja.js&#x27;</span>);
 </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 </code></pre>
 <p>这就好啦！</p>
@@ -107,21 +107,21 @@ registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
 <p>The power of the CSS Painting API is not over yet. There are more things you can do with it.</p>
 <h4>1. 我们可以创建动图</h4>
 <p>例如，我们可以动态更改气泡的颜色，而 CSS 变量就是服务此目的的。为了使用 CSS 变量，浏览器应该先明白我们在使用它。我们可以使用 <code>inputProperties()</code> 函数来做到这一点。</p>
-<pre class="hljs"><code>registerPaint(<span class="hljs-string">'bubble'</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> </span>{
+<pre class="hljs"><code>registerPaint(<span class="hljs-string">&#x27;bubble&#x27;</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> </span>{
     <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> <span class="hljs-title">inputProperties</span>() {
-        <span class="hljs-keyword">return</span> [<span class="hljs-string">'--bubble-size'</span>, <span class="hljs-string">'--bubble-color'</span>];
+        <span class="hljs-keyword">return</span> [<span class="hljs-string">&#x27;--bubble-size&#x27;</span>, <span class="hljs-string">&#x27;--bubble-color&#x27;</span>];
     }
 
-    paint() {
+    <span class="hljs-function"><span class="hljs-title">paint</span>(<span class="hljs-params"></span>)</span> {
         <span class="hljs-comment">/* ... */</span>
     }
 });
 </code></pre>
 <p>变量们可以通过第三个参数传给 <code>paint()</code> 方法</p>
-<pre class="hljs"><code>paint(context, canvas, properties)
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-title">paint</span>(<span class="hljs-params">context, canvas, properties</span>)</span>
 {
-    <span class="hljs-keyword">const</span> circleSize = <span class="hljs-built_in">parseInt</span>(properties.get(<span class="hljs-string">'--bubble-size'</span>).toString());
-    <span class="hljs-keyword">const</span> circleColor = properties.get(<span class="hljs-string">'--bubble-color'</span>).toString();
+    <span class="hljs-keyword">const</span> circleSize = <span class="hljs-built_in">parseInt</span>(properties.get(<span class="hljs-string">&#x27;--bubble-size&#x27;</span>).toString());
+    <span class="hljs-keyword">const</span> circleColor = properties.get(<span class="hljs-string">&#x27;--bubble-color&#x27;</span>).toString();
     <span class="hljs-keyword">const</span> bodyWidth = canvas.width;
     <span class="hljs-keyword">const</span> bodyHeight = canvas.height;
 
@@ -147,11 +147,11 @@ registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
 }
 </code></pre>
 <pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getRandomHexColor</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-string">'#'</span> + <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">16777215</span>).toString(<span class="hljs-number">16</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;#&#x27;</span> + <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">16777215</span>).toString(<span class="hljs-number">16</span>)
 }
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Random</span> </span>{
-    paint(context, canvas) {
+    <span class="hljs-function"><span class="hljs-title">paint</span>(<span class="hljs-params">context, canvas</span>)</span> {
         <span class="hljs-keyword">const</span> color1 = getRandomHexColor();
         <span class="hljs-keyword">const</span> color2 = getRandomHexColor();
 
@@ -164,7 +164,7 @@ registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
     }
 }
 
-registerPaint(<span class="hljs-string">'random'</span>, Random);
+registerPaint(<span class="hljs-string">&#x27;random&#x27;</span>, Random);
 </code></pre>
 <p>如果你在如何做到这些上存在疑惑，请在评论区中提出你的问题。</p>
 <p>这个真是太棒啦！</p>

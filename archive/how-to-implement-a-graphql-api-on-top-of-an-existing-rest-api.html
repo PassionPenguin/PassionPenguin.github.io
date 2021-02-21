@@ -28,52 +28,52 @@
 <p>项目的后台原先是使用 <a href="https://nodejs.org/en/">Node</a> 和 <a href="https://github.com/typicode/json-server">JSON Server</a> 开发的。JSON Server 利用 <a href="https://expressjs.com/">Express</a> 为一个模拟的数据库提供了完整的 REST API，并且这个数据库是由一个简单的 JSON 文件生成的。前端是使用 Vanilla JS 实现的，并使用浏览器内嵌的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">Fetch API</a> 发出 API 请求。该应用程序托管在 <a href="https://devcenter.heroku.com/">Heroku</a> 上，可以方便地对它进行部署和监控。</p>
 <p>我们使用的 JSON 文件含有一些笑话和评分信息。下面，我们把它完整地复制出来：</p>
 <pre class="hljs"><code>{
-  <span class="hljs-attr">"jokes"</span>: [
+  <span class="hljs-attr">&quot;jokes&quot;</span>: [
     {
-      <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
-      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"I don't often tell dad jokes, but when I do, sometimes he laughs."</span>
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">&quot;content&quot;</span>: <span class="hljs-string">&quot;I don&#x27;t often tell dad jokes, but when I do, sometimes he laughs.&quot;</span>
     },
     {
-      <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
-      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"Why was the scarecrow promoted? For being outstanding in his field."</span>
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">&quot;content&quot;</span>: <span class="hljs-string">&quot;Why was the scarecrow promoted? For being outstanding in his field.&quot;</span>
     },
     {
-      <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>,
-      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"What did the grape do when someone stepped on him? He let out a little whine."</span>
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">&quot;content&quot;</span>: <span class="hljs-string">&quot;What did the grape do when someone stepped on him? He let out a little whine.&quot;</span>
     },
     {
-      <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>,
-      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"Einstein, Pascal, and Newton are playing hide and seek. Einstein covers his eyes and begins counting. While Pascal runs off and hides, Newton takes out some chalk and marks a square on the ground with side lengths of exactly 1 meter, then sits down inside the square. When Einstein is finished counting and sees Newton sitting on the ground, he yells, \"Ha, I've found you, Newton!\". Newton replies, \"No you haven't! You've found one Newton over a square meter. You've found Pascal!"</span>
+      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">4</span>,
+      <span class="hljs-attr">&quot;content&quot;</span>: <span class="hljs-string">&quot;Einstein, Pascal, and Newton are playing hide and seek. Einstein covers his eyes and begins counting. While Pascal runs off and hides, Newton takes out some chalk and marks a square on the ground with side lengths of exactly 1 meter, then sits down inside the square. When Einstein is finished counting and sees Newton sitting on the ground, he yells, \&quot;Ha, I&#x27;ve found you, Newton!\&quot;. Newton replies, \&quot;No you haven&#x27;t! You&#x27;ve found one Newton over a square meter. You&#x27;ve found Pascal!&quot;</span>
     }
   ],
-  <span class="hljs-attr">"ratings"</span>: [
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">8</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">3</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">6</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">7</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">6</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">6</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">4</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">7</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">9</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">8</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">9</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">2</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">11</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">12</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">13</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">14</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
-    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">15</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> }
+  <span class="hljs-attr">&quot;ratings&quot;</span>: [
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">8</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">3</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">6</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">7</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">6</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">6</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">4</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">7</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">9</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">8</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">9</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">2</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">11</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">12</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">13</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">14</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">15</span>, <span class="hljs-attr">&quot;jokeId&quot;</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">&quot;score&quot;</span>: <span class="hljs-number">10</span> }
   ]
 }
 </code></pre>
 <p>JSON Server 系统把这个文件中的数据作为数据库的初始数据，接着实现一套 REST API，其中包括对 GET, POST, PUT, PATCH 和 DELETE 请求的支持。JSON Server 的神奇之处在于，使用这套 API 就能实现对 JSON 文件的修改，因此数据库就是完全交互式的。JSON Server 不经安装就可以直接由 npm 脚本启动，但为了对它进行一些配置以及端口的设置，我们可以写下几行代码并运行它，代码如下：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> jsonServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'json-server'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> jsonServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;json-server&#x27;</span>)
 <span class="hljs-keyword">const</span> server = jsonServer.create()
-<span class="hljs-keyword">const</span> router = jsonServer.router(<span class="hljs-string">'db.json'</span>)
+<span class="hljs-keyword">const</span> router = jsonServer.router(<span class="hljs-string">&#x27;db.json&#x27;</span>)
 <span class="hljs-keyword">const</span> middlewares = jsonServer.defaults()
 
 server.use(middlewares)
 server.use(router)
-server.listen(process.env.PORT || <span class="hljs-number">3000</span>, () =&gt; {
+server.listen(process.env.PORT || <span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`🚀 JSON Server is running on port <span class="hljs-subst">${process.env.PORT || <span class="hljs-number">3000</span>}</span>`</span>)
 })
 
@@ -98,51 +98,51 @@ heroku open
 <h2>构建用户界面</h2>
 <p>既然我们已经部署了一个运行中的 REST API，就可以制作前端页面，并使用 API 把这些笑话数据呈现在页面上，还可以对这些笑话进行评分。下面的 HTML 页面代码实现了一个显示笑话内容的容器，笑话内容由 JavaScript 代码加载进来。</p>
 <pre class="hljs"><code><span class="hljs-meta">&lt;!doctype <span class="hljs-meta-keyword">html</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;en&quot;</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">&quot;utf-8&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;viewport&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;width=device-width, initial-scale=1&quot;</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Dad Joke Dadabase<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"Where do you keep your dad jokes? In a dadabase of course!"</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"author"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"Tyler Hawkins"</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"./style.css"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;description&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;Where do you keep your dad jokes? In a dadabase of course!&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;author&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;Tyler Hawkins&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;./style.css&quot;</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
   <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Dad Joke Dadabase<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
 
-  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"project"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"jokeContent"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"rateThisJokeContainer"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;project&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;jokeContent&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;rateThisJokeContainer&quot;</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Rate this joke:<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"rateThisJokeOptions"</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-1"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-1"</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-2"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"2"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-2"</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-3"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"3"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-3"</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-4"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"4"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-4"</span>&gt;</span>4<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-5"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"5"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-5"</span>&gt;</span>5<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-6"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"6"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-6"</span>&gt;</span>6<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-7"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"7"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-7"</span>&gt;</span>7<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-8"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"8"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-8"</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-9"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"9"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-9"</span>&gt;</span>9<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-10"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"10"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-10"</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;rateThisJokeOptions&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-1&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;1&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-1&quot;</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-2&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;2&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-2&quot;</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-3&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;3&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-3&quot;</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-4&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;4&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-4&quot;</span>&gt;</span>4<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-5&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;5&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-5&quot;</span>&gt;</span>5<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-6&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;6&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-6&quot;</span>&gt;</span>6<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-7&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;7&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-7&quot;</span>&gt;</span>7<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-8&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;8&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-8&quot;</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-9&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;9&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-9&quot;</span>&gt;</span>9<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;formGroup&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;radio&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;score-10&quot;</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;yourRating&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;10&quot;</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">&quot;score-10&quot;</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
     <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"averageRating"</span>&gt;</span>Average Rating: <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"jokeRatingValue"</span>&gt;</span>7.8<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"nextJoke"</span>&gt;</span>See Next Joke<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;averageRating&quot;</span>&gt;</span>Average Rating: <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;jokeRatingValue&quot;</span>&gt;</span>7.8<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;nextJoke&quot;</span>&gt;</span>See Next Joke<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"./script.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;./script.js&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>
 <p>JavaScript 代码如下。跟 REST API 交互的关键代码在于两个获取数据的请求。第一个请求通过访问 <code>/jokes?_embed=ratings</code> 获取数据库中所有的笑话，第二个请求是 POST 类型的，它通过访问 <code>/ratings</code> 提交对某个笑话的评分。</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> jokeContent = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.jokeContent'</span>)
-<span class="hljs-keyword">const</span> jokeRatingValue = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.jokeRatingValue'</span>)
-<span class="hljs-keyword">const</span> nextJokeButton = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#nextJoke'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> jokeContent = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;.jokeContent&#x27;</span>)
+<span class="hljs-keyword">const</span> jokeRatingValue = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;.jokeRatingValue&#x27;</span>)
+<span class="hljs-keyword">const</span> nextJokeButton = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;#nextJoke&#x27;</span>)
 
 <span class="hljs-keyword">const</span> jokes = []
-<span class="hljs-keyword">let</span> currentJokeIndex = <span class="hljs-number">-1</span>
+<span class="hljs-keyword">let</span> currentJokeIndex = -<span class="hljs-number">1</span>
 
-<span class="hljs-keyword">const</span> displayNextJoke = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+<span class="hljs-keyword">const</span> displayNextJoke = <span class="hljs-function">() =&gt;</span> {
   currentJokeIndex++
   <span class="hljs-keyword">if</span> (currentJokeIndex &gt;= jokes.length) {
     currentJokeIndex = <span class="hljs-number">0</span>
@@ -162,18 +162,18 @@ heroku open
   jokeRatingValue.textContent = averageRating.toFixed(<span class="hljs-number">1</span>)
 }
 
-<span class="hljs-keyword">const</span> submitJokeRating = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
-  <span class="hljs-keyword">const</span> ratingInput = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'input[name="yourRating"]:checked'</span>)
+<span class="hljs-keyword">const</span> submitJokeRating = <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-keyword">const</span> ratingInput = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&#x27;input[name=&quot;yourRating&quot;]:checked&#x27;</span>)
 
   <span class="hljs-keyword">if</span> (ratingInput &amp;&amp; ratingInput.value) {
     <span class="hljs-keyword">const</span> score = <span class="hljs-built_in">Number</span>(ratingInput.value)
     <span class="hljs-keyword">const</span> jokeId = jokes[currentJokeIndex].id
     <span class="hljs-keyword">const</span> postData = { jokeId, score }
 
-    fetch(<span class="hljs-string">'/ratings'</span>, {
-      <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+    fetch(<span class="hljs-string">&#x27;/ratings&#x27;</span>, {
+      <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
       <span class="hljs-attr">headers</span>: {
-        <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,
+        <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
       },
       <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify(postData),
     })
@@ -182,7 +182,7 @@ heroku open
         <span class="hljs-keyword">const</span> jokeToUpdate = jokes.find(<span class="hljs-function"><span class="hljs-params">joke</span> =&gt;</span> joke.id === responseData.jokeId)
         jokeToUpdate &amp;&amp; jokeToUpdate.ratings.push(responseData)
       })
-      .finally(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+      .finally(<span class="hljs-function">() =&gt;</span> {
         ratingInput.checked = <span class="hljs-literal">false</span>
         displayNextJoke()
       })
@@ -191,9 +191,9 @@ heroku open
   }
 }
 
-nextJokeButton.addEventListener(<span class="hljs-string">'click'</span>, submitJokeRating)
+nextJokeButton.addEventListener(<span class="hljs-string">&#x27;click&#x27;</span>, submitJokeRating)
 
-fetch(<span class="hljs-string">'/jokes?_embed=ratings'</span>)
+fetch(<span class="hljs-string">&#x27;/jokes?_embed=ratings&#x27;</span>)
   .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
   .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
     jokes.push(...data)
@@ -204,19 +204,19 @@ fetch(<span class="hljs-string">'/jokes?_embed=ratings'</span>)
 <p><img src="https://cdn-images-1.medium.com/max/2860/1*vYef9XCI0zejzbFj7lzEPg.png" alt="Dad joke “dadabase” user interface allows you to rate each joke"></p>
 <h2>安装并使用 Apollo Server</h2>
 <p>这样，我们已经完成了项目的架构：它有一个简单的页面，该页面通过 REST API 跟数据库通信。那么，我们如何使用 GraphQL？使用 GraphQL 之前需要哪些准备工作呢？第一步，我们安装 <code>[apollo-server-express](https://www.npmjs.com/package/apollo-server-express)</code>，它是一个程序包，用于实现 <a href="https://www.apollographql.com/docs/apollo-server/getting-started/">Apollo Server</a> 和 Express 的集成。也需要安装 <code>[apollo-datasource-rest](https://www.npmjs.com/package/apollo-datasource-rest)</code> 包，用于 REST API 和 Apollo Server 的集成。然后，我们来配置服务器，需要编写以下代码：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)
-<span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>)
-<span class="hljs-keyword">const</span> { ApolloServer } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'apollo-server-express'</span>)
-<span class="hljs-keyword">const</span> JokesAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./jokesAPI'</span>)
-<span class="hljs-keyword">const</span> RatingsAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./ratingsAPI'</span>)
-<span class="hljs-keyword">const</span> typeDefs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./typeDefs'</span>)
-<span class="hljs-keyword">const</span> resolvers = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./resolvers'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;express&#x27;</span>)
+<span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>)
+<span class="hljs-keyword">const</span> { ApolloServer } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;apollo-server-express&#x27;</span>)
+<span class="hljs-keyword">const</span> JokesAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./jokesAPI&#x27;</span>)
+<span class="hljs-keyword">const</span> RatingsAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./ratingsAPI&#x27;</span>)
+<span class="hljs-keyword">const</span> typeDefs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./typeDefs&#x27;</span>)
+<span class="hljs-keyword">const</span> resolvers = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./resolvers&#x27;</span>)
 
 <span class="hljs-keyword">const</span> app = express()
 <span class="hljs-keyword">const</span> server = <span class="hljs-keyword">new</span> ApolloServer({
   typeDefs,
   resolvers,
-  <span class="hljs-attr">dataSources</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+  <span class="hljs-attr">dataSources</span>: <span class="hljs-function">() =&gt;</span> ({
     <span class="hljs-attr">jokesAPI</span>: <span class="hljs-keyword">new</span> JokesAPI(),
     <span class="hljs-attr">ratingsAPI</span>: <span class="hljs-keyword">new</span> RatingsAPI(),
   }),
@@ -225,25 +225,25 @@ fetch(<span class="hljs-string">'/jokes?_embed=ratings'</span>)
 server.applyMiddleware({ app })
 
 app
-  .use(express.static(path.join(__dirname, <span class="hljs-string">'public'</span>)))
-  .get(<span class="hljs-string">'/'</span>, (req, res) =&gt; {
-    res.sendFile(<span class="hljs-string">'index.html'</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">'public'</span> })
+  .use(express.static(path.join(__dirname, <span class="hljs-string">&#x27;public&#x27;</span>)))
+  .get(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+    res.sendFile(<span class="hljs-string">&#x27;index.html&#x27;</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">&#x27;public&#x27;</span> })
   })
-  .get(<span class="hljs-string">'/script.js'</span>, (req, res) =&gt; {
-    res.sendFile(<span class="hljs-string">'script.js'</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">'public'</span> })
+  .get(<span class="hljs-string">&#x27;/script.js&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+    res.sendFile(<span class="hljs-string">&#x27;script.js&#x27;</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">&#x27;public&#x27;</span> })
   })
-  .get(<span class="hljs-string">'/style.css'</span>, (req, res) =&gt; {
-    res.sendFile(<span class="hljs-string">'style.css'</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">'public'</span> })
+  .get(<span class="hljs-string">&#x27;/style.css&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+    res.sendFile(<span class="hljs-string">&#x27;style.css&#x27;</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">&#x27;public&#x27;</span> })
   })
 
-app.listen({ <span class="hljs-attr">port</span>: process.env.PORT || <span class="hljs-number">4000</span> }, () =&gt; {
+app.listen({ <span class="hljs-attr">port</span>: process.env.PORT || <span class="hljs-number">4000</span> }, <span class="hljs-function">() =&gt;</span> {
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`🚀 Server ready at port <span class="hljs-subst">${process.env.PORT || <span class="hljs-number">4000</span>}</span>`</span>)
 })
 
 </code></pre>
 <p>你可以看到，我们配置了 Apollo Server 的三个属性：<code>typeDefs</code>, <code>resolvers</code> 和 <code>dataSources</code>。其中，<code>typeDefs</code> 属性包含了与我们的 GraphQL API 相关的 <a href="https://www.apollographql.com/docs/apollo-server/schema/schema/">schema</a>，我们在相应的包中定义笑话和评分的数据类型，以及如何查询和更新数据；<code>resolvers</code> 告诉服务器如何处理各种各样的查询和更新需求，以及如何连接<a href="https://www.apollographql.com/docs/apollo-server/data/data-sources/">数据源</a>；最后，<code>dataSources</code> 大致描述了 GraphQL API 与 REST API 的关联关系。</p>
 <p>下面的代码定义了 <code>Joke</code> 和 <code>Rating</code> 数据类型，以及如何查询和更新数据。</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> { gql } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'apollo-server-express'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { gql } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;apollo-server-express&#x27;</span>)
 
 <span class="hljs-keyword">const</span> typeDefs = gql<span class="hljs-string">`
   type Joke {
@@ -270,36 +270,36 @@ app.listen({ <span class="hljs-attr">port</span>: process.env.PORT || <span clas
 <span class="hljs-built_in">module</span>.exports = typeDefs
 </code></pre>
 <p>下面是 JokesAPI 类的代码，主要定义了笑话数据创建、查询、更新、删除的方法，这些方法分别调用相应的 REST API 实施相关的数据操作。</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> { RESTDataSource } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'apollo-datasource-rest'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { RESTDataSource } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;apollo-datasource-rest&#x27;</span>)
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JokesAPI</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RESTDataSource</span> </span>{
-  <span class="hljs-keyword">constructor</span>() {
-    <span class="hljs-keyword">super</span>()
-    <span class="hljs-keyword">this</span>.baseURL = <span class="hljs-string">'https://dad-joke-dadabase-rest-api.herokuapp.com/'</span>
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"></span>)</span> {
+    <span class="hljs-built_in">super</span>()
+    <span class="hljs-built_in">this</span>.baseURL = <span class="hljs-string">&#x27;https://dad-joke-dadabase-rest-api.herokuapp.com/&#x27;</span>
   }
 
-  <span class="hljs-keyword">async</span> getJoke(id) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">`jokes/<span class="hljs-subst">${id}</span>?_embed=ratings`</span>)
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">getJoke</span>(<span class="hljs-params">id</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.get(<span class="hljs-string">`jokes/<span class="hljs-subst">${id}</span>?_embed=ratings`</span>)
   }
 
-  <span class="hljs-keyword">async</span> getJokes() {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'jokes?_embed=ratings'</span>)
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">getJokes</span>(<span class="hljs-params"></span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.get(<span class="hljs-string">&#x27;jokes?_embed=ratings&#x27;</span>)
   }
 
-  <span class="hljs-keyword">async</span> postJoke(jokeContent) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.post(<span class="hljs-string">'jokes'</span>, jokeContent)
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">postJoke</span>(<span class="hljs-params">jokeContent</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.post(<span class="hljs-string">&#x27;jokes&#x27;</span>, jokeContent)
   }
 
-  <span class="hljs-keyword">async</span> replaceJoke(joke) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.put(<span class="hljs-string">'jokes'</span>, joke)
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">replaceJoke</span>(<span class="hljs-params">joke</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.put(<span class="hljs-string">&#x27;jokes&#x27;</span>, joke)
   }
 
-  <span class="hljs-keyword">async</span> updateJoke(joke) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.patch(<span class="hljs-string">'jokes'</span>, { <span class="hljs-attr">id</span>: joke.id, joke })
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">updateJoke</span>(<span class="hljs-params">joke</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.patch(<span class="hljs-string">&#x27;jokes&#x27;</span>, { <span class="hljs-attr">id</span>: joke.id, joke })
   }
 
-  <span class="hljs-keyword">async</span> deleteJoke(id) {
-    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.delete(<span class="hljs-string">`jokes/<span class="hljs-subst">${id}</span>`</span>)
+  <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-title">deleteJoke</span>(<span class="hljs-params">id</span>)</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.delete(<span class="hljs-string">`jokes/<span class="hljs-subst">${id}</span>`</span>)
   }
 }
 
@@ -340,7 +340,7 @@ heroku open
 </code></pre>
 <h2>把 API 端点功能改为获取笑话的代码</h2>
 <p>你应当回忆下，我们有两个 API 端点供前端页面调用：它们的功能分别是获取笑话和提交评分。现在我们把 REST API 中获取笑话的代码改为 GraphQL API 形式：</p>
-<pre class="hljs"><code>fetch(<span class="hljs-string">'/jokes?_embed=ratings'</span>)
+<pre class="hljs"><code>fetch(<span class="hljs-string">&#x27;/jokes?_embed=ratings&#x27;</span>)
   .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
   .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
     jokes.push(...data)
@@ -348,9 +348,9 @@ heroku open
   })
 </code></pre>
 <p>我们把上述代码改为：</p>
-<pre class="hljs"><code>fetch(<span class="hljs-string">'/graphql'</span>, {
-  <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
-  <span class="hljs-attr">headers</span>: { <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span> },
+<pre class="hljs"><code>fetch(<span class="hljs-string">&#x27;/graphql&#x27;</span>, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: { <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> },
   <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
     <span class="hljs-attr">query</span>: <span class="hljs-string">`
     query GetAllJokesWithRatings {
@@ -377,10 +377,10 @@ heroku open
 <p><img src="https://cdn-images-1.medium.com/max/2520/0*ketnaG9b4tR0O0O4.png" alt="The Network tab shows a request is being made to the /graphql endpoint now"></p>
 <h2>把 API 端点功能改为提交评分的代码</h2>
 <p>一个 API 请求已完成，还有一个！我们现在对评分功能的代码进行修改。提交评分的代码原来类似于：</p>
-<pre class="hljs"><code>fetch(<span class="hljs-string">'/ratings'</span>, {
-  <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+<pre class="hljs"><code>fetch(<span class="hljs-string">&#x27;/ratings&#x27;</span>, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
   <span class="hljs-attr">headers</span>: {
-    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,
+    <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>,
   },
   <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify(postData),
 })
@@ -389,15 +389,15 @@ heroku open
     <span class="hljs-keyword">const</span> jokeToUpdate = jokes.find(<span class="hljs-function"><span class="hljs-params">joke</span> =&gt;</span> joke.id === responseData.jokeId)
     jokeToUpdate &amp;&amp; jokeToUpdate.ratings.push(responseData)
   })
-  .finally(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  .finally(<span class="hljs-function">() =&gt;</span> {
     ratingInput.checked = <span class="hljs-literal">false</span>
     displayNextJoke()
   })
 </code></pre>
 <p>现在我们作如下的改动，让它使用我们的 GraphQL API：</p>
-<pre class="hljs"><code>fetch(<span class="hljs-string">'/graphql'</span>, {
-  <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
-  <span class="hljs-attr">headers</span>: { <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span> },
+<pre class="hljs"><code>fetch(<span class="hljs-string">&#x27;/graphql&#x27;</span>, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;POST&#x27;</span>,
+  <span class="hljs-attr">headers</span>: { <span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span> },
   <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
     <span class="hljs-attr">query</span>: <span class="hljs-string">`
     mutation CreateRating {
@@ -416,7 +416,7 @@ heroku open
     <span class="hljs-keyword">const</span> jokeToUpdate = jokes.find(<span class="hljs-function"><span class="hljs-params">joke</span> =&gt;</span> joke.id === rating.jokeId)
     jokeToUpdate &amp;&amp; jokeToUpdate.ratings.push(rating)
   })
-  .finally(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  .finally(<span class="hljs-function">() =&gt;</span> {
     ratingInput.checked = <span class="hljs-literal">false</span>
     displayNextJoke()
   })

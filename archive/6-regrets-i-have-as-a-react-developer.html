@@ -27,8 +27,8 @@
 <p>长期以来，测试是我的弱项。我并没有为 React 组件编写测试样例，并且正如预期的那样，我经常因为某些输入错误而不得不进行调试。</p>
 <p>但即便测试这个词语看起来很吓人，在 React 中进行测试真的是很简单的一件事情（对于大多数情况而言）。</p>
 <p>写一个简单的测试只需要花费两分钟，但这可能会为我们在未来节省大量的时间。下面就是一个测试 <code>Title</code> 组件渲染是否可以正确渲染的例子：</p>
-<pre class="hljs"><code>it(<span class="hljs-string">'checks if the title component is in the document'</span>, () =&gt; {
-    expect(screen.getByText(<span class="hljs-string">'Title'</span>)).toBeInTheDocument()
+<pre class="hljs"><code>it(<span class="hljs-string">&#x27;checks if the title component is in the document&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+    expect(screen.getByText(<span class="hljs-string">&#x27;Title&#x27;</span>)).toBeInTheDocument()
 })
 </code></pre>
 <p>而如果你使用的是 <code>create-react-app</code> 命令创建你的 React 应用程序，那么命令本身已经正确地为你设置好了测试套件，只需要尽早地开始编写测试代码即可。</p>

@@ -27,7 +27,7 @@
 <p>举个例子，当允许用户在输入字段中输入数量时，我们可以允许他们输入字母数字字符，如果在他们的输入中发现字母字符，就向他们显示错误消息。但是，如果我们只允许用户在字段中输入数字字符，我们就可以提供更好的用户体验，这样就不需要检查是否包含字母字符了。</p>
 <p>React 的行为与此非常相似。如果我们从概念上考虑 Hooks，它们在组件的整个生命周期内都是静态的。我的意思是说，一旦声明了，我们就不能从组件中移除它们，也不能改变它们相对于其他 Hooks 的位置。 React 使用 lint 规则并抛出错误，试图阻止开发人员违反这个 Hooks 的细节。</p>
 <p>从这个意义上说，React 允许开发者犯错误，然后试图警告用户他们的错误。为了说明白我的意思，看下这个例子:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+<pre class="hljs"><code><span class="hljs-keyword">const</span> App = <span class="hljs-function">() =&gt;</span> {
   <span class="hljs-keyword">const</span> [countOne, setCountOne] = useState(<span class="hljs-number">0</span>);
   <span class="hljs-keyword">if</span> (countOne === <span class="hljs-number">0</span>) {
     <span class="hljs-keyword">const</span> [countTwo, setCountTwo] = useState(<span class="hljs-number">0</span>);
@@ -50,7 +50,7 @@
 <p>组件第一次渲染时，Hooks 的位置决定了 React 在后续渲染时必须在哪里找到 Hooks。</p>
 <p>既然 Hooks 在组件的生命周期内都是静态的，那么我们在组件构造时声明它们不是比在渲染阶段声明它们更有意义吗？如果我们在组件的构造过程中附加了 Hooks，我们就不再需要担心强制执行 Hooks 的规则，因为在组件的生命周期中，Hooks 不会再有机会改变位置或被移除。</p>
 <p>不幸的是，函数组件没有构造函数的概念，但是让我们假设它们是构造函数。我想它会像下面这样:</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> App = createComponent(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+<pre class="hljs"><code><span class="hljs-keyword">const</span> App = createComponent(<span class="hljs-function">() =&gt;</span> {
   <span class="hljs-comment">// This is a constructor function that only runs once </span>
   <span class="hljs-comment">// per component instance.</span>
   
@@ -76,7 +76,7 @@
 <p>响应式编程的核心思想是，变量是可观察的，当一个可观察对象的值发生变化时，观察者会通过回调函数来通知这个变化:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> count$ = observable(<span class="hljs-number">5</span>)
 
-observe(count$, (count) =&gt; {
+observe(count$, <span class="hljs-function">(<span class="hljs-params">count</span>) =&gt;</span> {
   <span class="hljs-built_in">console</span>.log(count)
 })
 
@@ -90,9 +90,9 @@ count$.set(<span class="hljs-number">7</span>)
 <p>注意，当我们修改可观察的 <code>count$</code> 值时，传递给 <code>observe</code> 的回调函数是如何执行的。您可能想知道 <code>count$</code> 后面的 <code>$</code>。这就是所谓的 <a href="https://medium.com/@benlesh/observables-and-finnish-notation-df8356ed1c9b">Finnish Notation</a>，它简单地指出变量包含一个可观察对象。</p>
 <p>在响应式编程中，还有一个计算或派生的可观察对象的概念，它既可以观察也可以被观察。下面是一个派生的可观察对象的例子，它跟踪另一个可观察对象的值，并对它应用 <code>transform</code>：</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> count$ = observable(<span class="hljs-number">5</span>)
-<span class="hljs-keyword">const</span> doubledCount$ = derived(count$, (count) =&gt; count * <span class="hljs-number">2</span>)
+<span class="hljs-keyword">const</span> doubledCount$ = derived(count$, <span class="hljs-function">(<span class="hljs-params">count</span>) =&gt;</span> count * <span class="hljs-number">2</span>)
 
-observe(doubledCount$, (doubledCount) =&gt; {
+observe(doubledCount$, <span class="hljs-function">(<span class="hljs-params">doubledCount</span>) =&gt;</span> {
   <span class="hljs-built_in">console</span>.log(doubledCount)
 })
 
@@ -107,11 +107,11 @@ count$.set(<span class="hljs-number">7</span>)
 <h2>用响应式来改造 React</h2>
 <p>在介绍了响应式编程的基础知识之后，让我们看一下 React 中的一个示例，并通过使其更具响应性来改进它。</p>
 <p>考虑一个应用程序有两个计数器和一个依赖于其中一个计数器的派生状态：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+<pre class="hljs"><code><span class="hljs-keyword">const</span> App = <span class="hljs-function">() =&gt;</span> {
   <span class="hljs-keyword">const</span> [countOne, setCountOne] = useState(<span class="hljs-number">0</span>);
   <span class="hljs-keyword">const</span> [countTwo, setCountTwo] = useState(<span class="hljs-number">0</span>);
 
-  <span class="hljs-keyword">const</span> countTwoDoubled = useMemo(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> countTwoDoubled = useMemo(<span class="hljs-function">() =&gt;</span> {
     <span class="hljs-keyword">return</span> countTwo * <span class="hljs-number">2</span>;
   }, [countTwo]);
 
@@ -143,13 +143,13 @@ count$.set(<span class="hljs-number">7</span>)
   <span class="hljs-comment">// Create observables to hold our counter state.</span>
   <span class="hljs-keyword">const</span> countOne$ = observable(<span class="hljs-number">0</span>);
   <span class="hljs-keyword">const</span> countTwo$ = observable(<span class="hljs-number">0</span>);
-  <span class="hljs-keyword">const</span> countTwoDoubled$ = derived(countTwo$, (countTwo) =&gt; {
+  <span class="hljs-keyword">const</span> countTwoDoubled$ = derived(countTwo$, <span class="hljs-function">(<span class="hljs-params">countTwo</span>) =&gt;</span> {
     <span class="hljs-keyword">return</span> countTwo * <span class="hljs-number">2</span>;
   });
 
   observe(
     [countOne$, countTwo$, countTwoDoubled$],
-    (countOne, countTwo, countTwoDoubled) =&gt; {
+    <span class="hljs-function">(<span class="hljs-params">countOne, countTwo, countTwoDoubled</span>) =&gt;</span> {
       setState({
         countOne,
         countTwo,
@@ -191,12 +191,12 @@ count$.set(<span class="hljs-number">7</span>)
 <p><a href="https://codesandbox.io/s/alternate-react-api-kyutz"><strong>在这个沙盒中尝试我们的演示!</strong></a></p>
 <p>这实际上与 Vue 3 使用其组合API的方式非常相似。尽管命名不同，但是可以看到这个 Vue 代码片段惊人地相似:</p>
 <pre class="hljs"><code><span class="hljs-comment">// 示例来自 https://composition-api.vuejs.org/#usage-in-components</span>
-<span class="hljs-keyword">import</span> { reactive, computed, watchEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>
+<span class="hljs-keyword">import</span> { reactive, computed, watchEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
 
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setup</span>(<span class="hljs-params"></span>) </span>{
   <span class="hljs-keyword">const</span> state = reactive({
     <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>,
-    <span class="hljs-attr">double</span>: computed(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> state.count * <span class="hljs-number">2</span>)
+    <span class="hljs-attr">double</span>: computed(<span class="hljs-function">() =&gt;</span> state.count * <span class="hljs-number">2</span>)
   })
 
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">increment</span>(<span class="hljs-params"></span>) </span>{
@@ -211,9 +211,9 @@ count$.set(<span class="hljs-number">7</span>)
 
 <span class="hljs-keyword">const</span> renderContext = setup()
 
-watchEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+watchEffect(<span class="hljs-function">() =&gt;</span> {
   renderTemplate(
-    <span class="hljs-string">`&lt;button @click="increment"&gt;
+    <span class="hljs-string">`&lt;button @click=&quot;increment&quot;&gt;
       Count is: {{ state.count }}, double is: {{ state.double }}
     &lt;/button&gt;`</span>,
     renderContext
@@ -221,7 +221,7 @@ watchEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 })
 </code></pre>
 <p>如果这还不够令人信服，看看当我们引入一个构造函数层来反应函数组件时，“引用”变得多么简单：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> App = createComponent(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {  
+<pre class="hljs"><code><span class="hljs-keyword">const</span> App = createComponent(<span class="hljs-function">() =&gt;</span> {  
   <span class="hljs-comment">// We can achieve ref functionality via closures</span>
   <span class="hljs-keyword">let</span> divEl = <span class="hljs-literal">null</span>;
   
@@ -234,11 +234,11 @@ watchEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt
 </code></pre>
 <p>实际上，我们不需要使用 <code>useRef</code>，因为我们可以在构造函数中声明变量，然后在组件的生命周期中从任何地方读写它们。</p>
 <p>也许更酷的是，我们可以很容易地将 <code>refs</code> 变成可观察的：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> App = createComponent(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {  
+<pre class="hljs"><code><span class="hljs-keyword">const</span> App = createComponent(<span class="hljs-function">() =&gt;</span> {  
   <span class="hljs-keyword">const</span> divEl$ = observable(<span class="hljs-literal">null</span>);
   
-  <span class="hljs-comment">// Do something any time our "ref" changes</span>
-  observe(divEl$, (divEl) =&gt; {
+  <span class="hljs-comment">// Do something any time our &quot;ref&quot; changes</span>
+  observe(divEl$, <span class="hljs-function">(<span class="hljs-params">divEl</span>) =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(divEl)
   });
   

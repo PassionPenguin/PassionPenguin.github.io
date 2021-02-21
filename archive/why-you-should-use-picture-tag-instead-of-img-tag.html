@@ -47,15 +47,15 @@
 
    <span class="hljs-tag">&lt;<span class="hljs-name">source</span>
 
-      <span class="hljs-attr">srcset</span>=<span class="hljs-string">"small-car-image.jpg 400w,
+      <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;small-car-image.jpg 400w,
               medium-car-image.jpg 800w,
-              large-car-image.jpg 1200w"</span>
+              large-car-image.jpg 1200w&quot;</span>
 
-      <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 1280px) 1200px,
+      <span class="hljs-attr">sizes</span>=<span class="hljs-string">&quot;(min-width: 1280px) 1200px,
              (min-width: 768px) 400px,
-             100vw"</span>&gt;</span>
+             100vw&quot;</span>&gt;</span>
 
-   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"medium-car-image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Car"</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;medium-car-image.jpg&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Car&quot;</span>&gt;</span>
 
 <span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
 </code></pre>
@@ -64,15 +64,15 @@
 <blockquote>
 <p><strong>话虽如此，最好不要只因为分辨率切换就使用 picture 标签，因为现在的 img 标签也能做到同样的事情（并且有更多的浏览器支持）。</strong></p>
 </blockquote>
-<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"small-car-image.jpg 400w,
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;small-car-image.jpg 400w,
              medium-car-image.jpg 800w,
-             large-car-image.jpg 1200w"</span>
+             large-car-image.jpg 1200w&quot;</span>
 
-     <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 1280px) 1200px,
+     <span class="hljs-attr">sizes</span>=<span class="hljs-string">&quot;(min-width: 1280px) 1200px,
             (min-width: 768px) 400px,
-            100vw"</span>
+            100vw&quot;</span>
      
-     <span class="hljs-attr">src</span>=<span class="hljs-string">"medium-car-image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Car"</span>&gt;</span>
+     <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;medium-car-image.jpg&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Car&quot;</span>&gt;</span>
 </code></pre>
 <p>然而，在大多数情况下，我们需要同时处理分辨率切换和美术设计，那么 <code>picture</code> 标签就是最好的选择。</p>
 <p>所以，让我们来看看如何使用 <code>picture</code> 标签来实现美术设计。</p>
@@ -94,34 +94,34 @@
 <p>下面的代码是将 <code>picture</code> 标签用于美术设计和分辨率切换的示例。</p>
 <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
      
-   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(orientation: landscape)"</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">&quot;(orientation: landscape)&quot;</span>
              
-      <span class="hljs-attr">srcset</span>=<span class="hljs-string">"land-small-car-image.jpg 200w,
+      <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;land-small-car-image.jpg 200w,
               land-medium-car-image.jpg 600w,
-              land-large-car-image.jpg 1000w"</span>
+              land-large-car-image.jpg 1000w&quot;</span>
              
-      <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 700px) 500px,
+      <span class="hljs-attr">sizes</span>=<span class="hljs-string">&quot;(min-width: 700px) 500px,
              (min-width: 600px) 400px,
-             100vw"</span>&gt;</span>
+             100vw&quot;</span>&gt;</span>
      
-   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(orientation: portrait)"</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">&quot;(orientation: portrait)&quot;</span>
              
-      <span class="hljs-attr">srcset</span>=<span class="hljs-string">"port-small-car-image.jpg 700w,
+      <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;port-small-car-image.jpg 700w,
               port-medium-car-image.jpg 1200w,
-              port-large-car-image.jpg 1600w"</span>
+              port-large-car-image.jpg 1600w&quot;</span>
              
-      <span class="hljs-attr">sizes</span>=<span class="hljs-string">"(min-width: 768px) 700px,
+      <span class="hljs-attr">sizes</span>=<span class="hljs-string">&quot;(min-width: 768px) 700px,
              (min-width: 1024px) 600px,
-             500px"</span>&gt;</span>
+             500px&quot;</span>&gt;</span>
      
-   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"land-medium-car-image.jpg"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"Car"</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;land-medium-car-image.jpg&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Car&quot;</span>&gt;</span>
 
 <span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
 </code></pre>
 <p>如果屏幕方向是水平时，浏览器会从第一个图片集（srcset）中显示图片。而当屏幕方面是竖直时，浏览器会使用第二个图片集（srcset）。除此之外，你也可以在 <code>media</code> 属性中设置 <code>max-width</code> 和 <code>min-width</code> 参数：</p>
 <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
-     <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(max-width: 767px)"</span> <span class="hljs-attr">....</span>&gt;</span>
-     <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">"(min-width: 768px)"</span> <span class="hljs-attr">....</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">&quot;(max-width: 767px)&quot;</span> <span class="hljs-attr">....</span>&gt;</span>
+     <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">&quot;(min-width: 768px)&quot;</span> <span class="hljs-attr">....</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
 </code></pre>
 <p>最后的 <code>img</code> 标签是用来向后兼容那些不支持 <code>picture</code> 标签的浏览器。</p>
@@ -133,9 +133,9 @@
 </blockquote>
 <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
 
-  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"test.avif"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"image/avif"</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">"test.webp"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"image/webp"</span>&gt;</span>
-  <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"test.png"</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">"test image"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;test.avif&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;image/avif&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;test.webp&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;image/webp&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;test.png&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;test image&quot;</span>&gt;</span>
 
 <span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
 </code></pre>

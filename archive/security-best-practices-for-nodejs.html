@@ -31,8 +31,8 @@
 <h2>注入攻击</h2>
 <p>Web 应用面临的一个最大的安全威胁之一就是：攻击者有可能把一段具有破坏性的 SQL 代码发送到后端并执行它。</p>
 <p>这种情况通常发生在开发者直接调用数据层对象并执行重要的 SQL 语句时，像这样：</p>
-<pre class="hljs"><code><span class="hljs-comment">// "id" 来自于未经处理的请求参数</span>
-db.query(<span class="hljs-string">'select * from MyTable where id = '</span> + id);
+<pre class="hljs"><code><span class="hljs-comment">// &quot;id&quot; 来自于未经处理的请求参数</span>
+db.query(<span class="hljs-string">&#x27;select * from MyTable where id = &#x27;</span> + id);
    .then(<span class="hljs-function">(<span class="hljs-params">users</span>) =&gt;</span> {
      <span class="hljs-comment">// 在响应中返回用户信息</span>
    });
@@ -41,10 +41,10 @@ db.query(<span class="hljs-string">'select * from MyTable where id = '</span> + 
 <p>大多数的编程语言和他们各自的对象关系映射框架都提供了避免 SQL 注入的方法。这些方法通常是在直接连接数据库执行语句之前，对语句中的输入参数进行参数化。这一参数化的过程由编程语言可执行库中的内部逻辑完成。</p>
 <p>在这种情况下，你需要深入了解这门语言/框架，并学习它如何实现这些功能，这非常重要。</p>
 <p>比方说，你使用 <a href="https://sequelize.org/">Sequelize</a> 来做这件事，那么一个简单的实现如下：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> { QueryTypes } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'sequelize'</span>);
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { QueryTypes } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;sequelize&#x27;</span>);
 
 <span class="hljs-keyword">await</span> sequelize.query(
-  <span class="hljs-string">'select * from MyTable where id = :p1'</span>,
+  <span class="hljs-string">&#x27;select * from MyTable where id = :p1&#x27;</span>,
   {
     <span class="hljs-attr">replacements</span>: { <span class="hljs-attr">p1</span>: id }, <span class="hljs-comment">// id 来自于请求参数</span>
     <span class="hljs-attr">type</span>: QueryTypes.SELECT
@@ -71,7 +71,7 @@ db.query(<span class="hljs-string">'select * from MyTable where id = '</span> + 
 <li>如果您可以更深入一点，那么请采用 <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security">HSTS</a> 协议。 HSTS 是一个帮助应用抵御<a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">中间人攻击</a>的协议。</li>
 </ul>
 <p>Node 应用中像下面这样设置 HSTS：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> hsts = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hsts'</span>);
+<pre class="hljs"><code><span class="hljs-keyword">const</span> hsts = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;hsts&#x27;</span>);
 
 app.use(hsts({
   <span class="hljs-attr">maxAge</span>: <span class="hljs-number">15552000</span>  <span class="hljs-comment">// 180 days in seconds</span>
@@ -124,16 +124,16 @@ app.use(hsts({
 <p>XSS 令人头疼。每天的繁忙工作让开发者经常忘记处理这种著名的问题。</p>
 <p>这个问题有点类似 SQL 注入。在你的应用上有一个端点接收请求并返回响应。这不是什么大问题，然而，当您将请求参数直接放在响应中而没有做处理时，问题就来了。</p>
 <p>经典案例如下：</p>
-<pre class="hljs"><code>app.get(<span class="hljs-string">'/users'</span>, (req, res) =&gt; {
+<pre class="hljs"><code>app.get(<span class="hljs-string">&#x27;/users&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
   <span class="hljs-keyword">const</span> user = db.getUserById(req.query.id);
   <span class="hljs-keyword">if</span> (!user) {
-    <span class="hljs-keyword">return</span> res.send(<span class="hljs-string">'&lt;span&gt;Sorry, the user "'</span> + req.query.product + <span class="hljs-string">'" was not found!&lt;/span&gt;'</span>);
+    <span class="hljs-keyword">return</span> res.send(<span class="hljs-string">&#x27;&lt;span&gt;Sorry, the user &quot;&#x27;</span> + req.query.product + <span class="hljs-string">&#x27;&quot; was not found!&lt;/span&gt;&#x27;</span>);
   }
   ...
 });
 </code></pre>
 <p>猜猜当客户发送下面这段代码作为 <strong>id</strong> 参数会发生什么？</p>
-<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span>alert(Uh la la, it's me! XSS!!)<span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span> 
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span>alert(Uh la la, it&#x27;s me! XSS!!)<span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span> 
 </code></pre>
 <p>现在这只是一段无关紧要的提示信息，但是我们都知道攻击者会在代码中注入更多的 JavaScript 代码。</p>
 <p><a href="https://openbase.io/packages/top-nodejs-xss-libraries">Node 的完整选项</a>通过使用新的中间件来解决这个问题。您可以选择其中一个，实现一下，然后这个问题就不会再困扰您了。</p>

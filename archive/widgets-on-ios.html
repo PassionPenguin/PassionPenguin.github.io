@@ -44,8 +44,8 @@
                .frame(maxWidth: .infinity, maxHeight: .infinity)
                .background(<span class="hljs-type">Color</span>.black)
        }
-       .configurationDisplayName(<span class="hljs-string">"My Widget"</span>)
-       .description(<span class="hljs-string">"This is an example widget."</span>)
+       .configurationDisplayName(<span class="hljs-string">&quot;My Widget&quot;</span>)
+       .description(<span class="hljs-string">&quot;This is an example widget.&quot;</span>)
 </code></pre>
 <p>**Kind：**这是小部件的标识符，可用于执行更新或进行查询。
 **Provider：**此值的类型为 <strong>“TimelineProvider”</strong>，它是 widget 的数据来源，负责确定在不同时间点需要显示哪些数据。
@@ -62,10 +62,10 @@
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Static_WidgetEntryView</span> : <span class="hljs-title">View</span> </span>{
     <span class="hljs-keyword">var</span> entry: <span class="hljs-type">Provider</span>.<span class="hljs-type">Entry</span>
 
-    @<span class="hljs-type">Environment</span>(\.widgetFamily) <span class="hljs-keyword">var</span> family
+    <span class="hljs-meta">@Environment</span>(\.widgetFamily) <span class="hljs-keyword">var</span> family
 
-    @<span class="hljs-type">ViewBuilder</span>
-    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+    <span class="hljs-meta">@ViewBuilder</span>
+    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
 
         <span class="hljs-keyword">switch</span> family {
         <span class="hljs-keyword">case</span> .systemSmall:
@@ -74,7 +74,7 @@
             <span class="hljs-type">ViewForSystemMedium</span>(entry: entry)
         <span class="hljs-keyword">case</span> .systemLarge:
             <span class="hljs-type">ViewForSystemLarge</span>(entry: entry)
-        @unknown <span class="hljs-keyword">default</span>:
+        <span class="hljs-keyword">@unknown</span> <span class="hljs-keyword">default</span>:
             <span class="hljs-built_in">fatalError</span>()
         }
     }
@@ -82,9 +82,9 @@
 </code></pre>
 <h4>时间线 Provider</h4>
 <p>构建我们的 widget 的最后一块拼图是 Provider。Provider 的类型为 <strong>‘TimelineProvider’</strong>，这个类型实现了三个方法</p>
-<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSnapshot</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context, completion: @escaping <span class="hljs-params">(SimpleEntry)</span></span></span> -&gt; ())
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getTimeline</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context, completion: @escaping <span class="hljs-params">(Timeline&lt;Entry&gt;)</span></span></span> -&gt; ())
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">placeholder</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context)</span></span> -&gt; <span class="hljs-type">SimpleEntry</span>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSnapshot</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>, <span class="hljs-params">completion</span>: <span class="hljs-keyword">@escaping</span> (<span class="hljs-type">SimpleEntry</span>) -&gt; ())</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getTimeline</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>, <span class="hljs-params">completion</span>: <span class="hljs-keyword">@escaping</span> (<span class="hljs-type">Timeline</span>&lt;<span class="hljs-type">Entry</span>&gt;) -&gt; ())</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">placeholder</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>)</span> -&gt; <span class="hljs-type">SimpleEntry</span>
 </code></pre>
 <p>这三个方法中，一个（<code>placeholder</code>）用于给 widget 提供占位符，一个（<code>getSnapshot</code>）用于提供快照，剩下的一个（<code>getTimeline</code>）用于返回当前时间线。</p>
 <p><strong>快照</strong>是 OS 在需要尽快返回视图，而无需加载任何数据或进行网络通信的时候使用的。widget gallery 就会使用快照，让用户可以在把 widget 添加到主屏幕之前进行预览。理想的快照是 widget 的模拟视图（mocked view）。</p>
@@ -94,27 +94,27 @@
 <p><strong>时间线重载策略</strong>
 OS 使用 ‘TimelineReloadPolicy’（时间线重载策略）来确定何时需要更新 widget 到下一组视图。 “<strong>.atEnd</strong>” 重载策略下 OS 会在没有更多时间线条目（entries）的时候重新加载新的条目。我在示例代码中创建了一个以1分钟为间隔的时间线，并添加了五个视图条目。这样，widget 会在每分钟都更新显示为相应的时间。5分钟后，系统将调用 “<strong>getTimeline</strong>” 方法来获取下一组视图。 TimelineReloadPolicy 还提供诸如 “<strong>after(date)</strong>” 和 “<strong>never</strong>” 之类的选项，前者会在指定时间更新时间线，后者则是设置完全不更新时间线。</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Provider</span>: <span class="hljs-title">TimelineProvider</span> </span>{
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">placeholder</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context)</span></span> -&gt; <span class="hljs-type">SimpleEntry</span> {
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">placeholder</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>)</span> -&gt; <span class="hljs-type">SimpleEntry</span> {
         <span class="hljs-type">SimpleEntry</span>(date: <span class="hljs-type">Date</span>())
     }
 
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSnapshot</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context, completion: @escaping <span class="hljs-params">(SimpleEntry)</span></span></span> -&gt; ()) {
-        <span class="hljs-keyword">let</span> entry = <span class="hljs-type">SimpleEntry</span>(date: <span class="hljs-type">Date</span>())
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSnapshot</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>, <span class="hljs-params">completion</span>: <span class="hljs-keyword">@escaping</span> (<span class="hljs-type">SimpleEntry</span>) -&gt; ())</span> {
+        <span class="hljs-keyword">let</span> entry <span class="hljs-operator">=</span> <span class="hljs-type">SimpleEntry</span>(date: <span class="hljs-type">Date</span>())
         completion(entry)
     }
 
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getTimeline</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context, completion: @escaping <span class="hljs-params">(Timeline&lt;Entry&gt;)</span></span></span> -&gt; ()) {
-        <span class="hljs-keyword">var</span> entries: [<span class="hljs-type">SimpleEntry</span>] = []
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getTimeline</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>, <span class="hljs-params">completion</span>: <span class="hljs-keyword">@escaping</span> (<span class="hljs-type">Timeline</span>&lt;<span class="hljs-type">Entry</span>&gt;) -&gt; ())</span> {
+        <span class="hljs-keyword">var</span> entries: [<span class="hljs-type">SimpleEntry</span>] <span class="hljs-operator">=</span> []
 
         <span class="hljs-comment">// 条目之间间隔1分钟</span>
-        <span class="hljs-keyword">let</span> currentDate = <span class="hljs-type">Date</span>()
-        <span class="hljs-keyword">for</span> hourOffset <span class="hljs-keyword">in</span> <span class="hljs-number">0</span> ..&lt; <span class="hljs-number">5</span> {
-            <span class="hljs-keyword">let</span> entryDate = <span class="hljs-type">Calendar</span>.current.date(byAdding: .minute, value: hourOffset, to: currentDate)!
-            <span class="hljs-keyword">let</span> entry = <span class="hljs-type">SimpleEntry</span>(date: entryDate)
+        <span class="hljs-keyword">let</span> currentDate <span class="hljs-operator">=</span> <span class="hljs-type">Date</span>()
+        <span class="hljs-keyword">for</span> hourOffset <span class="hljs-keyword">in</span> <span class="hljs-number">0</span> <span class="hljs-operator">..&lt;</span> <span class="hljs-number">5</span> {
+            <span class="hljs-keyword">let</span> entryDate <span class="hljs-operator">=</span> <span class="hljs-type">Calendar</span>.current.date(byAdding: .minute, value: hourOffset, to: currentDate)<span class="hljs-operator">!</span>
+            <span class="hljs-keyword">let</span> entry <span class="hljs-operator">=</span> <span class="hljs-type">SimpleEntry</span>(date: entryDate)
             entries.append(entry)
         }
 
-        <span class="hljs-keyword">let</span> timeline = <span class="hljs-type">Timeline</span>(entries: entries, policy: .atEnd)
+        <span class="hljs-keyword">let</span> timeline <span class="hljs-operator">=</span> <span class="hljs-type">Timeline</span>(entries: entries, policy: .atEnd)
         completion(timeline)
     }
 }
@@ -134,40 +134,40 @@ OS 使用 ‘TimelineReloadPolicy’（时间线重载策略）来确定何时�
 <p>现在，我们需要将 widget 从静态配置更新为 Intent 配置。 为此，让我们创建一个新的 Provider 实例。创建类型为 <strong>IntentTimelineProvider</strong> 的 “ConfigurableProvider”，并沿用了和 TimelineProvider 相同的三个函数，注意，参数中添加了 <strong>configuration</strong>，这个新参数的类型就是我们前文定义的 CityNamesIntent。 这个新的配置参数可以用于获取用户选择的值，并相应地更新或修改时间线。</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ConfigurableProvider</span>: <span class="hljs-title">IntentTimelineProvider</span> </span>{
 
-    <span class="hljs-keyword">typealias</span> <span class="hljs-type">Entry</span> = <span class="hljs-type">SimpleEntry</span>
+    <span class="hljs-keyword">typealias</span> <span class="hljs-type">Entry</span> <span class="hljs-operator">=</span> <span class="hljs-type">SimpleEntry</span>
 
-    <span class="hljs-keyword">typealias</span> <span class="hljs-type">Intent</span> = <span class="hljs-type">CityNamesIntent</span>
+    <span class="hljs-keyword">typealias</span> <span class="hljs-type">Intent</span> <span class="hljs-operator">=</span> <span class="hljs-type">CityNamesIntent</span>
 
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">placeholder</span><span class="hljs-params">(<span class="hljs-keyword">in</span> context: Context)</span></span> -&gt; <span class="hljs-type">SimpleEntry</span> {
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">placeholder</span>(<span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>)</span> -&gt; <span class="hljs-type">SimpleEntry</span> {
         <span class="hljs-type">SimpleEntry</span>(date: <span class="hljs-type">Date</span>())
     }
 
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSnapshot</span><span class="hljs-params">(<span class="hljs-keyword">for</span> configuration: CityNamesIntent, <span class="hljs-keyword">in</span> context: Context, completion: @escaping <span class="hljs-params">(SimpleEntry)</span></span></span> -&gt; <span class="hljs-type">Void</span>) {
-        <span class="hljs-keyword">let</span> entry = <span class="hljs-type">SimpleEntry</span>(date: <span class="hljs-type">Date</span>())
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSnapshot</span>(<span class="hljs-params">for</span> <span class="hljs-params">configuration</span>: <span class="hljs-type">CityNamesIntent</span>, <span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>, <span class="hljs-params">completion</span>: <span class="hljs-keyword">@escaping</span> (<span class="hljs-type">SimpleEntry</span>) -&gt; <span class="hljs-type">Void</span>)</span> {
+        <span class="hljs-keyword">let</span> entry <span class="hljs-operator">=</span> <span class="hljs-type">SimpleEntry</span>(date: <span class="hljs-type">Date</span>())
         completion(entry)
     }
 
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getTimeline</span><span class="hljs-params">(<span class="hljs-keyword">for</span> configuration: CityNamesIntent, <span class="hljs-keyword">in</span> context: Context, completion: @escaping <span class="hljs-params">(Timeline&lt;SimpleEntry&gt;)</span></span></span> -&gt; <span class="hljs-type">Void</span>) {
-        <span class="hljs-keyword">var</span> entries: [<span class="hljs-type">SimpleEntry</span>] = []
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getTimeline</span>(<span class="hljs-params">for</span> <span class="hljs-params">configuration</span>: <span class="hljs-type">CityNamesIntent</span>, <span class="hljs-params">in</span> <span class="hljs-params">context</span>: <span class="hljs-type">Context</span>, <span class="hljs-params">completion</span>: <span class="hljs-keyword">@escaping</span> (<span class="hljs-type">Timeline</span>&lt;<span class="hljs-type">SimpleEntry</span>&gt;) -&gt; <span class="hljs-type">Void</span>)</span> {
+        <span class="hljs-keyword">var</span> entries: [<span class="hljs-type">SimpleEntry</span>] <span class="hljs-operator">=</span> []
 
-        <span class="hljs-keyword">let</span> currentDate = <span class="hljs-type">Date</span>()
-        <span class="hljs-keyword">for</span> hourOffset <span class="hljs-keyword">in</span> <span class="hljs-number">0</span> ..&lt; <span class="hljs-number">5</span> {
-            <span class="hljs-keyword">let</span> entryDate = <span class="hljs-type">Calendar</span>.current.date(byAdding: .minute, value: hourOffset, to: currentDate)!
-            <span class="hljs-keyword">let</span> entry = <span class="hljs-type">SimpleEntry</span>(date: entryDate)
+        <span class="hljs-keyword">let</span> currentDate <span class="hljs-operator">=</span> <span class="hljs-type">Date</span>()
+        <span class="hljs-keyword">for</span> hourOffset <span class="hljs-keyword">in</span> <span class="hljs-number">0</span> <span class="hljs-operator">..&lt;</span> <span class="hljs-number">5</span> {
+            <span class="hljs-keyword">let</span> entryDate <span class="hljs-operator">=</span> <span class="hljs-type">Calendar</span>.current.date(byAdding: .minute, value: hourOffset, to: currentDate)<span class="hljs-operator">!</span>
+            <span class="hljs-keyword">let</span> entry <span class="hljs-operator">=</span> <span class="hljs-type">SimpleEntry</span>(date: entryDate)
             entries.append(entry)
         }
 
-        <span class="hljs-keyword">let</span> timeline = <span class="hljs-type">Timeline</span>(entries: entries, policy: .atEnd)
+        <span class="hljs-keyword">let</span> timeline <span class="hljs-operator">=</span> <span class="hljs-type">Timeline</span>(entries: entries, policy: .atEnd)
         completion(timeline)
     }
 }
 </code></pre>
 <p>我们要做的最后一件事是将小部件的定义从 StaticConfiguration 更新为 IntentConfiguration。 在 <strong>Static_Widget</strong> 的定义部分中，把 StaticConfiguration 替换为 IntentConfiguration。它需要一个 intent 实例，把 <strong>CityNameIntent</strong> 传给它。对于 Provider，请使用我们创建的 <strong>ConfigurableProvider</strong>。其余的保持不变。</p>
-<pre class="hljs"><code>@main
+<pre class="hljs"><code><span class="hljs-keyword">@main</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Static_Widget</span>: <span class="hljs-title">Widget</span> </span>{
-    <span class="hljs-keyword">let</span> kind: <span class="hljs-type">String</span> = <span class="hljs-string">"Static_Widget"</span>
+    <span class="hljs-keyword">let</span> kind: <span class="hljs-type">String</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Static_Widget&quot;</span>
 
-    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">WidgetConfiguration</span> {
+    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">WidgetConfiguration</span> {
         <span class="hljs-type">IntentConfiguration</span>(kind: kind,
                             intent: <span class="hljs-type">CityNamesIntent</span>.<span class="hljs-keyword">self</span>,
                             provider: <span class="hljs-type">ConfigurableProvider</span>(),
@@ -176,8 +176,8 @@ OS 使用 ‘TimelineReloadPolicy’（时间线重载策略）来确定何时�
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .background(<span class="hljs-type">Color</span>.black)
                             })
-            .configurationDisplayName(<span class="hljs-string">"My Widget"</span>)
-            .description(<span class="hljs-string">"This is an example widget."</span>)
+            .configurationDisplayName(<span class="hljs-string">&quot;My Widget&quot;</span>)
+            .description(<span class="hljs-string">&quot;This is an example widget.&quot;</span>)
             .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

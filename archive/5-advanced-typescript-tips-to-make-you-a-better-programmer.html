@@ -30,30 +30,30 @@
 <p>Swagger 极大地帮助我们了解后端可以提供什么样的服务 —— 但是，通常情况下，开发者往往会得到和约定不一致的 API，其中某些 API 属性可能存在，也可能不存在，或者是根据状态返回不同的对象。</p>
 <p>不幸的是，如果你不知道 API 会返回什么结果，就无法在编译时捕获它们，但我们可以做的是，使其在运行时更加易于处理（和上报！）。</p>
 <p>API 调用一般是 TypeScript 错误的出处 —— 我们通常会将 API 调用的返回结果像下面这样强制转换：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> myApiResult = <span class="hljs-keyword">await</span> callApi(<span class="hljs-string">"url.com/endpoint"</span>) <span class="hljs-keyword">as</span> IApiResult
+<pre class="hljs"><code><span class="hljs-keyword">const</span> myApiResult = <span class="hljs-keyword">await</span> callApi(<span class="hljs-string">&quot;url.com/endpoint&quot;</span>) <span class="hljs-keyword">as</span> IApiResult
 </code></pre>
 <p>甚至更糟糕…</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> myApiResult = <span class="hljs-keyword">await</span> callApi(<span class="hljs-string">"url.com/endpoint"</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> myApiResult = <span class="hljs-keyword">await</span> callApi(<span class="hljs-string">&quot;url.com/endpoint&quot;</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>
 </code></pre>
 <p>这两种方法都会导致编译器关闭，但是第一种方法明显比第二种方法的健壮性更高 —— 事实上，第二种方法处理的返回结果和 JavaScript 没什么区别。</p>
 <p>但如果 API 返回的结果不是 <code>IApiResult</code> 类型怎么办？其返回值类型和我们期望的不同，我们可以定义一个随机的 <code>MyApiResult</code> 类型？其结果显而易见会存在问题，并且会 100% 地导致输入类型错误。</p>
 <p>我们可以使用 TS 的类型保护来处理以上问题:</p>
 <pre class="hljs"><code><span class="hljs-keyword">interface</span> IApiResponse { 
-   bar: <span class="hljs-built_in">string</span>
+   <span class="hljs-attr">bar</span>: <span class="hljs-built_in">string</span>
 }
 
 <span class="hljs-keyword">const</span> callFooApi = <span class="hljs-keyword">async</span> (): <span class="hljs-built_in">Promise</span>&lt;IApiResponse&gt; =&gt; {
- <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> httpRequest(<span class="hljs-string">'foo.api/barEndpoint'</span>) <span class="hljs-comment">// 返回值类型未知</span>
+ <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> httpRequest(<span class="hljs-string">&#x27;foo.api/barEndpoint&#x27;</span>) <span class="hljs-comment">// 返回值类型未知</span>
  <span class="hljs-keyword">if</span> (responseIsbar(response)) {
    <span class="hljs-keyword">return</span> response
  } <span class="hljs-keyword">else</span> {
-   <span class="hljs-keyword">throw</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"response is not of type IApiResponse"</span>)
+   <span class="hljs-keyword">throw</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&quot;response is not of type IApiResponse&quot;</span>)
  }
 }
 
 <span class="hljs-keyword">const</span> responseIsBar = (response: unknown): response is IApiResponse =&gt; {
     <span class="hljs-keyword">return</span> (response <span class="hljs-keyword">as</span> IApiResponse).bar !== <span class="hljs-literal">undefined</span>
-        &amp;&amp; <span class="hljs-keyword">typeof</span> (response <span class="hljs-keyword">as</span> IApiResponse).bar === <span class="hljs-string">"string"</span>
+        &amp;&amp; <span class="hljs-keyword">typeof</span> (response <span class="hljs-keyword">as</span> IApiResponse).bar === <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre>
 <p>通过 <code>responseIsBar</code> 方法，我们可以提前判断返回值类型是否为 <code> IApiResponse</code> ，从而防止出现类型转换错误。</p>
@@ -62,33 +62,33 @@
 <h4>2. As Const / Readonly</h4>
 <p>这是一个更简洁的类型语法糖。很多人都知道，在给接口赋值时，可以通过 <code>readonly</code> 声明使该属性只能被读取而不能被写入</p>
 <pre class="hljs"><code><span class="hljs-keyword">interface</span> MyInterface {
-  readonly myProperty: <span class="hljs-built_in">string</span>
+  <span class="hljs-keyword">readonly</span> myProperty: <span class="hljs-built_in">string</span>
 }
 
 <span class="hljs-keyword">let</span> t: MyInterface = {
-  myProperty: <span class="hljs-string">'hi'</span>
+  <span class="hljs-attr">myProperty</span>: <span class="hljs-string">&#x27;hi&#x27;</span>
 }
 
-t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment">// 编译错误, myProperty 是只读属性.</span>
+t.myProperty = <span class="hljs-string">&quot;bye&quot;</span> <span class="hljs-comment">// 编译错误, myProperty 是只读属性.</span>
 </code></pre>
 <p>这样处理就很棒，如果你哪天遇到了比较复杂返回结果数据集，比如 API 返回结果。接着你可以根据每个属性的 readonly 标识符，识别其为简单的数据集。</p>
 <p>Typescript 支持在类型声明后加上 <code>as const</code>，这样我们就相当于给每个属性添加 <code>readonly</code>。</p>
 <pre class="hljs"><code><span class="hljs-keyword">let</span> t = {
- myProperty: <span class="hljs-string">"hi"</span>,
- myArr: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
+ <span class="hljs-attr">myProperty</span>: <span class="hljs-string">&quot;hi&quot;</span>,
+ <span class="hljs-attr">myArr</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]
 } <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span> 
 </code></pre>
 <p>现在，T 的所有属性值都是不可修改的。例如，<code>t.myArr.push(1)</code> 不能编译，给 <code>myProperty</code> 属性重新赋值同样也不能编译。</p>
 <p>我认为对我们最有帮助的场景与之前一样 —— 不同的是，在这里我们不是返回一个接口，而是想通过代理的方法修改 API 对象中的部分属性，使其成为一个数据对象，所以，结合前面的技巧:</p>
 <pre class="hljs"><code><span class="hljs-keyword">const</span> callFooApi = <span class="hljs-keyword">async</span> () =&gt; {
- <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> httpRequest(<span class="hljs-string">'foo.api/barEndpoint'</span>) <span class="hljs-comment">// 返回值类型未知</span>
+ <span class="hljs-keyword">let</span> response = <span class="hljs-keyword">await</span> httpRequest(<span class="hljs-string">&#x27;foo.api/barEndpoint&#x27;</span>) <span class="hljs-comment">// 返回值类型未知</span>
  <span class="hljs-keyword">if</span> (responseIsbar(response)) {
    <span class="hljs-comment">// 过滤掉不需要掉数据，在这里对数据进行自定义格式化处理</span>
    <span class="hljs-keyword">return</span> {
-      firstLastName: [response.firstName, response.lastName]
+      <span class="hljs-attr">firstLastName</span>: [response.firstName, response.lastName]
    } <span class="hljs-keyword">as</span> <span class="hljs-keyword">const</span>
  } <span class="hljs-keyword">else</span> {
-   <span class="hljs-keyword">throw</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"response is not of type IApiResponse"</span>)
+   <span class="hljs-keyword">throw</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&quot;response is not of type IApiResponse&quot;</span>)
  }
 }
 </code></pre>
@@ -99,7 +99,7 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 <p>没有人喜欢这样。</p>
 <p>许多语言解决这个问题的方法是：必须有明确 Switch 和 Case 场景，或者显式声明一个 <code>default</code> 状态。Typescript 编译器不支持这种情况，但我们可以这样创建 <code>switch case</code>：如果我们扩展了枚举（enum）或其他可能的值，我们的程序就不会编译，直到我们显式地处理了这种情况。</p>
 <p>我们所说的方法如下：</p>
-<pre class="hljs"><code><span class="hljs-keyword">enum</span> Directions {
+<pre class="hljs"><code><span class="hljs-built_in">enum</span> Directions {
    Left,
    Right
 }
@@ -108,16 +108,16 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 
 <span class="hljs-keyword">switch</span> (turnTowards) {
       <span class="hljs-keyword">case</span> Directions.Right:
-         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'we\'re going right!'</span>)
+         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;we\&#x27;re going right!&#x27;</span>)
          <span class="hljs-keyword">break</span>
       <span class="hljs-keyword">case</span> Directions.Left:
-         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Turning left!'</span>)
+         <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Turning left!&#x27;</span>)
          <span class="hljs-keyword">break</span>
 }
 </code></pre>
 <p>即使是初级的开发者也可以看懂我们这个程序到意思是向左转或向右转。在这里添加默认（default）语句似乎并不必要，这里只有两个枚举值。但是请记住，我们编写代码不仅仅是为了完成它，而且要考虑代码到可维护性！</p>
 <p>假设两年后，另一个开发人员决定添加一个新的方向：Forward 。现在，枚举（enum）看起来是这样的：</p>
-<pre class="hljs"><code><span class="hljs-keyword">enum</span> Directions {
+<pre class="hljs"><code><span class="hljs-built_in">enum</span> Directions {
    Left,
    Right,
    Forward
@@ -126,7 +126,7 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 <p>程序里的 <code>switch case</code> 知道这一点，但它<strong>不在乎</strong>。它会很自然地尝试打开 <code>goingTowards</code> ，如果它遇到 forward，它也会很自然地出错。两年是很长的一段时间，开发者忘记了之前都在哪里使用了 <code>switch case</code> 代码。对此，我们可以添加一个针对默认值的异常处理，让其在编译时抛出异常，这样总比运行时错误好。</p>
 <p>所以我们可以添加默认情况如下：</p>
 <pre class="hljs"><code><span class="hljs-keyword">default</span>:
-   <span class="hljs-keyword">const</span> exhaustiveCheck: never = myDirection
+   <span class="hljs-keyword">const</span> exhaustiveCheck: <span class="hljs-built_in">never</span> = myDirection
    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(exhaustiveCheck)
 </code></pre>
 <p>如果我们处理了 <code>Forward</code> 这个情况，那么一切都正常。如果我们不这样做，那么我们的程序将无法编译！( <code>throw</code> 这一行是可选的，我这样做只是为了关闭 eslint 对未使用变量的校验报错)</p>
@@ -142,14 +142,14 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 </code></pre>
 <p>属性 <code>bar</code> 以问号结尾，意味着这个字段可能是 <code>undefined</code>，因此 <code>let baz: Foo = {}</code> 会通过编译（另外, <code>let baz: Foo = {bar: null} </code> 也能通过编译）。然而开发者无法通过上述代码知道我是故意让 <code>bar</code> 取空值还是无意的。 一个更好表述我声明意图的示例如下：</p>
 <pre class="hljs"><code><span class="hljs-keyword">interface</span> Foo {
-  bar: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>
+  <span class="hljs-attr">bar</span>: <span class="hljs-built_in">string</span> | <span class="hljs-literal">null</span>
 }
 </code></pre>
 <p>现在，我必须 <strong>明确地声明 <code>bar</code> 的取值为 <code>null</code>。</strong> 我的意图不会被混淆 — <code>bar</code> 没有明确的取值。</p>
 <p>这不仅适用于接口声明 —— 我还会在函数不返回任何内容时使用它。这在编译时很有帮助:</p>
 <pre class="hljs"><code><span class="hljs-comment">// 如果我们忘记指定了函数的返回值，编译器会返回默认值</span>
 <span class="hljs-keyword">const</span> myFunc = (): <span class="hljs-built_in">string</span> | <span class="hljs-function"><span class="hljs-params">void</span> =&gt;</span> {
-   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'blah'</span>)
+   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;blah&#x27;</span>)
 }
 </code></pre>
 <pre class="hljs"><code><span class="hljs-comment">// 如果我们忘记指定了函数的返回值，编译器会返回 null</span>
@@ -176,7 +176,7 @@ t.myProperty = <span class="hljs-string">"bye"</span> <span class="hljs-comment"
 <p><strong>NonNullable</strong></p>
 <p>创建一个新类型，不包含 null / undefined 属性。如果我们正在增加或填写一些数据，这是很有用的，可以保证它是有值的。</p>
 <pre class="hljs"><code><span class="hljs-keyword">interface</span> IPerson {
-  name: <span class="hljs-built_in">string</span>
+  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>
 }
 
 <span class="hljs-keyword">type</span> MaybePerson = Person | <span class="hljs-literal">null</span>

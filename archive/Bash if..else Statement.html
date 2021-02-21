@@ -33,14 +33,14 @@
 <p>如果 <code>TEST-COMMAND</code> 执行后为真，那么相应地， <code>STATEMENTS</code> 就会被执行；而如果为假，则 <code>STATEMENTS</code> 会被忽略。</p>
 <p>大多数情况下，（在原文件中）保持你的代码拥有优秀的缩进及空行，可是个很好的习惯，能让你的代码具有更强的可读性和组织性结构性。大多数人都是用 4 个空格或 2 个空格的缩进。</p>
 <p>让我们看看如下用于检查给定数字是否大于 10 的一段代码：</p>
-<pre class="hljs"><code><span class="hljs-meta">#!/bin/zsh
-</span>
-<span class="hljs-built_in">echo</span> -n <span class="hljs-string">"输入一个数字："</span>
+<pre class="hljs"><code><span class="hljs-meta">#!/bin/zsh</span>
+
+<span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;输入一个数字：&quot;</span>
 <span class="hljs-built_in">read</span> VAR
 
 <span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$VAR</span> -gt 10 ]]
 <span class="hljs-keyword">then</span>
-  <span class="hljs-built_in">echo</span> <span class="hljs-string">"该变量大于 10。"</span>
+  <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;该变量大于 10。&quot;</span>
 <span class="hljs-keyword">fi</span>
 </code></pre>
 <p>保存上面的代码并在命令行中执行它：</p>

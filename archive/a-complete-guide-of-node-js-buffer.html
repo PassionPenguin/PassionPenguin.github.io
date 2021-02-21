@@ -44,27 +44,27 @@
 <h4><code>Buffer.compare()</code></h4>
 <p>通过使用 <code>Buffer.compare()</code> 我们可以比较两个缓冲区，此方法的返回值是 <code>-1</code>，<code>0</code>，<code>1</code> 中的一个。</p>
 <p>译者注：<code>buf.compare(otherBuffer);</code> 这一句调用会返回一个数字 <code>-1</code>，<code>0</code>，<code>1</code>，分别对应 <code>buf</code> 在 <code>otherBuffer</code> 之前，之后或相同。</p>
-<pre class="hljs"><code><span class="hljs-keyword">var</span> buf1 = Buffer.from(<span class="hljs-string">'Harsh'</span>)
-<span class="hljs-keyword">var</span> buf2 = Buffer.from(<span class="hljs-string">'Harsg'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">var</span> buf1 = Buffer.from(<span class="hljs-string">&#x27;Harsh&#x27;</span>)
+<span class="hljs-keyword">var</span> buf2 = Buffer.from(<span class="hljs-string">&#x27;Harsg&#x27;</span>)
 <span class="hljs-keyword">var</span> a = Buffer.compare(buf1, buf2)
 <span class="hljs-built_in">console</span>.log(a) <span class="hljs-comment">// 这会打印 0</span>
 
-<span class="hljs-keyword">var</span> buf1 = Buffer.from(<span class="hljs-string">'a'</span>)
-<span class="hljs-keyword">var</span> buf2 = Buffer.from(<span class="hljs-string">'b'</span>)
+<span class="hljs-keyword">var</span> buf1 = Buffer.from(<span class="hljs-string">&#x27;a&#x27;</span>)
+<span class="hljs-keyword">var</span> buf2 = Buffer.from(<span class="hljs-string">&#x27;b&#x27;</span>)
 <span class="hljs-keyword">var</span> a = Buffer.compare(buf1, buf2)
 <span class="hljs-built_in">console</span>.log(a) <span class="hljs-comment">// 这会打印 -1</span>
 
 
-<span class="hljs-keyword">var</span> buf1 = Buffer.from(<span class="hljs-string">'b'</span>)
-<span class="hljs-keyword">var</span> buf2 = Buffer.from(<span class="hljs-string">'a'</span>)
+<span class="hljs-keyword">var</span> buf1 = Buffer.from(<span class="hljs-string">&#x27;b&#x27;</span>)
+<span class="hljs-keyword">var</span> buf2 = Buffer.from(<span class="hljs-string">&#x27;a&#x27;</span>)
 <span class="hljs-keyword">var</span> a = Buffer.compare(buf1, buf2)
 <span class="hljs-built_in">console</span>.log(a) <span class="hljs-comment">// 这会打印 1</span>
 </code></pre>
 <h4><code>Buffer.concat()</code></h4>
 <p>顾名思义，我们可以使用此函数连接两个缓冲区。当然，就像字符串一样，我们也可以连接两个以上的缓冲区。</p>
-<pre class="hljs"><code><span class="hljs-keyword">var</span> buffer1 = Buffer.from(<span class="hljs-string">'x'</span>)
-<span class="hljs-keyword">var</span> buffer2 = Buffer.from(<span class="hljs-string">'y'</span>)
-<span class="hljs-keyword">var</span> buffer3 = Buffer.from(<span class="hljs-string">'z'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">var</span> buffer1 = Buffer.from(<span class="hljs-string">&#x27;x&#x27;</span>)
+<span class="hljs-keyword">var</span> buffer2 = Buffer.from(<span class="hljs-string">&#x27;y&#x27;</span>)
+<span class="hljs-keyword">var</span> buffer3 = Buffer.from(<span class="hljs-string">&#x27;z&#x27;</span>)
 <span class="hljs-keyword">var</span> arr = [buffer1, buffer2, buffer3]
 
 <span class="hljs-built_in">console</span>.log(arr)
@@ -78,7 +78,7 @@
 </code></pre>
 <h4><code>Buffer.entries()</code></h4>
 <p><code>Buffer.entries()</code> 会用这一缓冲区的内容创建并返回一个 [index, byte] 形式的迭代器。</p>
-<pre class="hljs"><code><span class="hljs-keyword">var</span> buf = Buffer.from(<span class="hljs-string">'xyz'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">var</span> buf = Buffer.from(<span class="hljs-string">&#x27;xyz&#x27;</span>)
 
 <span class="hljs-keyword">for</span> (a <span class="hljs-keyword">of</span> buf.entries()) {
     <span class="hljs-built_in">console</span>.log(a)
@@ -87,37 +87,37 @@
 </code></pre>
 <h4><code>Buffer.fill()</code></h4>
 <p>我们可以使用 <code>Buffer.fill()</code> 这个函数将数据插入或填充到缓冲区中。更多信息请参见下文。</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> b = Buffer.alloc(<span class="hljs-number">10</span>).fill(<span class="hljs-string">'a'</span>)
+<pre class="hljs"><code><span class="hljs-keyword">const</span> b = Buffer.alloc(<span class="hljs-number">10</span>).fill(<span class="hljs-string">&#x27;a&#x27;</span>)
 
 <span class="hljs-built_in">console</span>.log(b.toString())
 <span class="hljs-comment">// aaaaaaaaaa</span>
 </code></pre>
 <h4><code>Buffer.includes()</code></h4>
 <p>像字符串一样，它将确认缓冲区是否具有该值。我们可以使用 <code>Buffer.includes()</code> 方法来实现这一点，给定方法根据搜索返回一个布尔值，即 <code>true</code> 或 <code>false</code>。</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> buf = Buffer.from(<span class="hljs-string">'this is a buffer'</span>)
-<span class="hljs-built_in">console</span>.log(buf.includes(<span class="hljs-string">'this'</span>))
+<pre class="hljs"><code><span class="hljs-keyword">const</span> buf = Buffer.from(<span class="hljs-string">&#x27;this is a buffer&#x27;</span>)
+<span class="hljs-built_in">console</span>.log(buf.includes(<span class="hljs-string">&#x27;this&#x27;</span>))
 <span class="hljs-comment">// true</span>
 
-<span class="hljs-built_in">console</span>.log(buf.includes(Buffer.from(<span class="hljs-string">'a buffer example'</span>)))
+<span class="hljs-built_in">console</span>.log(buf.includes(Buffer.from(<span class="hljs-string">&#x27;a buffer example&#x27;</span>)))
 <span class="hljs-comment">// false</span>
 </code></pre>
 <h4><code>Buffer.isEncoding()</code></h4>
 <p>我们可能知道二进制文件必须进行编码，那么如果我们要检查数据类型是否支持字符编码该怎么办呢？我们可以使用 <code>Buffer.isEncoding()</code> 方法进行确认。如果支持，它将返回 <code>true</code>。</p>
-<pre class="hljs"><code><span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">'hex'</span>))
+<pre class="hljs"><code><span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">&#x27;hex&#x27;</span>))
 <span class="hljs-comment">// true</span>
 
-<span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">'utf-8'</span>))
+<span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">&#x27;utf-8&#x27;</span>))
 <span class="hljs-comment">// true</span>
 
-<span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">'utf/8'</span>))
+<span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">&#x27;utf/8&#x27;</span>))
 <span class="hljs-comment">// false</span>
 
-<span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">'hey'</span>))
+<span class="hljs-built_in">console</span>.log(Buffer.isEncoding(<span class="hljs-string">&#x27;hey&#x27;</span>))
 <span class="hljs-comment">// false</span>
 </code></pre>
 <h4><code>Buffer.slice()</code></h4>
 <p><code>buf.slice()</code> 将用于使用缓冲区的选定元素创建一个新缓冲区 —— 对缓冲区进行切割时，将创建一个新缓冲区，其中包含要在新缓冲区切片中找到的项目的列表。</p>
-<pre class="hljs"><code><span class="hljs-keyword">var</span> a = Buffer.from(<span class="hljs-string">'uvwxyz'</span>);
+<pre class="hljs"><code><span class="hljs-keyword">var</span> a = Buffer.from(<span class="hljs-string">&#x27;uvwxyz&#x27;</span>);
 <span class="hljs-keyword">var</span> b = a.slice(<span class="hljs-number">2</span>, <span class="hljs-number">5</span>);
 
 <span class="hljs-built_in">console</span>.log(b.toString());
@@ -149,7 +149,7 @@ buf1.swap64()
 <pre class="hljs"><code><span class="hljs-keyword">const</span> buf = Buffer.from([<span class="hljs-number">0x1</span>, <span class="hljs-number">0x2</span>, <span class="hljs-number">0x3</span>, <span class="hljs-number">0x4</span>, <span class="hljs-number">0x5</span>, <span class="hljs-number">0x6</span>, <span class="hljs-number">0x7</span>, <span class="hljs-number">0x8</span>]);
 
 <span class="hljs-built_in">console</span>.log(buf.toJSON());
-<span class="hljs-comment">// {"type":"Buffer", data:[1, 2, 3, 4, 5, 6, 7, 8]}</span>
+<span class="hljs-comment">// {&quot;type&quot;:&quot;Buffer&quot;, data:[1, 2, 3, 4, 5, 6, 7, 8]}</span>
 </code></pre>
 <h2>结论</h2>
 <p>如果我们需要进一步了解并使用 Node.js 的缓冲区，我们需要对缓冲区以及 Node.js 缓冲区的工作原理有更扎实的基础知识。我们还应该了解为什么我们需要使用 Node.js 缓冲区和各种 Node.js 缓冲区方法的使用。</p>

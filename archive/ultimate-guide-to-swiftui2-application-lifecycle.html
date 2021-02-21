@@ -30,9 +30,9 @@
 <p>创建新的 SwiftUI 应用时，应用的主类（main class）如下所示：</p>
 <pre class="hljs"><code><span class="hljs-keyword">import</span> SwiftUI
 
-<span class="hljs-keyword">@main</span>
+@main
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SwiftUIAppLifeCycleApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
@@ -41,7 +41,7 @@
 </code></pre>
 <p>那么 SE-0281 提到的静态 <code>main()</code> 函数在哪儿呢？</p>
 <p>实际上，框架可以（并且应该）为用户提供方便的默认实现。你会从上面的代码片段注意到 <code>SwiftUIAppLifeCycleApp</code> 遵循 <code>App</code> 协议。对于 <code>App</code> 协议，苹果提供了如下协议扩展：</p>
-<pre class="hljs"><code><span class="hljs-keyword">@available</span>(<span class="hljs-keyword">iOS</span> <span class="hljs-number">14.0</span>, <span class="hljs-keyword">macOS</span> <span class="hljs-number">11.0</span>, <span class="hljs-keyword">tvOS</span> <span class="hljs-number">14.0</span>, <span class="hljs-keyword">watchOS</span> <span class="hljs-number">7.0</span>, <span class="hljs-operator">*</span>)
+<pre class="hljs"><code><span class="hljs-meta">@available</span>(iOS <span class="hljs-number">14.0</span>, macOS <span class="hljs-number">11.0</span>, tvOS <span class="hljs-number">14.0</span>, watchOS <span class="hljs-number">7.0</span>, *)
 <span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">App</span> </span>{
 
     <span class="hljs-comment">/// 初始化并运行应用。</span>
@@ -50,23 +50,23 @@
     <span class="hljs-comment">/// [@main](https://docs.swift.org/swift-book/ReferenceManual/Attributes.html#ID626)</span>
     <span class="hljs-comment">/// 属性，系统会调用这个实现类的 `main()` 方法来启动应用。</span>
     <span class="hljs-comment">/// SwiftUI 提供了该方法的默认实现，从而能以适合平台的方式处理应用启动流程。</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>
 }
 </code></pre>
 <p>这下你就懂了吧 —— 这个协议扩展提供了处理应用启动的默认的实现。</p>
 <p>由于 SwiftUI 框架不是开源的，所以我们看不到苹果是如何实现此功能的，但是 <a href="https://github.com/apple/swift-argument-parser">Swift Argument Parser</a> 是开源的，并且也用了这个办法。查看 <code>ParsableCommand</code> 的源码，就能了解它是如何用协议扩展来提供静态 <code>main</code> 函数的默认实现，并将其用作程序入口的：</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">ParsableCommand</span> </span>{
-<span class="hljs-operator">...</span>
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">arguments</span>: [<span class="hljs-type">String</span>]<span class="hljs-operator">?</span>)</span> {
+...
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-number">_</span> arguments: [String]?)</span></span> {
     <span class="hljs-keyword">do</span> {
-      <span class="hljs-keyword">var</span> command <span class="hljs-operator">=</span> <span class="hljs-keyword">try</span> parseAsRoot(arguments)
+      <span class="hljs-keyword">var</span> command = <span class="hljs-keyword">try</span> parseAsRoot(arguments)
       <span class="hljs-keyword">try</span> command.run()
     } <span class="hljs-keyword">catch</span> {
       exit(withError: error)
     }
   }
 
-  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span>()</span> {
+  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
     <span class="hljs-keyword">self</span>.main(<span class="hljs-literal">nil</span>)
   }
 }
@@ -82,13 +82,13 @@
 <li>为存储属性设置初始值（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID206">文档</a>）</li>
 <li>用闭包设置属性的默认值（详见<a href="https://docs.swift.org/swift-book/LanguageGuide/Initialization.html#ID232">文档</a>）</li>
 </ul>
-<pre class="hljs"><code><span class="hljs-keyword">@main</span>
+<pre class="hljs"><code>@main
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorsApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-function"><span class="hljs-keyword">init</span>()</span> {
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Colors application is starting up. App initialiser.&quot;</span>)
+  <span class="hljs-keyword">init</span>() {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Colors application is starting up. App initialiser."</span>)
   }
   
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
@@ -100,24 +100,24 @@
 <p>通常，您可以在你的 <code>ApplicationDelegate</code> 上实现 <code>applicationDidBecomeActive</code>，<code>applicationWillResignActive</code> 或 <code>applicationDidEnterBackground</code>。</p>
 <p>从 iOS 14.0 起，苹果提供了新的 API，该 API 允许以更优雅，更易维护的方式跟踪应用程序状态：<code>[ScenePhase](https://developer.apple.com/documentation/swiftui/scenephase)</code>。你的项目可以有多个场景（scene），不过有时只有一个场景。这些场景将由 <code>[WindowGroup](https://developer.apple.com/documentation/swiftui/windowgroup)</code> 展示。</p>
 <p>SwiftUI 追踪环境中场景的状态，你可以使用 <code>@Environment</code> 属性包装器来获取 <code>scenePhase</code> 的值，然后使用 <code>onChange(of:)</code> modifier 来监听该值的变化：</p>
-<pre class="hljs"><code><span class="hljs-keyword">@main</span>
+<pre class="hljs"><code>@main
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SwiftUIAppLifeCycleApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-meta">@Environment</span>(\.scenePhase) <span class="hljs-keyword">var</span> scenePhase
+  @<span class="hljs-type">Environment</span>(\.scenePhase) <span class="hljs-keyword">var</span> scenePhase
   
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }
     .onChange(of: scenePhase) { newScenePhase <span class="hljs-keyword">in</span>
       <span class="hljs-keyword">switch</span> newScenePhase {
       <span class="hljs-keyword">case</span> .active:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;App is active&quot;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">"App is active"</span>)
       <span class="hljs-keyword">case</span> .inactive:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;App is inactive&quot;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">"App is inactive"</span>)
       <span class="hljs-keyword">case</span> .background:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;App is in background&quot;</span>)
-      <span class="hljs-keyword">@unknown</span> <span class="hljs-keyword">default</span>:
-        <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Oh - interesting: I received an unexpected new value.&quot;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">"App is in background"</span>)
+      @unknown <span class="hljs-keyword">default</span>:
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">"Oh - interesting: I received an unexpected new value."</span>)
       }
     }
   }
@@ -127,13 +127,13 @@
 <h2>处理深层链接（Deeplink）</h2>
 <p>之前，在处理深层链接时，你需要实现 <code>application(_:open:options:)</code>，并将传入的 URL 转给最合适的处理程序。</p>
 <p>新的应用生命周期模型可以更容易地处理深层链接。在最顶层的场景上添加 <code>onOpenURL</code> 就可以处理传入的 URL 了：</p>
-<pre class="hljs"><code><span class="hljs-keyword">@main</span>
+<pre class="hljs"><code>@main
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SwiftUIAppLifeCycleApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
         .onOpenURL { url <span class="hljs-keyword">in</span>
-          <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Received URL: <span class="hljs-subst">\(url)</span>&quot;</span>)
+          <span class="hljs-built_in">print</span>(<span class="hljs-string">"Received URL: \(url)"</span>)
         }
     }
   }
@@ -153,13 +153,13 @@
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorDetailsView</span>: <span class="hljs-title">View</span> </span>{
   <span class="hljs-keyword">var</span> color: <span class="hljs-type">String</span>
   
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
     <span class="hljs-type">Image</span>(color)
       <span class="hljs-comment">// ...</span>
-      .userActivity(<span class="hljs-string">&quot;showColor&quot;</span>) { activity <span class="hljs-keyword">in</span>
-        activity.title <span class="hljs-operator">=</span> color
-        activity.isEligibleForSearch <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
-        activity.isEligibleForPrediction <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+      .userActivity(<span class="hljs-string">"showColor"</span>) { activity <span class="hljs-keyword">in</span>
+        activity.title = color
+        activity.isEligibleForSearch = <span class="hljs-literal">true</span>
+        activity.isEligibleForPrediction = <span class="hljs-literal">true</span>
         <span class="hljs-comment">// ...</span>
       }
   }
@@ -169,25 +169,25 @@
 <pre class="hljs"><code><span class="hljs-keyword">import</span> SwiftUI
 
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ContentView</span>: <span class="hljs-title">View</span> </span>{
-  <span class="hljs-keyword">var</span> colors <span class="hljs-operator">=</span> [<span class="hljs-string">&quot;Red&quot;</span>, <span class="hljs-string">&quot;Green&quot;</span>, <span class="hljs-string">&quot;Yellow&quot;</span>, <span class="hljs-string">&quot;Blue&quot;</span>, <span class="hljs-string">&quot;Pink&quot;</span>, <span class="hljs-string">&quot;Purple&quot;</span>]
+  <span class="hljs-keyword">var</span> colors = [<span class="hljs-string">"Red"</span>, <span class="hljs-string">"Green"</span>, <span class="hljs-string">"Yellow"</span>, <span class="hljs-string">"Blue"</span>, <span class="hljs-string">"Pink"</span>, <span class="hljs-string">"Purple"</span>]
   
-  <span class="hljs-meta">@State</span> <span class="hljs-keyword">var</span> selectedColor: <span class="hljs-type">String</span>? <span class="hljs-operator">=</span> <span class="hljs-literal">nil</span>
+  @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> selectedColor: <span class="hljs-type">String?</span> = <span class="hljs-literal">nil</span>
   
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
     <span class="hljs-type">NavigationView</span> {
       <span class="hljs-type">ScrollView</span> {
         <span class="hljs-type">LazyVGrid</span>(columns: columns) {
           <span class="hljs-type">ForEach</span>(colors, id: \.<span class="hljs-keyword">self</span>) { color <span class="hljs-keyword">in</span>
             <span class="hljs-type">NavigationLink</span>(destination: <span class="hljs-type">ColorDetailsView</span>(color: color),
                            tag: color,
-                           selection: <span class="hljs-variable">$selectedColor</span>) {
+                           selection: $selectedColor) {
               <span class="hljs-type">Image</span>(color)
             }
           }
         }
-        .onContinueUserActivity(<span class="hljs-string">&quot;showColor&quot;</span>) { userActivity <span class="hljs-keyword">in</span>
-          <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> color <span class="hljs-operator">=</span> userActivity.userInfo<span class="hljs-operator">?</span>[<span class="hljs-string">&quot;colorName&quot;</span>] <span class="hljs-keyword">as?</span> <span class="hljs-type">String</span> {
-            selectedColor <span class="hljs-operator">=</span> color
+        .onContinueUserActivity(<span class="hljs-string">"showColor"</span>) { userActivity <span class="hljs-keyword">in</span>
+          <span class="hljs-keyword">if</span> <span class="hljs-keyword">let</span> color = userActivity.userInfo?[<span class="hljs-string">"colorName"</span>] <span class="hljs-keyword">as</span>? <span class="hljs-type">String</span> {
+            selectedColor = color
           }
         }
       }
@@ -200,18 +200,18 @@
 <p>另一个需要 AppDelegate 的原因是你使用的第三方 SDK 会使用 <a href="https://pspdfkit.com/blog/2019/swizzling-in-swift/">method swizzling</a> 来把它们注入应用生命周期。<a href="https://firebase.google.com/">Firebase</a> 就是一个<a href="https://stackoverflow.com/a/62633158/281221">典型的例子</a>。</p>
 <p>为了帮助上述情况中的你摆脱困境，Swift 提供了一种将 <code>AppDelegate</code> 的一个实现类与你的 <code>App</code> 实现相连接的方法：<code>@UIApplicationDelegateAdaptor</code>。使用方法如下：</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppDelegate</span>: <span class="hljs-title">NSObject</span>, <span class="hljs-title">UIApplicationDelegate</span> </span>{
-  <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">application</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">application</span>: <span class="hljs-type">UIApplication</span>,
-                   <span class="hljs-params">didFinishLaunchingWithOptions</span> <span class="hljs-params">launchOptions</span>: [<span class="hljs-type">UIApplication</span>.<span class="hljs-params">LaunchOptionsKey</span> : <span class="hljs-keyword">Any</span>]<span class="hljs-operator">?</span> <span class="hljs-operator">=</span> <span class="hljs-literal">nil</span>)</span> -&gt; <span class="hljs-type">Bool</span> {
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Colors application is starting up. ApplicationDelegate didFinishLaunchingWithOptions.&quot;</span>)
+  <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">application</span><span class="hljs-params">(<span class="hljs-number">_</span> application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : <span class="hljs-keyword">Any</span>]? = <span class="hljs-literal">nil</span>)</span></span> -&gt; <span class="hljs-type">Bool</span> {
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Colors application is starting up. ApplicationDelegate didFinishLaunchingWithOptions."</span>)
     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
   }
 }
 
-<span class="hljs-keyword">@main</span>
+@main
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">ColorsApp</span>: <span class="hljs-title">App</span> </span>{
-  <span class="hljs-meta">@UIApplicationDelegateAdaptor</span>(<span class="hljs-type">AppDelegate</span>.<span class="hljs-keyword">self</span>) <span class="hljs-keyword">var</span> delegate
+  @<span class="hljs-type">UIApplicationDelegateAdaptor</span>(<span class="hljs-type">AppDelegate</span>.<span class="hljs-keyword">self</span>) <span class="hljs-keyword">var</span> delegate
   
-  <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">Scene</span> {
+  <span class="hljs-keyword">var</span> body: some <span class="hljs-type">Scene</span> {
     <span class="hljs-type">WindowGroup</span> {
       <span class="hljs-type">ContentView</span>()
     }

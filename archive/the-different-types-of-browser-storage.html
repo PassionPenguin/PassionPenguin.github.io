@@ -88,41 +88,41 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 <h4>sessionStorage</h4>
 <p><code>sessionStorage</code> 对象除只存储一个对话的数据外，与 <code>localStorage</code> 对象一致。 当用户关闭特定的浏览器标签页时，对应的数据会被删除。</p>
 <p>Web Storage API 以键/值对形式存储数据。所有数据都存储为字符串，所有被添加到存储空间中的数据会被隐式转换为字符串类型。在查询数据时，它将类型显式转换为所需类型。<code>JSON.parse()</code> 和 <code>JSON.stringify()</code> 方法可用于序列化和反序列化对象数据。</p>
-<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">&quot;-//W3C//DTD HTML 4.01 Strict//EN&quot;</span> <span class="hljs-meta-string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>&gt;</span>
+<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">"-//W3C//DTD HTML 4.01 Strict//EN"</span> <span class="hljs-meta-string">"http://www.w3.org/TR/html4/strict.dtd"</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Browser Storage Demos - Web Storage API <span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>	
 		
-		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript">
+		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">"text/javascript"</span>&gt;</span><span class="javascript">
 		
 			<span class="hljs-comment">// 检查浏览器支持情况</span>
-			<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(Storage) !== <span class="hljs-string">&quot;undefined&quot;</span>) {
+			<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span>(Storage) !== <span class="hljs-string">"undefined"</span>) {
    
 				 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addToStorage</span>(<span class="hljs-params"></span>)
 				 </span>{
 				     <span class="hljs-comment">// 通过以下任一形式将数据添加至本地存储</span>
-				     <span class="hljs-built_in">localStorage</span>.setItem(<span class="hljs-string">&quot;testlocal&quot;</span>, <span class="hljs-string">&quot;test Local Data&quot;</span>);
-				     <span class="hljs-comment">//localStorage.testlocal= &quot;test Local Data&quot;;</span>
+				     localStorage.setItem(<span class="hljs-string">"testlocal"</span>, <span class="hljs-string">"test Local Data"</span>);
+				     <span class="hljs-comment">//localStorage.testlocal= "test Local Data";</span>
 				   
 				      <span class="hljs-comment">// 通过以下任一形式将数据添加至会话存储</span>
-				      sessionStorage.setItem(<span class="hljs-string">&quot;testsession&quot;</span>, <span class="hljs-string">&quot;test Session Data&quot;</span>);
-				      <span class="hljs-comment">//sessionStorage.testsession=  &quot;test Session Data&quot;;</span>
+				      sessionStorage.setItem(<span class="hljs-string">"testsession"</span>, <span class="hljs-string">"test Session Data"</span>);
+				      <span class="hljs-comment">//sessionStorage.testsession=  "test Session Data";</span>
 				   
                                       <span class="hljs-comment">// 添加 JSON 对象到存储</span>
-				      <span class="hljs-keyword">var</span> testObject = { <span class="hljs-string">&#x27;test1&#x27;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&#x27;test2&#x27;</span>: <span class="hljs-number">2</span>, <span class="hljs-string">&#x27;test3&#x27;</span>: <span class="hljs-number">3</span> };
-				      <span class="hljs-built_in">localStorage</span>.setItem(<span class="hljs-string">&#x27;testObject&#x27;</span>, <span class="hljs-built_in">JSON</span>.stringify(testObject));
+				      <span class="hljs-keyword">var</span> testObject = { <span class="hljs-string">'test1'</span>: <span class="hljs-number">1</span>, <span class="hljs-string">'test2'</span>: <span class="hljs-number">2</span>, <span class="hljs-string">'test3'</span>: <span class="hljs-number">3</span> };
+				      localStorage.setItem(<span class="hljs-string">'testObject'</span>, <span class="hljs-built_in">JSON</span>.stringify(testObject));
 				 }
  
 				 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeFromStorage</span>(<span class="hljs-params"></span>)
 				 </span>{
 				      <span class="hljs-comment">// 从本地存储中移除某键/值对</span>
-				      <span class="hljs-built_in">localStorage</span>.removeItem(<span class="hljs-string">&quot;testlocal&quot;</span>);
+				      localStorage.removeItem(<span class="hljs-string">"testlocal"</span>);
 				  
                                       <span class="hljs-comment">// 清空存储</span>
 				      <span class="hljs-comment">//localStorage.clear();</span>
   
 				      <span class="hljs-comment">// 从会话存储中删除某键/值对</span>
-				      sessionStorage.removeItem(<span class="hljs-string">&quot;testsession&quot;</span>);
+				      sessionStorage.removeItem(<span class="hljs-string">"testsession"</span>);
 				      <span class="hljs-comment">//sessionStorage.clear();</span>
 				 }
  
@@ -130,27 +130,27 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				 </span>{
   
 				      <span class="hljs-comment">// 从本地存储中读取数据</span>
-				      <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML= <span class="hljs-string">&quot;Local Storage Data..&quot;</span>+<span class="hljs-built_in">localStorage</span>.getItem(<span class="hljs-string">&quot;testlocal&quot;</span>)+<span class="hljs-string">&quot;&lt;br /&gt;&quot;</span>;
+				      <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML= <span class="hljs-string">"Local Storage Data.."</span>+localStorage.getItem(<span class="hljs-string">"testlocal"</span>)+<span class="hljs-string">"&lt;br /&gt;"</span>;
 				 
                                       <span class="hljs-comment">// 从会话存储中读取数据</span>
-				      <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML+=<span class="hljs-string">&quot;Session Storage Data..&quot;</span>+sessionStorage.getItem(<span class="hljs-string">&quot;testsession&quot;</span>)+<span class="hljs-string">&quot;&lt;br /&gt;&quot;</span>;
+				      <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML+=<span class="hljs-string">"Session Storage Data.."</span>+sessionStorage.getItem(<span class="hljs-string">"testsession"</span>)+<span class="hljs-string">"&lt;br /&gt;"</span>;
 				  
                                       <span class="hljs-comment">// 从存储中获取 JSON 数据</span>
-				      <span class="hljs-keyword">var</span> retrievedObject = <span class="hljs-built_in">localStorage</span>.getItem(<span class="hljs-string">&#x27;testObject&#x27;</span>);
-				      <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML+=<span class="hljs-string">&quot;JSON Data From Storage: &quot;</span>+<span class="hljs-built_in">JSON</span>.stringify(retrievedObject);
+				      <span class="hljs-keyword">var</span> retrievedObject = localStorage.getItem(<span class="hljs-string">'testObject'</span>);
+				      <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML+=<span class="hljs-string">"JSON Data From Storage: "</span>+<span class="hljs-built_in">JSON</span>.stringify(retrievedObject);
 				 }
 			} <span class="hljs-keyword">else</span> {
-			 <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;No Web Storage support..&quot;</span>);  
+			 <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"No Web Storage support.."</span>);  
 			}
 		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>			
 	<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
 		Welcome to Browser Storage Demos - Web Storage API	<span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span> 
 
-		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;data&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;readDataFromStrage()&quot;</span>&gt;</span>Read<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;addToStorage()&quot;</span>&gt;</span>Add data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;removeFromStorage()&quot;</span>&gt;</span>Delete data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"data"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"readDataFromStrage()"</span>&gt;</span>Read<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"addToStorage()"</span>&gt;</span>Add data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"removeFromStorage()"</span>&gt;</span>Delete data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
 	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span> 
 </code></pre>
@@ -162,21 +162,21 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 <p>IndexedDB API 是异步的，不会阻塞 UI 渲染。这个 API 使用索引以支持对数据的高性能搜索。</p>
 <p>创建数据库模式及对象，打开数据库连接，然后在一系列事务中查询和更新数据。IndexedDB 允许存储大量结构化数据。具体大小取决于浏览器。</p>
 <p>数据库对源（域/协议/端口）是私有的，因此任何网站不能访问其他网站的 IndexedDB 存储。</p>
-<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">&quot;-//W3C//DTD HTML 4.01 Strict//EN&quot;</span> <span class="hljs-meta-string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>&gt;</span>
+<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">"-//W3C//DTD HTML 4.01 Strict//EN"</span> <span class="hljs-meta-string">"http://www.w3.org/TR/html4/strict.dtd"</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Browser Storage Demos - IndexDB API <span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>		
 		
 		
-		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript">
+		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">"text/javascript"</span>&gt;</span><span class="javascript">
 		
 			<span class="hljs-comment">// 检查浏览器支持情况</span>
 			<span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.indexedDB) {		    
 			
 				<span class="hljs-comment">// 示例数据</span>
-				<span class="hljs-keyword">const</span> customerData = [{ <span class="hljs-attr">ssn</span>: <span class="hljs-string">&quot;444-44-4444&quot;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;test1&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">35</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;test1@company.com&quot;</span> },
-									  { <span class="hljs-attr">ssn</span>: <span class="hljs-string">&quot;555-55-5555&quot;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;test2&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;test2@home.org&quot;</span> }];
-				<span class="hljs-keyword">const</span> dbName = <span class="hljs-string">&quot;testDB&quot;</span>;
+				<span class="hljs-keyword">const</span> customerData = [{ <span class="hljs-attr">ssn</span>: <span class="hljs-string">"444-44-4444"</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"test1"</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">35</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">"test1@company.com"</span> },
+									  { <span class="hljs-attr">ssn</span>: <span class="hljs-string">"555-55-5555"</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"test2"</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">"test2@home.org"</span> }];
+				<span class="hljs-keyword">const</span> dbName = <span class="hljs-string">"testDB"</span>;
 				<span class="hljs-keyword">var</span> db;
 				<span class="hljs-comment">// 打开数据库，如果数据库不存在，则创建数据库</span>
 				<span class="hljs-comment">// 指定数据库名称和版本，如果需要修改数据库结构，则更新版本号</span>
@@ -184,13 +184,13 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 
 				<span class="hljs-comment">// 错误处理程序</span>
 				request.onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;error: &quot;</span>);
+					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"error: "</span>);
 				};
 				
 				<span class="hljs-comment">// 成功处理程序</span>
 				request.onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
 					db = request.result;
-					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;success: &quot;</span>+ db);
+					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"success: "</span>+ db);
 				};
 
 				<span class="hljs-comment">// 成功打开数据库时调用处理程序</span>
@@ -200,11 +200,11 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 
 					<span class="hljs-comment">// 设置键生成器（autoIncrement: true），默认不开启</span>
 					<span class="hljs-comment">// 使用主键创建 object store</span>
-					<span class="hljs-keyword">var</span> objectStore = db.createObjectStore(<span class="hljs-string">&quot;customers&quot;</span>, { <span class="hljs-attr">keyPath</span>: <span class="hljs-string">&quot;ssn&quot;</span> });
+					<span class="hljs-keyword">var</span> objectStore = db.createObjectStore(<span class="hljs-string">"customers"</span>, { <span class="hljs-attr">keyPath</span>: <span class="hljs-string">"ssn"</span> });
 					
 					<span class="hljs-comment">// 定义需要的索引</span>
-					objectStore.createIndex(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;name&quot;</span>, { <span class="hljs-attr">unique</span>: <span class="hljs-literal">false</span> });
-					objectStore.createIndex(<span class="hljs-string">&quot;email&quot;</span>, <span class="hljs-string">&quot;email&quot;</span>, { <span class="hljs-attr">unique</span>: <span class="hljs-literal">true</span> });
+					objectStore.createIndex(<span class="hljs-string">"name"</span>, <span class="hljs-string">"name"</span>, { <span class="hljs-attr">unique</span>: <span class="hljs-literal">false</span> });
+					objectStore.createIndex(<span class="hljs-string">"email"</span>, <span class="hljs-string">"email"</span>, { <span class="hljs-attr">unique</span>: <span class="hljs-literal">true</span> });
 					
 					<span class="hljs-comment">// 向对象添加数据</span>
 					customerData.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">customer</span>) </span>{
@@ -216,11 +216,11 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params"></span>) </span>{
 				
 					<span class="hljs-comment">// 查询特定对象的事务，指定模式 - 只读，读写和版本变更</span>
-					<span class="hljs-keyword">var</span> transaction = db.transaction([<span class="hljs-string">&quot;customers&quot;</span>], <span class="hljs-string">&quot;readwrite&quot;</span>);
+					<span class="hljs-keyword">var</span> transaction = db.transaction([<span class="hljs-string">"customers"</span>], <span class="hljs-string">"readwrite"</span>);
 					
 					<span class="hljs-comment">// 当所有数据添加到数据库时调用处理程序</span>
 					transaction.oncomplete = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-						<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Add Completed!&quot;</span>);
+						<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Add Completed!"</span>);
 					};
 
 					<span class="hljs-comment">// 错误处理程序</span>
@@ -228,14 +228,14 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 						
 					};
 					
-					<span class="hljs-keyword">const</span> customerDataNew = [{ <span class="hljs-attr">ssn</span>: <span class="hljs-string">&quot;777-77-7777&quot;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Test3&quot;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;test3@home.org&quot;</span> }];
+					<span class="hljs-keyword">const</span> customerDataNew = [{ <span class="hljs-attr">ssn</span>: <span class="hljs-string">"777-77-7777"</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">"Test3"</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">32</span>, <span class="hljs-attr">email</span>: <span class="hljs-string">"test3@home.org"</span> }];
 					
 					<span class="hljs-comment">// 添加新的客户数据到 store 中</span>
-					<span class="hljs-keyword">var</span> objectStore = transaction.objectStore(<span class="hljs-string">&quot;customers&quot;</span>);
+					<span class="hljs-keyword">var</span> objectStore = transaction.objectStore(<span class="hljs-string">"customers"</span>);
 					customerDataNew.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">customer</span>) </span>{
 						<span class="hljs-keyword">var</span> request = objectStore.add(customer);
 						request.onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Data Added...&quot;</span>+event.target.result);
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Data Added..."</span>+event.target.result);
 						};
 					});
 				}
@@ -244,25 +244,25 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				<span class="hljs-comment">// 通过主键和 delete 方法从 store 中删除数据</span>
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteData</span>(<span class="hljs-params"></span>)
 				</span>{
-					<span class="hljs-keyword">var</span> request = db.transaction([<span class="hljs-string">&quot;customers&quot;</span>], <span class="hljs-string">&quot;readwrite&quot;</span>)
-									.objectStore(<span class="hljs-string">&quot;customers&quot;</span>)
-									.delete(<span class="hljs-string">&quot;777-77-7777&quot;</span>);
+					<span class="hljs-keyword">var</span> request = db.transaction([<span class="hljs-string">"customers"</span>], <span class="hljs-string">"readwrite"</span>)
+									.objectStore(<span class="hljs-string">"customers"</span>)
+									.delete(<span class="hljs-string">"777-77-7777"</span>);
 					request.onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Record Deleted!&quot;</span>);
+					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Record Deleted!"</span>);
 					};
 				}
 				
 				<span class="hljs-comment">// 通过主键和 get 方法从 store 中读取数据</span>
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">read</span>(<span class="hljs-params"></span>)
 				</span>{
-					<span class="hljs-keyword">var</span> transaction = db.transaction([<span class="hljs-string">&quot;customers&quot;</span>]);
-					<span class="hljs-keyword">var</span> objectStore = transaction.objectStore(<span class="hljs-string">&quot;customers&quot;</span>);
-					<span class="hljs-keyword">var</span> request = objectStore.get(<span class="hljs-string">&quot;444-44-4444&quot;</span>);
+					<span class="hljs-keyword">var</span> transaction = db.transaction([<span class="hljs-string">"customers"</span>]);
+					<span class="hljs-keyword">var</span> objectStore = transaction.objectStore(<span class="hljs-string">"customers"</span>);
+					<span class="hljs-keyword">var</span> request = objectStore.get(<span class="hljs-string">"444-44-4444"</span>);
 					request.onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
 						<span class="hljs-comment">// 处理错误!</span>
 					};
 					request.onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-						<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML = <span class="hljs-string">&quot;Name for SSN 444-44-4444 is &quot;</span> + request.result.name;
+						<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML = <span class="hljs-string">"Name for SSN 444-44-4444 is "</span> + request.result.name;
 					};
 				}
 
@@ -271,22 +271,22 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readAll</span>(<span class="hljs-params"></span>)
 				</span>{
 				
-					<span class="hljs-keyword">var</span> objectStore = db.transaction(<span class="hljs-string">&quot;customers&quot;</span>).objectStore(<span class="hljs-string">&quot;customers&quot;</span>);
+					<span class="hljs-keyword">var</span> objectStore = db.transaction(<span class="hljs-string">"customers"</span>).objectStore(<span class="hljs-string">"customers"</span>);
 					
-					<span class="hljs-built_in">console</span>.log(db.transaction(<span class="hljs-string">&quot;customers&quot;</span>));
+					<span class="hljs-built_in">console</span>.log(db.transaction(<span class="hljs-string">"customers"</span>));
 					<span class="hljs-built_in">console</span>.log(objectStore);
-					<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML=<span class="hljs-string">&quot;&quot;</span>;
+					<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML=<span class="hljs-string">""</span>;
 
 					objectStore.openCursor().onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
 					<span class="hljs-keyword">var</span> cursor = event.target.result;
 						
 						<span class="hljs-comment">// 迭代游标</span>
                         <span class="hljs-keyword">if</span> (cursor) {
-							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML+=<span class="hljs-string">&quot;SSN: &quot;</span> + cursor.key + <span class="hljs-string">&quot; Name: &quot;</span> + cursor.value.name +<span class="hljs-string">&quot; Age: &quot;</span> + cursor.value.age+<span class="hljs-string">&quot;&lt;br /&gt;&quot;</span>;
+							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML+=<span class="hljs-string">"SSN: "</span> + cursor.key + <span class="hljs-string">" Name: "</span> + cursor.value.name +<span class="hljs-string">" Age: "</span> + cursor.value.age+<span class="hljs-string">"&lt;br /&gt;"</span>;
 							cursor.continue();
 						}
 						<span class="hljs-keyword">else</span> {
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;No more entries!&quot;</span>);
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"No more entries!"</span>);
 						}
 					};
 				}
@@ -295,8 +295,8 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">update</span>(<span class="hljs-params"></span>)
 				</span>{
 
-					<span class="hljs-keyword">var</span> objectStore = db.transaction([<span class="hljs-string">&quot;customers&quot;</span>], <span class="hljs-string">&quot;readwrite&quot;</span>).objectStore(<span class="hljs-string">&quot;customers&quot;</span>);
-					<span class="hljs-keyword">var</span> request = objectStore.get(<span class="hljs-string">&quot;444-44-4444&quot;</span>);
+					<span class="hljs-keyword">var</span> objectStore = db.transaction([<span class="hljs-string">"customers"</span>], <span class="hljs-string">"readwrite"</span>).objectStore(<span class="hljs-string">"customers"</span>);
+					<span class="hljs-keyword">var</span> request = objectStore.get(<span class="hljs-string">"444-44-4444"</span>);
 					request.onerror = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
 					  
 					};
@@ -314,14 +314,14 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 						 <span class="hljs-comment">// 错误</span>
 					   };
 					   requestUpdate.onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
-						 <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Success - the data is updated!&quot;</span>);
+						 <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Success - the data is updated!"</span>);
 					   };
 					};	
 				}				
 
 			
 			} <span class="hljs-keyword">else</span> {
-				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;No IndexDB support..&quot;</span>);		
+				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"No IndexDB support.."</span>);		
 			}	
 			
 		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
@@ -331,12 +331,12 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
 		Welcome to Browser Storage Demos - IndexDB API	<span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span>
 		
-		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;data&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;read()&quot;</span>&gt;</span>Read <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;readAll()&quot;</span>&gt;</span>Read all <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;add()&quot;</span>&gt;</span>Add data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;deleteData()&quot;</span>&gt;</span>Delete data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;update()&quot;</span>&gt;</span>Update data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"data"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"read()"</span>&gt;</span>Read <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"readAll()"</span>&gt;</span>Read all <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"add()"</span>&gt;</span>Add data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"deleteData()"</span>&gt;</span>Delete data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"update()"</span>&gt;</span>Update data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
 	
 	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
@@ -347,12 +347,12 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 </blockquote>
 <p>该规范基于 SQLite。Web SQL 数据库未被所有浏览器支持 —— 该标准已被 W3C 否决，IndexedDB 应该会成为替代品。</p>
 <p>尽管如此，它仍可以在支持的浏览器中使用，如 Safari，Chrome，Opera 及 Edge。</p>
-<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">&quot;-//W3C//DTD HTML 4.01 Strict//EN&quot;</span> <span class="hljs-meta-string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>&gt;</span>
+<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">"-//W3C//DTD HTML 4.01 Strict//EN"</span> <span class="hljs-meta-string">"http://www.w3.org/TR/html4/strict.dtd"</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Browser Storage Demos - Web SQL API <span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>	
 		
-		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript">
+		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">"text/javascript"</span>&gt;</span><span class="javascript">
 		
 			<span class="hljs-comment">// 检查浏览器支持情况</span>
 			<span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.openDatabase) {
@@ -362,15 +362,15 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createDBAndTable</span>(<span class="hljs-params"></span>)
 				</span>{
 					<span class="hljs-comment">// 打开数据库，如果不存在，则创建数据库 - 数据库名称，版本，描述和所需存储空间</span>
-					db = <span class="hljs-built_in">window</span>.openDatabase(<span class="hljs-string">&#x27;test_db&#x27;</span>, <span class="hljs-string">&#x27;1.0&#x27;</span>, <span class="hljs-string">&#x27;Test DB&#x27;</span>, <span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>)
+					db = <span class="hljs-built_in">window</span>.openDatabase(<span class="hljs-string">'test_db'</span>, <span class="hljs-string">'1.0'</span>, <span class="hljs-string">'Test DB'</span>, <span class="hljs-number">1024</span>*<span class="hljs-number">1024</span>)
 					<span class="hljs-comment">// 事务</span>
 					db.transaction(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx</span>) </span>{
 						<span class="hljs-comment">// 删除已有的表</span>
-						tx.executeSql(<span class="hljs-string">&#x27;DROP TABLE IF EXISTS CUSTOMERS&#x27;</span>);				
+						tx.executeSql(<span class="hljs-string">'DROP TABLE IF EXISTS CUSTOMERS'</span>);				
 						<span class="hljs-comment">// 包含必填字段创建新表，定义主键</span>
-						tx.executeSql(<span class="hljs-string">&#x27;CREATE TABLE IF NOT EXISTS CUSTOMERS(SSN TEXT PRIMARY KEY , NAME TEXT,AGE INTEGER ,EMAIL TEXT)&#x27;</span>, [], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx, result</span>) </span>{
+						tx.executeSql(<span class="hljs-string">'CREATE TABLE IF NOT EXISTS CUSTOMERS(SSN TEXT PRIMARY KEY , NAME TEXT,AGE INTEGER ,EMAIL TEXT)'</span>, [], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx, result</span>) </span>{
 							<span class="hljs-built_in">console</span>.log(result);
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Table created Successfully!&#x27;</span>);
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Table created Successfully!'</span>);
 
 						}, errorHandler);
 					});
@@ -380,13 +380,13 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				</span>{
 					db.transaction(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx</span>) </span>{ 										
 						 <span class="hljs-comment">// 在表中插入数据，可使用动态变量</span>
-						 tx.executeSql(<span class="hljs-string">&#x27;INSERT INTO CUSTOMERS(SSN, NAME,AGE,EMAIL) VALUES (?,?,?,?)&#x27;</span>,[<span class="hljs-string">&quot;444-44-4444&quot;</span>,<span class="hljs-string">&quot;Bill&quot;</span>,<span class="hljs-number">35</span>,<span class="hljs-string">&quot;bill@company.com&quot;</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{					 
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Record Inserted Successfully &quot;</span>+result.insertId );    
+						 tx.executeSql(<span class="hljs-string">'INSERT INTO CUSTOMERS(SSN, NAME,AGE,EMAIL) VALUES (?,?,?,?)'</span>,[<span class="hljs-string">"444-44-4444"</span>,<span class="hljs-string">"Bill"</span>,<span class="hljs-number">35</span>,<span class="hljs-string">"bill@company.com"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{					 
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Record Inserted Successfully "</span>+result.insertId );    
 						},errorHandler);
 							
-						 tx.executeSql(<span class="hljs-string">&#x27;INSERT INTO CUSTOMERS(SSN, NAME,AGE,EMAIL) VALUES (?,?,?,?)&#x27;</span>,[<span class="hljs-string">&quot;555-55-5555&quot;</span>,<span class="hljs-string">&quot;Test1&quot;</span>,<span class="hljs-number">32</span>,<span class="hljs-string">&quot;test1@company.com&quot;</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{
+						 tx.executeSql(<span class="hljs-string">'INSERT INTO CUSTOMERS(SSN, NAME,AGE,EMAIL) VALUES (?,?,?,?)'</span>,[<span class="hljs-string">"555-55-5555"</span>,<span class="hljs-string">"Test1"</span>,<span class="hljs-number">32</span>,<span class="hljs-string">"test1@company.com"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{
 						 
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Record Inserted Successfully &quot;</span>+result.insertId);
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Record Inserted Successfully "</span>+result.insertId);
 		
 						},errorHandler);
 					});
@@ -398,11 +398,11 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					
 					db.readTransaction(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx</span>) </span>{ 			
 					<span class="hljs-comment">// 从表中读取数据并遍历行对象</span>
-					tx.executeSql(<span class="hljs-string">&#x27;SELECT * FROM CUSTOMERS&#x27;</span>, [], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx, results</span>) </span>{ 
+					tx.executeSql(<span class="hljs-string">'SELECT * FROM CUSTOMERS'</span>, [], <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx, results</span>) </span>{ 
 						<span class="hljs-keyword">var</span> len = results.rows.length, i; 
-						<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML=<span class="hljs-string">&quot;&quot;</span>;
+						<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML=<span class="hljs-string">""</span>;
 						<span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) { 
-						 <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML+=<span class="hljs-string">&quot; SSN: &quot;</span> +results.rows.item(i).SSN+ <span class="hljs-string">&quot; Name: &quot;</span>+results.rows.item(i).NAME+<span class="hljs-string">&quot; Age: &quot;</span>+results.rows.item(i).AGE+<span class="hljs-string">&quot;&lt;br /&gt;&quot;</span>; 
+						 <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML+=<span class="hljs-string">" SSN: "</span> +results.rows.item(i).SSN+ <span class="hljs-string">" Name: "</span>+results.rows.item(i).NAME+<span class="hljs-string">" Age: "</span>+results.rows.item(i).AGE+<span class="hljs-string">"&lt;br /&gt;"</span>; 
 						} 
 				  
 						},errorHandler);
@@ -414,8 +414,8 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				</span>{
 					db.transaction(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx</span>) </span>{ 										
 						 <span class="hljs-comment">// 更新已有数据</span>
-						 tx.executeSql(<span class="hljs-string">&#x27;UPDATE CUSTOMERS SET AGE=? WHERE SSN=?&#x27;</span>,[<span class="hljs-number">45</span>,<span class="hljs-string">&quot;444-44-4444&quot;</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{					 
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Record Updated Successfully&quot;</span> +result);    
+						 tx.executeSql(<span class="hljs-string">'UPDATE CUSTOMERS SET AGE=? WHERE SSN=?'</span>,[<span class="hljs-number">45</span>,<span class="hljs-string">"444-44-4444"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{					 
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Record Updated Successfully"</span> +result);    
 						},errorHandler);				
 						
 					});
@@ -426,8 +426,8 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				</span>{
 					db.transaction(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">tx</span>) </span>{ 										
 						 <span class="hljs-comment">// 通过主键删除数据</span>
-						 tx.executeSql(<span class="hljs-string">&#x27;DELETE FROM CUSTOMERS WHERE SSN=?&#x27;</span>,[<span class="hljs-string">&quot;444-44-4444&quot;</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{					 
-							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Record Deleted Successfully&quot;</span> +result);    
+						 tx.executeSql(<span class="hljs-string">'DELETE FROM CUSTOMERS WHERE SSN=?'</span>,[<span class="hljs-string">"444-44-4444"</span>], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">tx,result</span>) </span>{					 
+							<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Record Deleted Successfully"</span> +result);    
 						},errorHandler);					
 						
 					});
@@ -435,25 +435,25 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 				}	
 
 				<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">errorHandler</span>(<span class="hljs-params">transaction, error</span>) </span>{
-					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;Oops. Error was &#x27;</span>+error.message+<span class="hljs-string">&#x27; (Code &#x27;</span>+error.code+<span class="hljs-string">&#x27;)&#x27;</span>);			
+					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Oops. Error was '</span>+error.message+<span class="hljs-string">' (Code '</span>+error.code+<span class="hljs-string">')'</span>);			
 					<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
 				}			
 
 				
 			} <span class="hljs-keyword">else</span> {
-				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;No Web SQL API support..&quot;</span>);		
+				<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"No Web SQL API support.."</span>);		
 			}	
 		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>			
 	<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
 		Welcome to Browser Storage Demos - Web SQL API	<span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span> 
 
-		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;data&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;createDBAndTable()&quot;</span>&gt;</span>Create DB/Table<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;insertData()&quot;</span>&gt;</span>Insert data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;readDataFromDB()&quot;</span>&gt;</span>Read data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;updateData()&quot;</span>&gt;</span>Update data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;deleteData()&quot;</span>&gt;</span>Delete data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"data"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"createDBAndTable()"</span>&gt;</span>Create DB/Table<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"insertData()"</span>&gt;</span>Insert data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"readDataFromDB()"</span>&gt;</span>Read data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"updateData()"</span>&gt;</span>Update data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"deleteData()"</span>&gt;</span>Delete data <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
 	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>
@@ -465,37 +465,37 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 <p>CacheStorage API 可以在 Window 上下文（DOM 上下文）中使用，也可以和 Service Worker API 一起使用以实现离线访问。在本教程中，我们将更多地讨论 DOM 上下文。</p>
 <p>CacheStorage 用于在网站中存储网络请求和响应，也可以作为存储工具。例如，我们可以存储个性化数据（如用户偏好）在缓存中，按需查询这些数据。<code>put</code> 方法可用于将个性化响应对象存储在缓存存储中。</p>
 <p>CacheStorage API 允许我们从跨域网站获取和缓存数据。CacheStorage API 是异步的，不会阻塞 UI 渲染。CacheStorage 选项是最新加入浏览器存储的，有些浏览器仍未支持。</p>
-<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">&quot;-//W3C//DTD HTML 4.01 Strict//EN&quot;</span> <span class="hljs-meta-string">&quot;http://www.w3.org/TR/html4/strict.dtd&quot;</span>&gt;</span>
+<pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">"-//W3C//DTD HTML 4.01 Strict//EN"</span> <span class="hljs-meta-string">"http://www.w3.org/TR/html4/strict.dtd"</span>&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span>
 	<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
 		<span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Browser Storage Demos - Cache Storage API <span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>	
 		
-		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="javascript">
+		<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span> = <span class="hljs-string">"text/javascript"</span>&gt;</span><span class="javascript">
 		
 				<span class="hljs-comment">// 检查浏览器支持情况</span>
-				<span class="hljs-keyword">if</span>(<span class="hljs-string">&#x27;caches&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) {
+				<span class="hljs-keyword">if</span>(<span class="hljs-string">'caches'</span> <span class="hljs-keyword">in</span> <span class="hljs-built_in">window</span>) {
 				
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params"></span>)
 					</span>{
 						<span class="hljs-comment">// 打开缓存存储，如果不存在，则新建</span>
-						caches.open(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
+						caches.open(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
 							
 							<span class="hljs-comment">// 从源服务器获取 data.json，添加响应到缓存存储中</span>
 							<span class="hljs-comment">// 允许跨域响应缓存 —— 指定完整的请求 URL</span>
 							<span class="hljs-comment">// Request 对象作为键</span>
-							cache.add(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">&#x27;/data.json&#x27;</span>));
+							cache.add(<span class="hljs-keyword">new</span> Request(<span class="hljs-string">'/data.json'</span>));
 
-							<span class="hljs-keyword">var</span> data={<span class="hljs-attr">foo</span>: <span class="hljs-string">&quot;bar&quot;</span>};					
+							<span class="hljs-keyword">var</span> data={<span class="hljs-attr">foo</span>: <span class="hljs-string">"bar"</span>};					
 							
 							<span class="hljs-comment">// 在缓存前将其他头选项加入响应对象</span>
 							<span class="hljs-keyword">const</span> jsonResponse = <span class="hljs-keyword">new</span> Response(<span class="hljs-built_in">JSON</span>.stringify(data), {
 								  <span class="hljs-attr">headers</span>: {
-									<span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;application/json&#x27;</span>
+									<span class="hljs-string">'content-type'</span>: <span class="hljs-string">'application/json'</span>
 								  }
 							});
 
 							<span class="hljs-comment">// 将自定义 JSON 数据加入缓存存储</span>
-							cache.put(<span class="hljs-string">&#x27;/custom.json&#x27;</span>, jsonResponse);				
+							cache.put(<span class="hljs-string">'/custom.json'</span>, jsonResponse);				
 
 						}).catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
 							<span class="hljs-built_in">console</span>.log(err);
@@ -505,8 +505,8 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					<span class="hljs-comment">// 将多个 URL 加入缓存 —— 浏览器从源获取数据</span>
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addAll</span>(<span class="hljs-params"></span>)
 					</span>{
-						caches.open(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {				
-							<span class="hljs-keyword">const</span> urls = [<span class="hljs-string">&#x27;/data1.json&#x27;</span>, <span class="hljs-string">&#x27;/data2.json&#x27;</span>,<span class="hljs-string">&#x27;/data3.json&#x27;</span>];
+						caches.open(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {				
+							<span class="hljs-keyword">const</span> urls = [<span class="hljs-string">'/data1.json'</span>, <span class="hljs-string">'/data2.json'</span>,<span class="hljs-string">'/data3.json'</span>];
 							cache.addAll(urls);	
 						}).catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
 							<span class="hljs-built_in">console</span>.log(err);
@@ -517,16 +517,16 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					<span class="hljs-comment">// 检查缓存存储状态</span>
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkCacheStatus</span>(<span class="hljs-params"></span>)
 					</span>{
-						caches.has(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">bool</span>) =&gt;</span> {
+						caches.has(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">bool</span>) =&gt;</span> {
 						
-						 <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML = <span class="hljs-string">&quot;Cache data_cache is available: &quot;</span> + bool+<span class="hljs-string">&quot;&lt;br /&gt;&quot;</span>;
+						 <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML = <span class="hljs-string">"Cache data_cache is available: "</span> + bool+<span class="hljs-string">"&lt;br /&gt;"</span>;
 
 						}).catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
 						}) 
 						
-						caches.has(<span class="hljs-string">&#x27;teat_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">bool</span>) =&gt;</span> {
+						caches.has(<span class="hljs-string">'teat_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">bool</span>) =&gt;</span> {
 						
-						 <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML += <span class="hljs-string">&quot;Cache test_cache is available: &quot;</span> + bool;
+						 <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML += <span class="hljs-string">"Cache test_cache is available: "</span> + bool;
 
 						}).catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
 						}) 
@@ -536,8 +536,8 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					<span class="hljs-comment">// 删除缓存存储</span>
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteCache</span>(<span class="hljs-params"></span>)
 					</span>{		
-							caches.delete(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">bool</span>) =&gt;</span> {			
-							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML = <span class="hljs-string">&quot;Cache data_cache is deleted&quot;</span>;
+							caches.delete(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">bool</span>) =&gt;</span> {			
+							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML = <span class="hljs-string">"Cache data_cache is deleted"</span>;
 						}).catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
 						})		
 					}
@@ -545,9 +545,9 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					<span class="hljs-comment">// 通过缓存键（请求 URL 或对象）从缓存中删除指定对象</span>
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deleteCacheObject</span>(<span class="hljs-params"></span>)
 					</span>{		
-							caches.open(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
+							caches.open(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
 							
-							cache.delete(<span class="hljs-string">&#x27;custom.json&#x27;</span>);							
+							cache.delete(<span class="hljs-string">'custom.json'</span>);							
 
 						}).catch(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
 							<span class="hljs-built_in">console</span>.log(err);
@@ -557,12 +557,12 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					<span class="hljs-comment">// 从缓存存储中获取所有缓存键</span>
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAllKeys</span>(<span class="hljs-params"></span>)
 					</span>{		
-							caches.open(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
+							caches.open(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
 							
-							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML = <span class="hljs-string">&quot;&quot;</span>;
+							<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML = <span class="hljs-string">""</span>;
 							cache.keys().then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">keys</span>) </span>{				
 								keys.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
-										<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML += key.url+<span class="hljs-string">&quot;&lt;br /&gt;&quot;</span>;	
+										<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML += key.url+<span class="hljs-string">"&lt;br /&gt;"</span>;	
 								});					
 							});
 										
@@ -575,11 +575,11 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					<span class="hljs-comment">// 从缓存存储中获取缓存数据</span>
 					<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCacheData</span>(<span class="hljs-params"></span>)
 					</span>{	
-						caches.open(<span class="hljs-string">&#x27;data_cache&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
-						<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML = <span class="hljs-string">&quot;&quot;</span>;			
-								cache.match(<span class="hljs-string">&#x27;custom.json&#x27;</span>).then(<span class="hljs-function">(<span class="hljs-params">response</span>)=&gt;</span> {
+						caches.open(<span class="hljs-string">'data_cache'</span>).then(<span class="hljs-function">(<span class="hljs-params">cache</span>) =&gt;</span> {
+						<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML = <span class="hljs-string">""</span>;			
+								cache.match(<span class="hljs-string">'custom.json'</span>).then(<span class="hljs-function">(<span class="hljs-params">response</span>)=&gt;</span> {
 								response.json().then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
-									<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">&quot;data&quot;</span>).innerHTML = <span class="hljs-built_in">JSON</span>.stringify(data);
+									<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"data"</span>).innerHTML = <span class="hljs-built_in">JSON</span>.stringify(data);
 								});
 									
 								})							
@@ -590,7 +590,7 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 					}				
 				
 			} <span class="hljs-keyword">else</span> {
-					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;No Cache Storage API support..&quot;</span>);		
+					<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"No Cache Storage API support.."</span>);		
 			}		
 
 		</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>			
@@ -598,14 +598,14 @@ Set-Cookie: &lt;cookie-name&gt;=&lt;cookie-value&gt;; Domain=&lt;domain-value&gt
 	<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
 		Welcome to Browser Storage Demos - Cache Storage API	<span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span> 
 
-		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;data&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
-                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;add()&quot;</span>&gt;</span>Add to Cache <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;addAll()&quot;</span>&gt;</span>Add All<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;checkCacheStatus()&quot;</span>&gt;</span>Cache Status <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;deleteCache()&quot;</span>&gt;</span>Delete Cache <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;deleteCacheObject()&quot;</span>&gt;</span>Delete Cache Object<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 	
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;getAllKeys()&quot;</span>&gt;</span>Get All Keys<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">&quot;getCacheData()&quot;</span>&gt;</span>Get Cache Data<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 	 		
+		<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"data"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"add()"</span>&gt;</span>Add to Cache <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"addAll()"</span>&gt;</span>Add All<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"checkCacheStatus()"</span>&gt;</span>Cache Status <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"deleteCache()"</span>&gt;</span>Delete Cache <span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"deleteCacheObject()"</span>&gt;</span>Delete Cache Object<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 	
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"getAllKeys()"</span>&gt;</span>Get All Keys<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span> = <span class="hljs-string">"getCacheData()"</span>&gt;</span>Get Cache Data<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span> 	 		
 	<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>

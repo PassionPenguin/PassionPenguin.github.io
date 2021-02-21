@@ -20,11 +20,11 @@
 </blockquote>
 <h1>我们应该在什么时候使用 @State、@Binding、@ObservedObject、@EnvironmentObject 和 @Environment？</h1>
 <p>SwiftUI 引入了一系列新的属性包装器让你的代码可以通过它们架起程序状态和视图之间的桥梁：</p>
-<pre class="hljs"><code> <span class="hljs-meta">@State</span>
- <span class="hljs-meta">@Binding</span>
- <span class="hljs-meta">@ObservedObject</span>
- <span class="hljs-meta">@EnvironmentObject</span>
- <span class="hljs-meta">@Environment</span>
+<pre class="hljs"><code> @<span class="hljs-type">State</span>
+ @<span class="hljs-type">Binding</span>
+ @<span class="hljs-type">ObservedObject</span>
+ @<span class="hljs-type">EnvironmentObject</span>
+ @<span class="hljs-type">Environment</span>
 </code></pre>
 <p>这只是其中一部分。还有其他用于 Core Data 获取请求和用于识别手势的属性包装器。但这些包装器与本文无关。与列举的包装器不同是，<code>@FetchRequest</code> 和<code>@GestureState</code> 的使用场景是明确的，然而，何时应该使用 <code>@State</code> 还是 <code>@Binding</code>，或 <code>@ObservedObject</code> 还是 <code>@EnvironmentObject</code> ，这些通常会令人感到困惑。</p>
 <p>本文试图通过简单、重复性的术语来定义每个包装器合适的使用时机。在这里我可能有点过于规定性，但我从这些规则中已经有了不错的收获。此外，过度规范是一个由来已久的程序员编写博客的传统，因此尽管偶尔会令人讨厌，但我想遵循规范应该会对你有所帮助。</p>
@@ -51,7 +51,7 @@
 
     <span class="hljs-comment">/// it needs read/write access to one of </span>
     <span class="hljs-comment">/// its own properties for private use</span>
-    <span class="hljs-meta">@State</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> isHighlighted <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+    @<span class="hljs-type">State</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> isHighlighted = <span class="hljs-literal">false</span>
 }
 </code></pre>
 <h3>…它需要让子视图可以对其某个属性进行读/写访问时。</h3>
@@ -59,16 +59,16 @@
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyView</span>: <span class="hljs-title">View</span> </span>{
     <span class="hljs-comment">/// it needs to provide read/write access of </span>
     <span class="hljs-comment">/// one of its properties to a descendant view</span>
-    <span class="hljs-meta">@State</span> <span class="hljs-keyword">var</span> isPresentingAlert <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+    @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> isPresentingAlert = <span class="hljs-literal">false</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">Button</span>(action: {
-            <span class="hljs-keyword">self</span>.isPresentingAlert <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+            <span class="hljs-keyword">self</span>.isPresentingAlert = <span class="hljs-literal">true</span>
         }, label: {
-            <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Present an Alert&quot;</span>)
+            <span class="hljs-type">Text</span>(<span class="hljs-string">"Present an Alert"</span>)
         })
-        .alert(isPresented: <span class="hljs-variable">$isPresentingAlert</span>) {
-            <span class="hljs-type">Alert</span>(title: <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Alert!&quot;</span>))
+        .alert(isPresented: $isPresentingAlert) {
+            <span class="hljs-type">Alert</span>(title: <span class="hljs-type">Text</span>(<span class="hljs-string">"Alert!"</span>))
         }
     }
 }
@@ -77,16 +77,16 @@
 <h3>…它需要对祖先视图的 <code>State</code> 包装属性进行读/写访问</h3>
 <p>与上述 Alert 弹框的场景相反。如果你的视图类似于 Alert 弹框，它依赖于祖先所拥有的值，并且关键的是，需要对该值的可变访问，那么该视图需要一个 @Binding 到该值。</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyView</span>: <span class="hljs-title">View</span> </span>{
-    <span class="hljs-meta">@State</span> <span class="hljs-keyword">var</span> isPresentingAlert <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+    @<span class="hljs-type">State</span> <span class="hljs-keyword">var</span> isPresentingAlert = <span class="hljs-literal">false</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">Button</span>(action: {
-            <span class="hljs-keyword">self</span>.isPresentingAlert <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+            <span class="hljs-keyword">self</span>.isPresentingAlert = <span class="hljs-literal">true</span>
         }, label: {
-            <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Present an Alert&quot;</span>)
+            <span class="hljs-type">Text</span>(<span class="hljs-string">"Present an Alert"</span>)
         })
-        .customAlert(isPresented: <span class="hljs-variable">$isPresentingAlert</span>) {
-            <span class="hljs-type">CustomAlertView</span>(title: <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Alert!&quot;</span>))
+        .customAlert(isPresented: $isPresentingAlert) {
+            <span class="hljs-type">CustomAlertView</span>(title: <span class="hljs-type">Text</span>(<span class="hljs-string">"Alert!"</span>))
         }
     }
 }
@@ -96,7 +96,7 @@
     
     <span class="hljs-comment">/// it needs read/write access to a State-</span>
     <span class="hljs-comment">/// wrapped property of an ancestor view</span>
-    <span class="hljs-meta">@Binding</span> <span class="hljs-keyword">var</span> isBeingPresented: <span class="hljs-type">Bool</span>
+    @<span class="hljs-type">Binding</span> <span class="hljs-keyword">var</span> isBeingPresented: <span class="hljs-type">Bool</span>
 }
 </code></pre>
 <h3>…它需要对符合 <code>ObservableObject</code> 的对象的属性进行读/写访问，但是对该对象的引用是由其祖先拥有的。</h3>
@@ -108,10 +108,10 @@
 </ol>
 <p>你的视图需要具有对该可观察对象的某些成员的读/写访问权限，但是它没（也不应）具有对该可观察对象的访问权限。然后，视图将为该值定义一个 @Binding 属性，该属性将在视图初始化时由其祖先视图提供。这方面的一个很好的例子是任何可复用的输入视图们，如选择器或文本框。 一个文本框需要能够对另一个对象上的一些字符串属性有读/写访问权，但是文本框不应该与那个特定的对象紧密耦合。相反，文本框的 @Binding 属性将提供对字符串属性的读/写访问权限，而无需将该属性直接暴露给文本框。</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyView</span>: <span class="hljs-title">View</span> </span>{
-    <span class="hljs-meta">@ObservedObject</span> <span class="hljs-keyword">var</span> person <span class="hljs-operator">=</span> <span class="hljs-type">Person</span>()
+    @<span class="hljs-type">ObservedObject</span> <span class="hljs-keyword">var</span> person = <span class="hljs-type">Person</span>()
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
-        <span class="hljs-type">NamePicker</span>(name: <span class="hljs-variable">$person</span>.name)
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+        <span class="hljs-type">NamePicker</span>(name: $person.name)
     }
 }
 
@@ -119,11 +119,11 @@
 
     <span class="hljs-comment">/// it needs read/write access to a property </span>
     <span class="hljs-comment">/// of an observable object owned by an ancestor</span>
-    <span class="hljs-meta">@Binding</span> <span class="hljs-keyword">var</span> name: <span class="hljs-type">String</span>
+    @<span class="hljs-type">Binding</span> <span class="hljs-keyword">var</span> name: <span class="hljs-type">String</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">CustomButton</span>(action: {
-            <span class="hljs-keyword">self</span>.name <span class="hljs-operator">=</span> names.randomElement()<span class="hljs-operator">!</span>
+            <span class="hljs-keyword">self</span>.name = names.randomElement()!
         }, label: {
             <span class="hljs-type">Text</span>(<span class="hljs-keyword">self</span>.name)
         })
@@ -137,11 +137,11 @@
 
     <span class="hljs-comment">/// it is dependent on an object that it </span>
     <span class="hljs-comment">/// can instantiate itself</span>
-    <span class="hljs-meta">@ObservedObject</span> <span class="hljs-keyword">var</span> veggieFetcher <span class="hljs-operator">=</span> <span class="hljs-type">VegetableFetcher</span>()
+    @<span class="hljs-type">ObservedObject</span> <span class="hljs-keyword">var</span> veggieFetcher = <span class="hljs-type">VegetableFetcher</span>()
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">List</span>(veggieFetcher.veggies) {
-            <span class="hljs-type">Text</span>(<span class="hljs-variable">$0</span>.name)
+            <span class="hljs-type">Text</span>($<span class="hljs-number">0</span>.name)
         }.onAppear {
             <span class="hljs-keyword">self</span>.veggieFetcher.fetch()
         }
@@ -154,11 +154,11 @@
 
     <span class="hljs-comment">/// it is dependent on an object that can</span>
     <span class="hljs-comment">/// easily be passed to its initializer</span>
-    <span class="hljs-meta">@ObservedObject</span> <span class="hljs-keyword">var</span> dessertFetcher: <span class="hljs-type">DessertFetcher</span>
+    @<span class="hljs-type">ObservedObject</span> <span class="hljs-keyword">var</span> dessertFetcher: <span class="hljs-type">DessertFetcher</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">List</span>(dessertFetcher.desserts) {
-            <span class="hljs-type">Text</span>(<span class="hljs-variable">$0</span>.name)
+            <span class="hljs-type">Text</span>($<span class="hljs-number">0</span>.name)
         }.onAppear {
             <span class="hljs-keyword">self</span>.dessertFetcher.fetch()
         }
@@ -167,10 +167,10 @@
 
 <span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">UIViewController</span> </span>{
 
-    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">observedObjectExampleTwo</span>()</span> -&gt; <span class="hljs-type">UIViewController</span> {
-        <span class="hljs-keyword">let</span> fetcher <span class="hljs-operator">=</span> <span class="hljs-type">DessertFetcher</span>(preferences: .<span class="hljs-keyword">init</span>(toleratesMint: <span class="hljs-literal">false</span>))
-        <span class="hljs-keyword">let</span> view <span class="hljs-operator">=</span> <span class="hljs-type">ObservedObjectExampleTwo</span>(dessertFetcher: fetcher)
-        <span class="hljs-keyword">let</span> host <span class="hljs-operator">=</span> <span class="hljs-type">UIHostingController</span>(rootView: view)
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">observedObjectExampleTwo</span><span class="hljs-params">()</span></span> -&gt; <span class="hljs-type">UIViewController</span> {
+        <span class="hljs-keyword">let</span> fetcher = <span class="hljs-type">DessertFetcher</span>(preferences: .<span class="hljs-keyword">init</span>(toleratesMint: <span class="hljs-literal">false</span>))
+        <span class="hljs-keyword">let</span> view = <span class="hljs-type">ObservedObjectExampleTwo</span>(dessertFetcher: fetcher)
+        <span class="hljs-keyword">let</span> host = <span class="hljs-type">UIHostingController</span>(rootView: view)
         <span class="hljs-keyword">return</span> host
     }
 
@@ -183,12 +183,12 @@
 
     <span class="hljs-comment">/// it would be too cumbersome to pass that </span>
     <span class="hljs-comment">/// observed object through all the initializers </span>
-    <span class="hljs-comment">/// of all your view&#x27;s ancestors</span>
-    <span class="hljs-meta">@EnvironmentObject</span> <span class="hljs-keyword">var</span> veggieFetcher: <span class="hljs-type">VegetableFetcher</span>
+    <span class="hljs-comment">/// of all your view's ancestors</span>
+    @<span class="hljs-type">EnvironmentObject</span> <span class="hljs-keyword">var</span> veggieFetcher: <span class="hljs-type">VegetableFetcher</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">List</span>(veggieFetcher.veggies) {
-            <span class="hljs-type">Text</span>(<span class="hljs-variable">$0</span>.name)
+            <span class="hljs-type">Text</span>($<span class="hljs-number">0</span>.name)
         }.onAppear {
             <span class="hljs-keyword">self</span>.veggieFetcher.fetch()
         }
@@ -196,13 +196,13 @@
 }
 
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SomeParentView</span>: <span class="hljs-title">View</span> </span>{
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">SomeChildView</span>()
     }
 }
 
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">SomeGrandparentView</span>: <span class="hljs-title">View</span> </span>{
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">SomeParentView</span>()
     }
 }
@@ -220,10 +220,10 @@
 
     <span class="hljs-comment">/// it is dependent on a type that cannot </span>
     <span class="hljs-comment">/// conform to ObservableObject</span>
-    <span class="hljs-meta">@Environment</span>(\.theme) <span class="hljs-keyword">var</span> theme: <span class="hljs-type">Theme</span>
+    @<span class="hljs-type">Environment</span>(\.theme) <span class="hljs-keyword">var</span> theme: <span class="hljs-type">Theme</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
-        <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Me and my dad make models of clipper ships.&quot;</span>)
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
+        <span class="hljs-type">Text</span>(<span class="hljs-string">"Me and my dad make models of clipper ships."</span>)
             .foregroundColor(theme.foregroundColor)
             .background(theme.backgroundColor)
     }
@@ -252,22 +252,22 @@
 <span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">EnvironmentValues</span> </span>{
     <span class="hljs-keyword">var</span> theme: <span class="hljs-type">Theme</span> {
         <span class="hljs-keyword">get</span> { <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>[<span class="hljs-type">ThemeKey</span>.<span class="hljs-keyword">self</span>]  }
-        <span class="hljs-keyword">set</span> { <span class="hljs-keyword">self</span>[<span class="hljs-type">ThemeKey</span>.<span class="hljs-keyword">self</span>] <span class="hljs-operator">=</span> newValue }
+        <span class="hljs-keyword">set</span> { <span class="hljs-keyword">self</span>[<span class="hljs-type">ThemeKey</span>.<span class="hljs-keyword">self</span>] = newValue }
     }
 }
 </code></pre>
 <h3>…你的视图依赖于同一个类型的多个实例，只要该类型不需要被用作可观察对象。</h3>
 <p>由于 @EnvironmentObject 每种类型仅支持一个实例，所以这种想法是行不通的。相反，如果您需要使用每个实例的键路径注册给定类型的多个实例，则需要使用 @Environment，以便视图的属性可以指定其所需的键路径。</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyView</span>: <span class="hljs-title">View</span> </span>{
-    <span class="hljs-meta">@Environment</span>(\.positiveTheme) <span class="hljs-keyword">var</span> positiveTheme: <span class="hljs-type">Theme</span>
-    <span class="hljs-meta">@Environment</span>(\.negativeTheme) <span class="hljs-keyword">var</span> negativeTheme: <span class="hljs-type">Theme</span>
+    @<span class="hljs-type">Environment</span>(\.positiveTheme) <span class="hljs-keyword">var</span> positiveTheme: <span class="hljs-type">Theme</span>
+    @<span class="hljs-type">Environment</span>(\.negativeTheme) <span class="hljs-keyword">var</span> negativeTheme: <span class="hljs-type">Theme</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">VStack</span> {
-            <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Positive&quot;</span>)
+            <span class="hljs-type">Text</span>(<span class="hljs-string">"Positive"</span>)
                 .foregroundColor(positiveTheme.foregroundColor)
                 .background(positiveTheme.backgroundColor)
-            <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Negative&quot;</span>)
+            <span class="hljs-type">Text</span>(<span class="hljs-string">"Negative"</span>)
                 .foregroundColor(negativeTheme.foregroundColor)
                 .background(negativeTheme.backgroundColor)
         }
@@ -303,12 +303,12 @@
 <span class="hljs-class"><span class="hljs-keyword">extension</span> <span class="hljs-title">EnvironmentValues</span> </span>{
     <span class="hljs-keyword">var</span> positiveTheme: <span class="hljs-type">Theme</span> {
         <span class="hljs-keyword">get</span> { <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>[<span class="hljs-type">PositiveThemeKey</span>.<span class="hljs-keyword">self</span>]  }
-        <span class="hljs-keyword">set</span> { <span class="hljs-keyword">self</span>[<span class="hljs-type">PositiveThemeKey</span>.<span class="hljs-keyword">self</span>] <span class="hljs-operator">=</span> newValue }
+        <span class="hljs-keyword">set</span> { <span class="hljs-keyword">self</span>[<span class="hljs-type">PositiveThemeKey</span>.<span class="hljs-keyword">self</span>] = newValue }
     }
 
     <span class="hljs-keyword">var</span> negativeTheme: <span class="hljs-type">Theme</span> {
         <span class="hljs-keyword">get</span> { <span class="hljs-keyword">return</span> <span class="hljs-keyword">self</span>[<span class="hljs-type">NegativeThemeKey</span>.<span class="hljs-keyword">self</span>]  }
-        <span class="hljs-keyword">set</span> { <span class="hljs-keyword">self</span>[<span class="hljs-type">NegativeThemeKey</span>.<span class="hljs-keyword">self</span>] <span class="hljs-operator">=</span> newValue }
+        <span class="hljs-keyword">set</span> { <span class="hljs-keyword">self</span>[<span class="hljs-type">NegativeThemeKey</span>.<span class="hljs-keyword">self</span>] = newValue }
     }
 }
 </code></pre>
@@ -321,25 +321,25 @@
 <p>这样，视图就可以观察同一类的多个对象：</p>
 <pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">MyView</span>: <span class="hljs-title">View</span> </span>{
 
-    <span class="hljs-meta">@DistinctEnvironmentObject</span>(\.posts) <span class="hljs-keyword">var</span> postsService: <span class="hljs-type">Microservice</span>
-    <span class="hljs-meta">@DistinctEnvironmentObject</span>(\.users) <span class="hljs-keyword">var</span> usersService: <span class="hljs-type">Microservice</span>
-    <span class="hljs-meta">@DistinctEnvironmentObject</span>(\.channels) <span class="hljs-keyword">var</span> channelsService: <span class="hljs-type">Microservice</span>
+    @<span class="hljs-type">DistinctEnvironmentObject</span>(\.posts) <span class="hljs-keyword">var</span> postsService: <span class="hljs-type">Microservice</span>
+    @<span class="hljs-type">DistinctEnvironmentObject</span>(\.users) <span class="hljs-keyword">var</span> usersService: <span class="hljs-type">Microservice</span>
+    @<span class="hljs-type">DistinctEnvironmentObject</span>(\.channels) <span class="hljs-keyword">var</span> channelsService: <span class="hljs-type">Microservice</span>
 
-    <span class="hljs-keyword">var</span> body: <span class="hljs-keyword">some</span> <span class="hljs-type">View</span> {
+    <span class="hljs-keyword">var</span> body: some <span class="hljs-type">View</span> {
         <span class="hljs-type">Form</span> {
-            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Posts&quot;</span>)) {
+            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Posts"</span>)) {
                 <span class="hljs-type">List</span>(postsService.content, id: \.<span class="hljs-keyword">self</span>) {
-                    <span class="hljs-type">Text</span>(<span class="hljs-variable">$0</span>)
+                    <span class="hljs-type">Text</span>($<span class="hljs-number">0</span>)
                 }
             }
-            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Users&quot;</span>)) {
+            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Users"</span>)) {
                 <span class="hljs-type">List</span>(usersService.content, id: \.<span class="hljs-keyword">self</span>) {
-                    <span class="hljs-type">Text</span>(<span class="hljs-variable">$0</span>)
+                    <span class="hljs-type">Text</span>($<span class="hljs-number">0</span>)
                 }
             }
-            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">&quot;Channels&quot;</span>)) {
+            <span class="hljs-type">Section</span>(header: <span class="hljs-type">Text</span>(<span class="hljs-string">"Channels"</span>)) {
                 <span class="hljs-type">List</span>(channelsService.content, id: \.<span class="hljs-keyword">self</span>) {
-                    <span class="hljs-type">Text</span>(<span class="hljs-variable">$0</span>)
+                    <span class="hljs-type">Text</span>($<span class="hljs-number">0</span>)
                 }
             }
         }.onAppear(perform: fetchContent)
@@ -348,13 +348,13 @@
 
 <span class="hljs-comment">// MARK: - Property Wrapper To Make This All Work</span>
 
-<span class="hljs-keyword">@propertyWrapper</span>
+<span class="hljs-meta">@propertyWrapper</span>
 <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">DistinctEnvironmentObject</span>&lt;<span class="hljs-title">Wrapped</span>&gt;: <span class="hljs-title">DynamicProperty</span> <span class="hljs-title">where</span> <span class="hljs-title">Wrapped</span> : <span class="hljs-title">ObservableObject</span> </span>{
     <span class="hljs-keyword">var</span> wrappedValue: <span class="hljs-type">Wrapped</span> { _wrapped }
-    <span class="hljs-meta">@ObservedObject</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> _wrapped: <span class="hljs-type">Wrapped</span>
+    @<span class="hljs-type">ObservedObject</span> <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> _wrapped: <span class="hljs-type">Wrapped</span>
 
-    <span class="hljs-function"><span class="hljs-keyword">init</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">keypath</span>: <span class="hljs-type">KeyPath</span>&lt;<span class="hljs-type">EnvironmentValues</span>, <span class="hljs-type">Wrapped</span>&gt;)</span> {
-        _wrapped <span class="hljs-operator">=</span> <span class="hljs-type">Environment</span>&lt;<span class="hljs-type">Wrapped</span>&gt;(keypath).wrappedValue
+    <span class="hljs-keyword">init</span>(<span class="hljs-number">_</span> keypath: <span class="hljs-type">KeyPath</span>&lt;<span class="hljs-type">EnvironmentValues</span>, <span class="hljs-type">Wrapped</span>&gt;) {
+        _wrapped = <span class="hljs-type">Environment</span>&lt;<span class="hljs-type">Wrapped</span>&gt;(keypath).wrappedValue
     }
 }
 

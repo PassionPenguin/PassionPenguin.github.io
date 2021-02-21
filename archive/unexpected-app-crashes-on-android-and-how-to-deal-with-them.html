@@ -69,7 +69,7 @@
         }
     }
 
-    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSaveInstanceState</span><span class="hljs-params">(bundle: <span class="hljs-type">Bundle</span>)</span></span> {
+    <span class="hljs-keyword">override</span> <span class="hljs-keyword">fun</span> onSaveInstanceState(bundle: Bundle) {
         <span class="hljs-keyword">super</span>.onSaveInstanceState(bundle)
         bundle.putString(PID, android.os.Process.myPid().toString())
     }
@@ -91,13 +91,13 @@
         <span class="hljs-keyword">super</span>.onViewCreated(view, savedInstanceState)
         <span class="hljs-keyword">val</span> recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        users = savedInstanceState?.getParcelableArrayList(<span class="hljs-string">&quot;userList&quot;</span>) ?: viewModel.getUsers()
+        users = savedInstanceState?.getParcelableArrayList(<span class="hljs-string">"userList"</span>) ?: viewModel.getUsers()
         rv.adapter = DataAdapter(users, <span class="hljs-keyword">this</span>)
     }
 
     <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSaveInstanceState</span><span class="hljs-params">(outState: <span class="hljs-type">Bundle</span>)</span></span> {
         <span class="hljs-keyword">super</span>.onSaveInstanceState(outState)
-        outState.putParcelableArrayList(<span class="hljs-string">&quot;userList&quot;</span>, users <span class="hljs-keyword">as</span> ArrayList)
+        outState.putParcelableArrayList(<span class="hljs-string">"userList"</span>, users <span class="hljs-keyword">as</span> ArrayList)
     }
 </code></pre>
 <ul>

@@ -23,23 +23,23 @@
 <h2>通过 <code>require</code> 函数的调用引入 JSON 模块</h2>
 <p>假设我们有一个用 TypeScript 编写的 Node 应用程序，并且假设我们要导入以下 JSON 文件：</p>
 <pre class="hljs"><code>{
-    <span class="hljs-attr">&quot;server&quot;</span>: {
-        <span class="hljs-attr">&quot;nodePort&quot;</span>: <span class="hljs-number">8080</span>
+    <span class="hljs-attr">"server"</span>: {
+        <span class="hljs-attr">"nodePort"</span>: <span class="hljs-number">8080</span>
     }
 }
 </code></pre>
 <p>在 Node 中，我们可以调用 <code>require</code> 函数导入这一个 JSON 文件，就像是导入别的 CommonJS 模块一样：</p>
-<pre class="hljs"><code><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
+<pre class="hljs"><code><span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config.json"</span>);
 </code></pre>
 <p>这一个 JSON 文件会被自动的反序列化为普通的 JavaScript 对象，让我们可以轻松访问配置对象的属性：</p>
-<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
+<pre class="hljs"><code><span class="hljs-meta">"use strict"</span>;
 
-<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);
-<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express"</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config.json"</span>);
 
 <span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+app.listen(config.server.nodePort, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
 </code></pre>
@@ -49,12 +49,12 @@ app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
 <pre class="hljs"><code><span class="hljs-comment">// 因为所有的 ECMAScript 模块都默认使用 strict 模式</span>
 <span class="hljs-comment">// 我们不需要再声明 `use strict`</span>
 
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;express&quot;</span>;
-<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> config <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./config.json&quot;</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> express <span class="hljs-keyword">from</span> <span class="hljs-string">"express"</span>;
+<span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> config <span class="hljs-keyword">from</span> <span class="hljs-string">"./config.json"</span>;
 
 <span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+app.listen(config.server.nodePort, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
 </code></pre>
@@ -64,39 +64,39 @@ app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
 </blockquote>
 <p>让我们转到 <strong>tsconfig.json</strong> 文件并在其中启用该选项：</p>
 <pre class="hljs"><code>{
-    <span class="hljs-attr">&quot;compilerOptions&quot;</span>: {
-        <span class="hljs-attr">&quot;target&quot;</span>: <span class="hljs-string">&quot;es2015&quot;</span>,
-        <span class="hljs-attr">&quot;module&quot;</span>: <span class="hljs-string">&quot;commonjs&quot;</span>,
-        <span class="hljs-attr">&quot;strict&quot;</span>: <span class="hljs-literal">true</span>,
-        <span class="hljs-attr">&quot;moduleResolution&quot;</span>: <span class="hljs-string">&quot;node&quot;</span>,
-        <span class="hljs-attr">&quot;resolveJsonModule&quot;</span>: <span class="hljs-literal">true</span>
+    <span class="hljs-attr">"compilerOptions"</span>: {
+        <span class="hljs-attr">"target"</span>: <span class="hljs-string">"es2015"</span>,
+        <span class="hljs-attr">"module"</span>: <span class="hljs-string">"commonjs"</span>,
+        <span class="hljs-attr">"strict"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"moduleResolution"</span>: <span class="hljs-string">"node"</span>,
+        <span class="hljs-attr">"resolveJsonModule"</span>: <span class="hljs-literal">true</span>
     }
 }
 </code></pre>
 <p>在声明了 <code>--resolveJsonModule</code> 以后，我们的 TypeScript 文件现在不会再出现类型错误。而且，我们现在还拥有了类型检查和自动补全功能！</p>
 <p>如果使用上面显示的编译器选项编译 TypeScript 文件，则会得到以下 JavaScript 输出：</p>
-<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
+<pre class="hljs"><code><span class="hljs-meta">"use strict"</span>;
 
-<span class="hljs-built_in">Object</span>.defineProperty(<span class="hljs-built_in">exports</span>, <span class="hljs-string">&quot;__esModule&quot;</span>, {<span class="hljs-attr">value</span>: <span class="hljs-literal">true</span>});
+<span class="hljs-built_in">Object</span>.defineProperty(exports, <span class="hljs-string">"__esModule"</span>, {value: <span class="hljs-literal">true</span>});
 
-<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);
-<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express"</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config.json"</span>);
 
 <span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+app.listen(config.server.nodePort, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
 </code></pre>
 <p>注意，输出与我们的第一个方法（使用 <code>require</code>） 几乎相同：</p>
-<pre class="hljs"><code><span class="hljs-meta">&quot;use strict&quot;</span>;
+<pre class="hljs"><code><span class="hljs-meta">"use strict"</span>;
 
-<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);
-<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./config.json&quot;</span>);
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express"</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./config.json"</span>);
 
 <span class="hljs-keyword">const</span> app = express();
 
-app.listen(config.server.nodePort, <span class="hljs-function">() =&gt;</span> {
+app.listen(config.server.nodePort, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
     <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`在端口 <span class="hljs-subst">${config.server.nodePort}</span> 上监听...`</span>);
 });
 </code></pre>

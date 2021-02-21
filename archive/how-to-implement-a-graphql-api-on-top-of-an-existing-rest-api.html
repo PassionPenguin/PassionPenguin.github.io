@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>如何基于已有的 REST API 实现 GraphQL API - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://codeburst.io/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api-db8b343ddb5a">How to Implement a GraphQL API on Top of an Existing REST API</a></li>
+<li>原文作者：<a href="https://medium.com/@thawkin3">Tyler Hawkins</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md">https://github.com/xitu/gold-miner/blob/master/article/2021/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md</a></li>
+<li>译者：<a href="https://github.com/samyu2000">samyu2000</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>, <a href="https://github.com/k8scat">k8scat</a></li>
+</ul>
+</blockquote>
+<h1>如何基于已有的 REST API 实现 GraphQL API</h1>
+<p><img src="https://cdn-images-1.medium.com/max/2912/0*r9_qx_t-6ltEP7GR.png" alt="Dad joke “dadabase” app"></p>
+<p>你的 dad jokes 放在哪儿？当然是在 <strong>dadabase</strong> 里。我们来想象一下，你是全世界最受欢迎的 dad jokes 数据库的管理员。项目的技术概况是：使用 REST API 与数据库通信，这种 REST API 具有搜索笑话和对笑话进行评分的功能；网站的访问者可以通过一个简单的用户界面对每条笑话进行评分。</p>
+<p>最近你了解到一种新技术，它叫做 GraphQL，它具有一定的灵活性，可以精准获取你需要的数据，而且是使用单一的 API 结点。这听上去很不错，于是你打算在应用程序中使用这种技术。但是，你不希望对原有的 REST API 作过多的改动。能否让你的项目同时支持 REST API 和 GraphQL API？</p>
+<p>在本文中，我们会讨论如何基于已有的 REST API 来实现 GraphQL API。你使用这种方法，不需要对基于原有的 REST API 框架进行调整，就可以在项目的未完成的模块中使用 GraphQL。</p>
+<p>如果你想看到最终的结果，可以访问 <a href="https://github.com/thawkin3/dad-joke-dadabase-rest-api">REST API 代码</a> 和 <a href="https://github.com/thawkin3/dad-joke-dadabase">前端和 GraphQL API 代码</a>。还要记得<a href="https://dad-joke-dadabase.herokuapp.com/">浏览一下网站</a>，那些笑话很值得看哦。</p>
+<h2>初始架构</h2>
+<p>项目的后台原先是使用 <a href="https://nodejs.org/en/">Node</a> 和 <a href="https://github.com/typicode/json-server">JSON Server</a> 开发的。JSON Server 利用 <a href="https://expressjs.com/">Express</a> 为一个模拟的数据库提供了完整的 REST API，并且这个数据库是由一个简单的 JSON 文件生成的。前端是使用 Vanilla JS 实现的，并使用浏览器内嵌的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">Fetch API</a> 发出 API 请求。该应用程序托管在 <a href="https://devcenter.heroku.com/">Heroku</a> 上，可以方便地对它进行部署和监控。</p>
+<p>我们使用的 JSON 文件含有一些笑话和评分信息。下面，我们把它完整地复制出来：</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"jokes"</span>: [
+    {
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"I don't often tell dad jokes, but when I do, sometimes he laughs."</span>
+    },
+    {
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"Why was the scarecrow promoted? For being outstanding in his field."</span>
+    },
+    {
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>,
+      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"What did the grape do when someone stepped on him? He let out a little whine."</span>
+    },
+    {
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>,
+      <span class="hljs-attr">"content"</span>: <span class="hljs-string">"Einstein, Pascal, and Newton are playing hide and seek. Einstein covers his eyes and begins counting. While Pascal runs off and hides, Newton takes out some chalk and marks a square on the ground with side lengths of exactly 1 meter, then sits down inside the square. When Einstein is finished counting and sees Newton sitting on the ground, he yells, \"Ha, I've found you, Newton!\". Newton replies, \"No you haven't! You've found one Newton over a square meter. You've found Pascal!"</span>
+    }
+  ],
+  <span class="hljs-attr">"ratings"</span>: [
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">8</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">3</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">6</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">7</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">6</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">6</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">4</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">7</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">9</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">8</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">9</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">2</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">11</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">12</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">13</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">14</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> },
+    { <span class="hljs-attr">"id"</span>: <span class="hljs-number">15</span>, <span class="hljs-attr">"jokeId"</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">"score"</span>: <span class="hljs-number">10</span> }
+  ]
+}
+</code></pre>
+<p>JSON Server 系统把这个文件中的数据作为数据库的初始数据，接着实现一套 REST API，其中包括对 GET, POST, PUT, PATCH 和 DELETE 请求的支持。JSON Server 的神奇之处在于，使用这套 API 就能实现对 JSON 文件的修改，因此数据库就是完全交互式的。JSON Server 不经安装就可以直接由 npm 脚本启动，但为了对它进行一些配置以及端口的设置，我们可以写下几行代码并运行它，代码如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> jsonServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'json-server'</span>)
+<span class="hljs-keyword">const</span> server = jsonServer.create()
+<span class="hljs-keyword">const</span> router = jsonServer.router(<span class="hljs-string">'db.json'</span>)
+<span class="hljs-keyword">const</span> middlewares = jsonServer.defaults()
+
+server.use(middlewares)
+server.use(router)
+server.listen(process.env.PORT || <span class="hljs-number">3000</span>, () =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`🚀 JSON Server is running on port <span class="hljs-subst">${process.env.PORT || <span class="hljs-number">3000</span>}</span>`</span>)
+})
+
+</code></pre>
+<p>欲对这个模拟的数据库进行测试，你可以把 <a href="https://github.com/thawkin3/dad-joke-dadabase-rest-api">API 有关的仓库</a>克隆到本地，并运行 <code>npm install</code> 和 <code>npm start</code>。在浏览器中访问 http://localhost:3000/jokes ，页面会显示所有的笑话。访问 http://localhost:3000/ratings ，页面会显示所有的评分信息。</p>
+<p><img src="https://cdn-images-1.medium.com/max/3524/0*hKZlLEM_mzlVLnLE.png" alt="/jokes API endpoint returns all the jokes when running the app locally"></p>
+<p>太棒了。我们可以在浏览器上运行应用程序的后台。现在我们把 API 托管在 Heroku 中。首先需要<a href="https://devcenter.heroku.com/articles/heroku-cli">安装 Heroku 命令行工具</a>。然后，我们可以进行这些操作：登录，创建项目，推送到 Heroku 服务端，在浏览器中打开项目的操作界面。</p>
+<pre class="hljs"><code><span class="hljs-comment"># 登录你的 Heroku 账户</span>
+heroku login
+
+<span class="hljs-comment"># 创建项目</span>
+heroku create dad-joke-dadabase-rest-api
+
+<span class="hljs-comment"># 将代码部署到 Heroku 服务端</span>
+git push heroku master
+
+<span class="hljs-comment"># 打开项目的后台页面</span>
+heroku open
+</code></pre>
+<p>看，现在我们把 API 发布到公网上了！</p>
+<p><img src="https://cdn-images-1.medium.com/max/3500/0*UG1tnsWGg6C_EyoX.png" alt="/jokes API endpoint returns all the jokes when hosting the API on Heroku"></p>
+<h2>构建用户界面</h2>
+<p>既然我们已经部署了一个运行中的 REST API，就可以制作前端页面，并使用 API 把这些笑话数据呈现在页面上，还可以对这些笑话进行评分。下面的 HTML 页面代码实现了一个显示笑话内容的容器，笑话内容由 JavaScript 代码加载进来。</p>
+<pre class="hljs"><code><span class="hljs-meta">&lt;!doctype <span class="hljs-meta-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"utf-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Dad Joke Dadabase<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"description"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"Where do you keep your dad jokes? In a dadabase of course!"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"author"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"Tyler Hawkins"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"./style.css"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>Dad Joke Dadabase<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"project"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"jokeContent"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"rateThisJokeContainer"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Rate this joke:<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"rateThisJokeOptions"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-1"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-1"</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-2"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"2"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-2"</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-3"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"3"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-3"</span>&gt;</span>3<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-4"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"4"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-4"</span>&gt;</span>4<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-5"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"5"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-5"</span>&gt;</span>5<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-6"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"6"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-6"</span>&gt;</span>6<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-7"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"7"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-7"</span>&gt;</span>7<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-8"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"8"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-8"</span>&gt;</span>8<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-9"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"9"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-9"</span>&gt;</span>9<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"formGroup"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"score-10"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"yourRating"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"10"</span> /&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"score-10"</span>&gt;</span>10<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"averageRating"</span>&gt;</span>Average Rating: <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"jokeRatingValue"</span>&gt;</span>7.8<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"nextJoke"</span>&gt;</span>See Next Joke<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"./script.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+<p>JavaScript 代码如下。跟 REST API 交互的关键代码在于两个获取数据的请求。第一个请求通过访问 <code>/jokes?_embed=ratings</code> 获取数据库中所有的笑话，第二个请求是 POST 类型的，它通过访问 <code>/ratings</code> 提交对某个笑话的评分。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> jokeContent = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.jokeContent'</span>)
+<span class="hljs-keyword">const</span> jokeRatingValue = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.jokeRatingValue'</span>)
+<span class="hljs-keyword">const</span> nextJokeButton = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'#nextJoke'</span>)
+
+<span class="hljs-keyword">const</span> jokes = []
+<span class="hljs-keyword">let</span> currentJokeIndex = <span class="hljs-number">-1</span>
+
+<span class="hljs-keyword">const</span> displayNextJoke = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  currentJokeIndex++
+  <span class="hljs-keyword">if</span> (currentJokeIndex &gt;= jokes.length) {
+    currentJokeIndex = <span class="hljs-number">0</span>
+  }
+
+  <span class="hljs-keyword">const</span> joke = jokes[currentJokeIndex]
+
+  jokeContent.textContent = joke.content
+
+  <span class="hljs-keyword">const</span> totalScore = joke.ratings.reduce(
+    <span class="hljs-function">(<span class="hljs-params">total, rating</span>) =&gt;</span> (total += rating.score),
+    <span class="hljs-number">0</span>
+  )
+  <span class="hljs-keyword">const</span> numberOfRatings = joke.ratings.length
+  <span class="hljs-keyword">const</span> averageRating = totalScore / numberOfRatings
+
+  jokeRatingValue.textContent = averageRating.toFixed(<span class="hljs-number">1</span>)
+}
+
+<span class="hljs-keyword">const</span> submitJokeRating = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> ratingInput = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'input[name="yourRating"]:checked'</span>)
+
+  <span class="hljs-keyword">if</span> (ratingInput &amp;&amp; ratingInput.value) {
+    <span class="hljs-keyword">const</span> score = <span class="hljs-built_in">Number</span>(ratingInput.value)
+    <span class="hljs-keyword">const</span> jokeId = jokes[currentJokeIndex].id
+    <span class="hljs-keyword">const</span> postData = { jokeId, score }
+
+    fetch(<span class="hljs-string">'/ratings'</span>, {
+      <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+      <span class="hljs-attr">headers</span>: {
+        <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,
+      },
+      <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify(postData),
+    })
+      .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
+      .then(<span class="hljs-function"><span class="hljs-params">responseData</span> =&gt;</span> {
+        <span class="hljs-keyword">const</span> jokeToUpdate = jokes.find(<span class="hljs-function"><span class="hljs-params">joke</span> =&gt;</span> joke.id === responseData.jokeId)
+        jokeToUpdate &amp;&amp; jokeToUpdate.ratings.push(responseData)
+      })
+      .finally(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+        ratingInput.checked = <span class="hljs-literal">false</span>
+        displayNextJoke()
+      })
+  } <span class="hljs-keyword">else</span> {
+    displayNextJoke()
+  }
+}
+
+nextJokeButton.addEventListener(<span class="hljs-string">'click'</span>, submitJokeRating)
+
+fetch(<span class="hljs-string">'/jokes?_embed=ratings'</span>)
+  .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
+  .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
+    jokes.push(...data)
+    displayNextJoke()
+  })
+
+</code></pre>
+<p><img src="https://cdn-images-1.medium.com/max/2860/1*vYef9XCI0zejzbFj7lzEPg.png" alt="Dad joke “dadabase” user interface allows you to rate each joke"></p>
+<h2>安装并使用 Apollo Server</h2>
+<p>这样，我们已经完成了项目的架构：它有一个简单的页面，该页面通过 REST API 跟数据库通信。那么，我们如何使用 GraphQL？使用 GraphQL 之前需要哪些准备工作呢？第一步，我们安装 <code>[apollo-server-express](https://www.npmjs.com/package/apollo-server-express)</code>，它是一个程序包，用于实现 <a href="https://www.apollographql.com/docs/apollo-server/getting-started/">Apollo Server</a> 和 Express 的集成。也需要安装 <code>[apollo-datasource-rest](https://www.npmjs.com/package/apollo-datasource-rest)</code> 包，用于 REST API 和 Apollo Server 的集成。然后，我们来配置服务器，需要编写以下代码：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)
+<span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>)
+<span class="hljs-keyword">const</span> { ApolloServer } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'apollo-server-express'</span>)
+<span class="hljs-keyword">const</span> JokesAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./jokesAPI'</span>)
+<span class="hljs-keyword">const</span> RatingsAPI = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./ratingsAPI'</span>)
+<span class="hljs-keyword">const</span> typeDefs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./typeDefs'</span>)
+<span class="hljs-keyword">const</span> resolvers = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./resolvers'</span>)
+
+<span class="hljs-keyword">const</span> app = express()
+<span class="hljs-keyword">const</span> server = <span class="hljs-keyword">new</span> ApolloServer({
+  typeDefs,
+  resolvers,
+  <span class="hljs-attr">dataSources</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> ({
+    <span class="hljs-attr">jokesAPI</span>: <span class="hljs-keyword">new</span> JokesAPI(),
+    <span class="hljs-attr">ratingsAPI</span>: <span class="hljs-keyword">new</span> RatingsAPI(),
+  }),
+})
+
+server.applyMiddleware({ app })
+
+app
+  .use(express.static(path.join(__dirname, <span class="hljs-string">'public'</span>)))
+  .get(<span class="hljs-string">'/'</span>, (req, res) =&gt; {
+    res.sendFile(<span class="hljs-string">'index.html'</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">'public'</span> })
+  })
+  .get(<span class="hljs-string">'/script.js'</span>, (req, res) =&gt; {
+    res.sendFile(<span class="hljs-string">'script.js'</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">'public'</span> })
+  })
+  .get(<span class="hljs-string">'/style.css'</span>, (req, res) =&gt; {
+    res.sendFile(<span class="hljs-string">'style.css'</span>, { <span class="hljs-attr">root</span>: <span class="hljs-string">'public'</span> })
+  })
+
+app.listen({ <span class="hljs-attr">port</span>: process.env.PORT || <span class="hljs-number">4000</span> }, () =&gt; {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`🚀 Server ready at port <span class="hljs-subst">${process.env.PORT || <span class="hljs-number">4000</span>}</span>`</span>)
+})
+
+</code></pre>
+<p>你可以看到，我们配置了 Apollo Server 的三个属性：<code>typeDefs</code>, <code>resolvers</code> 和 <code>dataSources</code>。其中，<code>typeDefs</code> 属性包含了与我们的 GraphQL API 相关的 <a href="https://www.apollographql.com/docs/apollo-server/schema/schema/">schema</a>，我们在相应的包中定义笑话和评分的数据类型，以及如何查询和更新数据；<code>resolvers</code> 告诉服务器如何处理各种各样的查询和更新需求，以及如何连接<a href="https://www.apollographql.com/docs/apollo-server/data/data-sources/">数据源</a>；最后，<code>dataSources</code> 大致描述了 GraphQL API 与 REST API 的关联关系。</p>
+<p>下面的代码定义了 <code>Joke</code> 和 <code>Rating</code> 数据类型，以及如何查询和更新数据。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { gql } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'apollo-server-express'</span>)
+
+<span class="hljs-keyword">const</span> typeDefs = gql<span class="hljs-string">`
+  type Joke {
+    id: Int!
+    content: String!
+    ratings: [Rating]
+  }
+  type Rating {
+    id: Int!
+    jokeId: Int!
+    score: Int!
+  }
+  type Query {
+    joke(id: Int!): Joke
+    jokes: [Joke]
+    rating(id: Int!): Rating
+    ratings: [Rating]
+  }
+  type Mutation {
+    rating(jokeId: Int!, score: Int!): Rating
+  }
+`</span>
+
+<span class="hljs-built_in">module</span>.exports = typeDefs
+</code></pre>
+<p>下面是 JokesAPI 类的代码，主要定义了笑话数据创建、查询、更新、删除的方法，这些方法分别调用相应的 REST API 实施相关的数据操作。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> { RESTDataSource } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'apollo-datasource-rest'</span>)
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JokesAPI</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RESTDataSource</span> </span>{
+  <span class="hljs-keyword">constructor</span>() {
+    <span class="hljs-keyword">super</span>()
+    <span class="hljs-keyword">this</span>.baseURL = <span class="hljs-string">'https://dad-joke-dadabase-rest-api.herokuapp.com/'</span>
+  }
+
+  <span class="hljs-keyword">async</span> getJoke(id) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">`jokes/<span class="hljs-subst">${id}</span>?_embed=ratings`</span>)
+  }
+
+  <span class="hljs-keyword">async</span> getJokes() {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.get(<span class="hljs-string">'jokes?_embed=ratings'</span>)
+  }
+
+  <span class="hljs-keyword">async</span> postJoke(jokeContent) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.post(<span class="hljs-string">'jokes'</span>, jokeContent)
+  }
+
+  <span class="hljs-keyword">async</span> replaceJoke(joke) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.put(<span class="hljs-string">'jokes'</span>, joke)
+  }
+
+  <span class="hljs-keyword">async</span> updateJoke(joke) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.patch(<span class="hljs-string">'jokes'</span>, { <span class="hljs-attr">id</span>: joke.id, joke })
+  }
+
+  <span class="hljs-keyword">async</span> deleteJoke(id) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.delete(<span class="hljs-string">`jokes/<span class="hljs-subst">${id}</span>`</span>)
+  }
+}
+
+<span class="hljs-built_in">module</span>.exports = JokesAPI
+</code></pre>
+<p>评分数据跟笑话相似，只是在每个实例中把 “joke” 变为 “rating”。欲获取这部分代码，可以<a href="https://github.com/thawkin3/dad-joke-dadabase/blob/master/src/ratingsAPI.js">参考 GitHub 上的代码仓库</a>。</p>
+<p>最后，我们设置解析器，在其中定义如何使用数据源。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> resolvers = {
+  <span class="hljs-attr">Query</span>: {
+    <span class="hljs-attr">joke</span>: <span class="hljs-keyword">async</span> (_source, { id }, { dataSources }) =&gt;
+      dataSources.jokesAPI.getJoke(id),
+    <span class="hljs-attr">jokes</span>: <span class="hljs-keyword">async</span> (_source, _args, { dataSources }) =&gt;
+      dataSources.jokesAPI.getJokes(),
+    <span class="hljs-attr">rating</span>: <span class="hljs-keyword">async</span> (_source, { id }, { dataSources }) =&gt;
+      dataSources.ratingsAPI.getRating(id),
+    <span class="hljs-attr">ratings</span>: <span class="hljs-keyword">async</span> (_source, _args, { dataSources }) =&gt;
+      dataSources.ratingsAPI.getRatings(),
+  },
+  <span class="hljs-attr">Mutation</span>: {
+    <span class="hljs-attr">rating</span>: <span class="hljs-keyword">async</span> (_source, { jokeId, score }, { dataSources }) =&gt; {
+      <span class="hljs-keyword">const</span> rating = <span class="hljs-keyword">await</span> dataSources.ratingsAPI.postRating({ jokeId, score })
+      <span class="hljs-keyword">return</span> rating
+    },
+  },
+}
+
+<span class="hljs-built_in">module</span>.exports = resolvers
+</code></pre>
+<p>完成这些步骤，我们一切准备就绪，可以通过 Apollo Server 调用 GraphQL API 了。为了把新的前端页面和 GraphQL API 托管在 Heroku 上，我们需要创建并部署第二个应用程序:</p>
+<pre class="hljs"><code># 创建 Heroku 应用程序
+heroku create dad-joke-dadabase
+
+# 把代码部署在 Heroku 上
+git push heroku master
+
+# 在本地打开 Heroku 应用程序
+heroku open
+</code></pre>
+<h2>把 API 端点功能改为获取笑话的代码</h2>
+<p>你应当回忆下，我们有两个 API 端点供前端页面调用：它们的功能分别是获取笑话和提交评分。现在我们把 REST API 中获取笑话的代码改为 GraphQL API 形式：</p>
+<pre class="hljs"><code>fetch(<span class="hljs-string">'/jokes?_embed=ratings'</span>)
+  .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
+  .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
+    jokes.push(...data)
+    displayNextJoke()
+  })
+</code></pre>
+<p>我们把上述代码改为：</p>
+<pre class="hljs"><code>fetch(<span class="hljs-string">'/graphql'</span>, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+  <span class="hljs-attr">headers</span>: { <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span> },
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">query</span>: <span class="hljs-string">`
+    query GetAllJokesWithRatings {
+      jokes {
+        id
+        content
+        ratings {
+          score
+          id
+          jokeId
+        }
+      }
+    }
+  `</span>,
+  }),
+})
+  .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.json())
+  .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    jokes.push(...res.data.jokes)
+    displayNextJoke()
+  })
+</code></pre>
+<p>现在，我们可以在本地运行应用程序了。实际上，从用户的角度来说，没有发生任何变化。但假如你在浏览器的开发者工具中查看网络请求，你会发现，现在获取笑话是通过访问 <code>/graphql</code> 端点来实现的了。真棒！</p>
+<p><img src="https://cdn-images-1.medium.com/max/2520/0*ketnaG9b4tR0O0O4.png" alt="The Network tab shows a request is being made to the /graphql endpoint now"></p>
+<h2>把 API 端点功能改为提交评分的代码</h2>
+<p>一个 API 请求已完成，还有一个！我们现在对评分功能的代码进行修改。提交评分的代码原来类似于：</p>
+<pre class="hljs"><code>fetch(<span class="hljs-string">'/ratings'</span>, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+  <span class="hljs-attr">headers</span>: {
+    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span>,
+  },
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify(postData),
+})
+  .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> response.json())
+  .then(<span class="hljs-function"><span class="hljs-params">responseData</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> jokeToUpdate = jokes.find(<span class="hljs-function"><span class="hljs-params">joke</span> =&gt;</span> joke.id === responseData.jokeId)
+    jokeToUpdate &amp;&amp; jokeToUpdate.ratings.push(responseData)
+  })
+  .finally(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    ratingInput.checked = <span class="hljs-literal">false</span>
+    displayNextJoke()
+  })
+</code></pre>
+<p>现在我们作如下的改动，让它使用我们的 GraphQL API：</p>
+<pre class="hljs"><code>fetch(<span class="hljs-string">'/graphql'</span>, {
+  <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+  <span class="hljs-attr">headers</span>: { <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span> },
+  <span class="hljs-attr">body</span>: <span class="hljs-built_in">JSON</span>.stringify({
+    <span class="hljs-attr">query</span>: <span class="hljs-string">`
+    mutation CreateRating {
+      rating(jokeId: <span class="hljs-subst">${jokeId}</span>, score: <span class="hljs-subst">${score}</span>) {
+        id
+        score
+        jokeId
+      }
+    }
+  `</span>,
+  }),
+})
+  .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.json())
+  .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> {
+    <span class="hljs-keyword">const</span> rating = res.data.rating
+    <span class="hljs-keyword">const</span> jokeToUpdate = jokes.find(<span class="hljs-function"><span class="hljs-params">joke</span> =&gt;</span> joke.id === rating.jokeId)
+    jokeToUpdate &amp;&amp; jokeToUpdate.ratings.push(rating)
+  })
+  .finally(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    ratingInput.checked = <span class="hljs-literal">false</span>
+    displayNextJoke()
+  })
+</code></pre>
+<p>经过快速测试，这段代码符合需求。再次说明，用户体验没有变，但现在我们请求数据使用的都是 <code>/graphql</code> 端点。</p>
+<h2>结论</h2>
+<p>我们做到了。我们以已有的 REST API 为基础，成功地实现了一个 GraphQL API 端点。因此，我们也能使用 GraphQL 来实现一些核心功能，而且已有的功能和原来的 REST API 都不需要修改。如今我们可以弃用 REST API，它将来也可能会退出历史舞台。</p>
+<p>虽然 dad joke 数据库是完全虚拟的项目，但几乎所有的在 2015 年 GraphQL 发布会之前成立的科技公司都发现：如果他们改变技术路线，使用 GraphQL，他们自身的情况跟 dad jokes 一样，也是可行的。另外，还有个好消息，Apollo Server 属于较灵活的产品，它也可以从包括 REST API 端点在内的各种数据源获取数据。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

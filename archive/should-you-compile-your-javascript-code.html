@@ -44,9 +44,9 @@
 <span class="hljs-keyword">if</span> (my_complex_function()) {
     result = <span class="hljs-number">10</span>;
 } <span class="hljs-keyword">else</span> {
-    result = <span class="hljs-string">&quot;something else&quot;</span>;
+    result = <span class="hljs-string">"something else"</span>;
 }
-<span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;The result is &quot;</span> + result);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">"The result is "</span> + result);
 </code></pre>
 <p>你真的在运行之前能够判定 <code>result</code> 变量的类型吗？你可能需要先在心中思考一下所有可能的类型，并且同时将不同的情况判断一遍。即便你解决了这个问题，你依旧添加了不少的逻辑到你的思考与判断之中。这听起来可并不那么好啊！</p>
 <p>事实上，有一个专门解决这个问题的项目，尽管不一定是最佳的（至少在纸面上）：<a href="https://github.com/NectarJS/nectarjs">NectarJS</a></p>
@@ -65,7 +65,7 @@ $ npm install nectarjs -g
 
 </code></pre>
 <p>在安装并同时设置或导入了<a href="https://github.com/NectarJS/nectarjs/blob/master/docs/ADVANCED_USAGE.md#requirements-and-compilation">必要的依赖</a>以后，你就可以简单的编写一段 HelloWorld 代码并编译这段代码：</p>
-<pre class="hljs"><code><span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;Hello 编译过的 world！&quot;</span>)
+<pre class="hljs"><code><span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Hello 编译过的 world！"</span>)
 </code></pre>
 <p>要去编译这段代码，简简单单的使用这段指令即可：</p>
 <pre class="hljs"><code>$ nectar your-file.js

@@ -83,21 +83,21 @@
 <p>接着，你需要验证软件包的名称，并将项目仓库添加到项目 package.json 文件中，然后将所有更改推送到 git。</p>
 <p><strong>注意：</strong> 这里你需要创建自己的项目仓库，并将其细节添加到下面的文件中。</p>
 <pre class="hljs"><code>{
-   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;@ChameeraD/pkg-git-demo&quot;</span>,
-   <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,
-   <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
-   <span class="hljs-attr">&quot;main&quot;</span>: <span class="hljs-string">&quot;index.js&quot;</span>,
-   <span class="hljs-attr">&quot;scripts&quot;</span>: {
-      <span class="hljs-attr">&quot;test&quot;</span>: <span class="hljs-string">&quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span>
+   <span class="hljs-attr">"name"</span>: <span class="hljs-string">"@ChameeraD/pkg-git-demo"</span>,
+   <span class="hljs-attr">"version"</span>: <span class="hljs-string">"1.0.0"</span>,
+   <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
+   <span class="hljs-attr">"main"</span>: <span class="hljs-string">"index.js"</span>,
+   <span class="hljs-attr">"scripts"</span>: {
+      <span class="hljs-attr">"test"</span>: <span class="hljs-string">"echo \"Error: no test specified\" &amp;&amp; exit 1"</span>
    },
-   <span class="hljs-attr">&quot;repository&quot;</span>: {
-      <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;git://github.com/ChameeraD/pkg-git-demo.git.&quot;</span>
+   <span class="hljs-attr">"repository"</span>: {
+      <span class="hljs-attr">"url"</span>: <span class="hljs-string">"git://github.com/ChameeraD/pkg-git-demo.git."</span>
    },
-   <span class="hljs-attr">&quot;publishConfig&quot;</span>: {
-      <span class="hljs-attr">&quot;registry&quot;</span>:<span class="hljs-string">&quot;https://npm.pkg.github.com/&quot;</span>
+   <span class="hljs-attr">"publishConfig"</span>: {
+      <span class="hljs-attr">"registry"</span>:<span class="hljs-string">"https://npm.pkg.github.com/"</span>
    },   
-   <span class="hljs-attr">&quot;author&quot;</span>: <span class="hljs-string">&quot;&quot;</span>,
-   <span class="hljs-attr">&quot;license&quot;</span>: <span class="hljs-string">&quot;ISC&quot;</span>
+   <span class="hljs-attr">"author"</span>: <span class="hljs-string">""</span>,
+   <span class="hljs-attr">"license"</span>: <span class="hljs-string">"ISC"</span>
 }
 </code></pre>
 <p>最后，使用 <code>npm publish</code> 发布包。</p>

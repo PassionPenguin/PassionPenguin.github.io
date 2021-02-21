@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>使用 CSS Painting API 自动生成图像 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/programmatically-generate-images-with-css-painting-api-3b1a860dae3b">Programmatically generate images with CSS Painting API</a></li>
+<li>原文作者：<a href="https://medium.com/@viduniwickramarachchi">Viduni Wickramarachchi</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/programmatically-generate-images-with-css-painting-api.md">https://github.com/xitu/gold-miner/blob/master/article/2021/programmatically-generate-images-with-css-painting-api.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/zenblo">zenblo</a>、<a href="https://github.com/lsvih">lsvih</a></li>
+</ul>
+</blockquote>
+<h1>使用 CSS Painting API 自动生成图像</h1>
+<p><img src="https://cdn-images-1.medium.com/max/5760/1*wKYGWd-7eWgpmMeBNiLCDA.jpeg" alt="Banner"></p>
+<p>图像为应用程序增添色彩，丰富内容。然而，如果网页中嵌入了大量高分辨率图像，会大量增加页面资源加载时间，严重影响用户体验。对于展示产品、方案等必须内容的图像，我们别无选择，只能按照正常方式嵌入这些图像并通过缓存它们来优化应用程序。但是，如果我们在应用程序中需要几何图像，则不必再将其作为资源来加载。</p>
+<blockquote>
+<p>我们可以使用 CSS Painting API 即时生成几何图像。</p>
+</blockquote>
+<p>让我们一起来走进这个 API，并且学习如何使用它生成图像吧～</p>
+<h2>CSS Painting API 的简介</h2>
+<p>开发者们能够使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/CSS_Painting_API">CSS Painting API</a> 使用编写的 JavaScript 函数将图像绘制到 CSS 属性中，例如 <code>background-image</code>和 <code>border</code>。它提供了一组 API，使开发人员可以访问 CSSOM，CSS Houdini（<a href="https://github.com/w3c/css-houdini-drafts">Houdini</a>）的一部分 —— 新浏览器 API 的集合，为开发人员提供了对 CSS 本身的更底层的访问方法。）</p>
+<p>嵌入图像的传统方法如下。</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">div</span> {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">'assets/background.jpg'</span>);
+}
+</code></pre>
+<p>而如果使用 CSS Painting API，我们只需要调用 <code>paint()</code> 函数，并且传入一个 JavaScript 声明好的 Worklet：</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">div</span> {
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">paint</span>(background);
+}
+</code></pre>
+<p>这串代码的工作逻辑是这样的：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*c2EShrISdnmcxc87qJdKPg.png" alt=""></p>
+<p>在上文中似乎存在着一些晦涩难懂的术语。例如，我们提及了 <code>worklet</code>？</p>
+<p>简而言之，让程序自动生成图像的 JavaScript 代码称为 Paint Worklet。<a href="https://www.w3.org/TR/worklets-1/#intro">Worklet</a> 是浏览器渲染管道的一个扩展。除了 Paint Worklet 之外，还有其他类型的 Worklet，例如 Animation Worklet 和 Layout Worklet。</p>
+<p>现在，让我们看一下程序生成图像的分步方法。</p>
+<h2>在实践中使用 CSS Painting API</h2>
+<p>在本文中，我们将会探讨如何创建一个气泡背景</p>
+<h4>第一步：添加 CSS paint() 函数</h4>
+<p>在开始这一切之前，我们需要往所需要添加图片的 CSS 属性中添加 <code>paint()</code> 函数。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.bubble-background</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">400px</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">400px</span>;
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">paint</span>(bubble);
+}
+</code></pre>
+<p><code>bubble</code> 就是我们等下生成图片的 Worklet，而要生成 Worklet，仅仅只需要短短几步。</p>
+<h4>第二步：定义 Worklet</h4>
+<p>Worklet 需要在外部 JavaScript 文件中被保存，而 Painting Worklet 应该是一个 <code>class</code>，例如 <code>class Bubble { …… }</code>，然后这个 Worklet 需要使用 <code>registerPaint()</code> 函数注册。</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bubble</span> </span>{
+    paint(context, canvas, properties) {
+        <span class="hljs-comment">/* <span class="hljs-doctag">TODO:</span> ... */</span>
+    }
+}
+
+registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
+</code></pre>
+<p><code>registerPaint()</code> 函数的第一个参数是我们向在 CSS 中使用的参考名。</p>
+<p>现在就让我们来绘制背景吧！</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Bubble</span> </span>{
+    paint(context, canvas, properties) {
+        <span class="hljs-keyword">const</span> circleSize = <span class="hljs-number">10</span>;
+        <span class="hljs-keyword">const</span> bodyWidth = canvas.width;
+        <span class="hljs-keyword">const</span> bodyHeight = canvas.height;
+
+        <span class="hljs-keyword">const</span> maxX = <span class="hljs-built_in">Math</span>.floor(bodyWidth / circleSize);
+        <span class="hljs-keyword">const</span> maxY = <span class="hljs-built_in">Math</span>.floor(bodyHeight / circleSize);
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; maxY; y++) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; maxX; x++) {
+                context.fillStyle = <span class="hljs-string">'#eee'</span>;
+                context.beginPath();
+                context.arc(x * circleSize * <span class="hljs-number">2</span> + circleSize, y * circleSize * <span class="hljs-number">2</span> + circleSize, circleSize, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI, <span class="hljs-literal">true</span>);
+                context.closePath();
+                context.fill();
+            }
+        }
+    }
+}
+
+registerPaint(<span class="hljs-string">'bubble'</span>, Bubble);
+</code></pre>
+<p>创建图像的运算是在 <code>paint()</code> 函数的内部进行的。我们将需要一些有关 Canvas 的知识来绘制上述图像。如果不熟悉，我们其实可以看一下 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial">Canvas API</a> 文档。</p>
+<h4>第三步：调用 Worklet</h4>
+<p>最后一步是在 HTML 文件中调用 Worklet。</p>
+<pre class="hljs"><code>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"bubble-background"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    CSS.paintWorklet.addModule(<span class="hljs-string">'https://codepen.io/viduni94/pen/ZEpgMja.js'</span>);
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+<p>这就好啦！</p>
+<p>你现在已经在三步之内用程序自动生成一张图片啦！</p>
+<h2>生成的图片</h2>
+<p>我们所编写的的代码的运行效果应该是这样的：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2448/1*vvLIdPpqWdRWswddJ9CgUw.png" alt="在编辑器中查看"></p>
+<h2>我们还可以用 CSS Painting API 干些什么呢？</h2>
+<p>The power of the CSS Painting API is not over yet. There are more things you can do with it.</p>
+<h4>1. 我们可以创建动图</h4>
+<p>例如，我们可以动态更改气泡的颜色，而 CSS 变量就是服务此目的的。为了使用 CSS 变量，浏览器应该先明白我们在使用它。我们可以使用 <code>inputProperties()</code> 函数来做到这一点。</p>
+<pre class="hljs"><code>registerPaint(<span class="hljs-string">'bubble'</span>, <span class="hljs-class"><span class="hljs-keyword">class</span> </span>{
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">get</span> <span class="hljs-title">inputProperties</span>() {
+        <span class="hljs-keyword">return</span> [<span class="hljs-string">'--bubble-size'</span>, <span class="hljs-string">'--bubble-color'</span>];
+    }
+
+    paint() {
+        <span class="hljs-comment">/* ... */</span>
+    }
+});
+</code></pre>
+<p>变量们可以通过第三个参数传给 <code>paint()</code> 方法</p>
+<pre class="hljs"><code>paint(context, canvas, properties)
+{
+    <span class="hljs-keyword">const</span> circleSize = <span class="hljs-built_in">parseInt</span>(properties.get(<span class="hljs-string">'--bubble-size'</span>).toString());
+    <span class="hljs-keyword">const</span> circleColor = properties.get(<span class="hljs-string">'--bubble-color'</span>).toString();
+    <span class="hljs-keyword">const</span> bodyWidth = canvas.width;
+    <span class="hljs-keyword">const</span> bodyHeight = canvas.height;
+
+    <span class="hljs-keyword">const</span> maxX = <span class="hljs-built_in">Math</span>.floor(bodyWidth / circleSize);
+    <span class="hljs-keyword">const</span> maxY = <span class="hljs-built_in">Math</span>.floor(bodyHeight / circleSize);
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> y = <span class="hljs-number">0</span>; y &lt; maxY; y++) {
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> x = <span class="hljs-number">0</span>; x &lt; maxX; x++) {
+            context.fillStyle = circleColor;
+            context.beginPath();
+            context.arc(x * circleSize * <span class="hljs-number">2</span> + circleSize, y * circleSize * <span class="hljs-number">2</span> + circleSize, circleSize, <span class="hljs-number">0</span>, <span class="hljs-number">2</span> * <span class="hljs-built_in">Math</span>.PI, <span class="hljs-literal">true</span>);
+            context.closePath();
+            context.fill();
+        }
+    }
+}
+</code></pre>
+<h4>2. 我们可以使用 <code>Math.random()</code> 在 <code>paint()</code> 函数中生成随机的图片</h4>
+<pre class="hljs"><code><span class="hljs-selector-tag">body</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;
+    <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">paint</span>(random);
+}
+</code></pre>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getRandomHexColor</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'#'</span> + <span class="hljs-built_in">Math</span>.floor(<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">16777215</span>).toString(<span class="hljs-number">16</span>)
+}
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Random</span> </span>{
+    paint(context, canvas) {
+        <span class="hljs-keyword">const</span> color1 = getRandomHexColor();
+        <span class="hljs-keyword">const</span> color2 = getRandomHexColor();
+
+        <span class="hljs-keyword">const</span> gradient = context.createLinearGradient(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.width, <span class="hljs-number">0</span>);
+        gradient.addColorStop(<span class="hljs-number">0</span>, color1);
+        gradient.addColorStop(<span class="hljs-number">1</span>, color2);
+
+        context.fillStyle = gradient;
+        context.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, canvas.width, canvas.height);
+    }
+}
+
+registerPaint(<span class="hljs-string">'random'</span>, Random);
+</code></pre>
+<p>如果你在如何做到这些上存在疑惑，请在评论区中提出你的问题。</p>
+<p>这个真是太棒啦！</p>
+<p>但是，好事总有糟糕的一面，这个 API 现在仅仅只被部分浏览器所有限制的支持。</p>
+<h2>浏览器支持</h2>
+<p><img src="https://github.com/PassionPenguin/gold-miner-images/blob/master/programmatically-generate-images-with-css-painting-api-caniuse.com_css-paint-api.png?raw=true" alt="数据源：Can I Use"></p>
+<p>包括 Firefox 在内的大多数浏览器都不支持 CSS Painting API。到目前为止，只有基于 Chromium 的浏览器完全支持此功能，真希望不久的将来浏览器支持会有所改善。</p>
+<h2>摘要</h2>
+<p>CSS Painting API 对于减少网络请求的响应时间非常有用，因为图片是程序化生成而非获取网络数据得到的。</p>
+<p>最重要的是，我认为主要的好处如下。</p>
+<ul>
+<li>能够创建完全可定制的图像，而不是静态图像。</li>
+<li>它创建与分辨率无关的图像（让我们的站点上不再有质量差的图像）。</li>
+</ul>
+<p>需要注意的重要一点是，我们可以使用 <code>polyfill</code> 等库作为解决方案来支持尚未实现 CSS Painting API 的 Firefox 等浏览器。</p>
+<hr>
+<p>如果你对本文有任何疑问或想法，请在评论区告诉我们！感谢你的阅读！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

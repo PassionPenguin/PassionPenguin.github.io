@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+<script>
+    const arr = Array(1000000000) // 1B
+    setTimeout(() => {
+        console.time("for")
+        for (let i = 0, n = arr.length; i < n; i++) {
+        }
+        console.timeEnd("for")
+    }, 2000)
+    setTimeout(() => {
+        console.time("for-alternative")
+        for (let i = 0; i < arr.length; i++) {
+        }
+        console.timeEnd("for-alternative")
+    }, 4000)
+    setTimeout(() => {
+        console.time("for-alternative-2")
+        const arrLength = arr.length
+        for (let i = 0; i < arrLength; i++) {
+        }
+        console.timeEnd("for-alternative-2")
+    }, 6000)
+    setTimeout(() => {
+        console.time("for-reverse")
+        for (let i = arr.length; i > 0; i--) {
+        }
+        console.timeEnd("for-reverse")
+    }, 8000)
+</script>
+</html>

@@ -42,13 +42,14 @@ jobs:
 
       - name: Generate Structure
         run: |
+          echo "Processing Markdown Files"
           java -jar page-generator/build/libs/PageGenerator.jar --input=./documents
           cd ./documents
           if [[ -n $(git status -uno --porcelain) ]]
           then
             git add *
             git commit -m "Generate Structure"
-            git push origin master --force
+            git push origin master
           fi
 
       - name: NPM Install
@@ -58,15 +59,14 @@ jobs:
 
       - name: Generate HTML Pages with Markdown Files
         run: |
+          echo "Generating HTML Files"
           cd documents
           for f in documents/*.md
             do
               htmlpath=${f/documents/archive}
               htmlpath=${htmlpath/md/html}
-              if [ ! -f htmlpath ]; then
-                md2html "$f" -o ./archive
-                echo "Generated $htmlpath"
-              fi
+              md2html "$f" -o ./archive
+              echo " - Generated $htmlpath"
             done
 
 
@@ -74,5 +74,5 @@ jobs:
           then
             git add *
             git commit -m "Build Pages"
-            git push origin master --force
+            git push origin master
           fi

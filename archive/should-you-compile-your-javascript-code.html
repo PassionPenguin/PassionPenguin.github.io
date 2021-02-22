@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>你应该编译你的 JavaScript 代码吗？</h1>
-<p><img src="https://cdn-images-1.medium.com/max/3840/1*_7N-LnDFVgKcgEgzczZVmg.jpeg" alt="Image by seznandy from Pixabay"></p>
+<p><img src="../images/should-you-compile-your-javascript-code.md-1*_7N-LnDFVgKcgEgzczZVmg.jpeg" alt="Image by seznandy from Pixabay"></p>
 <p>我们都会也都喜爱 JavaScript，并且我们都通过编写代码和在我们最爱的运行环境（通常是浏览器，Node.js 和 Deno）中来执行 JavaScript 代码。但你是否曾经尝试过去编译你的 JavaScript 代码呢？</p>
 <p>不对，等一下，我们都知道 JavaScript 是一门动态语言啊！其实它同样也会被解析，但是与常见的运行时大不相同，它是会在运行时被一个 <a href="https://blog.bitsrc.io/the-jit-in-javascript-just-in-time-compiler-798b66e44143">JIT 编译器</a>优化的。</p>
 <p>这可是事实！</p>
@@ -54,7 +54,7 @@
 <p>该项目旨在将 JavaScript 代码编译为机器指令，以便让我们可以在任何兼容的平台上运行它。现在，兼容的名单包括了 Windows、Linux、Arduino、<a href="https://www.st.comenevaluation-toolsstm32-nucleo-boards.html">STM32 Nucleo</a>、Android、Web（<a href="https://www.st.com/en/evaluation-tools/stm32-nucleo-boards.html">WASM</a>, Android, Web (<a href="https://blog.bitsrc.io/whats-wrong-with-web-assembly-3b9abb671ec2">WASM</a>）、macOS 和 SunOS。</p>
 <p>虽说实际上上述所有的平台基本上都有对应的，用于运行你的 JavaScript 代码的解析器，这个项目能够让最终的编译输出一个比当前可用编译器输出的更优化的一个输出。</p>
 <p>针对它们输出的结果而言，它们早已对 Windows 上 Node.js 的 v12 有了一些优化。在某些情况下并不是提升速度，而是内存的使用甚至是输出文件的大小。</p>
-<p><img src="https://cdn-images-1.medium.com/max/3036/1*HyX7ShDvXey6u9mo9_3ezg.png" alt="NectarJS’ 网站上的一份表格"></p>
+<p><img src="../images/should-you-compile-your-javascript-code.md-1*HyX7ShDvXey6u9mo9_3ezg.png" alt="NectarJS’ 网站上的一份表格"></p>
 <p>当然，该项目仍然有其局限性，特别是到目前为止，该项目仅支持大约 80％ 的 ES3 标准，这意味着您可以编写的 JavaScript 代码是非常有限且不符合当今的标准的。</p>
 <p>但是，对于你的某些项目而言你并不一定要编写兼容 ES6 的代码。而且能够去编译这些代码，并原生地在你的 Arduino 开发板上面运行这些代码，可能真的会是非常好用的</p>
 <p>但是话又说回来，对于特定项目而言，你可能并不需要在其中编写兼容 ES6 的代码，并且在对其进行编译并在 Arduino 板上本地运行这段代码的情况下它可能会派上用场。</p>
@@ -71,7 +71,7 @@ $ npm install nectarjs -g
 <pre class="hljs"><code>$ nectar your-file.js
 </code></pre>
 <p>这就是我在我的 macOS 系统上能够获得的输出：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2028/1*7i_ihlwJ8Kx49n7v3wrePw.png" alt=""></p>
+<p><img src="../images/should-you-compile-your-javascript-code.md-1*7i_ihlwJ8Kx49n7v3wrePw.png" alt=""></p>
 <p>需要注意的是，被创建的文件并没有一个拓展名 —— 它是一个二进制文件。如果你给予它执行的权限，你就能够执行这段代码。这很简单，并且它能够正常工作。</p>
 <hr>
 <h2>这就是 JavaScript 的未来吗？</h2>

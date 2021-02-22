@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>揭开图着色算法的神秘面纱</h1>
-<p><img src="https://cdn-images-1.medium.com/max/12032/0*nMi_GsBxeMO5LlkM" alt="Photo by salvatore ventura on Unsplash"></p>
+<p><img src="../images/demystify-graph-coloring-algorithms.md-0*nMi_GsBxeMO5LlkM" alt="Photo by salvatore ventura on Unsplash"></p>
 <p>图着色是指将特定的颜色按照约束条件（相邻任意两个部分的颜色不能相同）在图中分配的问题。要进行图着色算法，你必须先为一个图形着色，要么是上色顶点或是上色图的边，并且需要保证不存在两个相邻的部分有相同的颜色 —— 没有两个相邻的顶点或边会有相同的颜色。</p>
 <p>我是在偶然间发现了这个算法，并思考如何应用它。当我更深入地研究图着色问题以及实际使用时，我意识到它在我们使用的应用程序中有着广泛的应用。本文将简要介绍这种算法和图着色实例。</p>
 <h2>图着色算法</h2>
@@ -27,7 +27,7 @@
 <p>以下是一个简单的示例。只要我们理解了基本的算法，我们就能解决这些问题。</p>
 <p>我们假设这是顶点着色问题，那么如果我想给图形着色，相邻的两个顶点将不会有相同的颜色。</p>
 <p>我们假设一个图中有五个顶点。我们可以分配给每个顶点的最大颜色数是五个。因此，我们可以将颜色列表初始化为五种颜色。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/0*dX9rqaI1V_1bvgv2.png" alt=""></p>
+<p><img src="../images/demystify-graph-coloring-algorithms.md-0*dX9rqaI1V_1bvgv2.png" alt=""></p>
 <p>接下来，开始在一个空白图中将任意一个顶点作为第一个顶点进行上色操作。</p>
 <p>在下面的算法中，我们根据以下操作对图中的每个顶点进行着色：</p>
 <ul>
@@ -35,7 +35,7 @@
 <li>选择不在该桶（集合）中的第一种颜色，并将其指定给当前顶点。</li>
 <li>清空桶，接着处理下一个尚未着色的顶点。</li>
 </ul>
-<p><img src="https://cdn-images-1.medium.com/max/2000/0*d2tx_zFC6IhmcT58.png" alt=""></p>
+<p><img src="../images/demystify-graph-coloring-algorithms.md-0*d2tx_zFC6IhmcT58.png" alt=""></p>
 <p>这种贪心算法策略足以解决图着色问题。虽然它不保证最小颜色数量，但它保证了分配给图形的颜色数量上限。</p>
 <p>我们遍历顶点，总是选择第一个不存在于其相邻顶点的颜色。我们开始算法的颜色选择顺序很重要。</p>
 <p>如果我们迭代的顶点有较少的引入边，我们可能需要更多的颜色来给图着色。所以还有一种算法叫做韦尔奇-鲍威尔（Welch-Powell）算法。</p>
@@ -57,10 +57,10 @@
 <p>另一个例子是制定日程表或时间表。你想做一个考试日程安排，每个科目都有一份学生名单，每个学生都要上多节课。你要确保安排的考试不会相互冲突。在这种情况下，顶点可以是课程，如果两个课程中都有相同的学生，则两个课程之间会有边。在这种情况下，图的颜色将是安排考试所需的时间段总数。因此，顶点 A 和顶点 B 上的相同颜色意味着 A 和 B 将在同一时间段中进行。</p>
 <p>通常，这类问题中存在共享资源，我们希望有一个调度程序来确保系统中没有两个实体冲突。该颜色一般表示时间段或工作人员。</p>
 <h2>地图着色</h2>
-<p><img src="https://cdn-images-1.medium.com/max/2000/0*fiE_-5ZC7cQZdSxN.gif" alt=""></p>
+<p><img src="../images/demystify-graph-coloring-algorithms.md-0*fiE_-5ZC7cQZdSxN.gif" alt=""></p>
 <p>在地图着色问题中，没有两个相邻的城市或州在地图上被分配相同的颜色。根据<a href="https://mathworld.wolfram.com/Four-ColorTheorem.html#:~:text=The%20four%2Dcolor%20theorem%20states,conjectured%20the%20theorem%20in%201852.">四色定理</a>，四种颜色足以给任何地图上色。在这种情况下，顶点代表每个区域，它的每一个相邻区域可以被分类为一条边。</p>
 <h2>数独难题</h2>
-<p><img src="https://cdn-images-1.medium.com/max/2000/0*-aELwvDUPCYaizOI.png" alt="from ResearchGate-net"></p>
+<p><img src="../images/demystify-graph-coloring-algorithms.md-0*-aELwvDUPCYaizOI.png" alt="from ResearchGate-net"></p>
 <p>数独是图着色问题的一个变种，其中每个单元格代表一个顶点。如果两个顶点在同一行、列和块中，则在这两个顶点内形成一条边，每个块将有不同的颜色。</p>
 <h2>编译器的寄存器分配</h2>
 <p>编译器是将源代码从高级语言（Java、Scala）转换成机器代码的程序。这通常是分步骤进行的，最后一步是将寄存器分配给程序中最常用的值，同时将其它值放入内存。我们可以将符号寄存器（变量）建模为顶点，如果同时需要两个变量，则形成一条边。如果该图可以用 K 色进行着色，那么变量可以存储在 k 寄存器中。</p>

@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>为什么你应该使用 Picture 标签而不是 Img 标签</h1>
-<p><img src="https://cdn-images-1.medium.com/max/5760/1*Sv9aXzgr2N6IiblcW_lFPg.jpeg" alt=""></p>
+<p><img src="../images/why-you-should-use-picture-tag-instead-of-img-tag.md-1*Sv9aXzgr2N6IiblcW_lFPg.jpeg" alt=""></p>
 <p>现代 web 应用程序中，在用户界面中使用大量图片和动画是一件很常见的事情。这些现代设计聚焦于提升应用的用户体验，但是如果没有做好设备对图片的响应式支持，其效果可能适得其反。</p>
 <p>作为开发者，我们需要完成所有的需求。但是，在大多数情况下，我们可能会错过一些能产生巨大影响的细节，因为我们是以一个更高的视角来解决问题。</p>
 <p>选择 <code>picture</code> 还是 <code>img</code> 标签就是这么一个小细节，如果你做出了正确的选择，那么就可以同时提升用户体验和应用性能。</p>
@@ -41,7 +41,7 @@
 <p><strong>假设你对高分辨率图片使用了 <code>img</code> 标签。在这种情况下，相同的图片会在运行了该应用程序的每个设备上应用，并且会影响低分辨率设备（如：移动设备）的性能。</strong></p>
 </blockquote>
 <p>这个可能会导致更长的图片加载时间以及自上而下的图片逐部分加载。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*Atpq5fQFaAWBzVRgsMt75w.gif" alt="Top to bottom image loading issue"></p>
+<p><img src="../images/why-you-should-use-picture-tag-instead-of-img-tag.md-1*Atpq5fQFaAWBzVRgsMt75w.gif" alt="Top to bottom image loading issue"></p>
 <p>通过使用 <code>picture</code> 标签的 <code>srcset</code> 和 <code>sizes</code> 属性，可以轻松的解决这个问题。</p>
 <pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
 
@@ -144,7 +144,7 @@
 <p><strong>当 Chrome 声明其浏览器开发者工具（DevTools）将会在渲染选项卡（Rendering）中提供两种新的模拟方式以模拟部分支持的图像类型时，有关 <code>picture</code> 标签的事情开始变得有趣起来了。</strong></p>
 </blockquote>
 <p>从 Chrome 88 开始，你可以使用其浏览器开发者工具（DevTools）来检查浏览器对于图像格式的兼容情况。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2562/1*GAFavZjkfi4FUDRkkPMA4Q.png" alt="Using Chrome DevTools for Image Compatibility Emulations"></p>
+<p><img src="../images/why-you-should-use-picture-tag-instead-of-img-tag.md-1*GAFavZjkfi4FUDRkkPMA4Q.png" alt="Using Chrome DevTools for Image Compatibility Emulations"></p>
 <h2>总结</h2>
 <p>虽然我们讨论了为什么 <code>picture</code> 标签相比 <code>img</code> 标签更好。但是，我必须声明的是， <code>img</code> 标签并没有消亡，短期内也不会。</p>
 <p>如果我们能有效的使用 <code>srcset</code> 和 <code>sizes</code> 等属性，我们就能最大限度的用好 <code>img</code> 标签。比如，我们能仅使用 <code>img</code> 标签来实现分辨率切换。</p>

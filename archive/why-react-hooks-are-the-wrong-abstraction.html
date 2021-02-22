@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>为什么 React Hooks 是错误的抽象</h1>
-<p><img src="https://cdn-images-1.medium.com/max/5576/1*LVjLXZ8-mBmhJZoJj3w_3w.png" alt="Photo by the author."></p>
+<p><img src="../images/why-react-hooks-are-the-wrong-abstraction.md-1*LVjLXZ8-mBmhJZoJj3w_3w.png" alt="Photo by the author."></p>
 <p>在开始之前, 我想表达我对 React 团队多年来所付出的努力的感激。他们创建了一个很棒的框架，从很多方面来说，它是我对现代 Web 开发的引路人。他们为我铺平了道路，让我确信我的想法是正确的，如果没有他们的聪明才智，我不可能得出这些结论。</p>
 <p>在今天的文章中，我将提出我所观察到的 Hooks 的缺点，并提出一种同样强大但不需要太多注意事项的替代 API 。我要说的是，这个 <a href="https://malerba118.github.io/elementos-docs/">替代API</a> 有点冗长，但它对计算的浪费较少，概念上更准确，而且与框架无关。</p>
 <h2>Hooks 的问题 #1: 附加渲染</h2>
@@ -250,7 +250,7 @@ watchEffect(<span class="hljs-function">() =&gt;</span> {
 });
 </code></pre>
 <p>当然，我的 <code>observable</code>，<code>derived</code>，和 <code>observe</code> 的实现都有 bug，并没有形成一个完整的状态管理解决方案。更不用说这些精心设计的示例忽略了一些考虑因素，但不用担心：我在这个问题上花了很多心思，我的想法在名为 <a href="https://malerba118.github.io/elementos-docs/">Elementos</a>的新响应式状态管理库中达到了顶峰！</p>
-<p><img src="https://cdn-images-1.medium.com/max/5020/1*k1YTEm4t8HpWLaUcM7yfmg.png" alt="Photo by the author."></p>
+<p><img src="../images/why-react-hooks-are-the-wrong-abstraction.md-1*k1YTEm4t8HpWLaUcM7yfmg.png" alt="Photo by the author."></p>
 <p>Elementos 是一个与框架无关的响应式状态管理库，强调状态的可组合性和封装性。如果你喜欢这篇文章，我强烈建议你去看看！</p>
 <blockquote>
 <p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>

@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>解构标志性的 Apple Watch Bubble UI</h1>
-<p><img src="https://cdn-images-1.medium.com/max/10944/0*N-GwBFwqZbDSNOYy" alt="Photo by Raagesh C on Unsplash"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-0*N-GwBFwqZbDSNOYy" alt="Photo by Raagesh C on Unsplash"></p>
 <p>当第一款 <a href="https://en.wikipedia.org/wiki/Apple_Watch"><strong>Apple Watch</strong></a> 在 2015 年推出的时候，我对 <a href="https://en.wikipedia.org/wiki/WatchOS"><strong>WatchOS</strong></a> 的主屏幕设计感到震惊。它的布局不同于标准的网格式布局，而是提出了一种原始的视觉动态界面。</p>
 <p>五年后，当我打开这款具有光滑又时尚 UI 的手表时，仍然感到敬畏。但是，从工程学的角度来看，我仍然对这种布局的底层原理感到困惑。</p>
 <p>作为一名经验丰富的应用程序开发人员，我知道构造导航流程和布局对于任何应用程序的基础都至关重要。Apple 全部都做到了，并且还具有一定的灵活性，用户的满意度和好奇心。</p>
@@ -27,9 +27,9 @@
 <p>免责声明：<strong>此用户界面的基本功能和设计的讨论仅源于我的个人见解；苹果很有可能已经实现了这一布局，甚至可能有很大不同。</strong></p>
 <h2>布局的基础几何</h2>
 <p>让我们从气泡的基本蜂窝网格开始。我们稍后将处理布局中气泡的大小调整以及其他相关效果。如下图所示是每隔一个完整的气泡行出现一个少一个气泡的行，以及最后一行的气泡是不完整的居中气泡行。</p>
-<p><img src="https://cdn-images-1.medium.com/max/4474/1*LbdzqEFn6o-Cew0OEXs1Zw.png" alt="模型起点：蜂窝布局"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*LbdzqEFn6o-Cew0OEXs1Zw.png" alt="模型起点：蜂窝布局"></p>
 <p>如下图所示，UI 可以分为三个同心区域：<strong>center（中心）</strong>，<strong>fringe（边缘）</strong>，和 <strong>outer（外部区域）</strong>。在针对气泡的大小和位置在屏幕上的变化进行建模时，前两个区域至关重要。同时在针对气泡滑动的所有情况时，如果某个区域包含该气泡的中心圆点，则该气泡被判断为在该区域内。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*MvRtWHdTrozBli7ydT4CBA.gif" alt="我建立的图形模型展示了 Bubble UI 布局的核心区域和可变尺寸"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*MvRtWHdTrozBli7ydT4CBA.gif" alt="我建立的图形模型展示了 Bubble UI 布局的核心区域和可变尺寸"></p>
 <p><strong>中心区域</strong>定义为以 <code>x 半径</code> 和 <code>y 半径</code> 为边界，并且具有<code>拐角半径</code>修饰的处于中心的（圆角）矩形。中心区域中的所有气泡均以其 <strong>maximum size</strong>（最大尺寸）渲染。</p>
 <p><strong>边缘区域</strong>边缘区域定义为中心区域外部在其外边缘的一定 <code>fringe width（边缘宽度）</code>内的空间。此区域用于包含每个气泡<strong>从最小尺寸到最大尺寸的过渡</strong>。当气泡从外围进入该区域时，气泡以其最小大小进行移动，该大小线性增加，直到到达中心区域时达到其最大大小。</p>
 <p><strong>外部区域</strong>外部区域定义为 2D 画布上不包括中心和边缘区域的所有空间。在这个区域内，所有气泡都被<strong>最小化</strong>。</p>
@@ -38,7 +38,7 @@
 <h2>根据气泡位置计算气泡大小</h2>
 <p>让我们深入研究布局的基本技巧，让我们使用定义的区域来开发数学模型，该模型根据气泡在屏幕上的位置来计算气泡的大小。</p>
 <p>首先，我们需要定义另一个关键的视觉地标：拐角区域。</p>
-<p><img src="https://cdn-images-1.medium.com/max/3128/1*DcjuhEvJjcGloC630vqEIw.png" alt="在 Bubble UI 图形的模型上可视化角落区域"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*DcjuhEvJjcGloC630vqEIw.png" alt="在 Bubble UI 图形的模型上可视化角落区域"></p>
 <p><strong>拐角区域</strong>定义为由画布的拐角以及中心区域的内部拐角（从边缘的嵌入的<code>拐角半径</code>）界定的四个区域。在拐角区域，尺寸相对于内部拐角沿径向（指沿半径的方向的）保持恒定。相比之下，拐角区域外部的气泡在 x 或 y 位置不变时保持大小不变。</p>
 <p>注意： <strong>如果中心区域是圆形，则所有四个内部角均位于中心。否则，如果中心区域形成一个非圆角的矩形，则内部拐角不会偏离矩形的外边缘。</strong></p>
 <h4>步骤 1：确定气泡是否在角落区域</h4>
@@ -73,25 +73,25 @@
 <h2>高级功能</h2>
 <h4>紧凑</h4>
 <p>我不经意间注意到 Apple Watch UI 可以优化气泡的紧凑性。每当气泡在边缘区域发生尺寸转换时，它们都与最近的气泡保持相同的装订线宽度。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*23GQLo9bhAzjCWcbpzGuFA.gif" alt="[Gifer] 上的动画(https://gifer.com/en/XbVD)"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*23GQLo9bhAzjCWcbpzGuFA.gif" alt="[Gifer] 上的动画(https://gifer.com/en/XbVD)"></p>
 <p>当前，我们的模型始终会使气泡之间保持恒定的距离。下面的图表显示了我们当前的进度与最终目标的对比（前瞻）。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*xJ5tgmf8VXKJzxhx0PKb_w.gif" alt="不紧凑（左）与紧凑（右）"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*xJ5tgmf8VXKJzxhx0PKb_w.gif" alt="不紧凑（左）与紧凑（右）"></p>
 <p>实现最佳的紧凑性会带来新的复杂性，从现在开始，除了操纵尺寸之外，我们还需要直接操作气泡的位置。</p>
 <p>与之前相似，我们将根据包含同心区域的每个气泡以及气泡是否位于拐角区域来平移每个气泡。</p>
 <p><strong>中心区域中的气泡已经很紧密了</strong>，因此不需要移动。</p>
 <p>外部区域中的气泡向内移动直到这个气泡的最大大小。如果<strong>这些气泡位于拐角区域，它们将平移到相应的内部拐角或画布的中心</strong>。</p>
-<p><img src="https://cdn-images-1.medium.com/max/3164/1*RjPI_7Bfb3PHZc1xeUFxxQ.png" alt="基于画布上的位置平移的方向"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*RjPI_7Bfb3PHZc1xeUFxxQ.png" alt="基于画布上的位置平移的方向"></p>
 <p>边缘区域再次负责这<strong>两个状态之间的过渡</strong>。就像气泡的大小一样，气泡平移距离的多少由到中心区域的距离（范围 (<code>边缘宽度</code>，0) 到范围 (<code>最大大小</code>，0)）的插值得出。（内插或称插值（英语：interpolation）是一种通过已知的、离散的数据点，在范围内推求新数据点的过程或方法。）</p>
 <pre class="hljs"><code>translation_magnitude = distance_to_middle_region / fringe_width * max_size
 </code></pre>
 <p>之前的方向规则同样适用。</p>
 <h4>引力</h4>
 <p>这个特性是我用自己的想象力想象出来的一个概念 —— Apple 的气泡布局不一定会展示它。尽管如此，我想通过将远处的气泡吸引到中心区域来进一步提高气泡之间的的紧凑性。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*Ii03shSoDoKudknlylZcxw.gif" alt="无重力（左）与高重力（右）"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*Ii03shSoDoKudknlylZcxw.gif" alt="无重力（左）与高重力（右）"></p>
 <p>出乎意料的是，实现引力这个特性比迄今为止进行的任何其他解构转换都要容易。</p>
 <p>简而言之，引力效应涉及将外部区域中的气泡平移到边缘区域，与气泡到边缘的距离成正比。为了达到我们的目的，我们定义了气泡到边缘的距离与位移之间的线性关系，但是这可以通过许多不同的方式（指数，平方，平方根等）来实现。</p>
 <p><img src="https://cdn-images-1.medium.com/max/2002/1*GGG_QXIYZ3zSZkTYPzqG3w.png" alt="在无重力的情况下，外部区域的气泡相隔最大尺寸"></p>
-<p><img src="https://cdn-images-1.medium.com/max/2002/1*1CkXWgyAai1_8npyjq_kGA.png" alt="非零重力有效地缩小了外部区域中气泡之间的分离距离"></p>
+<p><img src="../images/deconstructing-the-iconic-apple-watch-bubble-ui.md-1*1CkXWgyAai1_8npyjq_kGA.png" alt="非零重力有效地缩小了外部区域中气泡之间的分离距离"></p>
 <p>处于外部区域中的气泡将要被移动距离可以被描述为 “紧凑性” 所表达的数量值，<strong>加上</strong>一个额外值：</p>
 <pre class="hljs"><code>distance_to_fringe_region * gravitation
 </code></pre>

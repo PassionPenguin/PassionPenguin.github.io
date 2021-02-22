@@ -19,12 +19,12 @@
 </ul>
 </blockquote>
 <h1>3 个最棒的最值得你去在产品中使用的 CSS Grid 功能</h1>
-<p><img src="https://cdn-images-1.medium.com/max/8096/0*mWiTIfu6BVlYQ5lf" alt="由 Sigmund 拍摄并在 Unsplash 上传的图片"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-0*mWiTIfu6BVlYQ5lf" alt="由 Sigmund 拍摄并在 Unsplash 上传的图片"></p>
 <p>Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实的。经过近 9 年的发展，我们现在可以说，浏览器对 Grid 的支持已经变得足够好，这样我们可以安心在生产环境中中使用 Grid 了。</p>
 <p>本篇文章我们主要讨论浏览器支持且使用频率最高的 3 个 Grid 布局相关的特性。即使有一些更酷的新功能的出现，例如 <code>subgrid</code> 等的问世，也请注意谨慎在生产中不要使用这些功能。在发布产品前，请先检查 <a href="https://www.caniuse.com">Can I Use</a> 网站上的浏览器支持信息。养成这样一个好习惯，百利而无一害。</p>
 <h2>一个简要的复习</h2>
 <p>究竟什么是 Grid？Grid 其实就是一个以容器为中心的多维布局系统。简而言之：它可以在任何 x / y 方向上拓展，并且所有布局信息都存储在父节点中，而子节点则大多掌握有关如何将自己放置在 Grid 上的信息。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*6YeEVVXSRcJwnZBHo2EgpQ.png" alt="一维布局与二维布局"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*6YeEVVXSRcJwnZBHo2EgpQ.png" alt="一维布局与二维布局"></p>
 <p>在使用 Grid 开发时，建议使用 Firefox 浏览器，因为它的 Dev Tools 比其他浏览器的都要好 —— 支持 Grid 相关属性最棒的浏览器，而且它也是目前唯一支持 <code>subgrid</code> 属性的浏览器。</p>
 <p>现在，让我们深入研究可用于生产的三大 CSS Grid 功能。</p>
 <h2>1.  Grid 模板区域</h2>
@@ -107,11 +107,11 @@
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*kxxETOv_yi4ECBfYz_D-mw.png" alt="复杂的 Grid 布局"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*kxxETOv_yi4ECBfYz_D-mw.png" alt="复杂的 Grid 布局"></p>
 <p>所有的变化都由 <code>grid-templates-areas</code> 和 <code>grid-area</code> 两个属性产生。前者定义了所有 Grid 轨迹，而后者将 Grid 元素定位在那些区域上。</p>
 <p>提示： Grid 轨迹是两条 Grid 线之间的空间。</p>
 <p>让我们使用 Firefox Inspector 审查页面元素，能够清晰地了解我们所创建的 Grid 布局。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2090/1*U9o4_M-wfMeBHindl1H4sw.png" alt=" Grid 布局的内部"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*U9o4_M-wfMeBHindl1H4sw.png" alt=" Grid 布局的内部"></p>
 <p>如果我们想在内容周围留一些空白，而不是直接挨着左右两列，我们可以使用<code>.</code> / <code>...</code> 符号。</p>
 <pre class="hljs"><code><span class="hljs-selector-id">#grid</span> {
     <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#73937E</span>;
@@ -124,7 +124,7 @@
     <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2074/1*frMRKP1wKAGbxlAuQVI_SQ.png" alt="在主要内容两边定义空白 Grid"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*frMRKP1wKAGbxlAuQVI_SQ.png" alt="在主要内容两边定义空白 Grid"></p>
 <p>注意：使用 <code>grid-template-areas</code> 时，需要注意以下几点：</p>
 <ul>
 <li>每个区域名称只能定义一次。如果没有连接具有相同区域名称的单元，则将会被视为两个声明。</li>
@@ -179,7 +179,7 @@
 }
 </code></pre>
 <p><img src="https://cdn-images-1.medium.com/max/2090/1*U9o4_M-wfMeBHindl1H4sw.png" alt="方法 A"></p>
-<p><img src="https://cdn-images-1.medium.com/max/2082/1*18VMr9MkDmUHOS-biKfckQ.png" alt="方法 B"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*18VMr9MkDmUHOS-biKfckQ.png" alt="方法 B"></p>
 <p>提示：使用 <code>grid-template-area</code> 可以简单创建 Grid 线。这意味着即使使用 <code>grid-template-area</code>，我们仍然可以使用 Grid 线的位置逻辑。接下来，让我们简要介绍一下负索引 <code>-1</code>。</p>
 <pre class="hljs"><code><span class="hljs-selector-class">.customContent</span> {
     <span class="hljs-attribute">background-color</span>: white;
@@ -188,7 +188,7 @@
 }
 </code></pre>
 <p>添加负索引会使我们的 CSS 更强大。我们可能会对 Grid 线的数量不了解：通过负索引，我们可以将内容设置为扩展到最后一个 Grid 线。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2078/1*mFCCFIxCWZ_EA5H80t-BjQ.png" alt="行上面使用负索引的结果"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*mFCCFIxCWZ_EA5H80t-BjQ.png" alt="行上面使用负索引的结果"></p>
 <h2>2. Grid 间隔</h2>
 <p>Grid 的 <code>gap</code> 特性的使用是很简捷的。我们仅需使用 <code>column-gap</code>、<code>row-gap</code> 或 <code>gap</code> 就能定义 Grid 布局中的间隙。</p>
 <pre class="hljs"><code><span class="hljs-selector-id">#grid</span> {
@@ -205,7 +205,7 @@
     <span class="hljs-string">&quot;footer footer footer footer&quot;</span>;
 }
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*aajG-IirnfyHHYyPb2YKsw.png" alt="使用 gap 功能"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*aajG-IirnfyHHYyPb2YKsw.png" alt="使用 gap 功能"></p>
 <p>注意：请勿使用 <code>grid-gap</code>、<code>grid-column-gap</code> 或 <code>grid-column-gap</code>：现在它们已过时，浏览器的支持会不断下降。</p>
 <h2>3. MinMax</h2>
 <p>起初，<code>MinMax</code> 看起来并不像一个令人兴奋的功能。这个功能非常简单：</p>
@@ -215,9 +215,9 @@
 <p>让我们创建一个包含三列的布局，并使用 <code>minmax</code> 将其扩展到整个 Grid 区域。</p>
 <pre class="hljs"><code>grid-template-columns: repeat(3, minmax(100px, 1fr));
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*DqLyXYT5DlN7k8NHejQ1nQ.png" alt="使用 minmax 定义三列布局"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*DqLyXYT5DlN7k8NHejQ1nQ.png" alt="使用 minmax 定义三列布局"></p>
 <p>注意：这看起来很棒，但是有一个很大的缺点 —— 如果容器小于 <code>3 * 100px + 2 * 10px</code>，则内容将溢出。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*q-y32_HSK0RUABQregRtJw.png" alt="没有足够的空间来渲染最小宽度为 100px 的三列布局"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*q-y32_HSK0RUABQregRtJw.png" alt="没有足够的空间来渲染最小宽度为 100px 的三列布局"></p>
 <p>我们该如何解决？直接以响应方式构建 Grid 布局！我们可以让 Grid 容器通过使用 <code>auto-fill</code> 或 <code>auto-fit</code> 来确定列数。</p>
 <p>通过简单的更改，我们的三列布局现在可以响应视口的大小：</p>
 <pre class="hljs"><code><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
@@ -272,7 +272,7 @@
 <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
 <span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*wu16vXlLxgjnrI8Gragp1g.png" alt="响应式 Grid 布局"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*wu16vXlLxgjnrI8Gragp1g.png" alt="响应式 Grid 布局"></p>
 <p>那就是我们所有变化所发生的源头：</p>
 <pre class="hljs"><code>grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 </code></pre>
@@ -295,9 +295,9 @@
 <p>最后，让我们进一步了解 <code>auto-fill</code> 和 <code>auto-fit</code> 之间的区别：</p>
 <p>*<code>auto-fill</code>：尝试在给定约束条件下用尽可能多的列填充行
 *<code>auto-fit</code>：行为与<code>auto-fill</code>相同，但是任何空的重复轨道将被折叠，它将扩展其他轨道以占用所有可用空间（如果有）。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*Be3yz9t1oZ-OzfWghQ_l0g.png" alt="自动填充与自动调整"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*Be3yz9t1oZ-OzfWghQ_l0g.png" alt="自动填充与自动调整"></p>
 <p>当有足够的元素填充 Grid 时，两个属性的效果将相同。这意味着根据分辨率的不同，它们可能渲染的效果是一样的。这就是为什么了解他们的内部情况是很重要的。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*bjQpF-R9e7ki-5u2c5zOwg.png" alt="在某些分辨率下，它们的作用效果可能相同"></p>
+<p><img src="../images/top-3-css-grid-features-to-start-using-in-production.md-1*bjQpF-R9e7ki-5u2c5zOwg.png" alt="在某些分辨率下，它们的作用效果可能相同"></p>
 <h2>总结</h2>
 <p><img src="https://cdn-images-1.medium.com/max/10944/0*qOzhnK7sH5tZyk_T" alt="Denys Nevozhai 拍摄并发布于 Unsplash 的照片"></p>
 <p>我们介绍了最突出的三个 Grid 特性并深入探讨了如何以最恰当的方式使用它们。现在，我想我们已经可以使用更少的 CSS 代码以更高效的方式构建布局。使用 Flex API 的日子已经过去了，现在就让我们一起使用 Grid 功能来美化我们的页面吧～</p>

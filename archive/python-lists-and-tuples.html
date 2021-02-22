@@ -27,7 +27,7 @@
 元组是一个静态数组，其元素是固定且不可变的。元组由 Python 运行时缓存，这意味着我们不需要在每次我们需要使用一个元组的时候 Python 不需要与内核对话来获得保留这个元组的内存。</p>
 </blockquote>
 <p>在计算机系统中，存储器是一系列编号的分配存储块，每个分配存储块都可以容纳一个数字。Python 通过引用将数据存储在这些分配存储块中。这意味着数字本身只是指向或引用了我们实际关心的数据。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2664/1*r3B7WgUsBJeYQmExYERwig.png" alt="一个存储了长度为 6 的数组系统内存布局"></p>
+<p><img src="../images/python-lists-and-tuples.md-1*r3B7WgUsBJeYQmExYERwig.png" alt="一个存储了长度为 6 的数组系统内存布局"></p>
 <p>当创建列表或元组时，我们需要分配一个系统存储块，该块的每个部分都使用整数指针进行引用。为了查找列表中的任何特定元素，我们应该知道分配存储块的编号和所需的元素。</p>
 <p>例如，假设我们有一个从<strong>分配存储块编号</strong> <strong>S</strong> 开始的数组，要找到该数组中的第 5 个元素，我们可以直接搜索分配存储块编号 <strong>S + 5</strong> ，同样类推到数组中的 i 元素。但是，如果分配存储块编号不适用于给定的数组，那么我们需要在整个数组中执行元素搜索，时间复杂度会随着数组大小的增加而增加。此搜索也称为<strong>线性搜索</strong>。最坏的情况是 O(n)，其中 n 是列表中元素的总数。如果列表已排序，则可以使用其他有效的搜索算法来搜索数组中的元素如二分法。</p>
 <p>为了进行搜索和排序，Python 内置了 <strong><strong>eq</strong></strong>、<strong><strong>lt</strong></strong> 等比较方法，并且 Python 中的列表内置有 TimSort 的内置排序算法，而它的最佳情况是 O(n)，最坏的情况是 O(nlog n)。</p>
@@ -39,9 +39,9 @@
 <p><strong>List 的分配方程</strong></p>
 <pre class="hljs"><code>M = (N &gt;&gt; <span class="hljs-number">3</span>) + (<span class="hljs-number">3</span> <span class="hljs-keyword">if</span> N &lt; <span class="hljs-number">9</span> <span class="hljs-keyword">else</span> <span class="hljs-number">6</span>)
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2134/1*mYYlsNHqfxdvdSUUmlSARQ.png" alt="列表的 &quot;过度&quot; 分配"></p>
+<p><img src="../images/python-lists-and-tuples.md-1*mYYlsNHqfxdvdSUUmlSARQ.png" alt="列表的 &quot;过度&quot; 分配"></p>
 <p>该图显示列表尺寸与额外元素的关系。例如，如果使用创建了一个包含 8000 个元素的列表，Python 将返回一个能够容纳大约 8,600 个元素的列表，也就是会多分配 600 个元素的空间！</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*Tb-UGxpj6tL93pKUo8EXUg.png" alt="追加元素对列表理解的记忆和时间的影响"></p>
+<p><img src="../images/python-lists-and-tuples.md-1*Tb-UGxpj6tL93pKUo8EXUg.png" alt="追加元素对列表理解的记忆和时间的影响"></p>
 <p>当我们构建了一个列表并且添加元素时候，我们使用了 2.7 倍的内存。与创建列表相比，添加元素时候分配给列表的额外空间要大得多。</p>
 <p><strong>TUPLES 元组</strong></p>
 <p>元组是静态的，也就是说，一旦创建了元组，与列表不同，我们再也无法对其进行修改或调整其大小。</p>

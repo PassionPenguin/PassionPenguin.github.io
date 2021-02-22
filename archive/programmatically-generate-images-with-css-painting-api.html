@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>使用 CSS Painting API 自动生成图像</h1>
-<p><img src="https://cdn-images-1.medium.com/max/5760/1*wKYGWd-7eWgpmMeBNiLCDA.jpeg" alt="Banner"></p>
+<p><img src="../images/programmatically-generate-images-with-css-painting-api.md-1*wKYGWd-7eWgpmMeBNiLCDA.jpeg" alt="Banner"></p>
 <p>图像为应用程序增添色彩，丰富内容。然而，如果网页中嵌入了大量高分辨率图像，会大量增加页面资源加载时间，严重影响用户体验。对于展示产品、方案等必须内容的图像，我们别无选择，只能按照正常方式嵌入这些图像并通过缓存它们来优化应用程序。但是，如果我们在应用程序中需要几何图像，则不必再将其作为资源来加载。</p>
 <blockquote>
 <p>我们可以使用 CSS Painting API 即时生成几何图像。</p>
@@ -38,7 +38,7 @@
 }
 </code></pre>
 <p>这串代码的工作逻辑是这样的：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*c2EShrISdnmcxc87qJdKPg.png" alt=""></p>
+<p><img src="../images/programmatically-generate-images-with-css-painting-api.md-1*c2EShrISdnmcxc87qJdKPg.png" alt=""></p>
 <p>在上文中似乎存在着一些晦涩难懂的术语。例如，我们提及了 <code>worklet</code>？</p>
 <p>简而言之，让程序自动生成图像的 JavaScript 代码称为 Paint Worklet。<a href="https://www.w3.org/TR/worklets-1/#intro">Worklet</a> 是浏览器渲染管道的一个扩展。除了 Paint Worklet 之外，还有其他类型的 Worklet，例如 Animation Worklet 和 Layout Worklet。</p>
 <p>现在，让我们看一下程序生成图像的分步方法。</p>

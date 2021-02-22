@@ -18,7 +18,7 @@
 <li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/zenblo">zenblo</a></li>
 </ul>
 </blockquote>
-<p><img src="https://cdn-images-1.medium.com/max/2880/1*nhb0C-BMierO2SW0bvtKqA.png" alt="Image based on Rocket by Icongeek26 on The Noun Project"></p>
+<p><img src="../images/ultimate-guide-to-swiftui2-application-lifecycle.md-1*nhb0C-BMierO2SW0bvtKqA.png" alt="Image based on Rocket by Icongeek26 on The Noun Project"></p>
 <h1>SwiftUI 2 应用生命周期的终极指导</h1>
 <p>在很长一段时间里，iOS 开发者们都是使用 <code>AppDelegate</code> 作为应用的主要入口。随着 SwiftUI 2 在 WWDC 2020 上发布，苹果公司引入了一个新的应用生命周期。新的生命周期几乎（几乎）完全与 <code>AppDelegate</code> 无关，为类 DSL 方法铺平了道路。</p>
 <p>在本文中，我会讨论引入新的生命周期的原因，以及你该如何在已有的应用或新的应用中使用它。</p>
@@ -145,7 +145,7 @@
 <p>无论哪种方式，触发应用中的深层链接的一种简单方法是在开发计算机上使用以下命令：</p>
 <pre class="hljs"><code>xcrun simctl openurl booted &lt;your url&gt;
 </code></pre>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*RMYt_zbKht6oqYJdTn9S_w.gif" alt="Demo: Opening deep links and continuing user activities"></p>
+<p><img src="../images/ultimate-guide-to-swiftui2-application-lifecycle.md-1*RMYt_zbKht6oqYJdTn9S_w.gif" alt="Demo: Opening deep links and continuing user activities"></p>
 <h2>继续用户 activity</h2>
 <p>如果你的应用使用 <code>NSUserActivity</code> 来<a href="https://developer.apple.com/documentation/foundation/nsuseractivity">集成</a> Siri、Handoff 或 Spotlight，你需要处理用户继续进行的 activity。</p>
 <p>同样，新的应用生命周期模型通过提供两个 modifier 使你更容易实现这一点。这些 modifier 使你可以声明 activity 并让用户可以继续进行它们。</p>

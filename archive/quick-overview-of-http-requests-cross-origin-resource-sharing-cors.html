@@ -19,10 +19,10 @@
 </ul>
 </blockquote>
 <h1>简述 HTTP 请求与跨域资源共享 CORS</h1>
-<p><img src="https://cdn-images-1.medium.com/max/6912/1*YECeOxlko9KoOJNw8RNm3A.jpeg" alt="图片源自 Alina Grubnyak on Unsplash"></p>
+<p><img src="../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*YECeOxlko9KoOJNw8RNm3A.jpeg" alt="图片源自 Alina Grubnyak on Unsplash"></p>
 <h2>URL 简介</h2>
 <p>以下示例 URL 由 4 部分组成：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*HfJAWr4Jw7rIXHSRaG4wcw.png" alt=""></p>
+<p><img src="../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*HfJAWr4Jw7rIXHSRaG4wcw.png" alt=""></p>
 <p><strong>服务类型（Scheme）</strong> 指明将被使用的协议（Protocol）。<strong>协议</strong>指定数据如何传输以及如何处理请求。当你查看协议时，你就能很好地理解这个 URL 的用途。（例如是带有 SMTP、POP3、IMAP 的电子邮件协议，还是获取和管理 git 仓库的 SSH 请求，或者是针对 Web 的 HTTP 请求。）</p>
 <p><strong>HTTP</strong> — 默认是在 80 端口运行，它指定请求中的表头。</p>
 <p><strong>HTTPS</strong> — 与 <strong>HTTP</strong> 协议类似，但 HTTPS 被认为是浏览器与服务器之间的安全通信。它与 HTTP 不同之处：</p>
@@ -41,14 +41,14 @@
 </blockquote>
 <p><strong>使用 HTTP 和 HTTPS 协议，我们还有其他方法可以将数据发送到服务器。</strong></p>
 <h2>请求与响应</h2>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*8S-OTIgudIC9wOIbN3VETg.png" alt="Taken from C0D3.com"></p>
+<p><img src="../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*8S-OTIgudIC9wOIbN3VETg.png" alt="Taken from C0D3.com"></p>
 <p>当用户在浏览器中输入域名时，浏览器会找到该服务器（这只是其他人的计算机）并向该服务器发送请求。如果它从服务器成功获取响应，就会在浏览器上呈现相应的页面。</p>
 <blockquote>
 <p><strong>注意</strong>：当你使用终端发送请求（例如运行 <code>node index.js</code>）时，进程是相同的。向服务器发送请求不一定需要浏览器，也可以使用终端。然而，如果响应是 HTML，那么终端不会做任何事情，因为 HTML 只是浏览器的指令。</p>
 </blockquote>
 <h2>表头部分</h2>
 <p>浏览器和服务器都需要获取对方的大量信息，才能识别对方，并最终发送请求或响应。比如 IP 地址、内容类型（Content-Type）、Cookie、<a href="https://en.wikipedia.org/wiki/Cache-Control">缓存控制（Cache-Control）</a>等。你可以在这里找到<a href="https://en.wikipedia.org/wiki/List_of_HTTP_header_fields">完整列表</a>，它们带着<strong>表头</strong>数据也就是<strong>键值对</strong>。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*kJ2ViLP32reDBOfeYHB46Q.png" alt="Request Headers Example | Taken from C0D3.com"></p>
+<p><img src="../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*kJ2ViLP32reDBOfeYHB46Q.png" alt="Request Headers Example | Taken from C0D3.com"></p>
 <p>在发送请求时，只需要手动设置两个表头：<strong>内容类型（Content-Type）<strong>和</strong>授权（Authorization）</strong>。虽然你可以设置其它表头，但它们通常由浏览器自动处理。</p>
 <p><strong>内容类型（Content-Type）</strong> — 当你通过正文向服务器发送（POST、PATCH、PUT 请求）数据时，你需要指定其内容类型，可以是 <code>application/json</code>、<code>text/html</code>、<code>image/gif</code> 或 <code>video/mpeg.</code>。</p>
 <p><strong>授权（Authorization）</strong> — 这是服务器用来识别用户的。与 cookie 表头不同，该表头必须由开发人员在发送请求时手动设置。通常用于 API 请求和 JWT 身份验证。</p>

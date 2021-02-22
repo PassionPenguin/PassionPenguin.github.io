@@ -7,7 +7,7 @@
 
 # Flutter 可能是下一个大事件，但 Kotlin Multiplatform 一直都是大事件
 
-![Photo by [Marc Reichelt](https://unsplash.com/@mreichelt?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral).](https://cdn-images-1.medium.com/max/8064/0*p9BRbpAgNsMKNKJS)
+![Photo by [Marc Reichelt](https://unsplash.com/@mreichelt?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral).](../images/flutter-may-or-may-not-be-the-next-big-thing-but-kotlin-multiplatform-is-here-to-stay.md-0*p9BRbpAgNsMKNKJS)
 
 Google 的 Flutter 框架在过去的一年中取得了巨大的进展。它已经成为人们茶余饭后常谈的话题，有的人称它为下一个大事件，而另一些人则只是将其看作一项闪亮的新技术进行推广而已。
 

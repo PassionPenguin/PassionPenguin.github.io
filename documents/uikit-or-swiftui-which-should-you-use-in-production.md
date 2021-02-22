@@ -7,7 +7,7 @@
 
 # UIKit 和 SwiftUI：我该选择哪一个运用在实际产品开发中？
 
-![图自 [Mario Dobelmann](https://unsplash.com/@mariodobelmann?utm_source=medium&utm_medium=referral) 源于 [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/11516/0*uqSWA_30Auiz_7F4)
+![图自 [Mario Dobelmann](https://unsplash.com/@mariodobelmann?utm_source=medium&utm_medium=referral) 源于 [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](../images/uikit-or-swiftui-which-should-you-use-in-production.md-0*uqSWA_30Auiz_7F4)
 
 Apple 最近发布了 iOS 14 —— 这意味着 Apple 已经给了开发者们一年时间缓冲决定是否使用 SwiftUI 了。而且这意味着 SwiftUI 不仅可以被爱好者们在其闲余的项目中使用，而且要被企业团队评估是否能在其发布的应用中使用了。
 

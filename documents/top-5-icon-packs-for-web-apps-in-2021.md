@@ -7,7 +7,7 @@
 
 # 2021 年 Web 应用开发常用的五个图标库
 
-![](https://cdn-images-1.medium.com/max/5760/1*uPK9UAnb1ni6GDB690LYig.jpeg)
+![](../images/top-5-icon-packs-for-web-apps-in-2021.md-1*uPK9UAnb1ni6GDB690LYig.jpeg)
 
 在过去的十年里，网络和移动应用已经成为我们日常生活的一部分。如今，我们可以找到很多解决同一问题的应用程序。因此，应用程序的功能显然不再是唯一的区别。
 
@@ -38,7 +38,7 @@
 
 此外，Icons8 通过为你的项目提供像素完美的图标来消除模糊效果，同时允许你下载任意标准格式的图标，包括 PNG、SVG、嵌入式 HTML 和 PDF。
 
-![Screenshot by Auther: Customizing icons in Icons8](https://cdn-images-1.medium.com/max/3068/1*Mv5Z09kKyMafb0PlZLONLw.png)
+![Screenshot by Auther: Customizing icons in Icons8](../images/top-5-icon-packs-for-web-apps-in-2021.md-1*Mv5Z09kKyMafb0PlZLONLw.png)
 
 #### Icons8 的主要特点
 
@@ -64,7 +64,7 @@
 
 如果你是 Flaticon 的游客用户，你只能创建一个收藏，并且每天只能下载 10 个图标。你可以通过在 Flaticon 注册，每天最多扩展到 3 个收藏和下载 100 个图标，而不会产生任何费用。最重要的是，他们的高级版本允许你创建无限的图标集合，每天下载 2000 个图标。
 
-![Screenshot by Auther: Customizing icons in Flaticon](https://cdn-images-1.medium.com/max/3092/1*rtcwQJSb3TlvMDMAQQOg7A.png)
+![Screenshot by Auther: Customizing icons in Flaticon](../images/top-5-icon-packs-for-web-apps-in-2021.md-1*rtcwQJSb3TlvMDMAQQOg7A.png)
 
 #### Flaticon 的主要特点
 
@@ -92,7 +92,7 @@
 
 使用免费版，你只能下载所选择图标的完整版本，如果你希望使用 Regular、Light 或 Duotone 等字体，则需要切换到专业版。
 
-![Screenshot by Auther: Customizing icons in Font Awesome](https://cdn-images-1.medium.com/max/3614/1*_GvBDBIHrbXi82AmPWXYxg.png)
+![Screenshot by Auther: Customizing icons in Font Awesome](../images/top-5-icon-packs-for-web-apps-in-2021.md-1*_GvBDBIHrbXi82AmPWXYxg.png)
 
 #### Font Awesome 的主要特点
 
@@ -161,7 +161,7 @@ composer require kenangundogan/fontisto // composer
 
 [Streamline Icons](https://streamlineicons.com/) 是另一个优秀的图标库，你可以在项目开发中使用。Streamline 大约有 30000 个漂亮的可适应性图标，包括 50 多个类别。Streamline 图标库以其对优化草图的支持而出名，这使得操作图标宽度和颜色变得容易。你可以在 Streamline 中创建一个免费账户并开始使用图标，也可以直接将整个图标集下载到你的设备上。像 Icon8、Font Awesom 和 FlatiCoin 一样，Streamline 支持在下载所需图标之前进行编辑。你可以轻松更改像素大小、格式，并在类似设计之间切换。但是，除非升级软件包，否则无法更改图标的颜色。
 
-![Screenshot by Auther: Customizing icons in Streamline Icons](https://cdn-images-1.medium.com/max/3092/1*ZMkeZRebdIvYGxGYR5J9TQ.png)
+![Screenshot by Auther: Customizing icons in Streamline Icons](../images/top-5-icon-packs-for-web-apps-in-2021.md-1*ZMkeZRebdIvYGxGYR5J9TQ.png)
 
 #### Streamline Icons 的主要特点
 

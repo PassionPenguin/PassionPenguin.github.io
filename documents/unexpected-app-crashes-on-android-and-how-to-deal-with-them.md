@@ -7,7 +7,7 @@
 
 # Android 中意料之外的应用崩溃以及它们的解决方案
 
-![图自 [testbytes](https://pixabay.com/users/testbytes-1013799/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=762486) 源于 [Pixabay](https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=762486)](https://cdn-images-1.medium.com/max/2560/1*4WT3_B3SVKgvexQOTE_ZqQ.jpeg)
+![图自 [testbytes](https://pixabay.com/users/testbytes-1013799/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=762486) 源于 [Pixabay](https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=762486)](../images/unexpected-app-crashes-on-android-and-how-to-deal-with-them.md-1*4WT3_B3SVKgvexQOTE_ZqQ.jpeg)
 
 如果问前端、后端甚至游戏开发人员之间存在什么共同点，那就是我们都讨厌应用产品出现 Bug，尤其是当这些错误导致应用崩溃时。而在应用发布后，监视应用程序中这些不断增加的崩溃是一种极其不愉快的体验。
 
@@ -47,7 +47,7 @@ adb shell am kill com.darktheme.example
 
 此时，你的终端窗口应如下所示：
 
-![执行 kill 命令后的命令行窗口](https://cdn-images-1.medium.com/max/2276/1*pYpZN8FbnrYeo_6QPGqc0g.png)
+![执行 kill 命令后的命令行窗口](../images/unexpected-app-crashes-on-android-and-how-to-deal-with-them.md-1*pYpZN8FbnrYeo_6QPGqc0g.png)
 
 现在，从后台任务中打开你的应用程序，并检查该应用程序是否崩溃。如果是，请不要担心，我们将在下一部分中讨论如何处理此问题。如果没有，你可以松一口气了，因为这是你应得的。
 

@@ -7,7 +7,7 @@
 
 # Flutter 中的交织动画
 
-![Flutter 中的交织动画](https://cdn-images-1.medium.com/max/2000/1*icYuiagsCKqcRapvjiLbmw.png)
+![Flutter 中的交织动画](../images/staggered-animation-in-flutter.md-1*icYuiagsCKqcRapvjiLbmw.png)
 
 交织动画由一个动画序列或重叠的动画组成，而要制作交织的动画，我们需要使用多个或多组动画对象。我们应该使用同一个 `AnimationController` 控制所有动画，每个动画对象都应该指定某个点或锚点在一段时间内的运动，并且对于要执行的动画的每个属性，我们都应该创建一个补间（`Tween`）。
 
@@ -202,7 +202,7 @@ class StaggeredTrekkingEnterAnimation {
 
 在下面发布的视频中，你将看到交织动画的工作方式。当你在屏幕上的任意位置点击时，它将启动动画并在向前播放动画之后自动向后播放动画。在这代码中，你还可以控制动画播放的速度。
 
-![](https://cdn-images-1.medium.com/max/2000/1*vQm1tBYamr7UZSaoApsAdg.gif)
+![](../images/staggered-animation-in-flutter.md-1*vQm1tBYamr7UZSaoApsAdg.gif)
 
 这就是交织动画的基本示例。在这里我们做了一个简单的示例，你可以尝试学习它。
 

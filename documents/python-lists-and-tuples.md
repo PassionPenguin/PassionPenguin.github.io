@@ -18,7 +18,7 @@
 
 在计算机系统中，存储器是一系列编号的分配存储块，每个分配存储块都可以容纳一个数字。Python 通过引用将数据存储在这些分配存储块中。这意味着数字本身只是指向或引用了我们实际关心的数据。
 
-![**一个存储了长度为 6 的数组系统内存布局**](https://cdn-images-1.medium.com/max/2664/1*r3B7WgUsBJeYQmExYERwig.png)
+![**一个存储了长度为 6 的数组系统内存布局**](../images/python-lists-and-tuples.md-1*r3B7WgUsBJeYQmExYERwig.png)
 
 当创建列表或元组时，我们需要分配一个系统存储块，该块的每个部分都使用整数指针进行引用。为了查找列表中的任何特定元素，我们应该知道分配存储块的编号和所需的元素。
 
@@ -42,11 +42,11 @@ List 是一个动态数组，所以它可以使用调整大小操作，且它也
 M = (N >> 3) + (3 if N < 9 else 6)
 ```
 
-![列表的 "过度" 分配](https://cdn-images-1.medium.com/max/2134/1*mYYlsNHqfxdvdSUUmlSARQ.png)
+![列表的 "过度" 分配](../images/python-lists-and-tuples.md-1*mYYlsNHqfxdvdSUUmlSARQ.png)
 
 该图显示列表尺寸与额外元素的关系。例如，如果使用创建了一个包含 8000 个元素的列表，Python 将返回一个能够容纳大约 8,600 个元素的列表，也就是会多分配 600 个元素的空间！
 
-![**追加元素对列表理解的记忆和时间的影响**](https://cdn-images-1.medium.com/max/2000/1*Tb-UGxpj6tL93pKUo8EXUg.png)
+![**追加元素对列表理解的记忆和时间的影响**](../images/python-lists-and-tuples.md-1*Tb-UGxpj6tL93pKUo8EXUg.png)
 
 当我们构建了一个列表并且添加元素时候，我们使用了 2.7 倍的内存。与创建列表相比，添加元素时候分配给列表的额外空间要大得多。
 

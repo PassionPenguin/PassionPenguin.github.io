@@ -9,7 +9,7 @@
 
 了解哪一种 `for` 循环或迭代器适合我们的需求，防止我们犯下一些影响应用性能的低级错误。
 
-![由 [Artem Sapegin](https://unsplash.com/@sapegin?utm_source=medium&utm_medium=referral) 上传至 [Unsplash](https://unsplash.com/?utm_source=medium&utm_medium=referral)](https://miro.medium.com/max/10944/0*FjGuCxH-seN1PrRF)
+![由 [Artem Sapegin](https://unsplash.com/@sapegin?utm_source=medium&utm_medium=referral) 上传至 [Unsplash](https://unsplash.com/?utm_source=medium&utm_medium=referral)](../images/Which%20type%20of%20loop%20is%20fastest%20in%20JavaScript%3F.md-0*FjGuCxH-seN1PrRF)
 
 JavaScript 是 Web 开发领域的“常青树”。无论是 JavaScript 框架（如 Node.js、React、Angular、Vue 等），还是原生 JavaScript，都拥有非常庞大的粉丝基础。我们来谈谈现代 JavaScript 吧。循环一直是大多数编程语言的重要组成部分，而现代 JavaScript 为我们提供了许多迭代或循环值的方法。
 

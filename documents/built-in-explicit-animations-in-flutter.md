@@ -7,7 +7,7 @@
 
 # Flutter 中内置的显式动画
 
-![](https://cdn-images-1.medium.com/max/2160/1*-VpftDFf_ArJZoyuOjqBJA.png)
+![](../images/built-in-explicit-animations-in-flutter.md-1*-VpftDFf_ArJZoyuOjqBJA.png)
 
 在我们的 [上一篇文章](https://github.com/xitu/gold-miner/blob/master/article/2021/staggered-animation-in-flutter.md) 中，我们弄清楚了如何利用 Flutter 的交织动画编写一些完美的动画。`AnimatedFoo` 和 `TweenAnimationBuilder` 让我们能够将一些基本动画运用在应用程序中。这些动画通常从头到尾使用补间进行渲染，而在这背后，Flutter 代替了我们控制好了这一切，满足了我们对动画的预期，也让我们不用再担心动画的播放顺序。
 
@@ -17,7 +17,7 @@ Flutter 有很多带有过渡动画的控件，而它们都以 `Transition` 结�
 
 例如说 [`PositionedTransition`](https://api.flutter.cn/flutter/widgets/PositionedTransition-class.html)，它可以产生在各个位置移动的小部件的动画。这些动画与补间动画很是相像，但是有明显的不同：这些 `Transition` 控件应该在 [`AnimatedWidget`](https://api.flutter.cn/flutter/widgets/AnimatedWidget-class.htmlhttps://api.flutter.dev/flutter/widgets/AnimatedWidget-class.html) 的构造中使用，而这就是显式动画。
 
-![一张太阳的图片，没有旋转](https://cdn-images-1.medium.com/max/5760/1*Rj0MJbE-gRj3gmUTwSkKog.jpeg)
+![一张太阳的图片，没有旋转](../images/built-in-explicit-animations-in-flutter.md-1*Rj0MJbE-gRj3gmUTwSkKog.jpeg)
 
 ## `RotationTransition` 旋转变换
 
@@ -44,7 +44,7 @@ RotationTransition(
 
 简简单单的代码就是使 `RotationTransition` 和各种 `Transition` 控件构成的动画被称为显式动画的原因。我们只需通过调用 `AnimatedContainer` 控件并进行更改就可以轻松实现旋转动画。借助显式动画，我们可以控制时间与旋转次数，使太阳不断旋转。
 
-![](https://cdn-images-1.medium.com/max/2000/1*oeGSTGSJwkqzQueCykTggw.gif)
+![](../images/built-in-explicit-animations-in-flutter.md-1*oeGSTGSJwkqzQueCykTggw.gif)
 
 对于 `RotationTransition` 而言，属性 `turns` 会直接影响我们的控件的旋转次数，而它所接受的输入类型是 `Animation<double>`。
 
@@ -84,13 +84,13 @@ _animationController = AnimationController(
 
 通过使用控制器，我们可以同样地为特定值设置动画（或从该值反向），并以给定的速度播放动画，或使用类似的控制器来控制各种动画。
 
-![](https://cdn-images-1.medium.com/max/2000/1*qmRBKLFSVNTvW8-uWFvbKw.gif)
+![](../images/built-in-explicit-animations-in-flutter.md-1*qmRBKLFSVNTvW8-uWFvbKw.gif)
 
 这只是我们对 Flutter 中的显式动画的第一次尝试。我们看到了 Transition 控件如何运行，以及学会了使用 `AnimationController` 来命令动画修改方向或其他动画属性。在以后的文章中，我们将进一步剖析显式动画以及介绍如何自定义使用显式动画。
 
 在下面的视频中，我们可以看到这个显式动画的运行结果 —— 当我们在屏幕上的任意位置点击时，动画会被暂停。而在屏幕任意位置再次点击就会恢复动画的播放。同样的，我们也可以通过修改代码来控制动画的速度以及播放的方向。
 
-![](https://cdn-images-1.medium.com/max/2000/1*y7sP1wxW1UHb_42Wv2foUw.gif)
+![](../images/built-in-explicit-animations-in-flutter.md-1*y7sP1wxW1UHb_42Wv2foUw.gif)
 
 这就是显式动画的基本入门了，我们在本文中构建了一个示例，而我相信，通过学习，你也同样可以轻松学会如何去制作这样一个动画，感谢你的阅读～
 

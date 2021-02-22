@@ -7,7 +7,7 @@
 
 # GitHub Package Registry 值得尝试吗
 
-![Photo by [Nana Smirnova](https://unsplash.com/@nananadolgo?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/10392/0*5jrNYn-hF3R_LkQi)
+![Photo by [Nana Smirnova](https://unsplash.com/@nananadolgo?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](../images/github-package-registry-is-it-worth-trying-out.md-0*5jrNYn-hF3R_LkQi)
 
 GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随着完成对 GitHub 和 NPM 的收购，这一功能似乎是微软扩展 GitHub 生态系统的绝佳举措。同时，GitHub 使用以下标语来强调这一事实：
 
@@ -21,7 +21,7 @@ GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随�
 
 如果你是 GitHub 的 4000 万用户中的一员，只需点击你的 `GitHub profile` 或 `GitHub Organization` 下的一个标签就可以访问 GitHub Package Registry。
 
-![Screenshot of GitHub Package Registry under my profile](https://cdn-images-1.medium.com/max/2538/1*PowgC6YYeQ7J7oN1edD9Vw.png)
+![Screenshot of GitHub Package Registry under my profile](../images/github-package-registry-is-it-worth-trying-out.md-1*PowgC6YYeQ7J7oN1edD9Vw.png)
 
 > 当我第一次尝试使用 GitHub Package Registry 时，我发现它直观且容易上手。我是从免费版开始，这对于一个几乎没有私有软件包的小型项目来说似乎已经足够使用。
 
@@ -33,7 +33,7 @@ GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随�
 
 与专注于 NodeJS 包的 NPM 不同，GitHub 包注册中心支持一系列包类型和客户端，如下所示：
 
-![Support for package registries, Source: [GitHub](http://Support for package registries)](https://cdn-images-1.medium.com/max/3056/1*CNuP0W1N0Uebuajvx46A1w.png)
+![Support for package registries, Source: [GitHub](http://Support for package registries)](../images/github-package-registry-is-it-worth-trying-out.md-1*CNuP0W1N0Uebuajvx46A1w.png)
 
 在即将到来的版本更新中，我们可以期待它会支持更多的开发工具和客户端。
 
@@ -45,7 +45,7 @@ GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随�
 
 结合 GitHub API、GitHub Actions 和 WebHooks，可以开发实现端到端 DevOps 工作流集成，包括 CI/CD 管道。你还可以使用 GraphQL 和 WebHooks 自定义发布前和发布后的工作流。
 
-![GitHub Package Management Tasks in GitHub Actions Marketplace](https://cdn-images-1.medium.com/max/2000/1*PECyA1fWltGS1dZo9g7f-w.png)
+![GitHub Package Management Tasks in GitHub Actions Marketplace](../images/github-package-registry-is-it-worth-trying-out.md-1*PECyA1fWltGS1dZo9g7f-w.png)
 
 > 你已经可以在 GitHub Actions 中找到预先构建的任务，以简化 GitHub Package Management 流程。
 
@@ -77,7 +77,7 @@ GitHub Package Registry 是由微软于 2019 年年中开发并推出的。随�
 
 首先，你需要有一个 GitHub 访问令牌才能向 GitHub 注册表验证你的身份。你既可以使用现有的令牌，也可以使用 [https://github.com/settings/tokens/new](https://github.com/settings/tokens/new) 创建一个令牌。在这里，我将令牌命名为 **githubReg**。
 
-![Screenshot by Author: Creating a new access token](https://cdn-images-1.medium.com/max/4046/1*mBJOGUKYRHObEQvd4c4iZA.png)
+![Screenshot by Author: Creating a new access token](../images/github-package-registry-is-it-worth-trying-out.md-1*mBJOGUKYRHObEQvd4c4iZA.png)
 
 你需要设置 .npmrc 文件，该文件是有关 NPM 客户端如何与 NPM 注册表本身进行通信的配置。打开终端并运行 `code .npmr`。它将打开一个空白文件，并用你的 access_token 替换以下对应内容。
 
@@ -141,7 +141,7 @@ module.export = () => {
    `import demoPkg from ‘@ChameeraD/pkg-git-demo’;`
    `demoPkg();`
 
-![Screenshot by Author: Output log by of the package](https://cdn-images-1.medium.com/max/2196/1*_xmY-6FUmxr8zJG6Znlh0w.png)
+![Screenshot by Author: Output log by of the package](../images/github-package-registry-is-it-worth-trying-out.md-1*_xmY-6FUmxr8zJG6Znlh0w.png)
 
 尽管 GitHub 包管理器具有很多功能特性，但它也有局限性。
 

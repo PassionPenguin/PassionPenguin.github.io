@@ -15,7 +15,7 @@
 
 要生成一个简简单单的正方形或矩形，我们可以创造一个 `Container` 控件并给它制定一个宽度和高度（我们可以看到下面的例子就避免了使用子控件去绘制形状）。
 
-![](https://cdn-images-1.medium.com/max/2078/1*mzCSaRJfZi8BiBHYUrUbqg.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*mzCSaRJfZi8BiBHYUrUbqg.png)
 
 ```Dart
 Widget squareContainer() {
@@ -37,7 +37,7 @@ Widget rectContainer() {
 
 而下面的例子展示了如何给 `Container` 控件加上圆角。首先操作的两个控件是使用了 `BoxDecoration` 圆角化控件的。我们同样可以通过使用 `BoxDecoration` 绘制一个圆形，就像第三个控件那样：
 
-![](https://cdn-images-1.medium.com/max/2202/1*lK_CjuIIFxIMSrijjme1qg.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*lK_CjuIIFxIMSrijjme1qg.png)
 
 ```Dart
 Widget roundedContainer() {
@@ -71,7 +71,7 @@ Widget circleContainer() {
 
 如果我们用 `Container` 控件包裹一个有 `onTap` 功能（本例中为 `InkWell` 控件）的子控件，我们甚至可以构建一个自定义的按钮：
 
-![](https://cdn-images-1.medium.com/max/2000/1*0CUGG-lyqxr-iP4wb9PRNQ.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*0CUGG-lyqxr-iP4wb9PRNQ.png)
 
 ```Dart
 Widget containerButton() {
@@ -92,7 +92,7 @@ Widget containerButton() {
 
 我们还可以通过使用 `Border.all()` 来生成边框装饰我们的 `Container` 控件。`BoxShadow` 则可以给我们的 `Container` 添加所设置的阴影，如控件二：
 
-![](https://cdn-images-1.medium.com/max/2000/1*SAcNvyxyzu-ofhDJ9_qhWg.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*SAcNvyxyzu-ofhDJ9_qhWg.png)
 
 ```Dart
 Widget containerWithBorders() {
@@ -128,7 +128,7 @@ Widget containerWithShadow() {
 
 在一个 `Container` 控件中，我们可以通过使用 `BoxDecoration` 以及 `DecorationImage` 给它添加装饰图片。这里大家可以试着找找两张图片中 `Container` 的区别，探究添加的装饰是如何被应用到控件上的：
 
-![](https://cdn-images-1.medium.com/max/2224/1*W0xtgxhy3hLNkrcHbZEGhQ.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*W0xtgxhy3hLNkrcHbZEGhQ.png)
 
 ```Dart
 Widget containerImgDecoration() {
@@ -155,11 +155,11 @@ Widget containerImg() {
 
 我们可以添加多彩的标题背景，让我们的 UI 更有吸引力。下面是三个使用 `Container` 控件构造的标题栏的例子：
 
-![](https://cdn-images-1.medium.com/max/2458/1*I5-WNUcfc8gRxQiiTD59zQ.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*I5-WNUcfc8gRxQiiTD59zQ.png)
 
-![](https://cdn-images-1.medium.com/max/2422/1*F3DS06d7jMIPJxwqVQlWKg.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*F3DS06d7jMIPJxwqVQlWKg.png)
 
-![](https://cdn-images-1.medium.com/max/2484/1*0LAhQZtJZx2bgvHFgEvELw.png)
+![](../images/flutter-creating-elegant-uis-with-containers.md-1*0LAhQZtJZx2bgvHFgEvELw.png)
 
 ```Dart
 Widget containerHeaderOne({width}) {

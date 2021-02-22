@@ -7,7 +7,7 @@
 
 # 不同类型的浏览器存储
 
-![[@kundeleknabiegunie](http://twitter.com/kundeleknabiegunie) unsplash.com](https://cdn-images-1.medium.com/max/2000/0*6UmrGOz0O2pvmwHT)
+![[@kundeleknabiegunie](http://twitter.com/kundeleknabiegunie) unsplash.com](../images/the-different-types-of-browser-storage.md-0*6UmrGOz0O2pvmwHT)
 
 现代浏览器为如何在用户浏览器中存储网站数据提供了多样的选择，允许按需查询这些数据。这使得网站所有者能长期保留数据，保存网页内容或文档供离线使用，存储用户偏好，应用状态等。
 

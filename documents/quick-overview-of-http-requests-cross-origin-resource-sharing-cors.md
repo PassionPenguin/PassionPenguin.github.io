@@ -7,13 +7,13 @@
 
 # 简述 HTTP 请求与跨域资源共享 CORS
 
-![图片源自 [Alina Grubnyak](https://unsplash.com/@alinnnaaaa?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/network?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)](https://cdn-images-1.medium.com/max/6912/1*YECeOxlko9KoOJNw8RNm3A.jpeg)
+![图片源自 [Alina Grubnyak](https://unsplash.com/@alinnnaaaa?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/s/photos/network?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)](../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*YECeOxlko9KoOJNw8RNm3A.jpeg)
 
 ## URL 简介
 
 以下示例 URL 由 4 部分组成：
 
-![](https://cdn-images-1.medium.com/max/2000/1*HfJAWr4Jw7rIXHSRaG4wcw.png)
+![](../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*HfJAWr4Jw7rIXHSRaG4wcw.png)
 
 **服务类型（Scheme）** 指明将被使用的协议（Protocol）。**协议**指定数据如何传输以及如何处理请求。当你查看协议时，你就能很好地理解这个 URL 的用途。（例如是带有 SMTP、POP3、IMAP 的电子邮件协议，还是获取和管理 git 仓库的 SSH 请求，或者是针对 Web 的 HTTP 请求。）
 
@@ -42,7 +42,7 @@ URL 路径就像你的目录路径。它为用户和搜索引擎提供了解当�
 
 ## 请求与响应
 
-![Taken from C0D3.com](https://cdn-images-1.medium.com/max/2000/1*8S-OTIgudIC9wOIbN3VETg.png)
+![Taken from C0D3.com](../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*8S-OTIgudIC9wOIbN3VETg.png)
 
 当用户在浏览器中输入域名时，浏览器会找到该服务器（这只是其他人的计算机）并向该服务器发送请求。如果它从服务器成功获取响应，就会在浏览器上呈现相应的页面。
 
@@ -52,7 +52,7 @@ URL 路径就像你的目录路径。它为用户和搜索引擎提供了解当�
 
 浏览器和服务器都需要获取对方的大量信息，才能识别对方，并最终发送请求或响应。比如 IP 地址、内容类型（Content-Type）、Cookie、[缓存控制（Cache-Control）](https://en.wikipedia.org/wiki/Cache-Control)等。你可以在这里找到[完整列表](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)，它们带着**表头**数据也就是**键值对**。
 
-![Request Headers Example | Taken from C0D3.com](https://cdn-images-1.medium.com/max/2000/1*kJ2ViLP32reDBOfeYHB46Q.png)
+![Request Headers Example | Taken from C0D3.com](../images/quick-overview-of-http-requests-cross-origin-resource-sharing-cors.md-1*kJ2ViLP32reDBOfeYHB46Q.png)
 
 在发送请求时，只需要手动设置两个表头：**内容类型（Content-Type）**和**授权（Authorization）**。虽然你可以设置其它表头，但它们通常由浏览器自动处理。
 

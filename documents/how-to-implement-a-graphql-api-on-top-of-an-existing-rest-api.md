@@ -7,7 +7,7 @@
 
 # 如何基于已有的 REST API 实现 GraphQL API
 
-![Dad joke “dadabase” app](https://cdn-images-1.medium.com/max/2912/0*r9_qx_t-6ltEP7GR.png)
+![Dad joke “dadabase” app](../images/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md-0*r9_qx_t-6ltEP7GR.png)
 
 你的 dad jokes 放在哪儿？当然是在 **dadabase** 里。我们来想象一下，你是全世界最受欢迎的 dad jokes 数据库的管理员。项目的技术概况是：使用 REST API 与数据库通信，这种 REST API 具有搜索笑话和对笑话进行评分的功能；网站的访问者可以通过一个简单的用户界面对每条笑话进行评分。
 
@@ -81,7 +81,7 @@ server.listen(process.env.PORT || 3000, () => {
 
 欲对这个模拟的数据库进行测试，你可以把 [API 有关的仓库](https://github.com/thawkin3/dad-joke-dadabase-rest-api)克隆到本地，并运行 `npm install` 和 `npm start`。在浏览器中访问 http://localhost:3000/jokes ，页面会显示所有的笑话。访问 http://localhost:3000/ratings ，页面会显示所有的评分信息。
 
-![/jokes API endpoint returns all the jokes when running the app locally](https://cdn-images-1.medium.com/max/3524/0*hKZlLEM_mzlVLnLE.png)
+![/jokes API endpoint returns all the jokes when running the app locally](../images/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md-0*hKZlLEM_mzlVLnLE.png)
 
 太棒了。我们可以在浏览器上运行应用程序的后台。现在我们把 API 托管在 Heroku 中。首先需要[安装 Heroku 命令行工具](https://devcenter.heroku.com/articles/heroku-cli)。然后，我们可以进行这些操作：登录，创建项目，推送到 Heroku 服务端，在浏览器中打开项目的操作界面。
 
@@ -101,7 +101,7 @@ heroku open
 
 看，现在我们把 API 发布到公网上了！
 
-![/jokes API endpoint returns all the jokes when hosting the API on Heroku](https://cdn-images-1.medium.com/max/3500/0*UG1tnsWGg6C_EyoX.png)
+![/jokes API endpoint returns all the jokes when hosting the API on Heroku](../images/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md-0*UG1tnsWGg6C_EyoX.png)
 
 ## 构建用户界面
 
@@ -216,7 +216,7 @@ fetch('/jokes?_embed=ratings')
 
 ```
 
-![Dad joke “dadabase” user interface allows you to rate each joke](https://cdn-images-1.medium.com/max/2860/1*vYef9XCI0zejzbFj7lzEPg.png)
+![Dad joke “dadabase” user interface allows you to rate each joke](../images/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md-1*vYef9XCI0zejzbFj7lzEPg.png)
 
 ## 安装并使用 Apollo Server
 
@@ -416,7 +416,7 @@ fetch('/graphql', {
 
 现在，我们可以在本地运行应用程序了。实际上，从用户的角度来说，没有发生任何变化。但假如你在浏览器的开发者工具中查看网络请求，你会发现，现在获取笑话是通过访问 `/graphql` 端点来实现的了。真棒！
 
-![The Network tab shows a request is being made to the /graphql endpoint now](https://cdn-images-1.medium.com/max/2520/0*ketnaG9b4tR0O0O4.png)
+![The Network tab shows a request is being made to the /graphql endpoint now](../images/how-to-implement-a-graphql-api-on-top-of-an-existing-rest-api.md-0*ketnaG9b4tR0O0O4.png)
 
 ## 把 API 端点功能改为提交评分的代码
 

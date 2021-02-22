@@ -9,7 +9,7 @@
 
 苹果最近在 iOS 中支持了 widget（应用小插件）。它们可以让用户在不访问应用程序的情况下获取有限但有用的信息。
 
-![source: [computer world](https://www.computerworld.com/article/3564605/ios-14-how-to-use-widgets-on-ipad-and-iphone.html)](https://cdn-images-1.medium.com/max/2400/1*TRYbj13rl7VonfzuVL46RQ.jpeg)
+![source: [computer world](https://www.computerworld.com/article/3564605/ios-14-how-to-use-widgets-on-ipad-and-iphone.html)](../images/widgets-on-ios.md-1*TRYbj13rl7VonfzuVL46RQ.jpeg)
 
 本文旨在介绍 widget。我们将在本文中广泛探究 WidgetKit SDK，并带你了解构建 widget 所需的组件和流程。 本文需要你已经熟悉 SwiftUI，因为构建 widget 的过程中会大量使用它。由于 widget 自身并不是一个完整的应用程序，因此它不使用应用代理（app delegates）或导航栈（navigation stacks）。此外，widget 不能独立存在，而是需要依赖一个父应用程序。 总而言之，widget 为用户提供了应用信息的快照。操作系统会在你设置的时刻快速触发 widget 以刷新其视图。
 
@@ -26,15 +26,15 @@
 
 > **Select File -> New -> Target -> Widget extension.**
 
-![](https://cdn-images-1.medium.com/max/2940/1*a-KEHHxPtDKzcIIS1rVcGQ.png)
+![](../images/widgets-on-ios.md-1*a-KEHHxPtDKzcIIS1rVcGQ.png)
 
 给 widget 设定一个名字，取消选中 ‘**Include Configuration Intent**’，取消选中的原因我们之后会讲到。
 
-![](https://cdn-images-1.medium.com/max/2924/1*RBapNhpn2b858rtzyCNd5Q.png)
+![](../images/widgets-on-ios.md-1*RBapNhpn2b858rtzyCNd5Q.png)
 
 接下来点击完成，你将看到一个弹出窗口，要求你激活 widget extension scheme。点击激活后，设置就完成了。
 
-![](https://cdn-images-1.medium.com/max/2000/1*ynPcdI0jU-bWjNmypreylA.png)
+![](../images/widgets-on-ios.md-1*ynPcdI0jU-bWjNmypreylA.png)
 
 现在，选择 widget 扩展下的 swift 文件，你会发现 Xcode 已经生成了代码的骨架。让我们来了解一下骨架的各个部分。 首先看 Widget 类型的结构体，它将是你在安装过程中输入的 widget 文件的名称。此结构体前有 ‘@main’ 属性，表明这里是 widget 的入口。让我们更细致地了解一下各个配置属性。
 
@@ -109,7 +109,7 @@ func placeholder(in context: Context) -> SimpleEntry
 
 **getTimeline函数** 用于告诉 widget 在不同时间需要显示什么内容。**时间线** 基本上是遵从 **TimelineEntry** 协议的对象的数组。例如，如果你想做一个显示特定事件的倒计时天数的 widget，你就需要创建从现在到那个事件发生日的一系列视图。
 
-![source: wwdc video](https://cdn-images-1.medium.com/max/5760/1*kgxFM7tdR4AZYHjVmWqHYw.png)
+![source: wwdc video](../images/widgets-on-ios.md-1*kgxFM7tdR4AZYHjVmWqHYw.png)
 
 这也是你可以进行异步网络通信的地方。小部件可以通过网络通信或者主机应用程序共享的容器来获取数据。这些通信调用完成后，widget 将显示获取到的数据。
 
@@ -156,11 +156,11 @@ struct Provider: TimelineProvider {
 
 1）我们需要创建一个自定义的 intent definition，为此我们将使用 **SiriKit Intent Definition**。单击 File 菜单选项，选择 New File 选项，然后继续选择 “SiriKit Intent Definition”。给它取个名字，例如我将它命名为了 CityNamesIntent。
 
-![](https://cdn-images-1.medium.com/max/4668/1*ABRRWfIFJfgSV5BgWhnD5w.png)
+![](../images/widgets-on-ios.md-1*ABRRWfIFJfgSV5BgWhnD5w.png)
 
 2）选择新创建的 intent 文件，我们现在需要添加一个新的 Intent。为此，请点击左下角的“+”图标，选择 **New Intent**，并命名为 CityNames。接下来，在右侧的 **Custom Intent** 下，将类别设置为 **View**，并确保选中了 **Intent is eligible for widgets**。
 
-![](https://cdn-images-1.medium.com/max/4664/1*1AezXCgg9qByWSpko1NOKA.png)
+![](../images/widgets-on-ios.md-1*1AezXCgg9qByWSpko1NOKA.png)
 
 3）添加新的 intent 后，我们需要定义 intent 将处理的属性。对于这个例子来说，一个简单的城市名的枚举就足够了。再次点击“+”图标，然后选择 **New Enum**。单击新创建的枚举来设置它的属性。在 **Cases section** 中，单击“+”图标以向枚举中添加值，就如图中我添加的城市名。
 
@@ -227,7 +227,7 @@ struct Static_Widget: Widget {
 
 到这里，用户就可以配置我们的 widget 了。运行应用，长按 widget 并选择 “Edit Widget”，你将看到一个我们提供的城市名称列表。 进行任何选择后，你可以在 Provider 中获取选定值，并相应地更改视图。
 
-![](https://cdn-images-1.medium.com/max/2000/1*iLhD0gNJKOIsZ5ICLtQ5lQ.png)
+![](../images/widgets-on-ios.md-1*iLhD0gNJKOIsZ5ICLtQ5lQ.png)
 
 本文到这里就结束了，希望你学会了 widget 的基础知识。widget 提供给用户了一种新的使用应用的方式，并为应用带来了更大的可能性。我强烈建议你继续探索 widget 的其他用法，例如 deep linking。
 

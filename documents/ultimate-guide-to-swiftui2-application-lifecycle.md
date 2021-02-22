@@ -5,7 +5,7 @@
 > * 译者：[zhuzilin](https://github.com/zhuzilin)
 > * 校对者：[PassionPenguin](https://github.com/PassionPenguin)、[zenblo](https://github.com/zenblo)
 
-![Image based on [Rocket](https://thenounproject.com/kavya261990/collection/space/?i=3437783) by [Icongeek26](https://thenounproject.com/kavya261990) on [The Noun Project](https://thenounproject.com/)](https://cdn-images-1.medium.com/max/2880/1*nhb0C-BMierO2SW0bvtKqA.png)
+![Image based on [Rocket](https://thenounproject.com/kavya261990/collection/space/?i=3437783) by [Icongeek26](https://thenounproject.com/kavya261990) on [The Noun Project](https://thenounproject.com/)](../images/ultimate-guide-to-swiftui2-application-lifecycle.md-1*nhb0C-BMierO2SW0bvtKqA.png)
 
 # SwiftUI 2 应用生命周期的终极指导
 
@@ -175,7 +175,7 @@ struct SwiftUIAppLifeCycleApp: App {
 xcrun simctl openurl booted <your url>
 ```
 
-![Demo: Opening deep links and continuing user activities](https://cdn-images-1.medium.com/max/2000/1*RMYt_zbKht6oqYJdTn9S_w.gif)
+![Demo: Opening deep links and continuing user activities](../images/ultimate-guide-to-swiftui2-application-lifecycle.md-1*RMYt_zbKht6oqYJdTn9S_w.gif)
 
 ## 继续用户 activity
 

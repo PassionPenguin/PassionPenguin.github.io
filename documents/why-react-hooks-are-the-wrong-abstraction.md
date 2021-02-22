@@ -7,7 +7,7 @@
 
 # 为什么 React Hooks 是错误的抽象
 
-![Photo by the author.](https://cdn-images-1.medium.com/max/5576/1*LVjLXZ8-mBmhJZoJj3w_3w.png)
+![Photo by the author.](../images/why-react-hooks-are-the-wrong-abstraction.md-1*LVjLXZ8-mBmhJZoJj3w_3w.png)
 
 在开始之前, 我想表达我对 React 团队多年来所付出的努力的感激。他们创建了一个很棒的框架，从很多方面来说，它是我对现代 Web 开发的引路人。他们为我铺平了道路，让我确信我的想法是正确的，如果没有他们的聪明才智，我不可能得出这些结论。
 
@@ -295,7 +295,7 @@ const App = createComponent(() => {
 
 当然，我的 `observable`，`derived`，和 `observe` 的实现都有 bug，并没有形成一个完整的状态管理解决方案。更不用说这些精心设计的示例忽略了一些考虑因素，但不用担心：我在这个问题上花了很多心思，我的想法在名为 [Elementos](https://malerba118.github.io/elementos-docs/)的新响应式状态管理库中达到了顶峰！
 
-![Photo by the author.](https://cdn-images-1.medium.com/max/5020/1*k1YTEm4t8HpWLaUcM7yfmg.png)
+![Photo by the author.](../images/why-react-hooks-are-the-wrong-abstraction.md-1*k1YTEm4t8HpWLaUcM7yfmg.png)
 
 Elementos 是一个与框架无关的响应式状态管理库，强调状态的可组合性和封装性。如果你喜欢这篇文章，我强烈建议你去看看！
 

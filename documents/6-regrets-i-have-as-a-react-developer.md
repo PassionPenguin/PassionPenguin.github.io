@@ -7,7 +7,7 @@
 
 # 我后悔没有在自己成为 React 开发者之前做的 6 件事情
 
-![由 [Francisco Gonzalez](https://unsplash.com/@franciscoegonzalez?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) 上传至 [Unsplash](https://unsplash.com/s/photos/sadness?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)](https://cdn-images-1.medium.com/max/8396/1*b_I4LDS0bICAcnC1bdOM2g.jpeg)
+![由 [Francisco Gonzalez](https://unsplash.com/@franciscoegonzalez?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) 上传至 [Unsplash](https://unsplash.com/s/photos/sadness?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)](../images/6-regrets-i-have-as-a-react-developer.md-1*b_I4LDS0bICAcnC1bdOM2g.jpeg)
 
 React 是一个很好的适合我们去学习的工具，它让我们能够以我们自己的方法编写代码完成任务。但即使它的功能很强大，它也有着不少的限制。
 

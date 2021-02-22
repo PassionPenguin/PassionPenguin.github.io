@@ -7,7 +7,7 @@
 
 # 为什么你应该使用 Picture 标签而不是 Img 标签
 
-![](https://cdn-images-1.medium.com/max/5760/1*Sv9aXzgr2N6IiblcW_lFPg.jpeg)
+![](../images/why-you-should-use-picture-tag-instead-of-img-tag.md-1*Sv9aXzgr2N6IiblcW_lFPg.jpeg)
 
 现代 web 应用程序中，在用户界面中使用大量图片和动画是一件很常见的事情。这些现代设计聚焦于提升应用的用户体验，但是如果没有做好设备对图片的响应式支持，其效果可能适得其反。
 
@@ -38,7 +38,7 @@
 
 这个可能会导致更长的图片加载时间以及自上而下的图片逐部分加载。
 
-![Top to bottom image loading issue](https://cdn-images-1.medium.com/max/2000/1*Atpq5fQFaAWBzVRgsMt75w.gif)
+![Top to bottom image loading issue](../images/why-you-should-use-picture-tag-instead-of-img-tag.md-1*Atpq5fQFaAWBzVRgsMt75w.gif)
 
 通过使用 `picture` 标签的 `srcset` 和 `sizes` 属性，可以轻松的解决这个问题。
 
@@ -167,7 +167,7 @@
 
 从 Chrome 88 开始，你可以使用其浏览器开发者工具（DevTools）来检查浏览器对于图像格式的兼容情况。
 
-![Using Chrome DevTools for Image Compatibility Emulations](https://cdn-images-1.medium.com/max/2562/1*GAFavZjkfi4FUDRkkPMA4Q.png)
+![Using Chrome DevTools for Image Compatibility Emulations](../images/why-you-should-use-picture-tag-instead-of-img-tag.md-1*GAFavZjkfi4FUDRkkPMA4Q.png)
 
 ## 总结
 

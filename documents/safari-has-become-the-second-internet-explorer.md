@@ -7,7 +7,7 @@
 
 # 恭喜 Safari 荣获「第二个 Internet Explorer」的美誉
 
-![Safari 有时候看起来长得跟 IE 没啥不一样的](https://cdn-images-1.medium.com/max/2300/1*obluMaNgoWxwefRpP__Elg.png)
+![Safari 有时候看起来长得跟 IE 没啥不一样的](../images/safari-has-become-the-second-internet-explorer.md-1*obluMaNgoWxwefRpP__Elg.png)
 
 如果你去问问一个程序员他对听到 IE 这个词的感受，一般来说，绝对是这样的 —— OMG 痛苦的要死！我当然也不是例外！我作为一名 Web 开发者已经有了十多年，在这段时间里面，开发过不少必须要兼容 IE 的项目。我清晰地认识到，某些奇葩浏览器不支持别的浏览器支持的常见功能这个问题，是如何令我们这群本已秃头的程序员们更加头秃沮丧的。或者说，有的时候，这种坑货浏览器甚至还会错误地将部分元素渲染在错误的地方！更糟糕的是，你可能有些时候还得去调试某些意料之外的错误的行为。
 
@@ -34,7 +34,7 @@ Safari 对 PWA 的支持？更确切地说应该是缺乏支持！Apple 是现�
 
 在 Mac 上，某些应用程序的 Web 版本无法发送推送通知，导致不能提供全部功能。
 
-![推送通知浏览器支持表格](https://github.com/PassionPenguin/gold-miner-images/blob/master/safari-has-become-the-second-internet-explorer-developer.mozilla.org_en-US_docs_Web_API_Push_API.png?raw=true)
+![推送通知浏览器支持表格](../images/safari-has-become-the-second-internet-explorer.md-safari-has-become-the-second-internet-explorer-developer.mozilla.org_en-US_docs_Web_API_Push_API.png)
 
 Messenger 应用们就是最好的例子。如今，Telegram 或 Facebook Messenger 只能在网站打开时通过变更标题和播放声音来通知用户有关新消息的信息。如果用户静音了，并将浏览器最小化了，显然就会错过新的消息。
 
@@ -85,7 +85,7 @@ ytd-page-manager {
 
 你是否能在 Mac 的 Safari 中看到 Instagram 网页的图标？出于某种原因，它是黑白的。
 
-![左上角的黑白图标](https://cdn-images-1.medium.com/max/5744/1*GgbMRIpIX_cuz6eCaLSoXA.png)
+![左上角的黑白图标](../images/safari-has-become-the-second-internet-explorer.md-1*GgbMRIpIX_cuz6eCaLSoXA.png)
 
 这是个次要的但也是个非常奇怪的问题。你可以自己尝试访问一下，会发现真正的图标应该是有颜色的。这个问题也出现在了我的 [methodist.io](https://methodist.io) 网页上。我在许多站点上都发现了此问题，而如果你知道此问题的发生原因以及解决方法，麻烦在评论中分享～
 
@@ -101,7 +101,7 @@ ytd-page-manager {
 
 在 2019 年，IT 巨头开始合作，开发先进、免费的视频编解码器 **AV1**。苹果、谷歌、Netflix 等公司（这个名单令人印象深刻）成立了一家”开放媒体联盟“公司，这些企业共享了他们的技术和专利，以创建跨时代的解编码器。目前，解编码器已开发完了，Netflix 也业已在其应用中使用了它，但是 Safari 还是不支持它。
 
-![开放媒体联盟](https://cdn-images-1.medium.com/max/2000/1*4Hu_Vd2eexqGCyRn16_AZg.jpeg)
+![开放媒体联盟](../images/safari-has-become-the-second-internet-explorer.md-1*4Hu_Vd2eexqGCyRn16_AZg.jpeg)
 
 如你所见，Safari 是一款非常保守的浏览器，而 Apple 总是不愿意与用户的意愿保持一致。
 

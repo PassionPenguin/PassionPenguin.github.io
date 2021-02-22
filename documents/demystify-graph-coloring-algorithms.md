@@ -7,7 +7,7 @@
 
 # 揭开图着色算法的神秘面纱
 
-![Photo by [salvatore ventura](https://unsplash.com/@salvoventura?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/12032/0*nMi_GsBxeMO5LlkM)
+![Photo by [salvatore ventura](https://unsplash.com/@salvoventura?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](../images/demystify-graph-coloring-algorithms.md-0*nMi_GsBxeMO5LlkM)
 
 图着色是指将特定的颜色按照约束条件（相邻任意两个部分的颜色不能相同）在图中分配的问题。要进行图着色算法，你必须先为一个图形着色，要么是上色顶点或是上色图的边，并且需要保证不存在两个相邻的部分有相同的颜色 —— 没有两个相邻的顶点或边会有相同的颜色。
 
@@ -23,7 +23,7 @@
 
 我们假设一个图中有五个顶点。我们可以分配给每个顶点的最大颜色数是五个。因此，我们可以将颜色列表初始化为五种颜色。
 
-![](https://cdn-images-1.medium.com/max/2000/0*dX9rqaI1V_1bvgv2.png)
+![](../images/demystify-graph-coloring-algorithms.md-0*dX9rqaI1V_1bvgv2.png)
 
 接下来，开始在一个空白图中将任意一个顶点作为第一个顶点进行上色操作。
 
@@ -33,7 +33,7 @@
 * 选择不在该桶（集合）中的第一种颜色，并将其指定给当前顶点。
 * 清空桶，接着处理下一个尚未着色的顶点。
 
-![](https://cdn-images-1.medium.com/max/2000/0*d2tx_zFC6IhmcT58.png)
+![](../images/demystify-graph-coloring-algorithms.md-0*d2tx_zFC6IhmcT58.png)
 
 这种贪心算法策略足以解决图着色问题。虽然它不保证最小颜色数量，但它保证了分配给图形的颜色数量上限。
 
@@ -70,13 +70,13 @@
 
 ## 地图着色
 
-![](https://cdn-images-1.medium.com/max/2000/0*fiE_-5ZC7cQZdSxN.gif)
+![](../images/demystify-graph-coloring-algorithms.md-0*fiE_-5ZC7cQZdSxN.gif)
 
 在地图着色问题中，没有两个相邻的城市或州在地图上被分配相同的颜色。根据[四色定理](https://mathworld.wolfram.com/Four-ColorTheorem.html#:~:text=The%20four%2Dcolor%20theorem%20states,conjectured%20the%20theorem%20in%201852.)，四种颜色足以给任何地图上色。在这种情况下，顶点代表每个区域，它的每一个相邻区域可以被分类为一条边。
 
 ## 数独难题
 
-![from ResearchGate-net](https://cdn-images-1.medium.com/max/2000/0*-aELwvDUPCYaizOI.png)
+![from ResearchGate-net](../images/demystify-graph-coloring-algorithms.md-0*-aELwvDUPCYaizOI.png)
 
 数独是图着色问题的一个变种，其中每个单元格代表一个顶点。如果两个顶点在同一行、列和块中，则在这两个顶点内形成一条边，每个块将有不同的颜色。
 

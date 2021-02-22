@@ -7,7 +7,7 @@
 
 # 3 个鲜为人知的 Bash 技巧
 
-![图源 Matera，摄于意大利](https://cdn-images-1.medium.com/max/4000/0*-UdH52A57htDgdu0.png)
+![图源 Matera，摄于意大利](../images/3-uncommon-bash-tricks-that-you-should-know.md-0*-UdH52A57htDgdu0.png)
 
 优秀的开发人员往往键入的内容更少 —— 这也让他们能够：
 

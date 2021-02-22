@@ -7,7 +7,7 @@
 
 # 掌握这 5 个 TypeScript 高级技巧，成为更好的开发者
 
-![Beautiful :)](https://cdn-images-1.medium.com/max/3200/0*RKICUYO863Mu_2mX.png)
+![Beautiful :)](../images/5-advanced-typescript-tips-to-make-you-a-better-programmer.md-0*RKICUYO863Mu_2mX.png)
 
 Typescript 是一门神奇的语言 —— 相比 JavaScript 可以实现的所有功能，它只用十分之一的调试时间就可以完成，主要包括以下几点：
 

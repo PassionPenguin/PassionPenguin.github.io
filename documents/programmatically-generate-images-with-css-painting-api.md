@@ -7,7 +7,7 @@
 
 # 使用 CSS Painting API 自动生成图像
 
-![Banner](https://cdn-images-1.medium.com/max/5760/1*wKYGWd-7eWgpmMeBNiLCDA.jpeg)
+![Banner](../images/programmatically-generate-images-with-css-painting-api.md-1*wKYGWd-7eWgpmMeBNiLCDA.jpeg)
 
 图像为应用程序增添色彩，丰富内容。然而，如果网页中嵌入了大量高分辨率图像，会大量增加页面资源加载时间，严重影响用户体验。对于展示产品、方案等必须内容的图像，我们别无选择，只能按照正常方式嵌入这些图像并通过缓存它们来优化应用程序。但是，如果我们在应用程序中需要几何图像，则不必再将其作为资源来加载。
 
@@ -37,7 +37,7 @@ div {
 
 这串代码的工作逻辑是这样的：
 
-![](https://cdn-images-1.medium.com/max/2000/1*c2EShrISdnmcxc87qJdKPg.png)
+![](../images/programmatically-generate-images-with-css-painting-api.md-1*c2EShrISdnmcxc87qJdKPg.png)
 
 在上文中似乎存在着一些晦涩难懂的术语。例如，我们提及了 `worklet`？
 

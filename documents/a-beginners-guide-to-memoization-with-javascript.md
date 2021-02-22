@@ -7,7 +7,7 @@
 
 # JavaScript Memoization 入门指南
 
-![Photo by [Tamanna Rumee](https://unsplash.com/@tamanna_rumee?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/10944/0*ppVRXfrCk7iBldw8)
+![Photo by [Tamanna Rumee](https://unsplash.com/@tamanna_rumee?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](../images/a-beginners-guide-to-memoization-with-javascript.md-0*ppVRXfrCk7iBldw8)
 
 作为一名软件开发者，需要不断学习。永远存在需要学习的新事物，特别是 JavaScript 相关技术。当我们的应用程序变得复杂起来，运行速度就显得尤为重要了。当应用程序代码量不断增加，就需要进行性能优化。Memoization 是一种概念，它能帮助你构建高效的应用，即使在应用程序变得越来越庞大的情况下也是如此。Memoization 概念跟 JavaScript 中纯函数和函数式编程密切相关。
 
@@ -46,7 +46,7 @@
 
 ## 重点
 
-![Photo by [Matthew Cabret](https://unsplash.com/@majinmdub?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/8320/0*m5L_0XBWVSlIUumn)
+![Photo by [Matthew Cabret](https://unsplash.com/@majinmdub?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](../images/a-beginners-guide-to-memoization-with-javascript.md-0*m5L_0XBWVSlIUumn.jpeg)
 
 关于 Memoization，有三个要点你需要记住。必须满足这些先决条件，Memoization 才是有意义的。
 

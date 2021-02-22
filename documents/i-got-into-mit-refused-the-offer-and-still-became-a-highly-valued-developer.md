@@ -7,7 +7,7 @@
 
 # 我拒绝了 MIT 的 Offer，依然是一个高价值的开发者
 
-![Photo by [Anthony DELANOIX](https://unsplash.com/@anthonydelanoix?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral).](https://cdn-images-1.medium.com/max/11232/0*pqI507rUeD-sclHu)
+![Photo by [Anthony DELANOIX](https://unsplash.com/@anthonydelanoix?utm_source=medium&utm_medium=referral) on [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral).](../images/i-got-into-mit-refused-the-offer-and-still-became-a-highly-valued-developer.md-0*pqI507rUeD-sclHu)
 
 小时候我一直梦想进入 MIT (麻省理工学院)，我敢肯定这也是大多数人在申请大学时的想法。
 

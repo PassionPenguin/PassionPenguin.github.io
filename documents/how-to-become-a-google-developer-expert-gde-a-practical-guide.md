@@ -106,7 +106,7 @@
 
 在你的个人简介中使用 GDE 标记。作为一个内容创作者，它是非常有价值的，因为它表明了你的资质。把它写在你的简历上，这样你就能脱颖而出，获取更高的薪水。
 
-![](https://cdn-images-1.medium.com/max/2000/1*KcIpcJq_OX3CPKrYQx-_Gg.png)
+![](../images/how-to-become-a-google-developer-expert-gde-a-practical-guide.md-1*KcIpcJq_OX3CPKrYQx-_Gg.png)
 
 #### 旅行和演讲
 

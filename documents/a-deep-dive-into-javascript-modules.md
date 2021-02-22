@@ -7,7 +7,7 @@
 
 # 深入了解 JavaScript 模块
 
-![Image by [HeungSoon](https://pixabay.com/users/heungsoon-4523762/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3887440) from [Pixabay](https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3887440)](https://cdn-images-1.medium.com/max/3840/1*Dya93Aqh8dXO4ngaaxHsug.jpeg)
+![Image by [HeungSoon](https://pixabay.com/users/heungsoon-4523762/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3887440) from [Pixabay](https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=3887440)](../images/a-deep-dive-into-javascript-modules.md-1*Dya93Aqh8dXO4ngaaxHsug.jpeg)
 
 所有 JavaScript 开发人员都知道如何导入模块，如果你以前没有这么做过，那么你还没有看过基本的 “helloworld” 示例。模块是 JavaScript 生态系统的基石。
 

@@ -7,7 +7,7 @@
 
 # 3 个最棒的最值得你去在产品中使用的 CSS Grid 功能
 
-![由 [Sigmund](https://unsplash.com/@sigmund?utm_source=medium&utm_medium=referral) 拍摄并在 [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral) 上传的图片](https://cdn-images-1.medium.com/max/8096/0*mWiTIfu6BVlYQ5lf)
+![由 [Sigmund](https://unsplash.com/@sigmund?utm_source=medium&utm_medium=referral) 拍摄并在 [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral) 上传的图片](../images/top-3-css-grid-features-to-start-using-in-production.md-0*mWiTIfu6BVlYQ5lf)
 
 Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实的。经过近 9 年的发展，我们现在可以说，浏览器对 Grid 的支持已经变得足够好，这样我们可以安心在生产环境中中使用 Grid 了。
 
@@ -17,7 +17,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 
 究竟什么是 Grid？Grid 其实就是一个以容器为中心的多维布局系统。简而言之：它可以在任何 x / y 方向上拓展，并且所有布局信息都存储在父节点中，而子节点则大多掌握有关如何将自己放置在 Grid 上的信息。
 
-![一维布局与二维布局](https://cdn-images-1.medium.com/max/2000/1*6YeEVVXSRcJwnZBHo2EgpQ.png)
+![一维布局与二维布局](../images/top-3-css-grid-features-to-start-using-in-production.md-1*6YeEVVXSRcJwnZBHo2EgpQ.png)
 
 在使用 Grid 开发时，建议使用 Firefox 浏览器，因为它的 Dev Tools 比其他浏览器的都要好 —— 支持 Grid 相关属性最棒的浏览器，而且它也是目前唯一支持 `subgrid` 属性的浏览器。
 
@@ -108,7 +108,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 </html>
 ```
 
-![复杂的 Grid 布局](https://cdn-images-1.medium.com/max/2000/1*kxxETOv_yi4ECBfYz_D-mw.png)
+![复杂的 Grid 布局](../images/top-3-css-grid-features-to-start-using-in-production.md-1*kxxETOv_yi4ECBfYz_D-mw.png)
 
 所有的变化都由 `grid-templates-areas` 和 `grid-area` 两个属性产生。前者定义了所有 Grid 轨迹，而后者将 Grid 元素定位在那些区域上。
 
@@ -116,7 +116,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 
 让我们使用 Firefox Inspector 审查页面元素，能够清晰地了解我们所创建的 Grid 布局。
 
-![ Grid 布局的内部](https://cdn-images-1.medium.com/max/2090/1*U9o4_M-wfMeBHindl1H4sw.png)
+![ Grid 布局的内部](../images/top-3-css-grid-features-to-start-using-in-production.md-1*U9o4_M-wfMeBHindl1H4sw.png)
 
 如果我们想在内容周围留一些空白，而不是直接挨着左右两列，我们可以使用`.` / `...` 符号。
 
@@ -133,7 +133,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 }
 ```
 
-![在主要内容两边定义空白 Grid](https://cdn-images-1.medium.com/max/2074/1*frMRKP1wKAGbxlAuQVI_SQ.png)
+![在主要内容两边定义空白 Grid](../images/top-3-css-grid-features-to-start-using-in-production.md-1*frMRKP1wKAGbxlAuQVI_SQ.png)
 
 注意：使用 `grid-template-areas` 时，需要注意以下几点：
 
@@ -199,7 +199,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 
 ![方法 A](https://cdn-images-1.medium.com/max/2090/1*U9o4_M-wfMeBHindl1H4sw.png)
 
-![方法 B](https://cdn-images-1.medium.com/max/2082/1*18VMr9MkDmUHOS-biKfckQ.png)
+![方法 B](../images/top-3-css-grid-features-to-start-using-in-production.md-1*18VMr9MkDmUHOS-biKfckQ.png)
 
 提示：使用 `grid-template-area` 可以简单创建 Grid 线。这意味着即使使用 `grid-template-area`，我们仍然可以使用 Grid 线的位置逻辑。接下来，让我们简要介绍一下负索引 `-1`。
 
@@ -213,7 +213,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 
 添加负索引会使我们的 CSS 更强大。我们可能会对 Grid 线的数量不了解：通过负索引，我们可以将内容设置为扩展到最后一个 Grid 线。
 
-![行上面使用负索引的结果](https://cdn-images-1.medium.com/max/2078/1*mFCCFIxCWZ_EA5H80t-BjQ.png)
+![行上面使用负索引的结果](../images/top-3-css-grid-features-to-start-using-in-production.md-1*mFCCFIxCWZ_EA5H80t-BjQ.png)
 
 ## 2. Grid 间隔
 
@@ -235,7 +235,7 @@ Grid 的 `gap` 特性的使用是很简捷的。我们仅需使用 `column-gap`�
 }
 ```
 
-![使用 gap 功能](https://cdn-images-1.medium.com/max/2000/1*aajG-IirnfyHHYyPb2YKsw.png)
+![使用 gap 功能](../images/top-3-css-grid-features-to-start-using-in-production.md-1*aajG-IirnfyHHYyPb2YKsw.png)
 
 注意：请勿使用 `grid-gap`、`grid-column-gap` 或 `grid-column-gap`：现在它们已过时，浏览器的支持会不断下降。
 
@@ -255,11 +255,11 @@ minmax(min, max)
 grid-template-columns: repeat(3, minmax(100px, 1fr));
 ```
 
-![使用 minmax 定义三列布局](https://cdn-images-1.medium.com/max/2000/1*DqLyXYT5DlN7k8NHejQ1nQ.png)
+![使用 minmax 定义三列布局](../images/top-3-css-grid-features-to-start-using-in-production.md-1*DqLyXYT5DlN7k8NHejQ1nQ.png)
 
 注意：这看起来很棒，但是有一个很大的缺点 —— 如果容器小于 `3 * 100px + 2 * 10px`，则内容将溢出。
 
-![没有足够的空间来渲染最小宽度为 100px 的三列布局](https://cdn-images-1.medium.com/max/2000/1*q-y32_HSK0RUABQregRtJw.png)
+![没有足够的空间来渲染最小宽度为 100px 的三列布局](../images/top-3-css-grid-features-to-start-using-in-production.md-1*q-y32_HSK0RUABQregRtJw.png)
 
 我们该如何解决？直接以响应方式构建 Grid 布局！我们可以让 Grid 容器通过使用 `auto-fill` 或 `auto-fit` 来确定列数。
 
@@ -319,7 +319,7 @@ grid-template-columns: repeat(3, minmax(100px, 1fr));
 </html>
 ```
 
-![响应式 Grid 布局](https://cdn-images-1.medium.com/max/2000/1*wu16vXlLxgjnrI8Gragp1g.png)
+![响应式 Grid 布局](../images/top-3-css-grid-features-to-start-using-in-production.md-1*wu16vXlLxgjnrI8Gragp1g.png)
 
 那就是我们所有变化所发生的源头：
 
@@ -352,11 +352,11 @@ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 *`auto-fill`：尝试在给定约束条件下用尽可能多的列填充行
 *`auto-fit`：行为与`auto-fill`相同，但是任何空的重复轨道将被折叠，它将扩展其他轨道以占用所有可用空间（如果有）。
 
-![自动填充与自动调整](https://cdn-images-1.medium.com/max/2000/1*Be3yz9t1oZ-OzfWghQ_l0g.png)
+![自动填充与自动调整](../images/top-3-css-grid-features-to-start-using-in-production.md-1*Be3yz9t1oZ-OzfWghQ_l0g.png)
 
 当有足够的元素填充 Grid 时，两个属性的效果将相同。这意味着根据分辨率的不同，它们可能渲染的效果是一样的。这就是为什么了解他们的内部情况是很重要的。
 
-![在某些分辨率下，它们的作用效果可能相同](https://cdn-images-1.medium.com/max/2000/1*bjQpF-R9e7ki-5u2c5zOwg.png)
+![在某些分辨率下，它们的作用效果可能相同](../images/top-3-css-grid-features-to-start-using-in-production.md-1*bjQpF-R9e7ki-5u2c5zOwg.png)
 
 ## 总结
 

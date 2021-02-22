@@ -7,7 +7,7 @@
 
 # 你应该编译你的 JavaScript 代码吗？
 
-![Image by [seznandy](https://pixabay.com/users/seznandy-15803435/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5093898) from [Pixabay](https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5093898)](https://cdn-images-1.medium.com/max/3840/1*_7N-LnDFVgKcgEgzczZVmg.jpeg)
+![Image by [seznandy](https://pixabay.com/users/seznandy-15803435/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5093898) from [Pixabay](https://pixabay.com/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5093898)](../images/should-you-compile-your-javascript-code.md-1*_7N-LnDFVgKcgEgzczZVmg.jpeg)
 
 我们都会也都喜爱 JavaScript，并且我们都通过编写代码和在我们最爱的运行环境（通常是浏览器，Node.js 和 Deno）中来执行 JavaScript 代码。但你是否曾经尝试过去编译你的 JavaScript 代码呢？
 
@@ -66,7 +66,7 @@ console.log("The result is " + result);
 
 针对它们输出的结果而言，它们早已对 Windows 上 Node.js 的 v12 有了一些优化。在某些情况下并不是提升速度，而是内存的使用甚至是输出文件的大小。
 
-![NectarJS’ 网站上的一份表格](https://cdn-images-1.medium.com/max/3036/1*HyX7ShDvXey6u9mo9_3ezg.png)
+![NectarJS’ 网站上的一份表格](../images/should-you-compile-your-javascript-code.md-1*HyX7ShDvXey6u9mo9_3ezg.png)
 
 当然，该项目仍然有其局限性，特别是到目前为止，该项目仅支持大约 80％ 的 ES3 标准，这意味着您可以编写的 JavaScript 代码是非常有限且不符合当今的标准的。
 
@@ -98,7 +98,7 @@ $ nectar your-file.js
 
 这就是我在我的 macOS 系统上能够获得的输出：
 
-![](https://cdn-images-1.medium.com/max/2028/1*7i_ihlwJ8Kx49n7v3wrePw.png)
+![](../images/should-you-compile-your-javascript-code.md-1*7i_ihlwJ8Kx49n7v3wrePw.png)
 
 需要注意的是，被创建的文件并没有一个拓展名 —— 它是一个二进制文件。如果你给予它执行的权限，你就能够执行这段代码。这很简单，并且它能够正常工作。
 

@@ -7,7 +7,7 @@
 
 # 如何让 JavaScript 中的循环慢下来
 
-![图源 [Charlotte Coneybeer](https://unsplash.com/@she_sees?utm_source=medium&utm_medium=referral)，上传于 [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](https://cdn-images-1.medium.com/max/10368/0*kcAWzuiAUolF3Zkr)
+![图源 [Charlotte Coneybeer](https://unsplash.com/@she_sees?utm_source=medium&utm_medium=referral)，上传于 [Unsplash](https://unsplash.com?utm_source=medium&utm_medium=referral)](../images/how-to-slow-down-a-for-loop-in-javascript.md-0*kcAWzuiAUolF3Zkr)
 
 For 循环在 JavaScript 中是必不可少的。使用 For 循环，我们可以写出与列表有关的程序。但是这里存在一个问题 —— For 循环是尽可能快地执行。当然如果我们只是用它来遍历数组那绝对是没有问题的。
 

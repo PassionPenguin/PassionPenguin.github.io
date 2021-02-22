@@ -17,7 +17,7 @@ Node.js 服务器一般需要在文件系统中进行读写，而文件在存储
 
 让我们一起深入缓冲区（`Buffer`）的各种使用方法，了解更多有关它们的信息以及一起学习如何在 Node.js 程序中使用它们吧。
 
-![](https://cdn-images-1.medium.com/max/2000/0*RbpNfHqVXY39GYeC.png)
+![](../images/a-complete-guide-of-node-js-buffer.md-0*RbpNfHqVXY39GYeC.png)
 
 ## Node.js Buffer 的方法
 

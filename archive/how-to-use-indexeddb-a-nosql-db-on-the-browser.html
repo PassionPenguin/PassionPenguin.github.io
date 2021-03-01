@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>如何在浏览器上使用 NoSQL 数据库 IndexedDB - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/how-to-use-indexeddb-a-nosql-db-on-the-browser-f845da3caf35">How to Use IndexedDB — A NoSQL DB on the Browser</a></li>
+<li>原文作者：<a href="https://medium.com/@viduniwickramarachchi">Viduni Wickramarachchi</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/how-to-use-indexeddb-a-nosql-db-on-the-browser.md">https://github.com/xitu/gold-miner/blob/master/article/2021/how-to-use-indexeddb-a-nosql-db-on-the-browser.md</a></li>
+<li>译者：<a href="https://github.com/zenblo">zenblo</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/Chorer">Chorer</a></li>
+</ul>
+</blockquote>
+<h1>如何在浏览器上使用 NoSQL 数据库 IndexedDB</h1>
+<p><img src="../images/how-to-use-indexeddb-a-nosql-db-on-the-browser.md-1*w6RCiqFjxootFGuWpCnkRw.jpeg" alt=""></p>
+<p>你听说过浏览器上的 NoSQL 数据库吗？</p>
+<blockquote>
+<p><strong>IndexedDB</strong> 是一个大型的 NoSQL 存储系统。它允许你在用户的<strong>浏览器</strong>中存储任意内容。除了通常的查找、读取和更新操作外，<strong>IndexedDB</strong> 还支持事务。</p>
+<p>来源：<a href="https://developers.google.cn/web/ilt/pwa/working-with-indexeddb">developers.google.cn</a></p>
+</blockquote>
+<p>你可以在下面找到 IndexedDB 的示例。</p>
+<p><img src="https://cdn-images-1.medium.com/max/3488/1*2XRdyD3uHCnjK-5WXpAfQw.png" alt="Source"></p>
+<p>在本文中，我们将重点介绍以下内容：</p>
+<ul>
+<li>为什么我们需要 IndexedDB</li>
+<li>如何在应用程序中使用 IndexedDB</li>
+<li>IndexedDB 的功能</li>
+<li>IndexedDB 的局限</li>
+<li>IndexedDB 是否适合你的应用程序</li>
+</ul>
+<h2>为什么我们需要 IndexedDB</h2>
+<blockquote>
+<p>IndexedDB 被认为比本地存储（<code>localStorage</code>）更强大！</p>
+</blockquote>
+<p>你知道背后的原因吗？让我们一起找出答案。</p>
+<ul>
+<li><strong>可以存储比本地存储（<code>localStorage</code>）大得多的数据量</strong></li>
+</ul>
+<p>IndexedDB 没有像本地存储（<code>localStorage</code>）那样的特殊存储限制（介于 2.5MB 和 10MB 之间）。IndexedDB 存储的最大限制取决于浏览器和磁盘空间。例如，Chrome 和基于 Chromium 的浏览器最多允许 80% 的磁盘空间可供使用。如果你有 100GB，则 IndexedDB 最多可以使用 80GB 的空间，单个来源最多可以使用 60GB。 Firefox 允许每个来源最多 2GB，而 Safari 允许每个来源最多 1GB。</p>
+<ul>
+<li><strong>可以存储基于键值对 <code>{ key: value }</code> 的任意类型值</strong></li>
+</ul>
+<p>IndexedDB 存储不同数据类型的灵活性更高。支持的数据类型不仅包括字符串类型，还包括二进制数据（<code>ArrayBuffer</code> 对象、<code>Blob</code> 对象等）。而 IndexedDB 在内部使用对象存储来保存数据。</p>
+<ul>
+<li><strong>提供查找接口</strong></li>
+</ul>
+<p>这个功能在其他浏览器存储选项（如本地存储 <code>localStorage</code> 和会话存储 <code>sessionStorage</code>）中都没有。</p>
+<ul>
+<li><strong>对于不需要持续联网的 Web 应用程序很有用</strong></li>
+</ul>
+<p>IndexedDB 对于在线和离线工作的应用程序都非常有用。例如，它可以用于渐进式 Web 应用程序（PWA）中的客户端存储。</p>
+<ul>
+<li><strong>可以存储应用状态</strong></li>
+</ul>
+<p>通过为频繁使用的用户存储应用程序状态，可以大幅提高应用程序的性能，让应用程序可以在后续与后端服务器同步，并通过懒加载来更新应用程序。</p>
+<p>让我们看一下可以存储多个数据库的 IndexedDB 结构。</p>
+<h4>IndexedDB 结构</h4>
+<p><img src="../images/how-to-use-indexeddb-a-nosql-db-on-the-browser.md-1*c0AXi5lhjUQiLxRNVJwr2w.png" alt=""></p>
+<h2>如何在应用程序中使用 IndexedDB</h2>
+<p>在以下内容中，我们将探讨如何在应用程序中使用 IndexedDB。</p>
+<h4>1. 使用 <code>window.indexedDB</code> 打开数据库连接</h4>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> openingRequest = indexedDB.open(<span class="hljs-string">&#x27;UserDB&#x27;</span>, <span class="hljs-number">1</span>);
+</code></pre>
+<p>在这里，<code>UserDB</code> 是数据库名称，<code>1</code> 是数据库的版本。这将返回一个对象，该对象是 <code>IDBOpenDBRequest</code> 接口的实例。</p>
+<h4>2. 创建对象存储</h4>
+<p>开启数据库连接后，将触发 <code>onupgradeneeded</code> 事件，该事件可用于创建对象存储。</p>
+<pre class="hljs"><code><span class="hljs-comment">// 创建 UserDetails 对象存储和索引</span>
+
+request.onupgradeneeded = <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+     <span class="hljs-keyword">let</span> db = event.target.result;
+
+     <span class="hljs-comment">// 创建 UserDetails 对象存储 </span>
+     <span class="hljs-comment">// 具有自动递增 id</span>
+     <span class="hljs-keyword">let</span> store = db.createObjectStore(<span class="hljs-string">&#x27;UserDetails&#x27;</span>, {
+         <span class="hljs-attr">autoIncrement</span>: <span class="hljs-literal">true</span>
+     });
+
+     <span class="hljs-comment">// 在 NIC 属性上创建索引</span>
+     <span class="hljs-keyword">let</span> index = store.createIndex(<span class="hljs-string">&#x27;nic&#x27;</span>, <span class="hljs-string">&#x27;nic&#x27;</span>, {
+         <span class="hljs-attr">unique</span>: <span class="hljs-literal">true</span>
+     });
+ };
+</code></pre>
+<h4>3. 将数据插入对象存储</h4>
+<p>只要开启数据库连接，就可以在 <code>onsuccess</code> 事件处理程序中管理数据。插入数据分四步进行。</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">insertUser</span>(<span class="hljs-params">db, user</span>) </span>{
+    <span class="hljs-comment">// 创建新的事务</span>
+    <span class="hljs-keyword">const</span> txn = db.transaction(<span class="hljs-string">&#x27;User&#x27;</span>, <span class="hljs-string">&#x27;readwrite&#x27;</span>);
+
+    <span class="hljs-comment">// 获取 UserDetails 对象存储</span>
+    <span class="hljs-keyword">const</span> store = txn.objectStore(<span class="hljs-string">&#x27;UserDetails&#x27;</span>);
+
+    <span class="hljs-comment">// 插入新记录</span>
+    <span class="hljs-keyword">let</span> query = store.put(user);
+
+    <span class="hljs-comment">// 处理成功案例</span>
+    query.onsuccess = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(event);
+    };
+
+    <span class="hljs-comment">// 处理错误案例</span>
+    query.onerror = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(event.target.errorCode);
+    }
+
+    <span class="hljs-comment">// 事务结束后关闭数据库</span>
+    txn.oncomplete = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        db.close();
+    };
+}
+</code></pre>
+<p>创建插入函数后，可以使用请求的 <code>onsuccess</code> 事件处理程序插入更多记录。</p>
+<pre class="hljs"><code>request.onsuccess = <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> {
+   <span class="hljs-keyword">const</span> db = event.target.result;
+
+   insertUser(db, {
+     <span class="hljs-attr">email</span>: <span class="hljs-string">&#x27;john.doe@outlook.com&#x27;</span>,
+     <span class="hljs-attr">firstName</span>: <span class="hljs-string">&#x27;John&#x27;</span>,
+     <span class="hljs-attr">lastName</span>: <span class="hljs-string">&#x27;Doe&#x27;</span>,
+   });
+
+   insertUser(db, {
+     <span class="hljs-attr">email</span>: <span class="hljs-string">&#x27;ann.doe@gmail.com&#x27;</span>,
+     <span class="hljs-attr">firstName</span>: <span class="hljs-string">&#x27;Ann&#x27;</span>,
+     <span class="hljs-attr">lastName</span>: <span class="hljs-string">&#x27;Doe&#x27;</span>
+   });
+};
+</code></pre>
+<p>可以在 IndexedDB 上执行很多操作。包括下面这些：</p>
+<ul>
+<li>通过键（key）从对象存储中读取或查找数据</li>
+<li>通过索引（index）从对象存储中读取或查找数据</li>
+<li>更新记录的数据</li>
+<li>删除一条记录</li>
+<li>从旧版本的数据库迁移等</li>
+</ul>
+<p>如果你需要关于如何实现上述操作的资料，请在下方评论区告诉我。你也可以参考<a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB">这里</a>获得更多信息。</p>
+<h2>IndexedDB 的功能</h2>
+<p>IndexedDB 提供了许多其它浏览器存储无法实现的特殊功能。下面简要说明一些功能。</p>
+<ul>
+<li><strong>具有异步 API</strong></li>
+</ul>
+<p>这样就可以在不阻塞 UI 线程的情况下执行高代价的操作，并为用户提供更好的体验。</p>
+<ul>
+<li><strong>支持可靠性事务</strong></li>
+</ul>
+<p>如果其中一个步骤失败，事务将被取消，数据库将回滚到以前的状态。</p>
+<ul>
+<li><strong>支持版本控制</strong></li>
+</ul>
+<p>你可以在创建数据库时对其进行版本控制，并在需要时对其进行升级。在 IndexedDB 中也可以从旧版本迁移到新版本。</p>
+<ul>
+<li><strong>支持私有域</strong></li>
+</ul>
+<p>数据库是私有域，因此任何站点都不能访问其它网站的 IndexedDB 存储。这也称为<strong>同源策略</strong>。</p>
+<h2>IndexedDB 的局限</h2>
+<p>到目前为止，IndexedDB 似乎很有希望用于客户端存储。然而，有几个限制值得注意。</p>
+<ul>
+<li>虽然现代浏览器支持 IndexedDB，但是 IE 等浏览器却没有完全支持。</li>
+</ul>
+<p><img src="https://cdn-images-1.medium.com/max/5472/1*II1BZYdl_uodU0W-6uOAwQ.png" alt="Source"></p>
+<ul>
+<li>IndexedDB 在 Firefox 的无痕浏览模式下是完全禁用的 —— 通过隐身窗口访问应用程序时，接口无法使用可能导致应用程序出现故障。</li>
+</ul>
+<h2>IndexedDB 是否适合你的应用程序</h2>
+<p>考虑到 IndexedDB 提供的诸多特性，这个百万美元问题（译者注：指至关重要的问题）答案可能是 Yes！然而，在得出结论之前，先问自己以下几个问题。</p>
+<ul>
+<li>你的应用程序需要离线访问吗？</li>
+<li>是否需要在客户端存储大量数据？</li>
+<li>是否需要在大量数据中快速定位或查找数据？</li>
+<li>应用程序是否使用 IndexedDB 支持的浏览器访问客户端存储？</li>
+<li>需要存储包括 JavaScript 对象在内的各种类型的数据吗？</li>
+<li>从客户端存储中写入或读取数据需要是非阻塞的吗？</li>
+</ul>
+<p>如果以上所有问题的答案都是肯定的，那么 IndexedDB 是你的最佳选择。但是，如果不需要这样的功能，你也可以选择本地存储（<code>localStorage</code>），因为它提供了大多数浏览器采用和易于使用的应用编程接口（API）。</p>
+<h2>总结</h2>
+<p>当我们考虑所有客户端存储机制时，IndexedDB 显然是胜出者。让我们来看一下不同客户端存储方法的总结比较。</p>
+<p><img src="../images/how-to-use-indexeddb-a-nosql-db-on-the-browser.md-how-to-use-indexeddb-a-nosql-db-on-the-browser-summary-img.png" alt=""></p>
+<p>希望你对 IndexedDB 及其特性有一个清晰的认识。也让我们知道你的想法。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

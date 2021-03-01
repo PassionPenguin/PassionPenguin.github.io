@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>构建像 Messenger 短信软件那样的 ImageView - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://proandroiddev.com/messengers-like-imageview-90e9f1da19f4">Messengers-like ImageView</a></li>
+<li>原文作者：<a href="https://medium.com/@programmerr47">Michael Spitsin</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/messengers-like-imageview.md">https://github.com/xitu/gold-miner/blob/master/article/2021/messengers-like-imageview.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/HumanBeingXenon">HumanBeing</a>、<a href="https://github.com/keepmovingljzy">keepmovingljzy</a></li>
+</ul>
+</blockquote>
+<h1>构建像 <code>Messenger</code> 短信软件那样的 ImageView</h1>
+<p><img src="../images/messengers-like-imageview.md-1*eUsCLT2MWPgMMc_7ltldOw.png" alt=""></p>
+<p>在上一篇论述中，我们讨论了<a href="https://proandroiddev.com/telegram-like-uploading-animation-e284f1404f63">发送图片消息时候的上传动画以及构建这个动画的方法</a>。今天我决定写一篇与图片的显示有关的文章。先来提个问题，在消息历史记录中，我们应该如何显示图片？</p>
+<p>当然是使用 <code>ImageView</code> 啦！好的这篇文章到此结束啦！</p>
+<p>嘿，别走！虽说我们可以使用 ImageView 简简单单就能呈现图片信息，但要做到像 Messenger 应用那样显示图片并非像我们想象中那么简单。虽说本质上难度并不大，但是，我们所需要的不仅是一个 <code>ImageView</code>，还要一些小计算，以查看尺寸是否适合我们要向用户展示的内容。</p>
+<h2>测量</h2>
+<p>首先我们需要了解我们应该要做什么。我们解决方案的核心是，我们要基于某些图片或动图，或任何其他可显示媒体的预定义大小（宽度和高度），在考虑显示图片的容器的尺寸限制（例如我们可能需要把尺寸为 1000x1000 的图片缩小以适合尺寸只有 100x100 的容器），而且应该在大多数情况下保持长宽比的情况下绘制图片。</p>
+<p>也就是说基本步骤可以分为两部分：</p>
+<ol>
+<li>依据容器尺寸界定最佳的尺寸并将其提供给程序程序。如果图像太小，我们需要将其调整直到其最短的边的长度等于容器最短的边长。</li>
+<li>给予其与容器一些约束条件（例如使用 <code>maxSize</code> 控制大小）。并且如果可能的话，我们应该就长宽比来计算得出最终的大小（稍后我们将讨论其他可能的情况）</li>
+</ol>
+<h3>定义尺寸</h3>
+<p>让我们从一个简单的 <code>Size</code> 类的定义开始。它将包含图像的 <code>width</code> 和 <code>height</code>，并且向它添加对我们计算有帮助的方法：</p>
+<pre class="hljs"><code><span class="hljs-keyword">internal</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Size</span></span>(
+    <span class="hljs-keyword">var</span> width: <span class="hljs-built_in">Int</span>,
+    <span class="hljs-keyword">var</span> height: <span class="hljs-built_in">Int</span>
+) {
+    <span class="hljs-keyword">val</span> area: <span class="hljs-built_in">Int</span> <span class="hljs-keyword">get</span>() = width * height
+    <span class="hljs-keyword">val</span> ratio: <span class="hljs-built_in">Float</span> <span class="hljs-keyword">get</span>() = height.toFloat() / width
+
+    <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">contains</span><span class="hljs-params">(other: <span class="hljs-type">Size</span>)</span></span> = width &gt;= other.width &amp;&amp; height &gt;= other.height
+
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">update</span><span class="hljs-params">(new: <span class="hljs-type">Size</span>)</span></span> {
+        width = new.width
+        height = new.height
+    }
+
+    <span class="hljs-comment">// 这里不希望让 mutable class 变成 data class</span>
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">copy</span><span class="hljs-params">(width: <span class="hljs-type">Int</span> = this.width, height: <span class="hljs-type">Int</span> = this.height)</span></span> = Size(width, height)
+}
+</code></pre>
+<p>这里有几点说明：</p>
+<ol>
+<li>我们之所以把这个类定义为可变类，是因为它将在视图内使用，并且我们希望优化实例的创建 —— 因为我们的程序是在一个线程中工作的，我们不希望也不需要因为创造它而浪费大量资源。</li>
+<li>我们其实可以将 <code>Size</code> 类本身视作数据类而不是自定义一个 <code>copy</code> 函数，但是我不想将可变性与数据类搭上边，因为数据类本应是不可变的。</li>
+</ol>
+<p>我们现在定义好了 <code>Size</code> 类，可以接着创建一个 <code>ImageSizeMeasurer</code> 类，负责尺寸的定义、调整和测量。</p>
+<h3>设置所需的尺寸</h3>
+<p>首先我们将设置图片所需的尺寸以及最小尺寸。在这个方法中，我们将检查所需大小是否小于最小值，如果是则对其进行依次调整：</p>
+<pre class="hljs"><code><span class="hljs-keyword">internal</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ImageSizeMeasurer</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> minSize: Size = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> desiredSize = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">val</span> desired <span class="hljs-keyword">get</span>() = desiredSize.copy()
+
+    <span class="hljs-comment">// = (height/width)</span>
+    <span class="hljs-keyword">var</span> fixRatio: <span class="hljs-built_in">Float</span> = <span class="hljs-number">1f</span>
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span>
+
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setDesiredSize</span><span class="hljs-params">(desired: <span class="hljs-type">Size</span>, min: <span class="hljs-type">Size</span>)</span></span> {
+        minSize = min.copy()
+
+        desiredSize = desired.copy()
+        fixRatio = desired.ratio
+
+        adjustDesiredHeight()
+        adjustDesiredWidth()
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">adjustDesiredHeight</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> (desiredSize.height &lt; minSize.height) {
+            desiredSize.height = minSize.height
+            desiredSize.width = (minSize.height / fixRatio).toInt()
+        }
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">adjustDesiredWidth</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> (desiredSize.width &lt; minSize.width) {
+            desiredSize.width = minSize.width
+            desiredSize.height = (minSize.width * fixRatio).toInt()
+        }
+    }
+}
+</code></pre>
+<p>此处我们使用了 <code>copy</code> 方法以避免数据被客户端操作修改的时候影响到。<code>copy</code> 方法让这些数据可以暗地里在不同地方之间共享（因此我们就不会因为字段不知道什么时候被更改而震惊）。</p>
+<p>这里的关键点在于设置大小和比例后，我们需要对其进行调整。不必担忧调用 <code>adjustDesiredHeight</code> 和 <code>adjustDesiredWidth</code> 方法时没有进行任何智能检查会造成任何严重后果。因为第一个方法在 <code>height</code> 小于 <code>width</code> 的情况下会把 <code>desiredSize</code> 中处于最小值的高度增加到 <code>minSize</code>，第二个函数在 <code>width</code> 小于 <code>height</code> 的情况下会把 <code>desiredSize</code> 处在最小值的宽度增加到 <code>minSize</code>。</p>
+<h4>分别测量约束条件</h4>
+<p>我们调整好了期望尺寸的最小尺寸，现在该测量实际尺寸的最大尺寸的了。该方法本身并不难，我们只需要记住，应该保证所有的更新不改变高宽比，除非降低图像的高度和宽度会导致两者之一小于 <code>minSize</code>。</p>
+<p>比如说，应用于非常窄的图片。</p>
+<p><img src="../images/messengers-like-imageview.md-messengers-like-imageview-example.png" alt=""></p>
+<ul>
+<li>要么宽度符合最大限值，但高度太小</li>
+<li>要么高度达到最小限值，但宽度过大</li>
+<li>要么将宽度设置为最大限值，高度设置为最小限值，但这个做法破坏了宽高比。</li>
+</ul>
+<p>在那种情况下，最后一个选项是最合适的选择，因为我们不能让图像大小超过约束尺寸，并且我们也不希望图像太窄，因为过于小的图片可能会让我们很难看清图片的内容，或与之交互。在这里我们可以使用 <code>scaleType = imageCrop</code>：它能帮助你在打破图片显示的宽高比的情况下正确地显示图片。</p>
+<pre class="hljs"><code><span class="hljs-keyword">internal</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ImageSizeMeasurer</span> </span>{
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> minSize: Size = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+
+    <span class="hljs-keyword">var</span> desiredSize = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">get</span>() = field.copy()
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span>
+
+    <span class="hljs-comment">// 放缩因子： `height` : `width`</span>
+    <span class="hljs-keyword">var</span> fixRatio: <span class="hljs-built_in">Float</span> = <span class="hljs-number">1f</span>
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span>
+
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(max: <span class="hljs-type">Size</span>, <span class="hljs-keyword">out</span>: <span class="hljs-type">Size</span>)</span></span> {
+        <span class="hljs-keyword">when</span> {
+            desiredSize <span class="hljs-keyword">in</span> max -&gt; <span class="hljs-keyword">out</span>.update(desiredSize)
+            fixRatio &lt; max.ratio -&gt; {
+                <span class="hljs-keyword">out</span>.width = max.width
+                <span class="hljs-keyword">out</span>.height = max((max.width * desiredSize.height) / desiredSize.width, minSize.height)
+            }
+            fixRatio &gt; max.ratio -&gt; {
+                <span class="hljs-keyword">out</span>.width = max((max.height * desiredSize.width) / desiredSize.height, minSize.width)
+                <span class="hljs-keyword">out</span>.height = max.height
+            }
+            <span class="hljs-keyword">else</span> -&gt; <span class="hljs-keyword">out</span>.update(max)
+        }
+    }
+    
+    <span class="hljs-comment">// ... 或者在这里设置需要的尺寸</span>
+}
+</code></pre>
+<p>让我们快速分析该 <code>measure</code> 方法。</p>
+<ul>
+<li>当所需大小适合最大大小时，一切正常。<code>setDesiredSize</code> 确定尺寸之后，我们将确保尺寸不小于最小尺寸。现在，我们只需要确保它不大于最大大小。因此，我们将返回它本身（<code>when</code> 代码块中的第一个条件句）</li>
+<li>如果以上预测错误，则说明要么宽度大于 <code>max.width</code> ，要么高度大于 <code>max.height</code> ，要么两者都超了。在这种情况下，图片的长宽比将与最大尺寸的长宽比相同，则我们可以输出最大尺寸，因为它将缩小为所需尺寸的结果。（<code>when</code> 代码块中的 <code>else</code> 语句）</li>
+<li>在另一种情况下，我们只需要比较宽高比。例如 <code>width</code> 的期望尺寸大于最大尺寸。但是期望尺寸的宽高比也大于最大尺寸的长宽比。意味着，当我们缩小期望尺寸时（因此当前尺寸的 <code>width</code> 将会和最大尺寸的相等），期望尺寸的 <code>height</code> 仍然大于最大尺寸的 <code>height</code>。
+因此，当期望尺寸的宽高比小于最大尺寸的长宽比时，我们只需将 <code>width</code> 更新为 <code>max.width</code>，然后高度也会相应地更新。但是如果小于 <code>minSize.height</code> ，我们将打破结果的宽高比，并把 <code>out.height</code> 设置为 <code>minSize.height</code>。</li>
+<li>类似地，如果期望尺寸的宽高比大于最大尺寸的宽高比，我们只需要将 <code>height</code> 更新为 <code>max.height</code>，宽度也相应地更新。但是，如果小于 <code>minSize.width</code> 我们将打破结果的宽高比，并且将 <code>out.width</code> 设置为 <code>minSize.width</code>。</li>
+</ul>
+<h2>所有计算中都带有一点魔术，使一切变得更自然，更漂亮</h2>
+<p>现在，我们准备好要衡量的所有内容：</p>
+<pre class="hljs"><code><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> measurer: ImageSizeMeasurer
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> measureResult = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> maxSize = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+
+<span class="hljs-comment">// ...</span>
+
+<span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMeasure</span><span class="hljs-params">(widthMeasureSpec: <span class="hljs-type">Int</span>, heightMeasureSpec: <span class="hljs-type">Int</span>)</span></span> {
+    <span class="hljs-keyword">if</span> (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+        setMeasuredDimension(measurer.desired.width, measurer.desired.height)
+    } <span class="hljs-keyword">else</span> {
+        measure(widthMeasureSpec, heightMeasureSpec)
+    }
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(widthSpec: <span class="hljs-type">Int</span>, heightSpec: <span class="hljs-type">Int</span>)</span></span> {
+    maxSize.width = <span class="hljs-comment">// 你可以在这里定义最大的尺寸：可以使用两个输入的尺寸，也可以使用硬编码的</span>
+    maxSize.height = <span class="hljs-comment">// 宽高比并且只使用其中一个输入的尺寸，随你选择 :)</span>
+    measurer.measure(maxSize, measureResult)
+    setMeasuredDimension(measureResult.width, measureResult.height)
+}
+</code></pre>
+<p>这里的一切都足够简单。如果我们有未指明的尺寸，我们会告诉视图的父控件在理想状况下的期望尺寸。在另一种情况下（大多数情况下），我们需要提供 <code>width</code> 与 <code>height</code> 来设置 <code>maxSize</code>，并将它们传递进入我们的 <code>measurer</code>。</p>
+<p>现在让我们看一下结果：</p>
+<p><img src="../images/messengers-like-imageview.md-1*lTedeH88K2J4Z8snpeSOfw.png" alt=""></p>
+<p>一切看起来都很棒，<span class="x x-first x-last">但是那些比较小图片似乎显示得太小了。我们希望让它们比现在的更大一些。你可能会说，“那就增大最小尺寸呗。”</span>我们当然可以这样做，但是在那种情况下，<span class="x x-first x-last">小图和更小尺寸的图片之间的显示上的大小不会有任何区别，因为它们将使用一个相同的最小尺寸定义</span>。</p>
+<p>除此之外，我们可以施加点魔法！</p>
+<p>而魔法的主要目的是通过增加一些幻数或公式使小图变大，并保持小图和更微小的图之间的大小差异：）</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(max: <span class="hljs-type">Size</span>, <span class="hljs-keyword">out</span>: <span class="hljs-type">Size</span>)</span></span> {
+    <span class="hljs-keyword">val</span> desired = desiredSize.copy()
+    magicallyStretchTooSmallSize(max, desired)
+
+    <span class="hljs-comment">// ... </span>
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">magicallyStretchTooSmallSize</span><span class="hljs-params">(max: <span class="hljs-type">ChatImageView</span>.<span class="hljs-type">Size</span>, desired: <span class="hljs-type">ChatImageView</span>.<span class="hljs-type">Size</span>)</span></span> {
+    <span class="hljs-keyword">if</span> (desired <span class="hljs-keyword">in</span> max) {
+        <span class="hljs-comment">// 如果图像小于最大尺寸，我们可以将图片尽可能往容器的边缘靠拢</span>
+        <span class="hljs-comment">// 这是有意而为，目的是告诉用户他正在发送小图，</span>
+        <span class="hljs-comment">// 调整后的图片不会变得太小，我们仅仅只需要用魔法调整一下就可以让图片变得更加漂亮了。</span>
+        <span class="hljs-keyword">val</span> adjustedArea = desired.area + (max.area - desired.area) / <span class="hljs-number">3f</span>
+        <span class="hljs-keyword">val</span> outW = sqrt(adjustedArea / fixRatio)
+        desired.height = (outW * fixRatio).toInt()
+        desired.width = outW.toInt()
+    }
+}
+</code></pre>
+<p>这个算法思路很简短：将期望面积增加到最大和期望面积之差的 1/3，然后通过新的面积和宽高比计算得出新的宽度和高度。</p>
+<p>这是一个比较结果。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2996/1*-pTHSTbjjPZlveMdtuTaeQ.gif" alt="Left: without magic, Right: with magic"></p>
+<p>我更喜欢新的结果：我们能够拥有更大的图片，能更方便地看清图片内容。但在同时，我们又能够理解图片的尺寸有所差异，有的图片比较大有的比较小。</p>
+<h2>如果我只知道比例就想要获取尺寸，该怎么办</h2>
+<p>让我们再进一步讨论一下能否有更多的改进吧。有时，我们并没有所要展示的图片的真实尺寸，而只获得了缩略图的尺寸。在这种情况下，我们不能缩略图的尺寸当作是所需的尺寸，因为这些规格要小得多，但是我们可以计算出比例是大了，小了还是完全相等，然后使用 <code>ImageSizeMeasurer</code> 对象，在只有固定宽高比得情况下，尝试计算得出所需尺寸并让这个尺寸尽可能满足最大约束。</p>
+<p>因此，首先，我们向 <code>Size</code> 类添加一个新属性：</p>
+<pre class="hljs"><code>val isSpecified: Boolean get() = width &gt; 0 &amp;&amp; height &gt; 0
+</code></pre>
+<p>接下来，我们需要添加方法以设置所需的比率而不是所需的大小：</p>
+<pre class="hljs"><code>fun setDesiredRatio(ratio: Float, min: Size) {
+    minSize = min.copy()
+    desiredSize = Size(0, 0)
+    fixRatio = ratio
+}
+</code></pre>
+<p>然后，我们需要通过添加其他调整到所需的大小来更新 <code>measure</code> 方法：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(max: <span class="hljs-type">ChatImageView</span>.<span class="hljs-type">Size</span>, <span class="hljs-keyword">out</span>: <span class="hljs-type">ChatImageView</span>.<span class="hljs-type">Size</span>)</span></span> {
+    <span class="hljs-keyword">val</span> desired = desiredSize.copy()
+    fixUnspecifiedDesiredSize(max, desired)
+    magicallyStretchTooSmallSize(max, desired)
+    
+    <span class="hljs-comment">// ...</span>
+}
+
+<span class="hljs-comment">// 没有指定所需的大小，但指定了宽高比，那么先将图片最大化伸展。</span>
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">fixUnspecifiedDesiredSize</span><span class="hljs-params">(max: <span class="hljs-type">ChatImageView</span>.<span class="hljs-type">Size</span>, desired: <span class="hljs-type">ChatImageView</span>.<span class="hljs-type">Size</span>)</span></span> {
+    <span class="hljs-keyword">if</span> (!desired.isSpecified) {
+        <span class="hljs-keyword">if</span> (fixRatio &gt; max.ratio) {
+            desired.width = max.width
+            desired.height = (max.width * fixRatio).toInt()
+        } <span class="hljs-keyword">else</span> {
+            desired.width = (max.height / fixRatio).toInt()
+            desired.height = max.height
+        }
+    }
+}
+</code></pre>
+<p>最后，让我们更新 <code>onMeasure</code> 方法：</p>
+<pre class="hljs"><code><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMeasure</span><span class="hljs-params">(widthMeasureSpec: <span class="hljs-type">Int</span>, heightMeasureSpec: <span class="hljs-type">Int</span>)</span></span> {
+    <span class="hljs-keyword">if</span> (measurer.desired.isSpecified) {
+        <span class="hljs-keyword">if</span> (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+            setMeasuredDimension(measurer.desired.width, measurer.desired.height)
+        } <span class="hljs-keyword">else</span> {
+            measure(widthMeasureSpec)
+        }
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (measurer.fixRatio &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">if</span> (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+            <span class="hljs-keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        } <span class="hljs-keyword">else</span> {
+            measure(widthMeasureSpec)
+        }
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+}
+
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(widthSpec: <span class="hljs-type">Int</span>)</span></span> {
+    maxSize.width = <span class="hljs-comment">// 我们可以同时使用两个规格或具有一些预定义的</span>
+    maxSize.height = <span class="hljs-comment">// 同时使用宽高或仅使用其中之一来定义最大尺寸，任君挑选；）</span>
+    measurer.measure(maxSize, measureResult)
+    setMeasuredDimension(measureResult.width, measureResult.height)
+}
+</code></pre>
+<h2>让我们一起讨论一下视图</h2>
+<p>到现在为止一切表现得还挺好。我们拥有了一个绝妙的图片尺寸计算工具！我们甚至对如何将其与视图整合都有一个粗略的了解，但是我们仍然没有思路如何表现。</p>
+<p>让我们首先描述一下我们想要什么。实际上，指定 <code>minWidth</code> 和 <code>minHeight</code> 并不难。这些属性是 xml 的一部分，<code>maxWidth</code> 和 <code>maxHeight</code> 也如此。但是我不想在这里硬编码任何特定的大小。相反，我想更多地依靠设备屏幕。意思是，最好用百分比来指定这些最大约束。我们现在已经拥有了 <code>ConstraintLayout</code> 控件，按理说像这样指定最大宽度（例如屏幕宽度的 70%）并不难...但是高度应该怎么办？</p>
+<p>其实你可以任意指定约束比例，毕竟这只是我的一点想法罢了。出于某些原因，我决定根据宽度决定高度，乘以缩放因子。因此，假设我们的 <code>factor</code> 值为 <code>1</code>，那便就是一个正方形。也就是说，只需指定 <code>width</code>（以及比例），程序就能计算对应的高度。</p>
+<p>如你所见，做法极其简单，但也极度依赖屏幕尺寸，而不是取决于设备的不同因素的 dimens.xml 中的各种定义，尽管后者的解决方案是安卓化的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">open</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FixRatioImageView</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span></span>(
+    context: Context, attrs: AttributeSet? = <span class="hljs-literal">null</span>, defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>
+) : AppCompatImageView(context, attrs, defStyleAttr) {
+    <span class="hljs-keyword">var</span> factor = DEFAULT_FACTOR
+        <span class="hljs-keyword">set</span>(value) {
+            <span class="hljs-keyword">if</span> (field != value) {
+                field = value
+                requestLayout()
+            }
+        }
+
+    <span class="hljs-keyword">init</span> {
+        attrs?.parseAttrs(context, R.styleable.FixRatioImageView) {
+            factor = getFloat(R.styleable.FixRatioImageView_factor, DEFAULT_FACTOR)
+        }
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMeasure</span><span class="hljs-params">(widthMeasureSpec: <span class="hljs-type">Int</span>, heightMeasureSpec: <span class="hljs-type">Int</span>)</span></span> {
+        <span class="hljs-keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        <span class="hljs-keyword">val</span> width = View.getDefaultSize(suggestedMinimumWidth, widthMeasureSpec)
+        setMeasuredDimension(width, ceil(width * factor).toInt())
+    }
+
+    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> {
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> DEFAULT_FACTOR = <span class="hljs-number">.6f</span>
+    }
+}
+</code></pre>
+<h2>合并所有代码！</h2>
+<p>让我们看看最终的代码：</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChatImageView</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span></span>(
+    context: Context, attrs: AttributeSet? = <span class="hljs-literal">null</span>, defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>
+) : FixRatioImageView(context, attrs, defStyleAttr) {
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> measurer = ImageSizeMeasurer()
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> measureResult = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> maxSize = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMeasure</span><span class="hljs-params">(widthMeasureSpec: <span class="hljs-type">Int</span>, heightMeasureSpec: <span class="hljs-type">Int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> (measurer.desired.isSpecified) {
+            <span class="hljs-keyword">if</span> (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+                setMeasuredDimension(measurer.desired.width, measurer.desired.height)
+            } <span class="hljs-keyword">else</span> {
+                measure(widthMeasureSpec)
+            }
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (measurer.fixRatio &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">if</span> (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+                <span class="hljs-keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec)
+            } <span class="hljs-keyword">else</span> {
+                measure(widthMeasureSpec)
+            }
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(widthSpec: <span class="hljs-type">Int</span>)</span></span> {
+        maxSize.width = MeasureSpec.getSize(widthSpec)
+        maxSize.height = (maxSize.width * factor).toInt()
+        measurer.measure(maxSize, measureResult)
+        setMeasuredDimension(measureResult.width, measureResult.height)
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setDesiredSize</span><span class="hljs-params">(width: <span class="hljs-type">Int</span>, height: <span class="hljs-type">Int</span>)</span></span> {
+        measurer.setDesiredSize(Size(width, height), Size(minimumWidth, minimumHeight))
+        invalidate()
+        requestLayout()
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setDesiredRatio</span><span class="hljs-params">(ratio: <span class="hljs-type">Float</span>)</span></span> {
+        measurer.setDesiredRatio(ratio, Size(minimumWidth, minimumHeight))
+        invalidate()
+        requestLayout()
+    }
+
+    <span class="hljs-keyword">internal</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ImageSizeMeasurer</span> </span>{
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> minSize: Size = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> desiredSize = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+        <span class="hljs-keyword">val</span> desired <span class="hljs-keyword">get</span>() = desiredSize.copy()
+
+        <span class="hljs-comment">// 缩放因子 height : width</span>
+        <span class="hljs-keyword">var</span> fixRatio: <span class="hljs-built_in">Float</span> = <span class="hljs-number">1f</span>
+            <span class="hljs-keyword">private</span> <span class="hljs-keyword">set</span>
+
+        <span class="hljs-keyword">init</span> { reset() }
+
+        <span class="hljs-comment">// 我们依赖客户端的 MATCH_PARENT 的设置以获取宽度</span>
+        <span class="hljs-comment">// 并且不创建新的 Size</span>
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">measure</span><span class="hljs-params">(max: <span class="hljs-type">Size</span>, <span class="hljs-keyword">out</span>: <span class="hljs-type">Size</span>)</span></span> {
+            <span class="hljs-keyword">val</span> desired = desiredSize.copy()
+            fixUnspecifiedDesiredSize(max, desired)
+            magicallyStretchTooSmallSize(max, desired)
+
+            <span class="hljs-keyword">when</span> {
+                desired <span class="hljs-keyword">in</span> max -&gt; <span class="hljs-keyword">out</span>.update(desired)
+                fixRatio &lt; max.ratio -&gt; {
+                    <span class="hljs-keyword">out</span>.width = max.width
+                    <span class="hljs-keyword">out</span>.height = max((max.width * desired.height) / desired.width, minSize.height)
+                }
+                fixRatio &gt; max.ratio -&gt; {
+                    <span class="hljs-keyword">out</span>.width = max((max.height * desired.width) / desired.height, minSize.width)
+                    <span class="hljs-keyword">out</span>.height = max.height
+                }
+                <span class="hljs-keyword">else</span> -&gt; <span class="hljs-keyword">out</span>.update(max)
+            }
+        }
+
+        <span class="hljs-comment">// 如果没有指定期望尺寸，但指定了缩放因数，那么先将图像最大程度地伸展</span>
+        <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">fixUnspecifiedDesiredSize</span><span class="hljs-params">(max: <span class="hljs-type">Size</span>, desired: <span class="hljs-type">Size</span>)</span></span> {
+            <span class="hljs-keyword">if</span> (!desired.isSpecified) {
+                <span class="hljs-keyword">if</span> (fixRatio &gt; max.ratio) {
+                    desired.width = max.width
+                    desired.height = (max.width * fixRatio).toInt()
+                } <span class="hljs-keyword">else</span> {
+                    desired.width = (max.height / fixRatio).toInt()
+                    desired.height = max.height
+                }
+            }
+        }
+
+        <span class="hljs-meta">@Suppress(<span class="hljs-meta-string">&quot;MagicNumber&quot;</span>)</span>
+        <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">magicallyStretchTooSmallSize</span><span class="hljs-params">(max: <span class="hljs-type">Size</span>, desired: <span class="hljs-type">Size</span>)</span></span> {
+            <span class="hljs-keyword">if</span> (desired <span class="hljs-keyword">in</span> max) {
+                <span class="hljs-comment">// 如果图像比最大界限小，我们就把这张图额外拉伸一点儿至边界值</span>
+                <span class="hljs-comment">// 这是有意这么做的，因为如果我们要发送小图像，图像不应该太小。</span>
+                <span class="hljs-comment">// 因此，它只是某种调整魔法，让图片看起来更靓 ;)</span>
+                <span class="hljs-keyword">val</span> adjustedArea = desired.area + (max.area - desired.area) / <span class="hljs-number">3f</span>
+                <span class="hljs-keyword">val</span> outW = sqrt(adjustedArea / fixRatio)
+                desired.height = (outW * fixRatio).toInt()
+                desired.width = outW.toInt()
+            }
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setDesiredRatio</span><span class="hljs-params">(ratio: <span class="hljs-type">Float</span>, min: <span class="hljs-type">Size</span>)</span></span> {
+            reset()
+            minSize = min.copy()
+            fixRatio = ratio
+        }
+
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">setDesiredSize</span><span class="hljs-params">(desired: <span class="hljs-type">Size</span>, min: <span class="hljs-type">Size</span>)</span></span> {
+            minSize = min.copy()
+
+            <span class="hljs-keyword">if</span> (!desired.isSpecified) {
+                reset()
+            } <span class="hljs-keyword">else</span> {
+                desiredSize = desired.copy()
+                fixRatio = desired.ratio
+
+                adjustDesiredHeight()
+                adjustDesiredWidth()
+            }
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">adjustDesiredHeight</span><span class="hljs-params">()</span></span> {
+            <span class="hljs-keyword">if</span> (desiredSize.height &lt; minSize.height) {
+                desiredSize.height = minSize.height
+                desiredSize.width = (minSize.height / fixRatio).toInt()
+            }
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">adjustDesiredWidth</span><span class="hljs-params">()</span></span> {
+            <span class="hljs-keyword">if</span> (desiredSize.width &lt; minSize.width) {
+                desiredSize.width = minSize.width
+                desiredSize.height = (minSize.width * fixRatio).toInt()
+            }
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">reset</span><span class="hljs-params">()</span></span> {
+            desiredSize = Size(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+            fixRatio = <span class="hljs-number">1f</span>
+        }
+    }
+
+    <span class="hljs-keyword">internal</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Size</span></span>(
+        <span class="hljs-keyword">var</span> width: <span class="hljs-built_in">Int</span>,
+        <span class="hljs-keyword">var</span> height: <span class="hljs-built_in">Int</span>
+    ) {
+        <span class="hljs-keyword">val</span> area: <span class="hljs-built_in">Int</span> <span class="hljs-keyword">get</span>() = width * height
+        <span class="hljs-keyword">val</span> ratio: <span class="hljs-built_in">Float</span> <span class="hljs-keyword">get</span>() = height.toFloat() / width
+        <span class="hljs-keyword">val</span> isSpecified: <span class="hljs-built_in">Boolean</span> <span class="hljs-keyword">get</span>() = width &gt; <span class="hljs-number">0</span> &amp;&amp; height &gt; <span class="hljs-number">0</span>
+
+        <span class="hljs-keyword">operator</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">contains</span><span class="hljs-params">(other: <span class="hljs-type">Size</span>)</span></span> = width &gt;= other.width &amp;&amp; height &gt;= other.height
+
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">update</span><span class="hljs-params">(new: <span class="hljs-type">Size</span>)</span></span> {
+            width = new.width
+            height = new.height
+        }
+
+        <span class="hljs-comment">// 不想使可变类成为数据类</span>
+        <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">copy</span><span class="hljs-params">(width: <span class="hljs-type">Int</span> = this.width, height: <span class="hljs-type">Int</span> = this.height)</span></span> = Size(width, height)
+    }
+}
+</code></pre>
+<p>我们的努力所换来的完美的运行结果：</p>
+<p><img src="../images/messengers-like-imageview.md-1*gSYcSTxF0jS3NbpbAR0MXQ.gif" alt=""></p>
+<h2>后记</h2>
+<p>如果你喜欢这篇文章，别忘记点赞或一键三连来支持我们。如果你有任何的疑问，请在评论区留言，让我们可以一起讨论！祝你编程快乐！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

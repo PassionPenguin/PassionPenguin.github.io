@@ -36,7 +36,7 @@ jobs:
           path: ./documents
 
       - name: Build with Gradle
-        run:  |
+        run: |
           cd ./page-generator
           ./gradlew build
 
@@ -68,7 +68,6 @@ jobs:
               md2html "$f" -o ./archive
               echo " - Generated $htmlpath"
             done
-
 
           if [[ -n $(git status -uno --porcelain) ]]
           then

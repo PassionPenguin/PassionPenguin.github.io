@@ -45,9 +45,10 @@ jobs:
           echo "Processing Markdown Files"
           java -jar page-generator/build/libs/PageGenerator.jar --input=./documents
           cd ./documents
+
+          git add *
           if [[ -n $(git status -uno --porcelain) ]]
           then
-            git add *
             git commit -m "Generate Structure"
             git push origin master
           fi
@@ -60,7 +61,7 @@ jobs:
       - name: Generate HTML Pages with Markdown Files
         run: |
           echo "Generating HTML Files"
-          cd documents
+          cd ./documents
           for f in documents/*.md
             do
               htmlpath=${f/documents/archive}
@@ -69,9 +70,9 @@ jobs:
               echo " - Generated $htmlpath"
             done
 
+          git add *
           if [[ -n $(git status -uno --porcelain) ]]
           then
-            git add *
             git commit -m "Build Pages"
             git push origin master
           fi

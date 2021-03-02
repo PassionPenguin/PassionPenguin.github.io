@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TypeScript 4.2 正式发布：优化了类型和开发者体验 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://www.infoq.com/news/2021/02/typescript-4-2-released/">Typescript 4.2 Released, Improves Types and Developer Experience</a></li>
+<li>原文作者：<a href="https://www.infoq.com/profile/Bruno-Couriol/">Bruno-Couriol</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/Typescript-4-2-Released-Improves-Types-and-Developer-Experience.md">https://github.com/xitu/gold-miner/blob/master/article/2021/Typescript-4-2-Released-Improves-Types-and-Developer-Experience.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/lsvih">lsvih</a>、<a href="https://github.com/zenblo">zenblo</a></li>
+</ul>
+</blockquote>
+<h1>TypeScript 4.2 正式发布：优化了类型和开发者体验</h1>
+<p>TypeScript 团队最近正式发布了 <a href="https://devblogs.microsoft.com/typescript/announcing-typescript-4-2/">TypeScript 4.2</a> 版本！该版本的 TypeScript 拥有了更灵活的类型注释，更严格的检查，额外的配置选项以及一些其他的重大变化。我们现在可以在元组的类型定义中的任意位置使用 Rest 参数（而不是只能在末尾使用）了！类型别名不再在类型错误消息中扩展，从而让我们开发者拥有更好的体验。</p>
+<p>TypeScript 4.2 <a href="https://github.com/microsoft/TypeScript/pull/41544">支持元组类型中任何位置的 Rest 参数（Rest Parameters）</a>：</p>
+<pre class="hljs"><code><span class="hljs-keyword">type</span> T1 = [...string[], <span class="hljs-built_in">number</span>];  <span class="hljs-comment">// 任意个 string 以及一个 number</span>
+<span class="hljs-keyword">type</span> T2 = [<span class="hljs-built_in">number</span>, ...boolean[], <span class="hljs-built_in">string</span>, <span class="hljs-built_in">string</span>];  <span class="hljs-comment">// 一个 number，跟着任意个 boolean，跟着两个 string</span>
+</code></pre>
+<p>在以前的版本中，Rest 参数只能在末尾处使用，例如 <code>type T1 = [number, ...string[]];</code>，因此我们不能对包含 Rest 参数却以固定类型参数结尾的参数集使用强类型定义。</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f1</span>(<span class="hljs-params">...args: [...<span class="hljs-built_in">string</span>[], <span class="hljs-built_in">number</span>]</span>) </span>{
+    <span class="hljs-keyword">const</span> strs = args.slice(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>[];
+    <span class="hljs-keyword">const</span> num = args[args.length - <span class="hljs-number">1</span>] <span class="hljs-keyword">as</span> <span class="hljs-built_in">number</span>;
+    <span class="hljs-comment">// ...</span>
+}
+
+f1(<span class="hljs-number">5</span>);
+f1(<span class="hljs-string">&#x27;abc&#x27;</span>, <span class="hljs-number">5</span>);
+f1(<span class="hljs-string">&#x27;abc&#x27;</span>, <span class="hljs-string">&#x27;def&#x27;</span>, <span class="hljs-number">5</span>);
+f1(<span class="hljs-string">&#x27;abc&#x27;</span>, <span class="hljs-string">&#x27;def&#x27;</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>);  <span class="hljs-comment">// Error</span>
+</code></pre>
+<p>函数 <code>f1</code> 的 <code>string</code> 参数的个数是不确定的，它的后面跟着一个 <code>number</code> 类型的参数。我们现在可以精确的定义 <code>f1</code> 参数的类型了。当然我们还是不能够使用多个 Rest 参数，可选元素不能在必需元素之前，也不能在其余元素之后。以下的参数类型定义是支持的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">type</span> Tup3&lt;T <span class="hljs-keyword">extends</span> unknown[], U <span class="hljs-keyword">extends</span> unknown[], V <span class="hljs-keyword">extends</span> unknown[]&gt; = [...T, ...U, ...V];
+
+<span class="hljs-keyword">type</span> TN1 = Tup3&lt;[<span class="hljs-built_in">number</span>], <span class="hljs-built_in">string</span>[], [<span class="hljs-built_in">number</span>]&gt;;  <span class="hljs-comment">// [number, ...string[], number]</span>
+<span class="hljs-comment">// Optional element following required element</span>
+<span class="hljs-keyword">type</span> TN2 = Tup3&lt;[<span class="hljs-built_in">number</span>], [<span class="hljs-built_in">string</span>?], [<span class="hljs-built_in">boolean</span>]&gt;;  <span class="hljs-comment">// [number, string | undefined, boolean]</span>
+<span class="hljs-keyword">type</span> TN3 = Tup3&lt;[<span class="hljs-built_in">number</span>], <span class="hljs-built_in">string</span>[], [<span class="hljs-built_in">boolean</span>?]&gt;;  <span class="hljs-comment">// [number, ...(string | boolean | undefined)[]]</span>
+<span class="hljs-keyword">type</span> TN4 = Tup3&lt;[<span class="hljs-built_in">number</span>], <span class="hljs-built_in">string</span>[], <span class="hljs-built_in">boolean</span>[]&gt;;  <span class="hljs-comment">// [number, ...(string | boolean)[]]</span>
+<span class="hljs-keyword">type</span> TN5 = Tup3&lt;<span class="hljs-built_in">string</span>[], <span class="hljs-built_in">number</span>[], <span class="hljs-built_in">boolean</span>[]&gt;;  <span class="hljs-comment">// (string | number | boolean)[] </span>
+</code></pre>
+<p>TypeScript 4.2 还让我们在使用类型别名时候拥有更好的开发体验：</p>
+<p><img src="https://imgur.com/rQkqilu.png" alt="https://imgur.com/rQkqilu.png"></p>
+<p>前面的示例表明，类型别名 <code>BasicPrimitive</code> 在某些情况下被拓展或规范化（例如为 <code>number | string | boolean</code>类型），但现在不会这样了。发行说明还强调了在不同地方的 TypeScript 开发者体验感受方面都做出了改进：</p>
+<blockquote>
+<p>你可以避免显示一些可怕的超长的类型定义 —— 类型别名现在通常会出现在快速信息和签名帮助中，以及转译的 <code>.d.ts</code> 文件输出中。这可以使 TypeScript 对于新手来说更加友善。</p>
+</blockquote>
+<p><strong><code>abstract</code></strong> 修饰符现在可以在构造函数签名上使用，实例：</p>
+<pre class="hljs"><code><span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Shape</span> </span>{
+    <span class="hljs-keyword">abstract</span> getArea(): <span class="hljs-built_in">number</span>;
+}
+
+<span class="hljs-comment">// 这是个错误！我们不能实例化一个抽象的类 </span>
+<span class="hljs-keyword">new</span> Shape();
+
+<span class="hljs-keyword">interface</span> HasArea {
+    getArea(): <span class="hljs-built_in">number</span>;
+}
+
+<span class="hljs-comment">// 这是一个错误！我们不能赋予抽象的构造器类型给一个不是抽象的构造器类型</span>
+<span class="hljs-keyword">let</span> Ctor: <span class="hljs-keyword">new</span>  () =&gt; HasArea = Shape;
+
+<span class="hljs-comment">// 这就很棒啦</span>
+<span class="hljs-keyword">let</span> Ctor: <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">new</span> () =&gt; HasArea = Shape;
+<span class="hljs-comment">//        ^^^^^^^^</span>
+</code></pre>
+<p><strong><code>abstract</code></strong> 修饰符的新语义允许我们<a href="https://github.com/microsoft/TypeScript/pull/36392">以支持抽象类的方式编写 <code>mixin factories</code> 的构造器</a>。</p>
+<p>我们现在可以将已解构的变量明确标记为未使用，而一些开发人员以前会写：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> [Input, <span class="hljs-comment">/* state */</span>, <span class="hljs-comment">/* actions */</span>, meta] = input 
+</code></pre>
+<p>而如果要更好的维护和阅读性，而非使用这个：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> [Input, , , meta] = input 
+</code></pre>
+<p>开发者们现在可以在未使用的变量名称的前面使用一个下划线标记：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> [Input, _state, _actions, meta] = input
+</code></pre>
+<p>新版本的 TypeScript 还对 <code>in</code> 运算符提供了更严格的检查：<code>&quot;foo&quot; in 42</code> 将触发类型错误。而 TypeScript 的未调用函数检查现在适用于 <code>&amp;&amp;</code> 和 <code>||</code> 表达式。<a href="https://devblogs.microsoft.com/typescript/announcing-typescript-4-2/#no-property-access-index-signature">当类型具有字符串索引签名时，设置 <code>noPropertyAccessFromIndexSignature</code> 标志不再使用点运算符（例如 <code>person.name</code>），让我们进行属性访问成为可能</a>，而 <code>explainFiles</code> 编译器标志（例如 <code>tsc --explainFiles</code> 命令）让编译器能够产生更详尽的信息告诉我们解决的和处理的文件的信息：</p>
+<pre class="hljs"><code>TS_Compiler_Directory/4.2.2/lib/lib.es5.d.ts
+  Library referenced via <span class="hljs-string">&#x27;es5&#x27;</span> from file <span class="hljs-string">&#x27;TS_Compiler_Directory/4.2.2/lib/lib.es2015.d.ts&#x27;</span>
+TS_Compiler_Directory/4.2.2/lib/lib.es2015.d.ts
+  Library referenced via <span class="hljs-string">&#x27;es2015&#x27;</span> from file <span class="hljs-string">&#x27;TS_Compiler_Directory/4.2.2/lib/lib.es2016.d.ts&#x27;</span>
+
+... More Library References...
+
+foo.ts
+  Matched by include pattern <span class="hljs-string">&#x27;**/*&#x27;</span> <span class="hljs-keyword">in</span> <span class="hljs-string">&#x27;tsconfig.json&#x27;</span>
+</code></pre>
+<p>TypeScript 4.2 还包含了一些重大更改：<a href="https://devblogs.microsoft.com/typescript/announcing-typescript-4-2/#type-arguments-in-javascript-are-not-parsed-as-type-arguments">JavaScript 中的类型参数不会解析为类型参数</a>，这意味着有效的 TypeScript 代码 <code>f&lt;T&gt;(100)</code> 将按照 JavaScript 规范解析到 JavaScript 文件中 <code>(f &lt; T) &gt; (100)</code>。与此同时，<code>.d.ts</code> 扩展名不能在导入路径中使用了（例如 <code>import { Foo } from &quot;./foo.d.ts;</code>），而我们可以用以下任何一种替换：</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> {Foo} <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./foo.js&quot;</span>;
+<span class="hljs-keyword">import</span> {Foo} <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./foo&quot;</span>;
+<span class="hljs-keyword">import</span> {Foo} <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./foo/index.js&quot;</span>;
+</code></pre>
+<p>TypeScript 4.2 实现在任何规模或位置更加准确编写 JavaScript 的目标，但是，在每个发行版中，TypeScript 都会增加其复杂性。一位开发者指出：</p>
+<blockquote>
+<p>由于 TypeScript 进行了大量更新导致的担忧，人们开始怀疑 TypeScript 是否会变得太复杂使得我们无法了解全部的问题，就像 C++ 那样。。</p>
+</blockquote>
+<p>TypeScript 4.2 还有其他的重大更改和功能新增，欢迎开发者阅读完整的发行说明。TypeScript 是基于 Apache 2 许可的开源软件，我们鼓励通过 TypeScript 在 GitHub 上的项目，在遵循 TypeScript 贡献准则和 Microsoft 开源行为准则的前提下进行贡献和反馈。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

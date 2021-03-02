@@ -197,7 +197,7 @@ Grid 最初是由 Microsoft 团队起草的，并于 2011 年在 IE 10 中落实
 }
 ```
 
-![方法 A](https://cdn-images-1.medium.com/max/2090/1*U9o4_M-wfMeBHindl1H4sw.png)
+![方法 A](../images//Library/WebServer/Documents/documents/top-3-css-grid-features-to-start-using-in-production.md-1*U9o4_M-wfMeBHindl1H4sw.png)
 
 ![方法 B](../images/top-3-css-grid-features-to-start-using-in-production.md-1*18VMr9MkDmUHOS-biKfckQ.png)
 

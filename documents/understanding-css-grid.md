@@ -7,7 +7,7 @@
 
 # 自适应 CSS 栅格：自由布局的最终版本
 
-![](https://cdn-images-1.medium.com/max/2800/0*MJfiLHUiFLi5M2sm.png)
+![](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*MJfiLHUiFLi5M2sm.png)
 
 CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方法。我们仅需几行 CSS，就可以创建一个之前不用 JavaScript 根本不可能实现的栅格布局。我们不需要任何插件或复杂的安装步骤，不需要繁琐的附加文件，同时也不需要局限于 12 列的栅格布局（译者注：指 Bootstrap 提供的 12 栅格系统）。
 
@@ -29,7 +29,7 @@ CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方�
 </div>
 ```
 
-![我额外添加了一些 CSS 代码让大家更好理解，与 Grid 实现毫无关系](https://cdn-images-1.medium.com/max/2800/0*lCX1UQBdGhuXCuJl.jpeg)
+![我额外添加了一些 CSS 代码让大家更好理解，与 Grid 实现毫无关系](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*lCX1UQBdGhuXCuJl.jpeg)
 
 ### 基础：在 CSS 中设置栅格和行列
 
@@ -46,7 +46,7 @@ CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方�
  grid-template-columns: repeat(5, 250px); */ 
 ```
 
-![](https://cdn-images-1.medium.com/max/2800/0*yYYJTjLzTLzogzyu.jpeg)
+![](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*yYYJTjLzTLzogzyu.jpeg)
 
 ### 设置间隔
 
@@ -61,7 +61,7 @@ CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方�
 }
 ```
 
-![需要注意的是容器的左边会将间隔减半，因此在本例中他们的间隔是 15px（对大多数其它的栅格同理）](https://cdn-images-1.medium.com/max/2800/0*CR0ENpYQu_-fNCuD.png)
+![需要注意的是容器的左边会将间隔减半，因此在本例中他们的间隔是 15px（对大多数其它的栅格同理）](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*CR0ENpYQu_-fNCuD.png)
 
 ### 使用 `fr` 自动填充剩余空间
 
@@ -74,7 +74,7 @@ CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方�
 }
 ```
 
-![](https://cdn-images-1.medium.com/max/2980/0*yh7hFOcFs43LM9q8.gif)
+![](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*yh7hFOcFs43LM9q8.gif)
 
 现在所有的行都是自适应的！
 
@@ -110,7 +110,7 @@ CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方�
 }
 ```
 
-![](https://cdn-images-1.medium.com/max/2800/0*fGVZP5_NMbf9UJs3.png)
+![](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*fGVZP5_NMbf9UJs3.png)
 
 别被栅格线所迷惑，它们总是在第一项的开始！
 
@@ -134,7 +134,7 @@ CSS 栅格布局（Grid）是一种全新的在 Web 上创建二维布局的方�
 }
 ```
 
-![任何垂直方向上的宽度和位置 ](https://cdn-images-1.medium.com/max/2800/0*a3fS5-GjETjWhArV.png)
+![任何垂直方向上的宽度和位置 ](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*a3fS5-GjETjWhArV.png)
 
 ### 想要适应不同的屏幕尺寸和设备？当然没问题！
 
@@ -170,7 +170,7 @@ CSS Grid 与常规栅格相比也具有明显的优势，根据屏幕大小，�
 }
 ```
 
-![](https://cdn-images-1.medium.com/max/2856/0*zF54G2_cLwYLyNh-.gif)
+![](../images//Library/WebServer/Documents/documents/understanding-css-grid.md-0*zF54G2_cLwYLyNh-.gif)
 
 ## 浏览器支持
 

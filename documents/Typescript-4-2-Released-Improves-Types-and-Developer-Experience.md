@@ -46,7 +46,7 @@ type TN5 = Tup3<string[], number[], boolean[]>;  // (string | number | boolean)[
 
 TypeScript 4.2 还让我们在使用类型别名时候拥有更好的开发体验：
 
-![https://imgur.com/rQkqilu.png](https://imgur.com/rQkqilu.png)
+![https://imgur.com/rQkqilu.png](../images//Library/WebServer/Documents/documents/Typescript-4-2-Released-Improves-Types-and-Developer-Experience.md-rQkqilu.png)
 
 前面的示例表明，类型别名 `BasicPrimitive` 在某些情况下被拓展或规范化（例如为 `number | string | boolean`类型），但现在不会这样了。发行说明还强调了在不同地方的 TypeScript 开发者体验感受方面都做出了改进：
 

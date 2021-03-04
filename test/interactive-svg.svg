@@ -1,0 +1,43 @@
+<svg id="svg" width="640" height="960" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 960"
+     style="background: url(background.png) center/cover no-repeat">
+
+    <image xmlns="http://www.w3.org/2000/svg" href="ship.png" width="364" height="353" x="640" y="460" opacity="0"
+           visibility="hidden">
+        <animate attributeName="x" to="320" begin="button.click+3" dur="2s" fill="freeze" keySplines=".94 .19 .75 .62"
+                 calcMode="spline"/>
+        <animate attributeName="opacity" to="1" begin="button.click+3" dur="2s" fill="freeze" calcMode="linear"/>
+        <animate attributeName="visibility" to="unset" begin="button.click" dur="0s" fill="freeze" calcMode="linear"/>
+    </image>
+
+    <g id="button">
+        <text fill="#fff" font-weight="900" font-family="Source Han Serif" font-size="24" text-anchor="middle" x="320"
+              y="835">点击我继续
+        </text>
+        <path d="M310,860 L320,870 L330,860 L335,860 L320,875 L305,860 Z" fill="#fff"/>
+    </g>
+
+    <rect width="640" height="960" fill="rgba(0,0,0,.3)" opacity="0" visibility="hidden">
+        <animate attributeName="opacity" to="1" begin="button.click" dur="2s" fill="freeze" calcMode="linear"/>
+        <animate attributeName="visibility" to="unset" begin="button.click" dur="0s" fill="freeze" calcMode="linear"/>
+    </rect>
+
+    <text font-family="Source Han Serif" font-size="36" opacity="0" text-anchor="middle" x="320" y="200" fill="#fff"
+          visibility="hidden">
+        生活就像海洋
+        <animate attributeName="opacity" to="1" begin="button.click" dur="2s" fill="freeze" calcMode="linear"/>
+        <animate attributeName="visibility" to="unset" begin="button.click" dur="0s" fill="freeze" calcMode="linear"/>
+    </text>
+    <text font-family="Source Han Serif" font-size="36" opacity="0" text-anchor="middle" x="320" y="260" fill="#fff"
+          visibility="hidden">
+        只有意志坚强的人
+        <animate attributeName="opacity" to="1" begin="button.click+1.5" dur="2s" fill="freeze" calcMode="linear"/>
+        <animate attributeName="visibility" to="unset" begin="button.click+1.5" dur="0s" fill="freeze"
+                 calcMode="linear"/>
+    </text>
+    <text font-family="Source Han Serif" font-size="36" opacity="0" text-anchor="middle" x="320" y="320" fill="#fff"
+          visibility="hidden">
+        才能听到答案
+        <animate attributeName="opacity" to="1" begin="button.click+3" dur="2s" fill="freeze" calcMode="linear"/>
+        <animate attributeName="visibility" to="unset" begin="button.click+3" dur="0s" fill="freeze" calcMode="linear"/>
+    </text>
+</svg>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在 React 中使用 Immer 管理不可变状态 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/using-immer-with-react-a-simple-solutions-for-immutable-states-a6ebb8b0bfa">Using Immer with React: a simple Solutions for Immutable States</a></li>
+<li>原文作者：<a href="https://medium.com/@LMPerera">Madushika Perera</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/using-immer-with-react-a-simple-solutions-for-immutable-states.md">https://github.com/xitu/gold-miner/blob/master/article/2021/using-immer-with-react-a-simple-solutions-for-immutable-states.md</a></li>
+<li>译者：<a href="https://github.com/zenblo">zenblo</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/felixliao">felixliao</a></li>
+</ul>
+</blockquote>
+<h1>在 React 中使用 Immer 管理不可变状态</h1>
+<p><img src="../images//Library/WebServer/Documents/documents/using-immer-with-react-a-simple-solutions-for-immutable-states.md-1*7V7cegDUA84z--4d6GflYg.jpeg" alt=""></p>
+<p>在 React 中，使用不可变状态可以快速且高效地比较更改前后的状态树。因此，每个组件可在执行任何成本很高的 DOM 操作之前，决定是否重新渲染。</p>
+<p>我希望你已经知道：</p>
+<blockquote>
+<p>JavaScript 是可变的，我们必须自己实现不可变性。</p>
+</blockquote>
+<p>像 Redux 这样流行的状态管理库也遵循着相同的理念。当我们使用 <code>reducers</code>（译者注：根级的 reduce 函数 reducer 拆分为多个 reducers）时，它期望我们不要改变状态，以避免产生任何的副作用。但是，对于容易出错的大型项目，手动实现不可变性可能不是最佳选择。</p>
+<blockquote>
+<p>幸运的是，有着专门的 JavaScript 库例如 <a href="https://immerjs.github.io/immer/docs/introduction">Immer</a>。它们通过设计，实现了状态树的不可变性。</p>
+</blockquote>
+<h2>Immer 简介与使用</h2>
+<p>Immer 是一个小型库，它基于写时拷贝（<strong>copy-on-write</strong> ）机制帮助开发者实现不可变状态，这是一种用于在可修改资源上实现复制操作的技术。</p>
+<p>在 Immer 中，主要有三种状态：</p>
+<ol>
+<li>Current State：实际状态数据。</li>
+<li>Draft State：所有更改都将应用于此状态。</li>
+<li>Next State：该状态是基于 Draft State 的变化而产生的。</li>
+</ol>
+<p><img src="../images//Library/WebServer/Documents/documents/using-immer-with-react-a-simple-solutions-for-immutable-states.md-1*-LI_oJ_e_DpY2mahvV1Hug.png" alt="Immer states"></p>
+<p>从性能的角度来看，与使用 JavaScript 中的 <strong>object.assign()</strong> 或展开运算符的浅拷贝（Shallow Copy）相比，Immer 表现得可谓是相当的好。如果你有兴趣了解更多关于性能的比较方面的信息，请参考此文：<a href="https://www.measurethat.net/Benchmarks/Show/6108/0/immer-vs-shallow-copy-vs-immutable-perf-test">Immer vs 浅拷贝 vs 不可变性的测试</a>。</p>
+<p><img src="../images//Library/WebServer/Documents/documents/using-immer-with-react-a-simple-solutions-for-immutable-states.md-1*5m8fOSOiL4W6nb7mwc2AxA.png" alt="Immer 与浅拷贝的性能比较"></p>
+<p>Immer 还减少了实现上述基准测试结果所需编写的代码量，这也是 Immer 脱颖而出的原因之一。</p>
+<hr>
+<p>现在你已经基本了解 Immer，接下来我们来看一下，为什么 Immer 被公认为是解决不可变性的最佳方案之一。</p>
+<h2>Immer 的工作原理</h2>
+<p>如果你正在处理简单的状态，可能会觉得 Immer 正在使你的代码更复杂。但是，当涉及处理复杂的数据时，Immer 变得非常有用。</p>
+<p>为了更好地理解这一点，让我们看看著名的 React reducer 示例：</p>
+<pre class="hljs"><code><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> (state = {}, action) =&gt; {
+    <span class="hljs-keyword">switch</span> (action.type) {
+        <span class="hljs-keyword">case</span> GET_ITEMS:
+            <span class="hljs-keyword">return</span> {
+                ...state,
+                ...action.items.reduce(<span class="hljs-function">(<span class="hljs-params">obj, item</span>) =&gt;</span> {
+                    obj[item.id] = item
+                    <span class="hljs-keyword">return</span> obj
+                }, {})
+            }
+        <span class="hljs-attr">default</span>:
+            <span class="hljs-keyword">return</span> state
+    }
+}
+</code></pre>
+<p>上述代码是一个 React-Redux 的典型简化示例，它使用 ES6 展开运算符，并深入到状态树对象的嵌套级别来更新值。我们可以使用 Immer 轻松地降低上述代码的复杂性。</p>
+<p>让我们来看看具体如何使用 Immer 降低上述代码的复杂性。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;immer&quot;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> produce(<span class="hljs-function">(<span class="hljs-params">draft, action</span>) =&gt;</span> {
+    <span class="hljs-keyword">switch</span> (action.type) {
+        <span class="hljs-keyword">case</span> GET_ITEMS:
+            action.items.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+                draft[item.id] = item
+            })
+    }
+}, {})
+</code></pre>
+<blockquote>
+<p>在这个示例中，Immer 简化了用于扩展状态的代码。你还可以看到它通过使用 <code>forEach</code> 循环而不是 ES6 的 <code>reduce</code> 函数来改变对象。</p>
+</blockquote>
+<p>让我们看另一个示例，将 Immer 与 React 结合使用。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> produce <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;immer&quot;</span>;
+
+<span class="hljs-built_in">this</span>.state={
+    <span class="hljs-attr">id</span>: <span class="hljs-number">14</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;stewie@familyguy.com&quot;</span>,
+    <span class="hljs-attr">profile</span>: {
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Stewie Griffin&quot;</span>,
+      <span class="hljs-attr">bio</span>: <span class="hljs-string">&quot;You know, the... the novel you&#x27;ve been working on&quot;</span>,
+      <span class="hljs-attr">age</span>:<span class="hljs-number">1</span>
+    }
+}
+
+changeBioAge = <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">this</span>.setState(<span class="hljs-function"><span class="hljs-params">prevState</span> =&gt;</span> ({
+        <span class="hljs-attr">profile</span>: {
+            ...prevState.profile,
+            <span class="hljs-attr">age</span>: prevState.profile.age + <span class="hljs-number">1</span>
+        }
+    }))
+}
+</code></pre>
+<p>可以通过更改如下所示的状态来重构这段代码。</p>
+<pre class="hljs"><code>changeBioAge = <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">this</span>.setState(
+        produce(<span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> {
+            draft.profile.age += <span class="hljs-number">1</span>
+        })
+    )
+}
+</code></pre>
+<p>如你所见，Immer 极大地减少了代码行数并降低了代码复杂度。</p>
+<h2>结合 Hooks 使用</h2>
+<p>Immer 的另一个重要特性是它支持 React Hooks。Immer 使用一个名为 <strong>use-immer</strong> 的附加库来实现此功能。让我们来看一个示例，以便更好地理解。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> [state, setState] = useState({
+    <span class="hljs-attr">id</span>: <span class="hljs-number">14</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;stewie@familyguy.com&quot;</span>,
+    <span class="hljs-attr">profile</span>: {
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Stewie Griffin&quot;</span>,
+      <span class="hljs-attr">bio</span>: <span class="hljs-string">&quot;You know, the... the novel you&#x27;ve been working on&quot;</span>,
+      <span class="hljs-attr">age</span>:<span class="hljs-number">1</span>
+    }
+  });
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changeBio</span>(<span class="hljs-params">newBio</span>) </span>{
+    setState(<span class="hljs-function"><span class="hljs-params">current</span> =&gt;</span> ({
+      ...current,
+      <span class="hljs-attr">profile</span>: {
+        ...current.profile,
+        <span class="hljs-attr">bio</span>: newBio
+      }
+    }));
+  }
+</code></pre>
+<p>通过将 <code>useState</code> 替换为 <code>useImmer</code> Hook，我们可以进一步简化 Hooks 示例，还可以通过更改组件状态来更新 React 组件。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { useImmer } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;use-immer&#x27;</span>;
+
+<span class="hljs-keyword">const</span> [state, setState] = useImmer({
+    <span class="hljs-attr">id</span>: <span class="hljs-number">14</span>,
+    <span class="hljs-attr">email</span>: <span class="hljs-string">&quot;stewie@familyguy.com&quot;</span>,
+    <span class="hljs-attr">profile</span>: {
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Stewie Griffin&quot;</span>,
+      <span class="hljs-attr">bio</span>: <span class="hljs-string">&quot;You know, the... the novel you&#x27;ve been working on&quot;</span>,
+      <span class="hljs-attr">age</span>:<span class="hljs-number">1</span>
+    }
+ });
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">changeBio</span>(<span class="hljs-params">newBio</span>) </span>{
+   setState(<span class="hljs-function"><span class="hljs-params">draft</span> =&gt;</span> {
+      draft.profile.bio = newBio;
+    });
+  }
+</code></pre>
+<p>同样，我们也可以使用 Immer 将 <code>Array</code> 和 <code>Sets</code> 转换为不可变的对象。通过 Immer 创建的 <code>Map</code> 和 <code>Set</code> 会在对象发生改变时会报错，从而使开发者能够意识到对象发生改变的错误。</p>
+<blockquote>
+<p>最重要的是，Immer 不局限于结合 React 使用，你还可以轻松地将 Immer 与原生 JavaScript 结合使用。</p>
+</blockquote>
+<p>除了在维持不可变方面之外，Immer 还可以通过降低代码库的复杂度，帮助我们维护一个编写良好且可读性强的代码库。</p>
+<h2>本文总结</h2>
+<p>根据我对 Immer 的使用经验，我相信 Immer 与 React 结合使用是一个不错的选择。它将简化项目代码，并通过设计帮助管理不可变状态。</p>
+<p>你可以通过<a href="https://immerjs.github.io/immer/docs/introduction">参考文档</a>找到更多关于 Immer 的信息。</p>
+<hr>
+<p>感谢大家的阅读！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

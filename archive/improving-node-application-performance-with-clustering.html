@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>通过集群提高 Node.js 应用程序性能 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.appsignal.com/2021/02/03/improving-node-application-performance-with-clustering.html">Improving Node.js Application Performance With Clustering</a></li>
+<li>原文作者：<a href="https://echessa.com/">Joyce Echessa</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/improving-node-application-performance-with-clustering.md">https://github.com/xitu/gold-miner/blob/master/article/2021/improving-node-application-performance-with-clustering.md</a></li>
+<li>译者：<a href="https://github.com/zenblo">zenblo</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/Ashira97">Ashira97</a></li>
+</ul>
+</blockquote>
+<h1>通过集群提高 Node.js 应用程序性能</h1>
+<p>在构建应用程序产品时，我们通常会寻找一些方法来尽可能优化应用程序的性能。在本文中，我们将探讨一种能有效改善 Node.js 应用程序处理工作负载的方法。</p>
+<p>Node.js 实例是在单个进程中运行的，意味着在如今大多数计算机都在使用的多核系统（multi-core system）上，该应用程序不会使用所有 CPU。要想使用其他可用 CPU，可以通过集群模式启动 Node.js 进程并在它们之间分配负载。</p>
+<p>因为可以同时为多个客户端提供服务，拥有多个进程来处理请求可以有效提高服务器的吞吐量（每秒请求数）。在本文中，我们将首先探讨如何使用 Node.js 集群模块创建子进程，然后我们将探讨如何使用 PM2 进程管理器管理集群。</p>
+<h2>集群简介</h2>
+<p>Node.js <a href="https://nodejs.org/api/cluster.html">集群模块</a>支持创建同时运行并共享同一服务器端口的子进程（工作进程）。每个衍生的子对象都有自己的事件循环、内存和 V8 实例。子进程使用进程间通信（IPC）与父进程进行通信。</p>
+<p>有多个进程来处理传入请求意味着可以同时处理多个请求，如果一个工作进程上有长时间运行或阻塞操作，其他工作进程可以继续处理传入请求。即使存在阻塞操作也不影响整体任务，完成正常传入任务以及阻塞任务，整个应用程序就可以结束运行。</p>
+<p>通过运行多个工作进程，我们可以在不停机情况下更新应用程序。我们可以在修改应用程序，每次只重启一个工作进程，等待一个子进程完全生成后再重启另一个子进程。这样，在我们更新应用程序时，就一直会有工作进程在维持运作。</p>
+<p>传入的连接是通过以下两种方式之一在子进程之间分配的：</p>
+<ul>
+<li>除了 Windows 平台，所有平台默认采用主进程监听端口上的连接，并以循环方式将它们分布在工作进程中的方法。</li>
+<li>主进程创建一个监听套接字，并将其发送给相关的工作进程，然后这些工作进程将能够直接收到传入的连接。</li>
+</ul>
+<h2>使用集群</h2>
+<p>要查看集群的优势，我们将从不使用集群的 Node.js 应用程序示例开始，然后将其与使用集群的应用程序进行比较：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;express&#x27;</span>);
+<span class="hljs-keyword">const</span> app = express();
+<span class="hljs-keyword">const</span> port = <span class="hljs-number">3000</span>;
+
+app.get(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+  res.send(<span class="hljs-string">&#x27;Hello World!&#x27;</span>);
+})
+
+app.get(<span class="hljs-string">&#x27;/api/:n&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-keyword">let</span> n = <span class="hljs-built_in">parseInt</span>(req.params.n);
+  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">5000000000</span>) n = <span class="hljs-number">5000000000</span>;
+
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt;= n; i++){
+    count += i;
+  }
+
+  res.send(<span class="hljs-string">`count 结果是 <span class="hljs-subst">${count}</span>`</span>);
+})
+
+app.listen(port, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`App 监听端口 <span class="hljs-subst">${port}</span>`</span>);
+})
+</code></pre>
+<p>这有点假，在现实世界中基本不存在，但它能够满足我们的需求。这个应用程序包含两条路径 —— 一条路是由返回字符串 “Hello World”，而另一条路是由采用路由参数 <code>n</code>，在返回包含最终统计的字符串之前，将 <code>n</code> 个数字加到一个 <code>count</code> 变量中。</p>
+<p>该操作是一个 <code>O(n)</code> 操作，如果我们将 n 设定为一个足够大的值，这个方法就能够简单模拟在服务器上长时间运行操作的情景。我们将 <code>n</code> 限制在 <code>5,000,000,000</code> —— 让我们的计算机不必运行如此多的操作。</p>
+<p>如果你使用 <code>node app.js</code> 运行应用程序，并向它传递一个适当小的 <code>n</code> 值（例如 <code>http://localhost:3000/api/50</code>），它将快速执行并几乎立即返回响应。根路由（<code>http://localhost:3000</code>）也会快速返回响应。</p>
+<p>当你传递给它一个比较大的 <code>n</code> 值的时候，你将看到在一个进程上运行应用程序所带来的问题。你可以自己试试传递一个 <code>5,000,000,000</code>（通过 <code>http://localhost:3000/api/5000000000</code>）这么大的数字给它。</p>
+<p>应用程序可能需要几秒钟才能完成你的请求。而如果你打开另一个浏览器选项卡并尝试向服务器发送另一个请求（发送到 <code>/</code> 或 <code>/api/:n</code> 路由），该请求将需要几秒钟才能完成，因为单个进程将忙于处理另一个长时间运行的操作 —— 单个 CPU 内核必须先完成第一个请求，然后才能处理另一个请求。</p>
+<p>现在，让我们使用应用程序中的集群模块来产生一些子进程，看一下是如何改进的。</p>
+<p>以下是修改后的应用：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;express&#x27;</span>);
+<span class="hljs-keyword">const</span> port = <span class="hljs-number">3000</span>;
+<span class="hljs-keyword">const</span> cluster = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;cluster&#x27;</span>);
+<span class="hljs-keyword">const</span> totalCPUs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;os&#x27;</span>).cpus().length;
+
+<span class="hljs-keyword">if</span> (cluster.isMaster) {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`CPU 数量是 <span class="hljs-subst">${totalCPUs}</span>`</span>);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`正在运行 <span class="hljs-subst">${process.pid}</span>`</span>);
+
+  <span class="hljs-comment">// 分叉工作进程</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; totalCPUs; i++) {
+    cluster.fork();
+  }
+
+  cluster.on(<span class="hljs-string">&#x27;exit&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">worker, code, signal</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`销毁进程 <span class="hljs-subst">${worker.process.pid}</span>`</span>);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;分叉另一个工作进程！&quot;</span>);
+    cluster.fork();
+  });
+
+} <span class="hljs-keyword">else</span> {
+  <span class="hljs-keyword">const</span> app = express();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`启动进程 <span class="hljs-subst">${process.pid}</span>`</span>);
+
+  app.get(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+    res.send(<span class="hljs-string">&#x27;Hello World!&#x27;</span>);
+  })
+
+  app.get(<span class="hljs-string">&#x27;/api/:n&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">let</span> n = <span class="hljs-built_in">parseInt</span>(req.params.n);
+    <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">5000000000</span>) n = <span class="hljs-number">5000000000</span>;
+
+    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt;= n; i++){
+      count += i;
+    }
+
+    res.send(<span class="hljs-string">`count 结果是 <span class="hljs-subst">${count}</span>`</span>);
+  })
+
+  app.listen(port, <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`App 监听端口 <span class="hljs-subst">${port}</span>`</span>);
+  })
+
+}
+</code></pre>
+<p>这个应用程序做了和之前一样的事情，但是这一次，我们正在产生几个子进程，它们都将共用端口 <code>3000</code>，并且能够处理发送到这个端口的请求。工作进程是使用 <a href="https://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options"><code>child_process.fork()</code></a> 方法生成的。该方法返回一个 <a href="https://nodejs.org/api/child_process.html#child_process_child_process"><code>ChildProcess</code></a> 对象，该对象具有一个内置的通信通道，允许消息在子进程与其父进程之间来回传递。</p>
+<p>我们在运行应用程序的机器上创建尽可能多的子进程。建议不要在计算机上创建超过逻辑核心数量的工作进程，因为这可能会导致进程调度方面的开销。出现这种情况是因为系统必须调度所有创建的进程，以便每个进程都能轮到在内核上运行。</p>
+<p>工作进程由主进程创建和管理。当应用程序第一次运行时，我们用 <code>isMaster</code> 检查它是否是一个主进程。这是由 <code>process.env.NODE_UNIQUE_ID</code> 变量决定的。如果 <code>process.env.NODE_UNIQUE_ID</code> 是 <code>undefined</code>，则 <code>isMaster</code> 为 <code>true</code>。</p>
+<p>如果进程是一个主进程，那么我们可以去调用 <code>cluster.fork()</code> 来产生几个进程。我们记录下主进程和工作进程的标识，并可以在下面的输出中看到在四核系统上运行该应用程序的输出结果。当一个子进程终止时，我们会产生一个新的进程来继续运行可用的中央处理器内核。</p>
+<pre class="hljs"><code>Number of CPUs is 4
+Master 67967 is running
+Worker 67981 started
+App listening on port 3000
+Worker 67988 started
+App listening on port 3000
+Worker 67982 started
+Worker 67975 started
+App listening on port 3000
+App listening on port 3000
+</code></pre>
+<p>要体验使用集群获得的改进效果，请运行与之前相同的示例：首先向服务器发送一个很大的 <code>n</code> 值请求，然后在另一个浏览器选项卡中快速运行另一个请求。第二个请求将在第一个请求仍在运行时完成，而无需等待其它请求完成。由于可以使用多个工作进程来处理请求，因此服务器可用性和吞吐量都得到了提高。</p>
+<p>在一个浏览器选项卡中运行一个请求，然后在第二个选项卡中快速运行另一个请求，可能会向我们展示本示例通过集群提供的改进，但这并不是适当或可靠的确定性能改进的方法。让我们看一些基准测试，这些基准测试可以更好地说明集群在多大程度上改善了我们的应用程序。</p>
+<h2>性能指标</h2>
+<p>让我们在两个应用程序上进行负载测试，以便了解每个应用程序如何处理大量传入连接。我们将为此使用 <a href="https://www.npmjs.com/package/loadtest">loadtest</a> 依赖包。</p>
+<p>通过 <code>loadtest</code> 依赖包，你可以模拟与 API 的大量并发连接，从而可以评估其性能。</p>
+<p>要使用 <code>loadtest</code>，首先需要全局安装它：</p>
+<pre class="hljs"><code>$ npm install -g loadtest
+</code></pre>
+<p>然后，使用 <code>node app.js</code> 运行要测试的应用程序。我们将首先测试不使用集群的版本。</p>
+<p>在应用程序运行的情况下，打开另一个终端并运行以下负载测试：</p>
+<pre class="hljs"><code>$ loadtest http://localhost:3000/api/500000 -n 1000 -c 100
+</code></pre>
+<p>上面的命令会将 <code>1000</code> 个请求发送到给定的 URL，其中 <code>1000</code> 个是并发的。以下是运行上述命令的输出结果：</p>
+<pre class="hljs"><code>Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
+
+Target URL:          http://localhost:3000/api/500000
+Max requests:        1000
+Concurrency level:   100
+Agent:               none
+
+Completed requests:  1000
+Total errors:        0
+Total time:          1.268364041 s
+Requests per second: 788
+Mean latency:        119.4 ms
+
+Percentage of the requests served within a certain time 50%      121 ms
+  90%      132 ms
+  95%      135 ms
+  99%      141 ms
+ 100%      142 ms (longest request)
+</code></pre>
+<p>我们看到，使用相同的请求（<code>n</code> = <code>500000</code>），服务器能够每秒处理 <code>788</code> 个请求，平均等待时间为 <code>119.4</code> 毫秒（完成单个请求所需的平均时间）。</p>
+<p>让我们再试一次，但是这次是更多请求（并且没有集群）：</p>
+<pre class="hljs"><code>$ loadtest http://localhost:3000/api/5000000 -n 1000 -c 100
+</code></pre>
+<p>以下是输出结果：</p>
+<pre class="hljs"><code>Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
+Requests: 573 (57%), requests per second: 115, mean latency: 798.3 ms
+
+Target URL:          http://localhost:3000/api/5000000
+Max requests:        1000
+Concurrency level:   100
+Agent:               none
+
+Completed requests:  1000
+Total errors:        0
+Total time:          8.740058135 s
+Requests per second: 114
+Mean latency:        828.9 ms
+
+Percentage of the requests served within a certain time 50%      869 ms
+  90%      874 ms
+  95%      876 ms
+  99%      879 ms
+ 100%      880 ms (longest request)
+</code></pre>
+<p>对于 <code>n</code> = <code>5000000</code> 的请求，服务器每秒可以处理 <code>114</code> 个请求，平均等待时间为 <code>828.9</code> 毫秒。</p>
+<p>让我们将此结果与使用集群的应用程序进行比较。</p>
+<p>停止非集群应用程序，运行集群应用程序，最后运行相同的负载测试。</p>
+<p>以下是 <code>http://localhost:3000/api/500000</code> 的测试结果：</p>
+<pre class="hljs"><code>Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
+
+Target URL:          http://localhost:3000/api/500000
+Max requests:        1000
+Concurrency level:   100
+Agent:               none
+
+Completed requests:  1000
+Total errors:        0
+Total time:          0.701446328 s
+Requests per second: 1426
+Mean latency:        65 ms
+
+Percentage of the requests served within a certain time 50%      61 ms
+  90%      81 ms
+  95%      90 ms
+  99%      106 ms
+ 100%      112 ms (longest request)
+</code></pre>
+<p>经过相同请求的测试（当 <code>n</code> = <code>500000</code> 时），使用集群的应用程序每秒可以处理 <code>1426</code> 个请求 —— 与不包含集群的应用程序每秒 <code>788</code> 个请求相比，显着增加。使用集群的应用程序平均延迟为 <code>65</code> 毫秒，而没有使用集群的应用程序的平均延迟为 <code>119.4</code>。你可以清楚地看到集群为应用程序带来的改进效果。</p>
+<p>以下是对 <code>http://localhost:3000/api/5000000</code> 的测试结果：</p>
+<pre class="hljs"><code>Requests: 0 (0%), requests per second: 0, mean latency: 0 ms
+
+Target URL:          http://localhost:3000/api/5000000
+Max requests:        1000
+Concurrency level:   100
+Agent:               none
+
+Completed requests:  1000
+Total errors:        0
+Total time:          2.43770738 s
+Requests per second: 410
+Mean latency:        229.9 ms
+
+Percentage of the requests served within a certain time 50%      235 ms
+  90%      253 ms
+  95%      259 ms
+  99%      355 ms
+ 100%      421 ms (longest request)
+</code></pre>
+<p>在这里（当 <code>n</code> = <code>5000000</code> 时），该应用程序每秒可以运行 <code>410</code> 个请求，相比之下，没有集群的应用程序有 <code>114</code> 个，延迟为 <code>229.9</code>，而其他应用程序为 <code>828.9</code>。</p>
+<p>在继续下一部分之前，让我们看一下集群可能无法提供很多性能改进的情况。</p>
+<p>我们将为每个应用程序再运行两次测试。我们将测试那些不是 CPU 密集型（CPU-intensive）的、运行速度相当快的请求，而不会使事件循环过载操作。</p>
+<p>在无集群应用程序运行的情况下，执行以下测试：</p>
+<pre class="hljs"><code>$ loadtest http://localhost:3000/api/50 -n 1000 -c 100
+</code></pre>
+<p>以下是小结的结果：</p>
+<pre class="hljs"><code>Total time:          0.531421648 s
+Requests per second: 1882
+Mean latency:        50 ms
+</code></pre>
+<p>在同一集群应用程序仍在运行的情况下，执行以下测试：</p>
+<pre class="hljs"><code>$ loadtest http://localhost:3000/api/5000 -n 1000 -c 100
+</code></pre>
+<p>以下是小结的结果：</p>
+<pre class="hljs"><code>Total time:          0.50637567 s
+Requests per second: 1975
+Mean latency:        47.6 ms
+</code></pre>
+<p>现在，停止应用程序，再次运行集群应用程序。</p>
+<p>运行集群应用程序，执行以下测试：</p>
+<pre class="hljs"><code>$ loadtest http://localhost:3000/api/50 -n 1000 -c 100
+</code></pre>
+<p>以下是小结的结果：</p>
+<pre class="hljs"><code>Total time:          0.598028941 s
+Requests per second: 1672
+Mean latency:        56.6 ms
+</code></pre>
+<p>集群应用程序每秒能够运行 <code>1672</code> 个请求，而非集群应用程序每秒只能够运行 <code>1882</code> 个请求。集群应用程序平均延迟为 <code>56.6</code> 毫秒，而非集群应用程序平均延迟为 <code>50</code> 毫秒。</p>
+<p>让我们运行另一个测试。在同一集群应用程序仍在运行的情况下，执行以下测试：</p>
+<pre class="hljs"><code>$ loadtest http://localhost:3000/api/5000 -n 1000 -c 100
+</code></pre>
+<p>以下是小结的结果：</p>
+<pre class="hljs"><code>Total time:          0.5703417869999999 s
+Requests per second: 1753
+Mean latency:        53.7 ms
+</code></pre>
+<p>在这里，集群应用程序每秒运行 <code>1753</code> 个请求，而非集群应用程序每秒运行 <code>1975</code> 个请求。集群应用程序的平均延迟为 <code>53.7</code> 毫秒，而非集群应用程序为 <code>47.6</code> 毫秒。</p>
+<p>基于这些测试，可以看到集群并没有给应用程序的性能带来太大的改善。事实上，与不使用集群的应用程序相比，集群应用程序的性能稍差。怎么会这样？</p>
+<p>在上面的测试中，我们使用一个相当小的 <code>n</code> 值调用 API，这意味着代码将运行非常少的循环次数。该操作不会占用大量 CPU。当涉及到 CPU 密集型任务时，集群会起作用。当你的应用可能运行 CPU 密集型任务时，就一次可运行此类任务的数量而言，使用集群将提高应用程序性能。</p>
+<p>但是，如果你的应用程序没有执行大量的 CPU 密集型任务，那么通过集群模式获得的性能提升可能并不足以弥补产生大量工作进程带来的开销。请记住，你创建的每个进程都有其自身的内存和 V8 实例。由于存在额外的资源分配，因此通常不建议生成大量 Node.js 子进程。</p>
+<p>在我们的示例中，集群应用程序的性能要比非集群应用程序差一些，因为我们要花一些开销来创建多个子进程，而这些子进程并没有太多优势。在现实世界中，你可以使用它来确定微服务体系结构中的哪些应用程序可以从集群中受益 —— 运行测试以检查这种额外复杂性的好处是否值得。</p>
+<h2>PM2 管理集群</h2>
+<p>在我们的应用程序中，我们使用 Node.js 集群模块（<code>cluster module</code>）手动创建和管理工作进程。我们首先确定要产生的工作进程数量（使用 CPU 内核的数量），然后手动产生这些工作进程，最后，监听任何终止的工作进程，以便我们可以产生新的工作进程。在非常简单的应用程序中，我们需要编写大量代码来处理集群。在生产应用程序中，你也需要编写更多内容。</p>
+<p>有一个工具可以帮助更好地管理流程 —— <a href="https://pm2.keymetrics.io/">PM2</a> 流程管理器。 PM2 是带有内置负载均衡器的 Node.js 应用程序的生产过程管理器。正确配置后，PM2 将自动在集群模式下运行你的应用程序，为你生成工作程序，并在工作程序死亡时照顾新工作程序的产生。 PM2 使得停止，删除和启动进程变得容易，它还具有一些监视工具，可以帮助你监视和调整应用程序的性能。</p>
+<p>要使用 PM2，请先在全局进行安装：</p>
+<pre class="hljs"><code>$ npm install pm2 -g
+</code></pre>
+<p>我们将使用它来运行我们的第一个未修改的应用程序：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;express&#x27;</span>);
+<span class="hljs-keyword">const</span> app = express();
+<span class="hljs-keyword">const</span> port = <span class="hljs-number">3000</span>;
+
+app.get(<span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+  res.send(<span class="hljs-string">&#x27;Hello World!&#x27;</span>);
+})
+
+app.get(<span class="hljs-string">&#x27;/api/:n&#x27;</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>{
+  <span class="hljs-keyword">let</span> n = <span class="hljs-built_in">parseInt</span>(req.params.n);
+  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">if</span> (n &gt; <span class="hljs-number">5000000000</span>) n = <span class="hljs-number">5000000000</span>;
+
+  <span class="hljs-keyword">for</span>(<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt;= n; i++){
+    count += i;
+  }
+
+  res.send(<span class="hljs-string">`count 结果为 <span class="hljs-subst">${count}</span>`</span>);
+})
+
+app.listen(port, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`App 监听端口 <span class="hljs-subst">${port}</span>`</span>);
+})
+</code></pre>
+<p>使用以下命令运行该应用程序：</p>
+<pre class="hljs"><code>$ pm2 start app.js -i 0
+</code></pre>
+<p><code>-i &lt;number of workers&gt;</code> 将告诉 PM2 在 <code>cluster_mode</code> （而不是 <code>fork_mode</code>）下启动应用程序。如果 <code>&lt;number of workers&gt;</code> 设置为 <code>0</code>，PM2 将自动生成与 CPU 核心数量一样多的工作进程。</p>
+<p>就像这样，应用程序以集群模式运行 —— 无需修改代码。现在，可以运行与前面相同的测试，可以得到与使用集群的应用程序相同的结果。在后台，PM2 还使用 Node.js 集群模块（<code>cluster module</code>）以及其它好用的流程管理工具。</p>
+<p>在终端会看到一个列表，其中显示了一些衍生进程的详细信息：</p>
+<p><img src="https://d33wubrfki0l68.cloudfront.net/95a8689e159614b649e45f6f24bb12f1ecf6ae3a/83cd2/images/blog/2021-02/pm2_cluster.png" alt="PM2 Cluster"></p>
+<p>可以使用以下命令停止应用程序：</p>
+<pre class="hljs"><code>$ pm2 stop app.js
+</code></pre>
+<p>应用程序将离线，终端输出将显示所有进程的终止（<code>stopped</code>）状态。</p>
+<p><img src="https://d33wubrfki0l68.cloudfront.net/3f2289bd93daf31b044a86b88c1966da0ac07fd4/91949/images/blog/2021-02/stopped_app.png" alt="Stopped app"></p>
+<p>可以使用 <code>pm2 start app.js -i 0</code> 运行应用程序时不必总是传递配置，你也可以将它们保存到单独的配置文件中，称为<a href="https://pm2.keymetrics.io/docs/usage/application-declaration/#ecosystem-file">生态系统文件（Ecosystem File）</a>。该文件还允许你为不同的应用程序设置特定的配置，例如，这对于微服务应用程序特别有用。</p>
+<p>可以使用以下命令生成生态系统文件：</p>
+<pre class="hljs"><code>$ pm2 ecosystem
+</code></pre>
+<p>它将生成一个名为 <code>ecosystem.config.js</code> 的文件。同时，我们需要对该文件进行如下修改：</p>
+<pre class="hljs"><code><span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">apps</span> : [{
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;app&quot;</span>,
+    <span class="hljs-attr">script</span>: <span class="hljs-string">&quot;app.js&quot;</span>,
+    <span class="hljs-attr">instances</span> : <span class="hljs-number">0</span>,
+    <span class="hljs-attr">exec_mode</span> : <span class="hljs-string">&quot;cluster&quot;</span>
+  }]
+}
+</code></pre>
+<p>通过使用集群值（<code>cluster value</code>）设置 <code>exec_mode</code>，可以指示 PM2 在每个实例之间进行负载平衡。将实例设置为 <code>0</code>，这将产生与 CPU 内核数量一样多的工作进程。</p>
+<p><code>-i</code> 或 <code>instances</code> 选项可以设置为：</p>
+<ul>
+<li><code>0</code> 或 <code>max</code>（已弃用）将应用程序进程分布到所有 CPU 上</li>
+<li><code>-1</code> 将应用程序分布在所有 CPU -1 上</li>
+<li><code>number</code> 将应用程序分布在 CPU <code>number</code> 上</li>
+</ul>
+<p>你现在可以通过以下命令运行该应用程序：</p>
+<pre class="hljs"><code>$ pm2 start ecosystem.config.js
+</code></pre>
+<p>该应用程序将像之前那样在集群模式下运行。</p>
+<p>你可以分别使用以下命令启动、重新启动、重新加载、停止和删除应用程序：</p>
+<pre class="hljs"><code>$ pm2 start app_name
+$ pm2 restart app_name
+$ pm2 reload app_name
+$ pm2 stop app_name
+$ pm2 delete app_name
+
+<span class="hljs-comment"># 使用生态系统文件时：</span>
+
+$ pm2 [start|restart|reload|stop|delete] ecosystem.config.js
+</code></pre>
+<p>重新启动（<code>restart</code>）命令会立即终止并重新启动进程，而重新加载（<code>reload</code>）命令会实现零秒停机时间（0-second-downtime）重新加载，工作进程会一个接一个地重新启动，等待新的工作进程产生，然后再终止旧的工作进程。</p>
+<p>你还可以检查正在运行的应用程序的状态、日志和指标。</p>
+<p>以下命令是列出 PM2 管理的所有应用程序的状态：</p>
+<pre class="hljs"><code>$ pm2 ls
+</code></pre>
+<p>以下命令是实时显示日志：</p>
+<pre class="hljs"><code>$ pm2 logs
+</code></pre>
+<p>以下命令是在终端中显示实时仪表板：</p>
+<pre class="hljs"><code>$ pm2 monit
+</code></pre>
+<p>有关 PM2 及其<a href="https://pm2.keymetrics.io/docs/usage/cluster-mode/">集群模式（cluster mode）</a>的更多信息，请查看<a href="https://pm2.io/blog/2018/04/20/Node-js-clustering-made-easy-with-PM2">文档</a>。</p>
+<h2>总结</h2>
+<p>首先我们讲到了，集群为我们提供了一种通过更有效地利用系统资源来提高 Node.js 应用程序性能的方法。当一个应用程序被修改为使用集群时，我们能够看到吞吐量的显著提高。然后我们在下文中简单了解了一下可以帮助你简化集群管理过程的工具。希望这篇文章对你有用。有关集群的更多信息，请查看<a href="https://nodejs.org/api/cluster.html">集群模块（cluster module）</a>文档和 <a href="https://pm2.keymetrics.io/docs/usage/quick-start/">PM2</a> 的文档，你也可以看一下这个<a href="https://leanpub.com/thenodejsclustermodule/read">教程</a>。</p>
+<p><strong>我们的特约作者 Joyce Echessa 是全栈 Web 开发人员。她偶尔会在技术文章中写下自己的想法，以记录自己所学的各种知识。</strong></p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

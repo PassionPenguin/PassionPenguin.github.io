@@ -308,12 +308,12 @@ app.listen(port, <span class="hljs-function">() =&gt;</span> {
 <p><code>-i &lt;number of workers&gt;</code> 将告诉 PM2 在 <code>cluster_mode</code> （而不是 <code>fork_mode</code>）下启动应用程序。如果 <code>&lt;number of workers&gt;</code> 设置为 <code>0</code>，PM2 将自动生成与 CPU 核心数量一样多的工作进程。</p>
 <p>就像这样，应用程序以集群模式运行 —— 无需修改代码。现在，可以运行与前面相同的测试，可以得到与使用集群的应用程序相同的结果。在后台，PM2 还使用 Node.js 集群模块（<code>cluster module</code>）以及其它好用的流程管理工具。</p>
 <p>在终端会看到一个列表，其中显示了一些衍生进程的详细信息：</p>
-<p><img src="https://d33wubrfki0l68.cloudfront.net/95a8689e159614b649e45f6f24bb12f1ecf6ae3a/83cd2/images/blog/2021-02/pm2_cluster.png" alt="PM2 Cluster"></p>
+<p><img src="../images//Library/WebServer/Documents/documents/improving-node-application-performance-with-clustering.md-pm2_cluster.png" alt="PM2 Cluster"></p>
 <p>可以使用以下命令停止应用程序：</p>
 <pre class="hljs"><code>$ pm2 stop app.js
 </code></pre>
 <p>应用程序将离线，终端输出将显示所有进程的终止（<code>stopped</code>）状态。</p>
-<p><img src="https://d33wubrfki0l68.cloudfront.net/3f2289bd93daf31b044a86b88c1966da0ac07fd4/91949/images/blog/2021-02/stopped_app.png" alt="Stopped app"></p>
+<p><img src="../images//Library/WebServer/Documents/documents/improving-node-application-performance-with-clustering.md-stopped_app.png" alt="Stopped app"></p>
 <p>可以使用 <code>pm2 start app.js -i 0</code> 运行应用程序时不必总是传递配置，你也可以将它们保存到单独的配置文件中，称为<a href="https://pm2.keymetrics.io/docs/usage/application-declaration/#ecosystem-file">生态系统文件（Ecosystem File）</a>。该文件还允许你为不同的应用程序设置特定的配置，例如，这对于微服务应用程序特别有用。</p>
 <p>可以使用以下命令生成生态系统文件：</p>
 <pre class="hljs"><code>$ pm2 ecosystem

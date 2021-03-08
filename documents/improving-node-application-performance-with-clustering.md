@@ -403,7 +403,7 @@ $ pm2 start app.js -i 0
 
 在终端会看到一个列表，其中显示了一些衍生进程的详细信息：
 
-![PM2 Cluster](https://d33wubrfki0l68.cloudfront.net/95a8689e159614b649e45f6f24bb12f1ecf6ae3a/83cd2/images/blog/2021-02/pm2_cluster.png)
+![PM2 Cluster](../images//Library/WebServer/Documents/documents/improving-node-application-performance-with-clustering.md-pm2_cluster.png)
 
 可以使用以下命令停止应用程序：
 
@@ -413,7 +413,7 @@ $ pm2 stop app.js
 
 应用程序将离线，终端输出将显示所有进程的终止（`stopped`）状态。
 
-![Stopped app](https://d33wubrfki0l68.cloudfront.net/3f2289bd93daf31b044a86b88c1966da0ac07fd4/91949/images/blog/2021-02/stopped_app.png)
+![Stopped app](../images//Library/WebServer/Documents/documents/improving-node-application-performance-with-clustering.md-stopped_app.png)
 
 可以使用 `pm2 start app.js -i 0` 运行应用程序时不必总是传递配置，你也可以将它们保存到单独的配置文件中，称为[生态系统文件（Ecosystem File）](https://pm2.keymetrics.io/docs/usage/application-declaration/#ecosystem-file)。该文件还允许你为不同的应用程序设置特定的配置，例如，这对于微服务应用程序特别有用。
 

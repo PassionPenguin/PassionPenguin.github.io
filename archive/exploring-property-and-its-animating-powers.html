@@ -1,0 +1,2327 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>5w 字的 CSS 的 @property 小结 —— 你说把它用在动画上，会咋样？｜技术点评 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://css-tricks.com/exploring-property-and-its-animating-powers/">Exploring @property and its Animating powers</a></li>
+<li>原文作者：<a href="https://css-tricks.com/author/jheytompkins/">Jhey Tompkins</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>标签：前端</li>
+</ul>
+</blockquote>
+<h1>5w 字的 CSS 的 @property 小结 —— 你说把它用在动画上，会咋样？｜技术点评</h1>
+<p>诶，你说什么啊，什么是你说的那个 <code>@property</code> 啊？</p>
+<p>它是一个新的 CSS 功能，能够为我们提供强劲的能力！我可不是说笑的哈，它能够解锁 CSS 的一些功能，让我们能够完成一些以前没法做到的事情。</p>
+<p>尽管有关 <code>@property</code> 的内容都令我们很是兴奋，但也许最有趣的是，它为我们提供了一种为自定义 CSS 属性指定类型的方法。类型能为浏览器提供了更多的上下文信息，而这就恰好带来了很酷的效果 —— 我们可以为浏览器提供转换和设置这些属性动画所需的信息！</p>
+<p>但在我们对此不太了解之前，我们先应该了解到，浏览器对 <code>@property</code> 的支持还不够。就目前而言，Chrome 和 Edge 85+、Opera 71+ 支持了 <code>@property</code>。在需要适配其他浏览器（例如 Firefox 和 Safari）时候，我们需要在浏览器支持上留个心眼。</p>
+<h2>首先，我们有了类型检查</h2>
+<pre class="hljs"><code><span class="hljs-keyword">@property</span> --spinAngle {
+  <span class="hljs-comment">/* 一个对我们自定义类型的初始化值 */</span>
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0deg</span>;
+  <span class="hljs-comment">/* 它会继承父节点的值还是不会 */</span>
+  inherits: false;
+  <span class="hljs-comment">/* 具体的类型 —— 就像 TypeScript 那么酷 */</span>
+  syntax: <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>;
+}
+
+<span class="hljs-keyword">@keyframes</span> spin {
+  <span class="hljs-selector-tag">to</span> {
+    --spinAngle: <span class="hljs-number">360deg</span>;
+  }
+}
+</code></pre>
+<p>是的！我们现在可以在CSS中进行类型检查了！这可有点像创建我们自己的一小份 CSS 规范！上面的代码只是一个简单的例子，而下面是我们可使用的所有各种类型：</p>
+<ul>
+<li><code>length</code></li>
+<li><code>number</code></li>
+<li><code>percentage</code></li>
+<li><code>length-percentage</code></li>
+<li><code>color</code></li>
+<li><code>image</code></li>
+<li><code>url</code></li>
+<li><code>integer</code></li>
+<li><code>angle</code></li>
+<li><code>time</code></li>
+<li><code>resolution</code></li>
+<li><code>transform-list</code></li>
+<li><code>transform-function</code></li>
+<li><code>custom-ident</code>（自定义字符串）</li>
+</ul>
+<p>在此之前，我们可能依赖于使用一些 <code>奇淫妙计</code> 来为具有自定义属性的动画提供动力。</p>
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b4492f39d3ac47f4ba8f1f4c9f3485c5~tplv-k3u1fbpfcp-watermark.image" width="360" />
+<p>那我们能做些什么酷的事情？让我们来发散一下我们的想象力吧～</p>
+<h2>让我们给颜色添加动画</h2>
+<p>诶诶你会怎样为一个元素设置动画？像是霓虹夜景那般切换一系列的颜色？还是单纯的颜色之间的过渡转换呢？对我来说，我是个 HSL 色彩空间的拥护者。HSL 色彩空间将色彩分解为可以理解的数字：分别是色相，饱和度和明度。</p>
+<p>给颜色加动画可是个有趣的事，毕竟有什么五颜六色的？哦对了就是它！碰上彩虹，吃尽彩虹！我们可以通过多种方式制作彩虹，例如说：</p>
+<details>
+<summary>HTML <small>(PUG)</small></summary>
+<pre class="hljs"><code>.rainbow
+  - let b = 0
+  while b &lt; 7
+    .rainbow__band(style=\`--index: ${b};\`)
+    -- b++
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>(Stylus)</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  
+<span class="hljs-selector-class">.rainbow</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">25vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">position</span> relative
+  <span class="hljs-attribute">overflow</span> hidden
+  
+  &amp;__band
+    --size calc((<span class="hljs-number">50</span> - (<span class="hljs-selector-tag">var</span>(--index, <span class="hljs-number">0</span>) * <span class="hljs-number">4</span>)) * <span class="hljs-number">1vmin</span>)
+    <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">border-width</span> <span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">border-style</span> solid
+    <span class="hljs-attribute">border-color</span> <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % var(--hue, <span class="hljs-number">10</span>)
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">height</span> var(--size)
+    <span class="hljs-attribute">width</span> var(--size)
+    
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">2</span>)
+      --hue <span class="hljs-number">35</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">3</span>)
+      --hue <span class="hljs-number">55</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">4</span>)
+      --hue <span class="hljs-number">110</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">5</span>)
+      --hue <span class="hljs-number">200</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">6</span>)
+      --hue <span class="hljs-number">230</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">7</span>)
+      --hue <span class="hljs-number">280</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-2c590099c9324bd9babb2bf8d78e2a86~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>在这个例子中，我们使用了 <code>:nth-child()</code> 将我们的 CSS 自定义属性应用在彩虹的不同光环上，以将颜色等样式限制为各个光环，并且为每个光环都设置了一个 <code>--index</code> 来帮助我们调整大小。</p>
+<p>要为这些光环设置动画，我们可以使用 <code>--index</code> 设置一些负的动画延迟，然后用相同的关键帧动画，在不同色相之间循环。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.rainbow__band</span> {
+  <span class="hljs-attribute">border-color</span>: <span class="hljs-built_in">hsl</span>(<span class="hljs-built_in">var</span>(--hue, <span class="hljs-number">10</span>), <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  <span class="hljs-attribute">animation</span>: rainbow <span class="hljs-number">2s</span> <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--index, <span class="hljs-number">0</span>) * -<span class="hljs-number">0.2s</span>) infinite linear;
+}
+
+<span class="hljs-keyword">@keyframes</span> rainbow {
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span> {
+    --hue: <span class="hljs-number">10</span>;
+  }
+  <span class="hljs-number">14%</span> {
+    --hue: <span class="hljs-number">35</span>;
+  }
+  <span class="hljs-number">28%</span> {
+    --hue: <span class="hljs-number">55</span>;
+  }
+  <span class="hljs-number">42%</span> {
+    --hue: <span class="hljs-number">110</span>;
+  }
+  <span class="hljs-number">56%</span> {
+    --hue: <span class="hljs-number">200</span>;
+  }
+  <span class="hljs-number">70%</span> {
+    --hue: <span class="hljs-number">230</span>;
+  }
+  <span class="hljs-number">84%</span> {
+    --hue: <span class="hljs-number">280</span>;
+  }
+}
+</code></pre>
+<p>如果你想要 阶梯式 的效果，也许我们也可以解决。但是，这些关键帧的每一步的定位并不是特别准确，在这里我使用了 <code>14％</code> （七分之一）的跨度作为粗略的时间定位。</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>.rainbow
+  - let b = 0
+  while b &lt; 7
+    .rainbow__band(style=\`--index: ${b};\`)
+    -- b++
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  
+<span class="hljs-selector-class">.rainbow</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">25vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">position</span> relative
+  <span class="hljs-attribute">overflow</span> hidden
+  
+  &amp;__band
+    --size calc((<span class="hljs-number">50</span> - (<span class="hljs-selector-tag">var</span>(--index, <span class="hljs-number">0</span>) * <span class="hljs-number">4</span>)) * <span class="hljs-number">1vmin</span>)
+    <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">border-width</span> <span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">border-style</span> solid
+    <span class="hljs-attribute">border-color</span> <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % var(--hue, <span class="hljs-number">10</span>)
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">height</span> var(--size)
+    <span class="hljs-attribute">width</span> var(--size)
+    <span class="hljs-attribute">animation</span> rainbow <span class="hljs-number">2s</span> calc(var(--index, <span class="hljs-number">0</span>) * -<span class="hljs-number">0.2s</span>) infinite linear
+    
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">2</span>)
+      --hue <span class="hljs-number">35</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">3</span>)
+      --hue <span class="hljs-number">55</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">4</span>)
+      --hue <span class="hljs-number">110</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">5</span>)
+      --hue <span class="hljs-number">200</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">6</span>)
+      --hue <span class="hljs-number">230</span>
+    <span class="hljs-selector-pseudo">&amp;:nth-of-type</span>(<span class="hljs-number">7</span>)
+      --hue <span class="hljs-number">280</span>
+    
+      
+<span class="hljs-keyword">@keyframes</span> rainbow
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>
+    --hue <span class="hljs-number">10</span>
+  <span class="hljs-number">14%</span>
+    --hue <span class="hljs-number">35</span>
+  <span class="hljs-number">28%</span>
+    --hue <span class="hljs-number">55</span>
+  <span class="hljs-number">42%</span>
+    --hue <span class="hljs-number">110</span>
+  <span class="hljs-number">56%</span>
+    --hue <span class="hljs-number">200</span>
+  <span class="hljs-number">70%</span>
+    --hue <span class="hljs-number">230</span>
+  <span class="hljs-number">84%</span>
+    --hue <span class="hljs-number">280</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-c9d3a5712e7f4ff6936953f859f2e8e8~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>我们可以为边框颜色设置动画，就顺利完成任务啦！不过在这里，我们仍然存在关键帧位置的计算问题。我们需要编写不少的 CSS 代码来完成此任务：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> rainbow {
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">10</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+  <span class="hljs-number">14%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">35</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+  <span class="hljs-number">28%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">55</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+  <span class="hljs-number">42%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">110</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+  <span class="hljs-number">56%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">200</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+  <span class="hljs-number">70%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">230</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+  <span class="hljs-number">84%</span> {
+    <span class="hljs-attribute">border-color</span>: hsl(<span class="hljs-number">280</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+}
+</code></pre>
+<p>让我们输入 <code>@property</code>，然后首先定义一个色调的自定义属性，这告诉浏览器我们的自定义属性 <code>--hue</code> 将是一个数字（而不是看起来像数字的字符串）：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@property</span> --hue {
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0</span>;
+  inherits: false;
+  syntax: <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>;
+}
+</code></pre>
+<p>HSL 中的色相值可以从 <code>0</code> 到 <code>360</code>，那就让我们定义初始值为 <code>0</code>，设置其不继承。那么在这里，我们的值就是数字，而动画是非常简单的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> rainbow {
+  <span class="hljs-selector-tag">to</span> {
+    --hue: <span class="hljs-number">360</span>;
+  }
+}
+</code></pre>
+<p>这就好啦，我又行了！</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>.rainbow
+  - let b = 0
+  while b &lt; 7
+    .rainbow__band(style=\`--index: ${b};\`)
+    -- b++
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>@property --hue
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  
+<span class="hljs-selector-class">.rainbow</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">25vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">position</span> relative
+  <span class="hljs-attribute">overflow</span> hidden
+  
+  &amp;__band
+    --size calc((<span class="hljs-number">50</span> - (<span class="hljs-selector-tag">var</span>(--index, <span class="hljs-number">0</span>) * <span class="hljs-number">4</span>)) * <span class="hljs-number">1vmin</span>)
+    <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">border-width</span> <span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">border-color</span> <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % var(--hue)
+    <span class="hljs-attribute">border-style</span> solid
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">height</span> var(--size)
+    <span class="hljs-attribute">width</span> var(--size)
+    <span class="hljs-attribute">animation</span> rainbow <span class="hljs-number">2s</span> calc(var(--index, <span class="hljs-number">0</span>) * -<span class="hljs-number">0.2s</span>) infinite linear
+    
+      
+<span class="hljs-keyword">@keyframes</span> rainbow
+  to
+    --hue <span class="hljs-number">360</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-b8aa469d8bf744baae295d52afd5718d~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>为了获得准确的动画的开始点，我们每个光环上的动画都可能会有延迟，为我们提供了一些很酷的灵活性。例如，我们可以延长动画持续时间 <code>animation-duration</code>，得到一个缓慢的周期。例如下面这个例子的速度：</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>.rainbow
+  - let b = 0
+  while b &lt; 7
+    .rainbow__band(style=\`--index: ${b};\`)
+    -- b++
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>property --hue
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  
+<span class="hljs-selector-class">.rainbow</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">25vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">position</span> relative
+  <span class="hljs-attribute">overflow</span> hidden
+  
+  &amp;__band
+    --size calc((<span class="hljs-number">50</span> - (<span class="hljs-selector-tag">var</span>(--index, <span class="hljs-number">0</span>) * <span class="hljs-number">4</span>)) * <span class="hljs-number">1vmin</span>)
+    <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">border-width</span> <span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">border-color</span> <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % var(--hue)
+    <span class="hljs-attribute">border-style</span> solid
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">height</span> var(--size)
+    <span class="hljs-attribute">width</span> var(--size)
+    <span class="hljs-attribute">animation</span> rainbow calc(var(--duration, <span class="hljs-number">8</span>) * <span class="hljs-number">1s</span>) calc(var(--index, <span class="hljs-number">0</span>) * -<span class="hljs-number">0.2s</span>) infinite linear
+    
+      
+<span class="hljs-keyword">@keyframes</span> rainbow
+  to
+    --hue <span class="hljs-number">360</span>
+</code></pre>
+</details>
+<details>
+<summary>JS <small>（Babel）</small></summary>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { GUI } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://cdn.skypack.dev/dat.gui&#x27;</span>
+
+<span class="hljs-keyword">const</span> CONFIG = {
+  <span class="hljs-attr">DURATION</span>: <span class="hljs-number">8</span>
+}
+
+<span class="hljs-keyword">const</span> UPDATE = <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-built_in">document</span>.documentElement.style.setProperty(<span class="hljs-string">&#x27;--duration&#x27;</span>, CONFIG.DURATION)
+}
+
+<span class="hljs-keyword">const</span> CONTROLLER = <span class="hljs-keyword">new</span> GUI()
+CONTROLLER.add(CONFIG, <span class="hljs-string">&#x27;DURATION&#x27;</span>, <span class="hljs-number">1</span>, <span class="hljs-number">15</span>, <span class="hljs-number">0.1</span>).name(<span class="hljs-string">&#x27;Speed&#x27;</span>).onChange(UPDATE)
+
+UPDATE()
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-8aaa64b49cbc4811b4c547f1c94f73f8~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>这可能不是最 疯狂 的例子，但是我认为当我们使用逻辑上使用数字的色彩空间时，给动画设置颜色会带来一些有趣的现象。在需要学习一些别的技巧之前，先让我们尝试通过色轮进行动画处理吧，例如，使用预处理器（如 Stylus）生成关键帧：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> party 
+  <span class="hljs-keyword">for</span> <span class="hljs-variable">$frame</span> <span class="hljs-keyword">in</span> (<span class="hljs-number">0</span>..<span class="hljs-number">100</span>)
+    {<span class="hljs-variable">$frame</span> * <span class="hljs-number">1%</span>}
+      <span class="hljs-attribute">background</span> <span class="hljs-string">&#x27;hsl(%s, 65%, 40%)&#x27;</span> % (<span class="hljs-variable">$frame</span> * <span class="hljs-number">3.6</span>)
+</code></pre>
+<p>我们这样做纯粹是因为浏览器无法理解我们的意图 —— 由于两个 HSL 值都显示相同的颜色，因此它会将色轮从 <code>0</code> 直接变为 <code>360</code>。</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> party {
+  <span class="hljs-selector-tag">from</span> {
+    <span class="hljs-attribute">background</span>: <span class="hljs-built_in">hsl</span>(<span class="hljs-number">0</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>); 
+  }
+  <span class="hljs-selector-tag">to</span> {
+    <span class="hljs-attribute">background</span>: <span class="hljs-built_in">hsl</span>(<span class="hljs-number">360</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  }
+}
+</code></pre>
+<p>关键帧是相同的，因此当我们真正想要浏览器遍历整个色相谱时，浏览器会假定动画保持在相同的背景值 <code>background</code>，然后从一个值开始，并在遍历整个色调后结束于原来的值。</p>
+<p>想一想我们在这里拥有的所有其他可以做的，例如：</p>
+<ul>
+<li>为饱和度设置动画</li>
+<li>使用不同的动画变化</li>
+<li>尝试亮度变化</li>
+<li>尝试使用 <code>rgb()</code></li>
+<li>尝试将我们的自定义属性类型声明为 <code>&lt;angle&gt;</code>，然后直接为 <code>hsl()</code> 设置度数</li>
+</ul>
+<p>很棒的是，我们可以通过 <code>scope</code> 将动画值在各个元素之间共享！例如对于这个按钮而言，对边框和阴影悬停时的色轮进行动画处理：</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>button Start Party!
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code><span class="hljs-keyword">@import</span> url(<span class="hljs-string">&#x27;https://fonts.googleapis.com/css2?family=Inter:wght@500&amp;display=swap&#x27;</span>)
+
+@property --hue
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+  inherits true
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  
+<span class="hljs-selector-pseudo">:root</span>
+  --bg hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">10%</span>)
+  --button-bg hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">0%</span>)
+  
+*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">10%</span>)
+  <span class="hljs-attribute">display</span> flex
+  <span class="hljs-attribute">align-items</span> center
+  <span class="hljs-attribute">justify-content</span> center
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">transform-style</span> preserve-<span class="hljs-number">3</span>d
+  <span class="hljs-attribute">perspective</span> <span class="hljs-number">800px</span>
+  
+<span class="hljs-selector-tag">button</span>
+  --<span class="hljs-attribute">border</span> <span class="hljs-string">&#x27;hsl(%s, 0%, 50%)&#x27;</span> % var(--hue, <span class="hljs-number">0</span>)
+  --shadow <span class="hljs-string">&#x27;hsl(%s, 0%, 80%)&#x27;</span> % <span class="hljs-selector-tag">var</span>(--hue, <span class="hljs-number">0</span>)
+  user-select <span class="hljs-attribute">none</span>
+  <span class="hljs-attribute">font-family</span> <span class="hljs-string">&#x27;Inter&#x27;</span>, sans-serif
+  <span class="hljs-attribute">font-size</span> <span class="hljs-number">2rem</span>
+  <span class="hljs-attribute">padding</span> <span class="hljs-number">1.25rem</span> <span class="hljs-number">2.5rem</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">0.5rem</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">0.25rem</span> solid
+  <span class="hljs-attribute">background</span> var(--button-bg)
+  <span class="hljs-attribute">color</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>)
+  <span class="hljs-attribute">border-color</span> var(--border)
+  <span class="hljs-attribute">box-shadow</span> <span class="hljs-number">0</span> <span class="hljs-number">1rem</span> <span class="hljs-number">2rem</span> -<span class="hljs-number">1.5rem</span> var(--shadow)
+  <span class="hljs-attribute">transition</span> transform <span class="hljs-number">0.2s</span>, box-shadow <span class="hljs-number">0.2s</span>
+  <span class="hljs-attribute">cursor</span> pointer
+  <span class="hljs-attribute">outline</span> transparent
+  
+  <span class="hljs-selector-pseudo">&amp;:hover</span>
+    --<span class="hljs-attribute">border</span> <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % var(--hue, <span class="hljs-number">0</span>)
+    --shadow <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % <span class="hljs-selector-tag">var</span>(--hue, <span class="hljs-number">0</span>)
+    <span class="hljs-attribute">animation</span> hueJump <span class="hljs-number">0.75s</span> infinite linear
+    <span class="hljs-attribute">transform</span> rotateY(<span class="hljs-number">10deg</span>) rotateX(<span class="hljs-number">10deg</span>)
+    
+  <span class="hljs-selector-pseudo">&amp;:active</span>
+    <span class="hljs-attribute">transform</span> rotateY(<span class="hljs-number">10deg</span>) rotateX(<span class="hljs-number">10deg</span>) translate3d(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">15px</span>)
+    <span class="hljs-attribute">box-shadow</span> <span class="hljs-number">0</span> <span class="hljs-number">0rem</span> <span class="hljs-number">0rem</span> <span class="hljs-number">0rem</span> var(--shadow)
+    <span class="hljs-attribute">animation-play-state</span> paused
+    
+<span class="hljs-keyword">@keyframes</span> hueJump
+  to
+    --hue <span class="hljs-number">360</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-1090eda74074495e8375064ed023e8bf~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>能够为颜色添加动画，就是……一个词，<code>wow</code>！</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>- const COUNT = 20
+- let t = 0
+while t &lt; COUNT
+  h1(style=`--index: ${COUNT - t};`) Wow!
+  - t++
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code><span class="hljs-keyword">@import</span> url(<span class="hljs-string">&#x27;https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,900&amp;display=swap&#x27;</span>)
+  
+@property --hue
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+  
+<span class="hljs-selector-pseudo">:root</span>
+  --bg hsl(<span class="hljs-number">45</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>)
+  --stroke hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">10%</span>)
+  
+*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">background</span> var(--bg)
+  <span class="hljs-attribute">font-family</span> <span class="hljs-string">&#x27;Montserrat&#x27;</span>, sans-serif
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">overflow</span> hidden
+    
+<span class="hljs-selector-tag">h1</span>
+  --<span class="hljs-attribute">color</span> <span class="hljs-string">&#x27;hsl(%s, 80%, 60%)&#x27;</span> % var(--hue)
+  <span class="hljs-attribute">text-transform</span> uppercase
+  <span class="hljs-attribute">font-size</span> <span class="hljs-number">150px</span>
+  <span class="hljs-attribute">letter-spacing</span> <span class="hljs-number">0.25vmin</span>
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">margin</span> <span class="hljs-number">0</span>
+  <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">line-height</span> <span class="hljs-number">0.8</span>
+  <span class="hljs-attribute">color</span> var(--color)
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">30%</span>, -<span class="hljs-number">70%</span>) translate(calc(var(--index) * (var(--x, -<span class="hljs-number">4</span>) * <span class="hljs-number">1%</span>)), calc(var(--index) * (var(--y, <span class="hljs-number">20</span>) * <span class="hljs-number">1%</span>)))
+  -webkit-text-stroke <span class="hljs-number">1.25vmin</span> <span class="hljs-selector-tag">var</span>(--stroke)
+  <span class="hljs-attribute">animation</span> party <span class="hljs-number">1s</span> calc(var(--index) * -<span class="hljs-number">0.1s</span>) infinite linear
+  
+<span class="hljs-keyword">@keyframes</span> party
+  <span class="hljs-number">0%</span>
+    --hue <span class="hljs-number">0</span>
+  <span class="hljs-number">100%</span>
+    --hue <span class="hljs-number">360</span>
+</code></pre>
+</details>
+<details>
+<summary>JS <small>（Babel）</small></summary>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> gsap <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://cdn.skypack.dev/gsap&#x27;</span>
+
+<span class="hljs-built_in">document</span>.addEventListener(<span class="hljs-string">&#x27;pointermove&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">{ x, y }</span>) =&gt;</span> {
+  gsap.set(<span class="hljs-string">&#x27;h1&#x27;</span>, {
+    <span class="hljs-string">&#x27;--x&#x27;</span>: gsap.utils.mapRange(<span class="hljs-number">0</span>, <span class="hljs-built_in">window</span>.innerWidth, -<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, x),
+    <span class="hljs-string">&#x27;--y&#x27;</span>: gsap.utils.mapRange(<span class="hljs-number">0</span>, <span class="hljs-built_in">window</span>.innerHeight, -<span class="hljs-number">10</span>, <span class="hljs-number">10</span>, y)
+  })
+})
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-248fdda3c41f46389dd298d61b1c399c~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<h2>数字的递增</h2>
+<p>因为我们可以为数字定义类型（例如 <code>integer</code> 和 <code>number</code>），意味着我们还可以为数字设置动画，而不是将这些数字用作其他内容的一部分。 实际上，<a href="https://css-tricks.com/author/carterli/">Carter Li</a> 就曾在 CSS-Tricks 上为此撰写过<a href="https://css-tricks.com/animating-number-counters/">一篇文章</a>。内容是将 <code>integer</code> 与 CSS 计数器结合使用，类似于我们的什么 纯 CSS 游戏 一样。</p>
+<p>计数器和伪元素为我们提供了一种将数字转换为字符串的方法，然后，我们可以将该字符串设置为伪元素的内容，其中的重点代码是：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@property</span> --milliseconds {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>;
+}
+
+<span class="hljs-selector-class">.counter</span> {
+  <span class="hljs-attribute">counter-reset</span>: ms <span class="hljs-built_in">var</span>(--milliseconds);
+  <span class="hljs-attribute">animation</span>: count <span class="hljs-number">1s</span> <span class="hljs-built_in">steps</span>(<span class="hljs-number">100</span>) infinite;
+}
+
+<span class="hljs-selector-class">.counter</span>:after {
+  content: <span class="hljs-built_in">counter</span>(ms);
+}
+
+<span class="hljs-keyword">@keyframes</span> count {
+  <span class="hljs-selector-tag">to</span> {
+    --milliseconds: <span class="hljs-number">100</span>;
+  }
+}
+</code></pre>
+<p>给我们带来了这个样子的效果，这可棒啦！</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>.counter
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>@property --milliseconds {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>;
+}
+
+<span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">min-height</span>: <span class="hljs-number">100vh</span>;
+  <span class="hljs-attribute">display</span>: grid;
+  place-items: center;
+  <span class="hljs-attribute">background</span>: hsl(<span class="hljs-number">10</span>, <span class="hljs-number">10%</span>, <span class="hljs-number">10%</span>);
+}
+
+<span class="hljs-selector-class">.counter</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">counter-reset</span>: ms var(--milliseconds);
+  <span class="hljs-attribute">animation</span>: count <span class="hljs-number">1s</span> steps(<span class="hljs-number">100</span>) infinite;
+}
+
+<span class="hljs-selector-class">.counter</span>:after {
+  <span class="hljs-attribute">content</span>: counter(ms);
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">left</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">5rem</span>;
+  <span class="hljs-attribute">transform</span>: translate(-<span class="hljs-number">50%</span>, <span class="hljs-number">0</span>);
+  <span class="hljs-attribute">color</span>: hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>);
+  <span class="hljs-attribute">font-weight</span>: bold;
+  <span class="hljs-attribute">font-family</span>: sans-serif;
+}
+
+<span class="hljs-keyword">@keyframes</span> count {
+  to {
+    --milliseconds: <span class="hljs-number">100</span>;
+  }
+}
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-6cc72089496146278433f4acce02312e~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>让我们再进一步，我们即将拥有一只仅用 CSS 和 HTML 制作的秒表。快点那个按钮！值得一提的是，它实际上可以用作计时器，而且它不会受到<a href="https://twitter.com/jaffathecake/status/1362471942238961665?s=20">漂移</a>的影响。在某些角度而言，它可能比我们经常使用的 <code>setInterval</code> 之类的 JavaScript 解决方案更准确。可以来看看这个 Google Chrome 开发者录制的有关 JavaScript 计数器的<a href="https://www.youtube.com/watch?v=MCi6AZMkxcU">精彩视频</a>。</p>
+<details>
+<summary>HTML <small>（PUG）</small></summary>
+<pre class="hljs"><code>form.stopwatch
+  input#start(type=&quot;checkbox&quot;)
+  input#pause(type=&quot;checkbox&quot;)
+  label.stopwatch__pause(for=&quot;pause&quot;)
+    span Pause
+  label.stopwatch__start(for=&quot;start&quot;)
+    span Start
+  button#reset.stopwatch__reset(type=&quot;reset&quot;)
+    span Reset
+  .stopwatch__restart.stopwatch__control
+    .reset-button
+  .stopwatch__stop-start.stopwatch__control
+    .start-button
+  .stopwatch__shadows
+  .stopwatch__content
+
+img.stopwatch__branding(src=&quot;https://assets.codepen.io/605876/avatar.png&quot;)
+    .stopwatch__face
+      .digit.m.m--tens 0
+      .digit.m.m--singles 0
+      span :
+      .digit.second.s.s--tens 0
+      .digit.second.s.s--singles 0
+      span .
+      .digit.digit--small.ms.ms--tens 0
+      .digit.digit--small.ms.ms--singles 0
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code><span class="hljs-keyword">@import</span> url(<span class="hljs-string">&#x27;https://fonts.googleapis.com/css2?family=Orbitron:wght@500&amp;display=swap&#x27;</span>)
+
+*
+*:after
+*:before
+  <span class="hljs-attribute">box-sizing</span> border-box
+  user-select <span class="hljs-attribute">none</span>
+
+<span class="hljs-comment">// 默认下播放状态是 `paused` 的</span>
+<span class="hljs-selector-pseudo">:root</span>
+  --state paused
+  --bg hsl(<span class="hljs-number">280</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">90%</span>)
+  --digit hsl(<span class="hljs-number">90</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">90%</span>)
+  --face hsl(<span class="hljs-number">90</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">5%</span>)
+  --<span class="hljs-attribute">content</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">40%</span>)
+  --shadow hsla(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">0.25</span>)
+  --glare hsla(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>, <span class="hljs-number">0.2</span>)
+  --watch-bg hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>)
+  --watch-bg--light hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  --watch-bg--dark hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">20%</span>)
+  --stroke hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">15%</span>)
+  --start hsl(<span class="hljs-number">10</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">40%</span>)
+  --start-two hsl(<span class="hljs-number">10</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">60%</span>)
+  --restart hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">70%</span>)
+  --restart-two hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">90%</span>)
+
+<span class="hljs-comment">// 开启或停止秒表的小技巧</span>
+<span class="hljs-comment">// 如果 animation-name 是 none</span>
+<span class="hljs-comment">// 那么就重置计数器至初始值</span>
+<span class="hljs-selector-id">#start</span><span class="hljs-selector-pseudo">:checked</span> ~ <span class="hljs-selector-class">.stopwatch__content</span>
+<span class="hljs-selector-id">#pause</span><span class="hljs-selector-pseudo">:checked</span> ~ <span class="hljs-selector-class">.stopwatch__content</span>
+  <span class="hljs-selector-class">.ms--tens</span>
+    --name ms-tens
+  <span class="hljs-selector-class">.ms--singles</span>
+    --name ms-singles
+  <span class="hljs-selector-class">.s--tens</span>
+    --name s-tens
+  <span class="hljs-selector-class">.s--singles</span>
+    --name s-singles
+  <span class="hljs-selector-class">.m--tens</span>
+    --name m-tens
+  <span class="hljs-selector-class">.m--singles</span>
+    --name m-singles
+
+<span class="hljs-comment">// 处理 playback 的东西，当 Start 被点击，</span>
+<span class="hljs-comment">// 播放状态是 running，那么我们可以用 Pause 去，</span>
+<span class="hljs-comment">// 切换动画的播放的开始</span>
+<span class="hljs-selector-id">#start</span><span class="hljs-selector-pseudo">:checked</span> ~ <span class="hljs-selector-class">.stopwatch__content</span>
+  --state running
+<span class="hljs-selector-id">#pause</span><span class="hljs-selector-pseudo">:checked</span> ~ <span class="hljs-selector-class">.stopwatch__content</span>
+  --state paused
+<span class="hljs-comment">// 隐藏开始按钮的技巧</span>
+<span class="hljs-selector-id">#start</span><span class="hljs-selector-pseudo">:checked</span> ~ <span class="hljs-selector-class">.stopwatch__start</span>
+  <span class="hljs-attribute">z-index</span> -<span class="hljs-number">1</span>
+
+<span class="hljs-selector-class">.stopwatch__start</span><span class="hljs-selector-pseudo">:active</span> ~ <span class="hljs-selector-class">.stopwatch__stop-start</span>
+<span class="hljs-selector-class">.stopwatch__pause</span><span class="hljs-selector-pseudo">:active</span> ~ <span class="hljs-selector-class">.stopwatch__stop-start</span>
+  --y <span class="hljs-number">25</span>
+<span class="hljs-selector-class">.stopwatch__reset</span><span class="hljs-selector-pseudo">:active</span> ~ <span class="hljs-selector-class">.stopwatch__restart</span>
+  --y <span class="hljs-number">15</span>
+
+<span class="hljs-comment">// 这里的属性用于为每一个数字设置动画</span>
+<span class="hljs-comment">// 我们应该可以以链的形式定义，</span>
+<span class="hljs-comment">// 不过语法在此列出的：https://web.dev/at-property/#multiple-declarations</span>
+<span class="hljs-comment">// 在我的机器上并没有正常运作</span>
+@property --ms-tens
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+@property --ms-singles
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+@property --s-tens
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+@property --s-singles
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+@property --m-tens
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+@property --m-singles
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  <span class="hljs-attribute">font-family</span> <span class="hljs-string">&#x27;Orbitron&#x27;</span>, sans-serif
+  <span class="hljs-attribute">background</span> var(--bg)
+  place-items center
+
+<span class="hljs-selector-tag">form</span>
+  <span class="hljs-attribute">margin</span> <span class="hljs-number">0</span>
+
+<span class="hljs-selector-tag">button</span>
+  appearance <span class="hljs-attribute">none</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">0</span>
+  <span class="hljs-attribute">outline</span> transparent
+  <span class="hljs-attribute">background</span> none
+
+<span class="hljs-selector-tag">label</span> <span class="hljs-selector-tag">span</span>
+<span class="hljs-selector-tag">button</span> <span class="hljs-selector-tag">span</span>
+<span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span>
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">width</span> <span class="hljs-number">1px</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">1px</span>
+  <span class="hljs-attribute">padding</span> <span class="hljs-number">0</span>
+  <span class="hljs-attribute">margin</span> -<span class="hljs-number">1px</span>
+  <span class="hljs-attribute">overflow</span> hidden
+  <span class="hljs-attribute">clip</span> rect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+  <span class="hljs-attribute">white-space</span> nowrap
+  <span class="hljs-attribute">border-width</span> <span class="hljs-number">0</span>
+
+<span class="hljs-selector-tag">label</span>
+<span class="hljs-selector-tag">button</span>
+  <span class="hljs-attribute">cursor</span> pointer
+
+<span class="hljs-selector-class">.reset-button</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">top</span> <span class="hljs-number">10%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, <span class="hljs-number">0</span>)
+  <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> solid var(--stroke)
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">1vmin</span>
+  <span class="hljs-attribute">background</span> var(--restart)
+  <span class="hljs-attribute">overflow</span> hidden
+
+  &amp;:after
+    <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">background</span> repeating-linear-gradient(<span class="hljs-number">90deg</span>, transparent <span class="hljs-number">0</span> <span class="hljs-number">18%</span>, var(--stroke) <span class="hljs-number">18%</span> <span class="hljs-number">22%</span>) <span class="hljs-number">50%</span> <span class="hljs-number">0</span> / <span class="hljs-number">100%</span> <span class="hljs-number">30%</span> no-repeat,
+               repeating-linear-gradient(<span class="hljs-number">90deg</span>, transparent <span class="hljs-number">0</span> <span class="hljs-number">18%</span>, <span class="hljs-selector-tag">var</span>(--stroke) <span class="hljs-number">18%</span> <span class="hljs-number">22%</span>) <span class="hljs-number">50%</span> <span class="hljs-number">100%</span> / <span class="hljs-number">100%</span> <span class="hljs-number">30%</span> no-repeat
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+
+  &amp;:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">1vmin</span>
+    <span class="hljs-attribute">background</span> var(--restart-two)
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">bottom</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">20%</span>, <span class="hljs-number">45%</span>)
+
+<span class="hljs-selector-class">.start-button</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">60%</span>
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">bottom</span> <span class="hljs-number">0</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> solid var(--stroke)
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">1vmin</span>
+  <span class="hljs-attribute">background</span> var(--start)
+  <span class="hljs-attribute">overflow</span> hidden
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">1vmin</span>
+    <span class="hljs-attribute">background</span> var(--start-two)
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">bottom</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">20%</span>, <span class="hljs-number">35%</span>)
+
+<span class="hljs-selector-class">.stopwatch</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">45vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">45vmin</span>
+  <span class="hljs-attribute">background-color</span> var(--watch-bg)
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> solid var(--stroke)
+  <span class="hljs-attribute">position</span> relative
+
+  &amp;__pause
+  &amp;__start
+  &amp;__reset
+  &amp;__control
+    --size min(<span class="hljs-number">48px</span>, <span class="hljs-number">10vmin</span>)
+    <span class="hljs-attribute">height</span> var(--size)
+    <span class="hljs-attribute">width</span> var(--size)
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transition</span> transform <span class="hljs-number">0.05s</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) rotate(var(--rotation, <span class="hljs-number">0deg</span>)) translate(<span class="hljs-number">0</span>, -<span class="hljs-number">25vmin</span>) translateY(calc(var(--y, <span class="hljs-number">0</span>) * <span class="hljs-number">1%</span>))
+    <span class="hljs-attribute">z-index</span> <span class="hljs-number">10</span>
+
+  &amp;__control
+    <span class="hljs-attribute">z-index</span> -<span class="hljs-number">1</span>
+
+  &amp;__restart:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">bottom</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, <span class="hljs-number">0</span>)
+    <span class="hljs-attribute">width</span> <span class="hljs-number">60%</span>
+    <span class="hljs-attribute">height</span> <span class="hljs-number">75%</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> solid var(--stroke)
+    <span class="hljs-attribute">background</span> linear-gradient(<span class="hljs-number">90deg</span>, var(--restart-two) <span class="hljs-number">0</span> <span class="hljs-number">80%</span>, transparent <span class="hljs-number">81%</span>) <span class="hljs-number">50%</span> <span class="hljs-number">50%</span> / <span class="hljs-number">100%</span> <span class="hljs-number">100%</span> no-repeat
+    <span class="hljs-attribute">background-color</span> var(--restart)
+    <span class="hljs-attribute">z-index</span> -<span class="hljs-number">1</span>
+
+  &amp;__start
+  &amp;__pause
+  &amp;__stop-start
+    --rotation <span class="hljs-number">40deg</span>
+
+  &amp;__shadows
+    <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">overflow</span> hidden
+
+    &amp;:after
+      <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+      <span class="hljs-attribute">position</span> absolute
+      <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">width</span> <span class="hljs-number">106%</span>
+      <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) translate(<span class="hljs-number">0</span>, <span class="hljs-number">2%</span>)
+      <span class="hljs-attribute">box-shadow</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">5vmin</span> var(--watch-bg--light)
+
+    &amp;:before
+      <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+      <span class="hljs-attribute">position</span> absolute
+      <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) translate(<span class="hljs-number">0</span>, -<span class="hljs-number">2%</span>)
+      <span class="hljs-attribute">box-shadow</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">5vmin</span> var(--watch-bg--dark)
+
+  &amp;__content
+    <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> solid var(--stroke)
+    <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">background-color</span> var(--content)
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">overflow</span> hidden
+
+    &amp;:before
+      <span class="hljs-attribute">box-shadow</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">5vmin</span> var(--shadow)
+      <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+      <span class="hljs-attribute">position</span> absolute
+      <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) translate(<span class="hljs-number">0</span>, <span class="hljs-number">2%</span>)
+
+    &amp;:after
+      <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+      <span class="hljs-attribute">position</span> absolute
+      <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+      <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+      <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>) rotate(-<span class="hljs-number">50deg</span>)
+      <span class="hljs-attribute">background</span> linear-gradient(transparent <span class="hljs-number">0</span> <span class="hljs-number">15%</span>, var(--glare) <span class="hljs-number">16%</span> <span class="hljs-number">35%</span>, transparent <span class="hljs-number">36%</span> <span class="hljs-number">40%</span>, var(--glare) <span class="hljs-number">41%</span> <span class="hljs-number">45%</span>, transparent <span class="hljs-number">46%</span>)
+
+  &amp;__branding
+    <span class="hljs-attribute">height</span> <span class="hljs-number">7vmin</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">top</span> <span class="hljs-number">75%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, <span class="hljs-number">0</span>)
+    <span class="hljs-attribute">opacity</span> <span class="hljs-number">0.5</span>
+    <span class="hljs-attribute">filter</span> saturate(<span class="hljs-number">0</span>)
+
+  &amp;__face
+    <span class="hljs-attribute">color</span> var(--digit)
+    <span class="hljs-attribute">display</span> flex
+    <span class="hljs-attribute">font-size</span> <span class="hljs-number">6vmin</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">padding</span> <span class="hljs-number">1.75vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">1vmin</span>
+    <span class="hljs-attribute">background</span> var(--face)
+
+<span class="hljs-selector-class">.digit</span>
+  <span class="hljs-attribute">position</span> relative
+  <span class="hljs-attribute">color</span> transparent
+  <span class="hljs-attribute">counter-reset</span> var(--counter-name) var(--counter-variable)
+  <span class="hljs-attribute">animation</span> var(--name, none) var(--duration, <span class="hljs-number">1s</span>) infinite steps(var(--steps)) var(--state)
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> counter(var(--counter-name))
+    <span class="hljs-attribute">font-variant</span> tabular-nums
+    <span class="hljs-attribute">color</span> var(--digit)
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">bottom</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">right</span> <span class="hljs-number">0</span>
+
+<span class="hljs-selector-class">.ms</span>
+  <span class="hljs-attribute">font-size</span> <span class="hljs-number">4vmin</span>
+  <span class="hljs-attribute">transform</span> translate(<span class="hljs-number">0</span>, -<span class="hljs-number">6%</span>)
+
+  &amp;--tens
+    --duration <span class="hljs-number">1s</span>
+    --steps <span class="hljs-number">10</span>
+    --counter-name ms-tens
+    --counter-variable <span class="hljs-selector-tag">var</span>(--ms-tens)
+
+  &amp;--singles
+    --duration <span class="hljs-number">0.1s</span>
+    --steps <span class="hljs-number">10</span>
+    --counter-name ms-singles
+    --counter-variable <span class="hljs-selector-tag">var</span>(--ms-singles)
+
+<span class="hljs-selector-class">.s</span>
+  &amp;--tens
+    --duration <span class="hljs-number">60s</span>
+    --steps <span class="hljs-number">6</span>
+    --counter-name s-tens
+    --counter-variable <span class="hljs-selector-tag">var</span>(--s-tens)
+
+  &amp;--singles
+    --duration <span class="hljs-number">10s</span>
+    --steps <span class="hljs-number">10</span>
+    --counter-name s-singles
+    --counter-variable <span class="hljs-selector-tag">var</span>(--s-singles)
+
+<span class="hljs-selector-class">.m</span>
+  &amp;--tens
+    --duration <span class="hljs-number">3600s</span>
+    --steps <span class="hljs-number">6</span>
+    --counter-name m-tens
+    --counter-variable <span class="hljs-selector-tag">var</span>(--m-tens)
+
+  &amp;--singles
+    --duration <span class="hljs-number">600s</span>
+    --steps <span class="hljs-number">10</span>
+    --counter-name m-singles
+    --counter-variable <span class="hljs-selector-tag">var</span>(--m-singles)
+
+<span class="hljs-comment">// The different animations requires for each digit</span>
+<span class="hljs-keyword">@keyframes</span> ms-tens
+  to
+    --ms-tens <span class="hljs-number">10</span>
+
+<span class="hljs-keyword">@keyframes</span> ms-singles
+  to
+    --ms-singles <span class="hljs-number">10</span>
+
+<span class="hljs-keyword">@keyframes</span> s-tens
+  to
+    --s-tens <span class="hljs-number">6</span>
+
+<span class="hljs-keyword">@keyframes</span> s-singles
+  to
+    --s-singles <span class="hljs-number">10</span>
+
+<span class="hljs-keyword">@keyframes</span> m-tens
+  to
+    --m-tens <span class="hljs-number">6</span>
+
+<span class="hljs-keyword">@keyframes</span> m-singles
+  to
+    --m-singles <span class="hljs-number">10</span>
+</code></pre>
+</details>
+<details>
+<summary>JS <small>（Babel）</small></summary>
+<pre class="hljs"><code><span class="hljs-comment">// 404</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-175268f0b44c4d93b4cae7a0ae0a97eb~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>我们还可以使用数字动画做些什么？倒计时工具？</p>
+<h2>渐变动画</h2>
+<p>我们都知道 <code>linear</code>、<code>radial</code> 和 <code>conic</code> 的渐变，那么请问，你是否曾经想要去过渡或为色标添加动画？我可以告诉你，<code>@property</code> 可以做到这事儿！</p>
+<p>考虑一个梯度 —— 在海滩上会有一些波浪席卷而来。一旦我们分层放置了一些图像，我们就可以做这样的事情：</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">background-image</span>:
+    <span class="hljs-built_in">linear-gradient</span>(transparent <span class="hljs-number">0</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">35%</span> + (<span class="hljs-built_in">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-built_in">var</span>(--wave-four) <span class="hljs-built_in">calc</span>(<span class="hljs-number">75%</span> + <span class="hljs-built_in">var</span>(--wave)) <span class="hljs-number">100%</span>),
+    <span class="hljs-built_in">linear-gradient</span>(transparent <span class="hljs-number">0</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">35%</span> + (<span class="hljs-built_in">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-built_in">var</span>(--wave-three) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--wave)) <span class="hljs-built_in">calc</span>(<span class="hljs-number">75%</span> + <span class="hljs-built_in">var</span>(--wave))),
+    <span class="hljs-built_in">linear-gradient</span>(transparent <span class="hljs-number">0</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">20%</span> + (<span class="hljs-built_in">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-built_in">var</span>(--wave-two) <span class="hljs-built_in">calc</span>(<span class="hljs-number">35%</span> + <span class="hljs-built_in">var</span>(--wave)) <span class="hljs-built_in">calc</span>(<span class="hljs-number">50%</span> + <span class="hljs-built_in">var</span>(--wave))),
+    <span class="hljs-built_in">linear-gradient</span>(transparent <span class="hljs-number">0</span> <span class="hljs-built_in">calc</span>(<span class="hljs-number">15%</span> + (<span class="hljs-built_in">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-built_in">var</span>(--wave-one) <span class="hljs-built_in">calc</span>(<span class="hljs-number">25%</span> + <span class="hljs-built_in">var</span>(--wave)) <span class="hljs-built_in">calc</span>(<span class="hljs-number">35%</span> + <span class="hljs-built_in">var</span>(--wave))), <span class="hljs-built_in">var</span>(--sand);
+}
+</code></pre>
+<p>代码太复杂了，为了简单明了，我们使用 <code>calc()</code> 创建每个色标。然后在这个计算中，我们加上 <code>--wave</code> 的值。这里有个巧妙的窍门，当我们为 <code>--wave</code> 值设置动画时，所有的 <code>wave</code> 图层都会移动。</p>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --sand hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --wave-one hsl(<span class="hljs-number">200</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">100%</span>)
+  --wave-two hsl(<span class="hljs-number">200</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">90%</span>)
+  --wave-three hsl(<span class="hljs-number">210</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">60%</span>)
+  --wave-four hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">25%</span>)
+
+@property --wave
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0%</span>
+  syntax <span class="hljs-string">&#x27;&lt;percentage&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">background</span> linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">35%</span> + (var(--wave) * <span class="hljs-number">0.5</span>)), var(--wave-four) calc(<span class="hljs-number">75%</span> + var(--wave)) <span class="hljs-number">100%</span>),
+             linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">35%</span> + (<span class="hljs-selector-tag">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-selector-tag">var</span>(--wave-three) calc(<span class="hljs-number">50%</span> + <span class="hljs-selector-tag">var</span>(--wave)) calc(<span class="hljs-number">75%</span> + <span class="hljs-selector-tag">var</span>(--wave))),
+             linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">20%</span> + (<span class="hljs-selector-tag">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-selector-tag">var</span>(--wave-two) calc(<span class="hljs-number">35%</span> + <span class="hljs-selector-tag">var</span>(--wave)) calc(<span class="hljs-number">50%</span> + <span class="hljs-selector-tag">var</span>(--wave))),
+             linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">15%</span> + (<span class="hljs-selector-tag">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-selector-tag">var</span>(--wave-one) calc(<span class="hljs-number">25%</span> + <span class="hljs-selector-tag">var</span>(--wave)) calc(<span class="hljs-number">35%</span> + <span class="hljs-selector-tag">var</span>(--wave))),
+             <span class="hljs-selector-tag">var</span>(--sand)
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+</code></pre>
+</details>
+<details>
+<summary>JS <small>（Babel）</small></summary>
+<pre class="hljs"><code>Stylus BabelResult Skip Results Iframe
+EDIT ON
+<span class="hljs-keyword">import</span> { GUI } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;https://cdn.skypack.dev/dat.gui&#x27;</span>
+
+<span class="hljs-keyword">const</span> CONFIG = {
+  <span class="hljs-attr">tide</span>: <span class="hljs-number">0</span>
+}
+
+<span class="hljs-keyword">const</span> CONTROLLER = <span class="hljs-keyword">new</span> GUI()
+CONTROLLER.add(CONFIG, <span class="hljs-string">&#x27;tide&#x27;</span>, <span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">1</span>).name(<span class="hljs-string">&#x27;Tide (%)&#x27;</span>).onChange(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-built_in">document</span>.body.style.setProperty(<span class="hljs-string">&#x27;--wave&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">${CONFIG.tide}</span>%`</span>)
+})
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-000f207a413b42bc9485b540046adad6~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>这是我们实现该目标所需的全部代码：</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">animation</span>: waves <span class="hljs-number">5s</span> infinite ease-in-out;
+}
+<span class="hljs-keyword">@keyframes</span> waves {
+  <span class="hljs-number">50%</span> {
+    --wave: <span class="hljs-number">25%</span>;
+  }
+}
+</code></pre>
+<p>如果不使用 <code>@property</code>，我们的波浪将在涨潮和退潮之间步进。但是，有了它，我们得到了一个很好的切换缓冲效果。</p>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --sand hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --wave-one hsl(<span class="hljs-number">200</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">100%</span>)
+  --wave-two hsl(<span class="hljs-number">200</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">90%</span>)
+  --wave-three hsl(<span class="hljs-number">210</span>, <span class="hljs-number">50%</span>, <span class="hljs-number">60%</span>)
+  --wave-four hsl(<span class="hljs-number">210</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">25%</span>)
+
+@property --wave
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0%</span>
+  syntax <span class="hljs-string">&#x27;&lt;percentage&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">background</span> linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">35%</span> + (var(--wave) * <span class="hljs-number">0.5</span>)), var(--wave-four) calc(<span class="hljs-number">75%</span> + var(--wave)) <span class="hljs-number">100%</span>),
+             linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">35%</span> + (<span class="hljs-selector-tag">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-selector-tag">var</span>(--wave-three) calc(<span class="hljs-number">50%</span> + <span class="hljs-selector-tag">var</span>(--wave)) calc(<span class="hljs-number">75%</span> + <span class="hljs-selector-tag">var</span>(--wave))),
+             linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">20%</span> + (<span class="hljs-selector-tag">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-selector-tag">var</span>(--wave-two) calc(<span class="hljs-number">35%</span> + <span class="hljs-selector-tag">var</span>(--wave)) calc(<span class="hljs-number">50%</span> + <span class="hljs-selector-tag">var</span>(--wave))),
+             linear-gradient(transparent <span class="hljs-number">0</span> calc(<span class="hljs-number">15%</span> + (<span class="hljs-selector-tag">var</span>(--wave) * <span class="hljs-number">0.5</span>)), <span class="hljs-selector-tag">var</span>(--wave-one) calc(<span class="hljs-number">25%</span> + <span class="hljs-selector-tag">var</span>(--wave)) calc(<span class="hljs-number">35%</span> + <span class="hljs-selector-tag">var</span>(--wave))),
+             <span class="hljs-selector-tag">var</span>(--sand)
+  <span class="hljs-attribute">animation</span> waves <span class="hljs-number">5s</span> infinite ease-in-out
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+
+<span class="hljs-keyword">@keyframes</span> waves
+  <span class="hljs-number">50%</span>
+    --wave <span class="hljs-number">25%</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-7c5709adbb0649bcb7af2372f104d02d~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>想到我们在处理图像时还会获得其他极好的的东西，实在是令人兴奋，我们可以旋转，或者，为圆锥形渐变的角度动画化……但是只能在 <code>border-image</code> 中设置。Bramus Van Damme 概括了一下<a href="https://www.bram.us/2021/01/29/animating-a-css-gradient-border/">此方面内容</a>。</p>
+<p>让我们通过创建一个充电指示器来解释概念。我们将同时设置角度和色调的动画。 我们可以从两个自定义属性开始：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@property</span> --angle {
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0deg</span>;
+  inherits: false;
+  syntax: <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>;
+}
+
+<span class="hljs-keyword">@property</span> --hue {
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0</span>;
+  inherits: false;
+  syntax: <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>;
+}
+</code></pre>
+<p>动画将在每次迭代中稍有停顿地更新角度和色相。</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> load {
+  <span class="hljs-number">0%</span>, <span class="hljs-number">10%</span> {
+    --angle: <span class="hljs-number">0deg</span>;
+    --hue: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">100%</span> {
+    --angle: <span class="hljs-number">360deg</span>;
+    --hue: <span class="hljs-number">100</span>;
+  }
+}
+</code></pre>
+<p>现在，将其应用为元素的 <code>border-image</code>。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.loader</span> {
+  --charge: <span class="hljs-built_in">hsl</span>(<span class="hljs-built_in">var</span>(--hue), <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>);
+  <span class="hljs-attribute">border-image</span>: <span class="hljs-built_in">conic-gradient</span>(<span class="hljs-built_in">var</span>(--charge) <span class="hljs-built_in">var</span>(--angle), transparent <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--angle) * <span class="hljs-number">0.5deg</span>)) <span class="hljs-number">30</span>;
+  <span class="hljs-attribute">animation</span>: load <span class="hljs-number">2s</span> infinite ease-in-out;
+}
+</code></pre>
+<p>太棒了！</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.loader Charging...
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --bg hsl(<span class="hljs-number">0</span>, <span class="hljs-number">10%</span>, <span class="hljs-number">10%</span>)
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">background</span> var(--bg)
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+
+@property --<span class="hljs-selector-tag">a</span>
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+@property --h
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+<span class="hljs-selector-class">.loader</span>
+  <span class="hljs-attribute">padding</span> <span class="hljs-number">2rem</span> <span class="hljs-number">4rem</span>
+  <span class="hljs-attribute">font-family</span> monospace
+  <span class="hljs-attribute">font-weight</span> bold
+  <span class="hljs-attribute">color</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>)
+  <span class="hljs-attribute">border-style</span> solid
+  <span class="hljs-attribute">border-width</span> <span class="hljs-number">1vmin</span>
+  <span class="hljs-attribute">font-size</span> <span class="hljs-number">2rem</span>
+  --charge <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % <span class="hljs-selector-tag">var</span>(--h, <span class="hljs-number">0</span>)
+  <span class="hljs-attribute">border-image</span> conic-gradient(var(--charge) var(--a), transparent calc(var(--a) + <span class="hljs-number">0.5deg</span>)) <span class="hljs-number">30</span>
+  <span class="hljs-attribute">animation</span> load <span class="hljs-number">2s</span> infinite ease-in-out
+
+<span class="hljs-keyword">@keyframes</span> load
+  <span class="hljs-number">0%</span>, <span class="hljs-number">10%</span>
+    --<span class="hljs-selector-tag">a</span> <span class="hljs-number">0deg</span>
+    --h <span class="hljs-number">0</span>
+  <span class="hljs-number">100%</span>
+    --<span class="hljs-selector-tag">a</span> <span class="hljs-number">360deg</span>
+    --h <span class="hljs-number">100</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-242c1aa34cb74a5c912ff39f1f1a29a1~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>不幸的是，<code>border-image</code> 与 <code>border-radius</code> 之间的兼容配合并不那么好。但是，我们可以在其后面使用伪元素来解决这个问题。将其与以前的动画技巧结合起来，我们便获得了完整的充电/加载动画。（是的，当达到100％时，它就会自动产生变化。）</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.charger
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --bg hsl(<span class="hljs-number">0</span>, <span class="hljs-number">10%</span>, <span class="hljs-number">10%</span>)
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">background</span> var(--bg)
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+
+@property --<span class="hljs-selector-tag">a</span>
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+@property --h
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+@property --c
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+<span class="hljs-selector-class">.charger</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+  <span class="hljs-attribute">font-family</span> monospace
+  <span class="hljs-attribute">font-weight</span> bold
+  <span class="hljs-attribute">color</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>)
+  <span class="hljs-attribute">font-size</span> <span class="hljs-number">2rem</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">position</span> relative
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">25%</span>)
+  <span class="hljs-attribute">counter-reset</span> charge var(--c)
+  <span class="hljs-attribute">animation</span> charge <span class="hljs-number">60s</span> forwards steps(<span class="hljs-number">100</span>)
+  
+  &amp;:after
+    <span class="hljs-attribute">content</span> counter(charge) <span class="hljs-string">&#x27;%&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">font-size</span> <span class="hljs-number">10vmin</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+  
+  &amp;:before
+    --charge <span class="hljs-string">&#x27;hsl(%s, 80%, 50%)&#x27;</span> % <span class="hljs-selector-tag">var</span>(--h, <span class="hljs-number">0</span>)
+    <span class="hljs-attribute">animation</span> load <span class="hljs-number">2s</span> <span class="hljs-number">30</span> ease-in-out forwards, loaded <span class="hljs-number">1s</span> <span class="hljs-number">60s</span> infinite linear
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> -<span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">right</span> -<span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">left</span> -<span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">bottom</span> -<span class="hljs-number">2vmin</span>
+    <span class="hljs-attribute">background</span> conic-gradient(var(--charge) var(--a), transparent calc(var(--a) + <span class="hljs-number">0.5deg</span>))
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">z-index</span> -<span class="hljs-number">1</span>
+
+<span class="hljs-keyword">@keyframes</span> load
+  <span class="hljs-number">0%</span>, <span class="hljs-number">10%</span>
+    --<span class="hljs-selector-tag">a</span> <span class="hljs-number">0deg</span>
+    --h <span class="hljs-number">0</span>
+  <span class="hljs-number">100%</span>
+    --<span class="hljs-selector-tag">a</span> <span class="hljs-number">360deg</span>
+    --h <span class="hljs-number">100</span>
+    
+<span class="hljs-keyword">@keyframes</span> loaded
+  to
+    --h <span class="hljs-number">360</span>
+
+<span class="hljs-keyword">@keyframes</span> charge
+  to
+    --c <span class="hljs-number">100</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-4c8646c06dbc4fdd9af10ba72c1216d6~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<h2>我们还可以给 <code>transform</code> 变换 设置动画，那也很酷啊</h2>
+<p>动画转换的一个问题是某些部分之间的过渡，它通常最终会坏掉或并不像预期那样运行。考虑扔球的这个经典例子，我们希望它在模仿重力影响的同时从 A 点到达 B 点。</p>
+<p>最初的尝试可能看起来像这样：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> throw {
+  <span class="hljs-number">0%</span> {
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(-<span class="hljs-number">500%</span>, <span class="hljs-number">0</span>);
+  }
+  <span class="hljs-number">50%</span> {
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(<span class="hljs-number">0</span>, -<span class="hljs-number">250%</span>);
+  }
+  <span class="hljs-number">100%</span> {
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(<span class="hljs-number">500%</span>, <span class="hljs-number">0</span>);
+  }
+}
+</code></pre>
+<p>但这个效果可跟我们的预期不一致：</p>
+<details>
+<summary>HTML</summary>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ball&quot;</span> <span class="hljs-attr">viewBox</span>=<span class="hljs-string">&quot;0 0 496 512&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;basketball-ball&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">path</span> <span class="hljs-attr">d</span>=<span class="hljs-string">&quot;M212.3 10.3c-43.8 6.3-86.2 24.1-122.2 53.8l77.4 77.4c27.8-35.8 43.3-81.2 44.8-131.2zM248 222L405.9 64.1c-42.4-35-93.6-53.5-145.5-56.1-1.2 63.9-21.5 122.3-58.7 167.7L248 222zM56.1 98.1c-29.7 36-47.5 78.4-53.8 122.2 50-1.5 95.5-17 131.2-44.8L56.1 98.1zm272.2 204.2c45.3-37.1 103.7-57.4 167.7-58.7-2.6-51.9-21.1-103.1-56.1-145.5L282 256l46.3 46.3zM248 290L90.1 447.9c42.4 34.9 93.6 53.5 145.5 56.1 1.3-64 21.6-122.4 58.7-167.7L248 290zm191.9 123.9c29.7-36 47.5-78.4 53.8-122.2-50.1 1.6-95.5 17.1-131.2 44.8l77.4 77.4zM167.7 209.7C122.3 246.9 63.9 267.3 0 268.4c2.6 51.9 21.1 103.1 56.1 145.5L214 256l-46.3-46.3zm116 292c43.8-6.3 86.2-24.1 122.2-53.8l-77.4-77.4c-27.7 35.7-43.2 81.2-44.8 131.2z&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span>
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">190</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  
+  
+<span class="hljs-selector-class">.ball</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">10vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">10vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+  fill hsl(<span class="hljs-number">35</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>)
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">35</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">35%</span>)
+  <span class="hljs-attribute">animation</span> throw <span class="hljs-number">1s</span> infinite alternate
+  
+<span class="hljs-keyword">@keyframes</span> throw
+  <span class="hljs-number">0%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">500%</span>, <span class="hljs-number">0</span>)
+  <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(<span class="hljs-number">0</span>, -<span class="hljs-number">250%</span>)
+  <span class="hljs-number">100%</span>
+    <span class="hljs-attribute">transform</span> translate(<span class="hljs-number">500%</span>, <span class="hljs-number">0</span>)
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-915d790631604dacb97cf47ade173d2c~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>以前，我们可能已经接触过用于包裹元素的元素，并单独为它设置了动画。但是，如果我们使用 <code>@property</code>，我们可以为变换的各个值设置动画，并且全部集中在一个时间轴上。让我们通过定义自定义属性，然后在球上设置 <code>transform</code> 来翻转这种工作方式。</p>
+<pre class="hljs"><code><span class="hljs-keyword">@property</span> --x {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0%</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;percentage&gt;&#x27;</span>;
+}
+
+<span class="hljs-keyword">@property</span> --y {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0%</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;percentage&gt;&#x27;</span>;
+}
+
+<span class="hljs-keyword">@property</span> --rotate {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0deg</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>;
+}
+
+<span class="hljs-selector-class">.ball</span> {
+  <span class="hljs-attribute">animation</span>: throw <span class="hljs-number">1s</span> infinite alternate ease-in-out;
+  <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translateX</span>(<span class="hljs-built_in">var</span>(--x)) <span class="hljs-built_in">translateY</span>(<span class="hljs-built_in">var</span>(--y)) <span class="hljs-built_in">rotate</span>(<span class="hljs-built_in">var</span>(--rotate));
+}
+</code></pre>
+<p>现在在动画上，我们可以针对关键帧直接组装所需的变换：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> throw {
+  <span class="hljs-number">0%</span> {
+    --x: -<span class="hljs-number">500%</span>;
+    --rotate: <span class="hljs-number">0deg</span>;
+  }
+  <span class="hljs-number">50%</span> {
+    --y: -<span class="hljs-number">250%</span>;
+  }
+  <span class="hljs-number">100%</span> {
+    --x: <span class="hljs-number">500%</span>;
+    --rotate: <span class="hljs-number">360deg</span>;
+  }
+}
+</code></pre>
+<p>结果如何？我们希望看到一条弯曲的轨迹。我们可以根据所使用的不同计时功能使外观看起来有所不同。我们可以将动画分为三种方式并使用不同的计时功能。这将使我们对球的移动方式产生不同的结果。</p>
+<details>
+<summary>HTML</summary>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;ball&quot;</span> <span class="hljs-attr">viewBox</span>=<span class="hljs-string">&quot;0 0 496 512&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;basketball-ball&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">path</span> <span class="hljs-attr">d</span>=<span class="hljs-string">&quot;M212.3 10.3c-43.8 6.3-86.2 24.1-122.2 53.8l77.4 77.4c27.8-35.8 43.3-81.2 44.8-131.2zM248 222L405.9 64.1c-42.4-35-93.6-53.5-145.5-56.1-1.2 63.9-21.5 122.3-58.7 167.7L248 222zM56.1 98.1c-29.7 36-47.5 78.4-53.8 122.2 50-1.5 95.5-17 131.2-44.8L56.1 98.1zm272.2 204.2c45.3-37.1 103.7-57.4 167.7-58.7-2.6-51.9-21.1-103.1-56.1-145.5L282 256l46.3 46.3zM248 290L90.1 447.9c42.4 34.9 93.6 53.5 145.5 56.1 1.3-64 21.6-122.4 58.7-167.7L248 290zm191.9 123.9c29.7-36 47.5-78.4 53.8-122.2-50.1 1.6-95.5 17.1-131.2 44.8l77.4 77.4zM167.7 209.7C122.3 246.9 63.9 267.3 0 268.4c2.6 51.9 21.1 103.1 56.1 145.5L214 256l-46.3-46.3zm116 292c43.8-6.3 86.2-24.1 122.2-53.8l-77.4-77.4c-27.7 35.7-43.2 81.2-44.8 131.2z&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span>
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">190</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+  
+@property --x
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0%</span>
+  syntax <span class="hljs-string">&#x27;&lt;percentage&gt;&#x27;</span>
+
+@property --y
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0%</span>
+  syntax <span class="hljs-string">&#x27;&lt;percentage&gt;&#x27;</span>
+
+@property --rotate
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+  
+<span class="hljs-selector-class">.ball</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">10vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">10vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">50%</span>
+  fill hsl(<span class="hljs-number">35</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">50%</span>)
+  <span class="hljs-attribute">background</span> hsl(<span class="hljs-number">35</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">35%</span>)
+  <span class="hljs-attribute">animation</span> throw <span class="hljs-number">1s</span> infinite alternate ease-in-out
+  <span class="hljs-attribute">transform</span> translateX(var(--x)) translateY(var(--y)) rotate(var(--rotate))
+  
+<span class="hljs-keyword">@keyframes</span> throw
+  <span class="hljs-number">0%</span>
+    --x -<span class="hljs-number">500%</span>
+    --rotate <span class="hljs-number">0deg</span>
+  <span class="hljs-number">50%</span>
+    --y -<span class="hljs-number">250%</span>
+  <span class="hljs-number">100%</span>
+    --x <span class="hljs-number">500%</span>
+    --rotate <span class="hljs-number">360deg</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-00e979247f874f0d9964f37e0b293ebf~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>换一个例子吧！现在我们有一辆汽车要绕着一个圆角的正方形行驶。</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.road
+img.car(src=&quot;https://assets.codepen.io/605876/little-red-car.png&quot; alt=&quot;Little red car&quot;)
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --road hsl(<span class="hljs-number">220</span>, <span class="hljs-number">8%</span>, <span class="hljs-number">50%</span>)
+  --grass hsl(<span class="hljs-number">90</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --island hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --lines hsl(<span class="hljs-number">45</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+
+@property --x
+  inherits false
+  <span class="hljs-attribute">initial</span>-value -<span class="hljs-number">22.5</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --y
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --r
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> var(--grass)
+
+<span class="hljs-selector-class">.car</span>
+  <span class="hljs-attribute">animation</span> journey <span class="hljs-number">5s</span> infinite linear
+  <span class="hljs-attribute">transform</span> translate(calc(var(--x) * <span class="hljs-number">1vmin</span>), calc(var(--y) * <span class="hljs-number">1vmin</span>)) rotate(var(--r))
+  <span class="hljs-attribute">width</span> <span class="hljs-number">3vmin</span>
+  <span class="hljs-attribute">object-fit</span> cover
+
+<span class="hljs-selector-class">.road</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">12.5%</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">5vmin</span> solid var(--road)
+  <span class="hljs-attribute">background</span> var(--road)
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">11%</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> dashed var(--lines)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">background</span> var(--island)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">10%</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-809dec27956641d3840d82259330aab9~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>我们可以对球使用类似的方法：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@property</span> --x {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: -<span class="hljs-number">22.5</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>;
+}
+
+<span class="hljs-keyword">@property</span> --y {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>;
+}
+
+<span class="hljs-keyword">@property</span> --r {
+  inherits: false;
+  <span class="hljs-attribute">initial</span>-value: <span class="hljs-number">0deg</span>;
+  syntax: <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>;
+}
+</code></pre>
+<p>汽车的变换是用 <code>vmin</code> 进行计算的，以保持响应式布局：</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.car</span> {
+  <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(<span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--x) * <span class="hljs-number">1vmin</span>), <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--y) * <span class="hljs-number">1vmin</span>)) <span class="hljs-built_in">rotate</span>(<span class="hljs-built_in">var</span>(--r));
+}
+</code></pre>
+<p>现在可以为汽车编写极其精确的逐帧动画，从 <code>--x</code> 的值开始吧。</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> journey {
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">25%</span> {
+    --x: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">50%</span> {
+    --x: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">75%</span> {
+    --x: <span class="hljs-number">0</span>;
+  }
+}
+</code></pre>
+<p>汽车在 x 轴上就会运行一段正确的轨迹。</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.road
+img.car(src=&quot;https://assets.codepen.io/605876/little-red-car.png&quot; alt=&quot;Little red car&quot;)
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --road hsl(<span class="hljs-number">220</span>, <span class="hljs-number">8%</span>, <span class="hljs-number">50%</span>)
+  --grass hsl(<span class="hljs-number">90</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --island hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --lines hsl(<span class="hljs-number">45</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+
+@property --x
+  inherits false
+  <span class="hljs-attribute">initial</span>-value -<span class="hljs-number">22.5</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --y
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --r
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> var(--grass)
+
+<span class="hljs-selector-class">.car</span>
+  <span class="hljs-attribute">animation</span> journey <span class="hljs-number">5s</span> infinite linear
+  <span class="hljs-attribute">transform</span> translate(calc(var(--x) * <span class="hljs-number">1vmin</span>), calc(var(--y) * <span class="hljs-number">1vmin</span>)) rotate(var(--r))
+  <span class="hljs-attribute">width</span> <span class="hljs-number">3vmin</span>
+  <span class="hljs-attribute">object-fit</span> cover
+
+<span class="hljs-selector-class">.road</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">12.5%</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">5vmin</span> solid var(--road)
+  <span class="hljs-attribute">background</span> var(--road)
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">11%</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> dashed var(--lines)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">background</span> var(--island)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">10%</span>
+
+<span class="hljs-keyword">@keyframes</span> journey
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>
+    --x -<span class="hljs-number">22.5</span>
+  <span class="hljs-number">25%</span>
+    --x <span class="hljs-number">0</span>
+  <span class="hljs-number">50%</span>
+    --x <span class="hljs-number">22.5</span>
+  <span class="hljs-number">75%</span>
+    --x <span class="hljs-number">0</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-8a32659206b04ceda299987206db97cb~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>然后针对 y 轴：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> journey {
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">25%</span> {
+    --x: <span class="hljs-number">0</span>;
+    --y: -<span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">50%</span> {
+    --x: <span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">75%</span> {
+    --x: <span class="hljs-number">0</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+}
+</code></pre>
+<p>你不对劲？</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.road
+img.car(src=&quot;https://assets.codepen.io/605876/little-red-car.png&quot; alt=&quot;Little red car&quot;)
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --road hsl(<span class="hljs-number">220</span>, <span class="hljs-number">8%</span>, <span class="hljs-number">50%</span>)
+  --grass hsl(<span class="hljs-number">90</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --island hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --lines hsl(<span class="hljs-number">45</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+
+@property --x
+  inherits false
+  <span class="hljs-attribute">initial</span>-value -<span class="hljs-number">22.5</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --y
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --r
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> var(--grass)
+
+<span class="hljs-selector-class">.car</span>
+  <span class="hljs-attribute">animation</span> journey <span class="hljs-number">5s</span> infinite linear
+  <span class="hljs-attribute">transform</span> translate(calc(var(--x) * <span class="hljs-number">1vmin</span>), calc(var(--y) * <span class="hljs-number">1vmin</span>)) rotate(var(--r))
+  <span class="hljs-attribute">width</span> <span class="hljs-number">3vmin</span>
+  <span class="hljs-attribute">object-fit</span> cover
+
+<span class="hljs-selector-class">.road</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">12.5%</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">5vmin</span> solid var(--road)
+  <span class="hljs-attribute">background</span> var(--road)
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">11%</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> dashed var(--lines)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">background</span> var(--island)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">10%</span>
+
+
+<span class="hljs-keyword">@keyframes</span> journey
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+  <span class="hljs-number">25%</span>
+    --x <span class="hljs-number">0</span>
+    --y -<span class="hljs-number">22.5</span>
+  <span class="hljs-number">50%</span>
+    --x <span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+  <span class="hljs-number">75%</span>
+    --x <span class="hljs-number">0</span>
+    --y <span class="hljs-number">22.5</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-924f011559624d2f8d5636c63b7f6316~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>让我们在 <code>@keyframes</code> 中添加一些额外的步骤来使动画更正常：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> journey {
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">12.5%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: -<span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">25%</span> {
+    --x: <span class="hljs-number">0</span>;
+    --y: -<span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">37.5%</span> {
+    --y: -<span class="hljs-number">22.5</span>;
+    --x: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">50%</span> {
+    --x: <span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">62.5%</span> {
+    --x: <span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">75%</span> {
+    --x: <span class="hljs-number">0</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">87.5%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+}
+</code></pre>
+<p>看起来好多了：</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.road
+img.car(src=&quot;https://assets.codepen.io/605876/little-red-car.png&quot; alt=&quot;Little red car&quot;)
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --road hsl(<span class="hljs-number">220</span>, <span class="hljs-number">8%</span>, <span class="hljs-number">50%</span>)
+  --grass hsl(<span class="hljs-number">90</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --island hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --lines hsl(<span class="hljs-number">45</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+
+@property --x
+  inherits false
+  <span class="hljs-attribute">initial</span>-value -<span class="hljs-number">22.5</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --y
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --r
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> var(--grass)
+
+<span class="hljs-selector-class">.car</span>
+  <span class="hljs-attribute">animation</span> journey <span class="hljs-number">5s</span> infinite linear
+  <span class="hljs-attribute">transform</span> translate(calc(var(--x) * <span class="hljs-number">1vmin</span>), calc(var(--y) * <span class="hljs-number">1vmin</span>)) rotate(var(--r))
+  <span class="hljs-attribute">width</span> <span class="hljs-number">3vmin</span>
+  <span class="hljs-attribute">object-fit</span> cover
+
+<span class="hljs-selector-class">.road</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">12.5%</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">5vmin</span> solid var(--road)
+  <span class="hljs-attribute">background</span> var(--road)
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">11%</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> dashed var(--lines)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">background</span> var(--island)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">10%</span>
+
+
+<span class="hljs-keyword">@keyframes</span> journey
+  <span class="hljs-number">0%</span>, <span class="hljs-number">100%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+  <span class="hljs-number">12.5%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y -<span class="hljs-number">22.5</span>
+  <span class="hljs-number">25%</span>
+    --x <span class="hljs-number">0</span>
+    --y -<span class="hljs-number">22.5</span>
+  <span class="hljs-number">37.5%</span>
+    --y -<span class="hljs-number">22.5</span>
+    --x <span class="hljs-number">22.5</span>
+  <span class="hljs-number">50%</span>
+    --x <span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+  <span class="hljs-number">62.5%</span>
+    --x <span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">22.5</span>
+  <span class="hljs-number">75%</span>
+    --x <span class="hljs-number">0</span>
+    --y <span class="hljs-number">22.5</span>
+  <span class="hljs-number">87.5%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">22.5</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-89982c76e21948b4b94a3d12d877fae1~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p>剩下的就是汽车的旋转角度，我们要在拐角处设下几个 5％ 的额外的转向动画。虽然这不精确，但肯定可以显示出它的潜力：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> journey {
+  <span class="hljs-number">0%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+    --r: <span class="hljs-number">0deg</span>;
+  }
+  <span class="hljs-number">10%</span> {
+    --r: <span class="hljs-number">0deg</span>;
+  }
+  <span class="hljs-number">12.5%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: -<span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">15%</span> {
+    --r: <span class="hljs-number">90deg</span>;
+  }
+  <span class="hljs-number">25%</span> {
+    --x: <span class="hljs-number">0</span>;
+    --y: -<span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">35%</span> {
+    --r: <span class="hljs-number">90deg</span>;
+  }
+  <span class="hljs-number">37.5%</span> {
+    --y: -<span class="hljs-number">22.5</span>;
+    --x: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">40%</span> {
+    --r: <span class="hljs-number">180deg</span>;
+  }
+  <span class="hljs-number">50%</span> {
+    --x: <span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+  }
+  <span class="hljs-number">60%</span> {
+    --r: <span class="hljs-number">180deg</span>;
+  }
+  <span class="hljs-number">62.5%</span> {
+    --x: <span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">65%</span> {
+    --r: <span class="hljs-number">270deg</span>;
+  }
+  <span class="hljs-number">75%</span> {
+    --x: <span class="hljs-number">0</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">85%</span> {
+    --r: <span class="hljs-number">270deg</span>;
+  }
+  <span class="hljs-number">87.5%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">22.5</span>;
+  }
+  <span class="hljs-number">90%</span> {
+    --r: <span class="hljs-number">360deg</span>;
+  }
+  <span class="hljs-number">100%</span> {
+    --x: -<span class="hljs-number">22.5</span>;
+    --y: <span class="hljs-number">0</span>;
+    --r: <span class="hljs-number">360deg</span>;
+  }
+}
+</code></pre>
+<p>我们现在做到了！有一辆汽车绕着弯曲的正方形行驶！无需额外的容器，无需复杂的数学运算！我们用自定义属性组成了这一切！！！666 刷一波～</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>.road
+img.car(src=&quot;https://assets.codepen.io/605876/little-red-car.png&quot; alt=&quot;Little red car&quot;)
+</code></pre>
+</details><details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code>*
+  <span class="hljs-attribute">box-sizing</span> border-box
+
+<span class="hljs-selector-pseudo">:root</span>
+  --road hsl(<span class="hljs-number">220</span>, <span class="hljs-number">8%</span>, <span class="hljs-number">50%</span>)
+  --grass hsl(<span class="hljs-number">90</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --island hsl(<span class="hljs-number">45</span>, <span class="hljs-number">40%</span>, <span class="hljs-number">50%</span>)
+  --lines hsl(<span class="hljs-number">45</span>, <span class="hljs-number">80%</span>, <span class="hljs-number">90%</span>)
+
+@property --x
+  inherits false
+  <span class="hljs-attribute">initial</span>-value -<span class="hljs-number">22.5</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --y
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  syntax <span class="hljs-string">&#x27;&lt;number&gt;&#x27;</span>
+
+@property --r
+  inherits false
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0deg</span>
+  syntax <span class="hljs-string">&#x27;&lt;angle&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> grid
+  place-items center
+  <span class="hljs-attribute">background</span> var(--grass)
+
+<span class="hljs-selector-class">.car</span>
+  <span class="hljs-attribute">animation</span> journey <span class="hljs-number">5s</span> infinite linear
+  <span class="hljs-attribute">transform</span> translate(calc(var(--x) * <span class="hljs-number">1vmin</span>), calc(var(--y) * <span class="hljs-number">1vmin</span>)) rotate(var(--r))
+  <span class="hljs-attribute">width</span> <span class="hljs-number">3vmin</span>
+  <span class="hljs-attribute">object-fit</span> cover
+
+<span class="hljs-selector-class">.road</span>
+  <span class="hljs-attribute">height</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">50vmin</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">12.5%</span>
+  <span class="hljs-attribute">border</span> <span class="hljs-number">5vmin</span> solid var(--road)
+  <span class="hljs-attribute">background</span> var(--road)
+  <span class="hljs-attribute">position</span> absolute
+  <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+  <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:before
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">44vmin</span>
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">11%</span>
+    <span class="hljs-attribute">border</span> <span class="hljs-number">0.5vmin</span> dashed var(--lines)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+  &amp;:after
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">height</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">40vmin</span>
+    <span class="hljs-attribute">background</span> var(--island)
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+    <span class="hljs-attribute">border-radius</span> <span class="hljs-number">10%</span>
+
+<span class="hljs-comment">// @keyframes journey</span>
+<span class="hljs-comment">//   0%, 100%</span>
+<span class="hljs-comment">//     --x -22.5</span>
+<span class="hljs-comment">//   25%</span>
+<span class="hljs-comment">//     --x 0</span>
+<span class="hljs-comment">//   50%</span>
+<span class="hljs-comment">//     --x 22.5</span>
+<span class="hljs-comment">//   75%</span>
+<span class="hljs-comment">//     --x 0</span>
+
+<span class="hljs-comment">// @keyframes journey</span>
+<span class="hljs-comment">//   0%, 100%</span>
+<span class="hljs-comment">//     --x -22.5</span>
+<span class="hljs-comment">//     --y 0</span>
+<span class="hljs-comment">//   25%</span>
+<span class="hljs-comment">//     --x 0</span>
+<span class="hljs-comment">//     --y -22.5</span>
+<span class="hljs-comment">//   50%</span>
+<span class="hljs-comment">//     --x 22.5</span>
+<span class="hljs-comment">//     --y 0</span>
+<span class="hljs-comment">//   75%</span>
+<span class="hljs-comment">//     --x 0</span>
+<span class="hljs-comment">//     --y 22.5</span>
+<span class="hljs-comment">// @keyframes journey</span>
+<span class="hljs-comment">//   0%, 100%</span>
+<span class="hljs-comment">//     --x -22.5</span>
+<span class="hljs-comment">//     --y 0</span>
+<span class="hljs-comment">//   12.5%</span>
+<span class="hljs-comment">//     --x -22.5</span>
+<span class="hljs-comment">//     --y -22.5</span>
+<span class="hljs-comment">//   25%</span>
+<span class="hljs-comment">//     --x 0</span>
+<span class="hljs-comment">//     --y -22.5</span>
+<span class="hljs-comment">//   37.5%</span>
+<span class="hljs-comment">//     --y -22.5</span>
+<span class="hljs-comment">//     --x 22.5</span>
+<span class="hljs-comment">//   50%</span>
+<span class="hljs-comment">//     --x 22.5</span>
+<span class="hljs-comment">//     --y 0</span>
+<span class="hljs-comment">//   62.5%</span>
+<span class="hljs-comment">//     --x 22.5</span>
+<span class="hljs-comment">//     --y 22.5</span>
+<span class="hljs-comment">//   75%</span>
+<span class="hljs-comment">//     --x 0</span>
+<span class="hljs-comment">//     --y 22.5</span>
+<span class="hljs-comment">//   87.5%</span>
+<span class="hljs-comment">//     --x -22.5</span>
+<span class="hljs-comment">//     --y 22.5</span>
+<span class="hljs-keyword">@keyframes</span> journey
+  <span class="hljs-number">0%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+    --r <span class="hljs-number">0deg</span>
+  <span class="hljs-number">10%</span>
+    --r <span class="hljs-number">0deg</span>
+  <span class="hljs-number">12.5%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y -<span class="hljs-number">22.5</span>
+  <span class="hljs-number">15%</span>
+    --r <span class="hljs-number">90deg</span>
+  <span class="hljs-number">25%</span>
+    --x <span class="hljs-number">0</span>
+    --y -<span class="hljs-number">22.5</span>
+  <span class="hljs-number">35%</span>
+    --r <span class="hljs-number">90deg</span>
+  <span class="hljs-number">37.5%</span>
+    --y -<span class="hljs-number">22.5</span>
+    --x <span class="hljs-number">22.5</span>
+  <span class="hljs-number">40%</span>
+    --r <span class="hljs-number">180deg</span>
+  <span class="hljs-number">50%</span>
+    --x <span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+  <span class="hljs-number">60%</span>
+    --r <span class="hljs-number">180deg</span>
+  <span class="hljs-number">62.5%</span>
+    --x <span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">22.5</span>
+  <span class="hljs-number">65%</span>
+    --r <span class="hljs-number">270deg</span>
+  <span class="hljs-number">75%</span>
+    --x <span class="hljs-number">0</span>
+    --y <span class="hljs-number">22.5</span>
+  <span class="hljs-number">85%</span>
+    --r <span class="hljs-number">270deg</span>
+  <span class="hljs-number">87.5%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">22.5</span>
+  <span class="hljs-number">90%</span>
+    --r <span class="hljs-number">360deg</span>
+  <span class="hljs-number">100%</span>
+    --x -<span class="hljs-number">22.5</span>
+    --y <span class="hljs-number">0</span>
+    --r <span class="hljs-number">360deg</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-26c6ed87d8aa425c9db5676079831f02~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<h2>用变量强化整个场景</h2>
+<p>到目前为止，我们已经看到了一些不错的 <code>@property</code> 的潜力。但是将我们在这里看到的所有内容放在一起可以将事情推上一个新的台阶 —— 例如，我们仅需几个自定义属性就可以为整个场景提供更强劲的动力。</p>
+<p>考虑以下 404 页面的思路 —— 两个注册的属性为不同的运动部件提供动力。我们使用 <code>-webkit-background-clip</code> 剪辑了一个渐变色，而阴影则会读取属性的值移动。我们还用光线效果摆动了另一个元素。</p>
+<details>
+<summary>HTML <small>（Pug）</small></summary>
+<pre class="hljs"><code>h1 404
+.cloak__wrapper
+  .cloak__container
+    .cloak
+.info
+  h2 We can&#x27;t find that page
+  p.
+    We&#x27;re fairly sure that page used to be here, but seems to have gone missing. We do apologise on it&#x27;s behalf.
+  a(href=&quot;https://jhey.dev&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;) Home
+</code></pre>
+</details>
+<details>
+<summary>CSS <small>（Stylus）</small></summary>
+<pre class="hljs"><code><span class="hljs-keyword">@import</span> url(<span class="hljs-string">&#x27;https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&amp;family=Roboto:wght@100;300&amp;display=swap&#x27;</span>)
+
+<span class="hljs-selector-pseudo">:root</span>
+  --<span class="hljs-selector-tag">button</span> hsl(<span class="hljs-number">44</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">70%</span>)
+  --button-<span class="hljs-attribute">color</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">4%</span>)
+  --shadow hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">0%</span>)
+  --bg hsl(<span class="hljs-number">53</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">45%</span>)
+  --<span class="hljs-selector-tag">header</span> hsl(<span class="hljs-number">53</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">48%</span>)
+  --<span class="hljs-attribute">color</span> hsl(<span class="hljs-number">0</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">98%</span>)
+  --lit-<span class="hljs-selector-tag">header</span> hsl(<span class="hljs-number">53</span>, <span class="hljs-number">0%</span>, <span class="hljs-number">90%</span>)
+  --speed <span class="hljs-number">2s</span>
+
+*
+  <span class="hljs-attribute">box-sizing</span> border-box
+  <span class="hljs-attribute">transform-style</span> preserve-<span class="hljs-number">3</span>d
+
+@property --swing-x
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+@property --swing-y
+  <span class="hljs-attribute">initial</span>-value <span class="hljs-number">0</span>
+  inherits false
+  syntax <span class="hljs-string">&#x27;&lt;integer&gt;&#x27;</span>
+
+<span class="hljs-selector-tag">body</span>
+  <span class="hljs-attribute">min-height</span> <span class="hljs-number">100vh</span>
+  <span class="hljs-attribute">display</span> flex
+  <span class="hljs-attribute">font-family</span> <span class="hljs-string">&#x27;Roboto&#x27;</span>, sans-serif
+  <span class="hljs-attribute">flex-direction</span> column
+  <span class="hljs-attribute">align-items</span> center
+  <span class="hljs-attribute">justify-content</span> center
+  <span class="hljs-attribute">background</span> var(--bg)
+  <span class="hljs-attribute">color</span> var(--color)
+  <span class="hljs-attribute">perspective</span> <span class="hljs-number">1200px</span>
+
+<span class="hljs-selector-tag">a</span>
+  <span class="hljs-attribute">text-transform</span> uppercase
+  <span class="hljs-attribute">text-decoration</span> none
+  <span class="hljs-attribute">background</span> var(--button)
+  <span class="hljs-attribute">color</span> var(--button-color)
+  <span class="hljs-attribute">padding</span> <span class="hljs-number">1rem</span> <span class="hljs-number">4rem</span>
+  <span class="hljs-attribute">border-radius</span> <span class="hljs-number">4rem</span>
+  <span class="hljs-attribute">font-size</span> <span class="hljs-number">0.875rem</span>
+  <span class="hljs-attribute">letter-spacing</span> <span class="hljs-number">0.05rem</span>
+
+<span class="hljs-selector-tag">p</span>
+  <span class="hljs-attribute">font-weight</span> <span class="hljs-number">100</span>
+
+<span class="hljs-selector-tag">h1</span>
+  <span class="hljs-attribute">animation</span> swing var(--speed) infinite alternate ease-in-out
+  <span class="hljs-attribute">font-size</span> clamp(<span class="hljs-number">5rem</span>, <span class="hljs-number">40vmin</span>, <span class="hljs-number">20rem</span>)
+  <span class="hljs-attribute">font-family</span> <span class="hljs-string">&#x27;Open Sans&#x27;</span>, sans-serif
+  <span class="hljs-attribute">margin</span> <span class="hljs-number">0</span>
+  <span class="hljs-attribute">margin-bottom</span> <span class="hljs-number">1rem</span>
+  <span class="hljs-attribute">letter-spacing</span> <span class="hljs-number">1rem</span>
+  <span class="hljs-attribute">transform</span> translate3d(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0vmin</span>)
+  --x calc(<span class="hljs-number">50%</span> + (<span class="hljs-selector-tag">var</span>(--swing-x) * <span class="hljs-number">0.5</span>) * <span class="hljs-number">1%</span>)
+  <span class="hljs-attribute">background</span> radial-gradient(var(--lit-header), var(--header) <span class="hljs-number">45%</span>) var(--x) <span class="hljs-number">100%</span> / <span class="hljs-number">200%</span> <span class="hljs-number">200%</span>
+  -webkit-<span class="hljs-attribute">background-clip</span> text
+  <span class="hljs-attribute">color</span> transparent
+
+  &amp;:after
+    <span class="hljs-attribute">animation</span> swing var(--speed) infinite alternate ease-in-out
+    <span class="hljs-attribute">content</span> <span class="hljs-string">&quot;404&quot;</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">color</span> var(--shadow)
+    <span class="hljs-attribute">filter</span> blur(<span class="hljs-number">1.5vmin</span>)
+    <span class="hljs-attribute">transform</span> scale(<span class="hljs-number">1.05</span>) translate3d(<span class="hljs-number">0</span>, <span class="hljs-number">12%</span>, -<span class="hljs-number">10vmin</span>) translate(calc((var(--swing-x, <span class="hljs-number">0</span>) * <span class="hljs-number">0.05</span>) * <span class="hljs-number">1%</span>), calc((var(--swing-y) * <span class="hljs-number">0.05</span>) * <span class="hljs-number">1%</span>))
+
+<span class="hljs-selector-class">.cloak</span>
+  <span class="hljs-attribute">animation</span> swing var(--speed) infinite alternate-reverse ease-in-out
+  <span class="hljs-attribute">height</span> <span class="hljs-number">100%</span>
+  <span class="hljs-attribute">width</span> <span class="hljs-number">100%</span>
+  <span class="hljs-attribute">transform-origin</span> <span class="hljs-number">50%</span> <span class="hljs-number">30%</span>
+  <span class="hljs-attribute">transform</span> rotate(calc(var(--swing-x) * -<span class="hljs-number">0.25deg</span>))
+  <span class="hljs-attribute">background</span> radial-gradient(<span class="hljs-number">40%</span> <span class="hljs-number">40%</span> at <span class="hljs-number">50%</span> <span class="hljs-number">42%</span>, transparent, black <span class="hljs-number">35%</span>)
+  
+  &amp;__wrapper
+    <span class="hljs-attribute">position</span> fixed
+    <span class="hljs-attribute">top</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">bottom</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">right</span> <span class="hljs-number">0</span>
+    <span class="hljs-attribute">overflow</span> hidden
+
+  &amp;__container
+    <span class="hljs-attribute">height</span> <span class="hljs-number">250vmax</span>
+    <span class="hljs-attribute">width</span> <span class="hljs-number">250vmax</span>
+    <span class="hljs-attribute">position</span> absolute
+    <span class="hljs-attribute">top</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">left</span> <span class="hljs-number">50%</span>
+    <span class="hljs-attribute">transform</span> translate(-<span class="hljs-number">50%</span>, -<span class="hljs-number">50%</span>)
+
+<span class="hljs-selector-class">.info</span>
+  <span class="hljs-attribute">text-align</span> center
+  <span class="hljs-attribute">line-height</span> <span class="hljs-number">1.5</span>
+  <span class="hljs-attribute">max-width</span> clamp(<span class="hljs-number">16rem</span>, <span class="hljs-number">90vmin</span>, <span class="hljs-number">25rem</span>)
+
+  &amp; &gt; <span class="hljs-selector-tag">p</span>
+    <span class="hljs-attribute">margin-bottom</span> <span class="hljs-number">3rem</span>
+
+<span class="hljs-keyword">@keyframes</span> swing
+  <span class="hljs-number">0%</span>
+    --swing-x -<span class="hljs-number">100</span>
+    --swing-y -<span class="hljs-number">100</span>
+  <span class="hljs-number">50%</span>
+    --swing-y <span class="hljs-number">0</span>
+  <span class="hljs-number">100%</span>
+    --swing-y -<span class="hljs-number">100</span>
+    --swing-x <span class="hljs-number">100</span>
+</code></pre>
+</details>
+<details>
+<summary>JS <small>（Babel）</small></summary>
+<pre class="hljs"><code><span class="hljs-comment">// 404</span>
+</code></pre>
+</details>
+<p><img src="../images/exploring-property-and-its-animating-powers.md-56dbf58d8a374f22955ff6b1d57c5ee9~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<h2>不过如此！</h2>
+<p>考虑到我们使用 <code>@property</code> 定义类型的功能还可以做些别的什么类型的事情，真的很令我兴奋！通过为浏览器提供有关自定义属性的其他上下文，我们可以以基本字符串无法比拟的方式疯狂般的作用效果。</p>
+<p>您对其他类型有什么想法？<code>time</code> 和 <code>resolution</code> 会带来有趣的过渡，尽管我承认我无法使它们按我希望的方式工作。网址也可能很整洁，就像图像轮播通常在各种来源之间进行过渡一样。且让我们在此集思广益吧！</p>
+<p>我希望对 <code>@property</code> 的简单介绍能激发你去学习它，并创造出一个属于自己的出色的模范案例！我期待看到你的成就，请在评论中与我分享～！</p>
+<hr>
+<ul>
+<li>本文正在参与「掘金 2021 春招闯关活动」, 点击查看 <a href="https://sourl.co/4TuMU2">活动详情</a></li>
+</ul>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

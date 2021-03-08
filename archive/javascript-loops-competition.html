@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript 中的循环 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<p>标签：前端</p>
+</blockquote>
+<h1>JavaScript 中的循环</h1>
+<p>先前翻译了一篇文章，<a href="https://juejin.cn/post/6930973929452339213">JavaScript 中哪一种循环最快呢？</a>，原作在比较上稍有偏颇，比较的内容似乎也不够全面，也因此想要作此文与大家分享一下。 ψ(｀∇´)ψ</p>
+<p>不知道大家的想法是什么，但是看到结果，还是有些乍舌的 —— 其实与评论区和译文中的结果有一些出入。</p>
+<p>如果直接想要康康我们能够得出的结论的话，那么就请坐飞起飞向文末嗷，芜湖起飞 ✈️～</p>
+<p>首先我们先可以参考 <a href="https://juejin.cn/user/4265760847576808">Mongkii</a> 老哥的建议，将数组全部赋值为 <code>0</code>，以及定义一个 <code>length</code> 变量供纯循环使用：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> arr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(<span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">10</span>,<span class="hljs-number">7</span>)).fill(<span class="hljs-number">0</span>);
+<span class="hljs-keyword">const</span> length = <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">10</span>, <span class="hljs-number">9</span>);
+</code></pre>
+<p>出于目的不同，我们其实可以分为几个部分来谈：</p>
+<ul>
+<li>纯循环（单纯数字循环）</li>
+<li>数组遍历</li>
+<li>数组赋值</li>
+<li>数组修改（原数组修改）</li>
+<li>数组筛选</li>
+</ul>
+<p>以及测试平台，选用了 Chromium-based 的 Chrome，Gecko 的 FireFox，WebKit 的 Safari 三款浏览器在 MacOS Bug Sur（误）上运行测试。</p>
+<h2>纯循环（单纯数字循环）</h2>
+<pre class="hljs"><code><span class="hljs-comment">/* ====== FOR 正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for normal&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; length; i++) {}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for normal&quot;</span>)
+<span class="hljs-comment">// for normal: 588.867919921875 ms</span>
+<span class="hljs-comment">// min: 571, max: 588</span>
+
+<span class="hljs-comment">/* ====== FOR 倒序 ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for reverse&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = length; i; i--) {}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for reverse&quot;</span>)
+<span class="hljs-comment">// for reverse: 587.512939453125 ms</span>
+<span class="hljs-comment">// min: 570, max: 587</span>
+</code></pre>
+<p>从结果我们其实可以看到，for 和倒序的 for 的时间相差基本不大，而其实测试下，倒序的 for 循环最稳定。</p>
+<p>测试中的倒序的 for 稳定在 570ms ~ 576ms 上下，而正序的 for 与之相差 1ms ~ 2ms（个人感觉还是系统的浮动，但是多次测试下，的确，十来次也都没有一次超过 571ms）。</p>
+<pre class="hljs"><code><span class="hljs-comment">/* ====== WHILE 正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;while&quot;</span>)
+
+<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> (i &lt; length) {
+	i++
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;while&quot;</span>)
+<span class="hljs-comment">// while: 2965.8759765625 ms</span>
+<span class="hljs-comment">// min: 2871, max: 2965</span>
+
+<span class="hljs-comment">/* ====== WHILE 倒序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;while reverse&quot;</span>)
+
+<span class="hljs-keyword">let</span> i = length;
+<span class="hljs-keyword">while</span> (i) {
+	i--
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;while reverse&quot;</span>)
+<span class="hljs-comment">// while reverse: 3069.81298828125 ms</span>
+<span class="hljs-comment">// min: 3069, max: 3093</span>
+</code></pre>
+<p>值得注意的是，大家所说的 while 循环却是表现不佳，不知道是不是我的打开方式有问题，毕竟倒是真的没怎么用 while 循环（。</p>
+<p>至于 forEach，最后我也测试了一下，挺好看的数字：</p>
+<pre class="hljs"><code>forEach: <span class="hljs-number">21016.822998046875</span> ms
+</code></pre>
+<p>所以我们其实可以得出我们的第一个结论，<code>for</code> 循环倒序版最快！</p>
+<h2>数组遍历</h2>
+<p>在这里，我们测试了 <code>for</code> 循环正序、赋值后正序以及倒序，还有 <code>forEach</code> 等版本：</p>
+<pre class="hljs"><code><span class="hljs-comment">/* ====== FOR 正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for normal&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) {
+	<span class="hljs-keyword">let</span> b = arr[i]
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for normal&quot;</span>)
+<span class="hljs-comment">// for normal: 11.520263671875 ms</span>
+<span class="hljs-comment">// min: 8.4, max: 11.5</span>
+
+<span class="hljs-comment">/* ====== FOR 赋值后正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for assigned&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, n = arr.length; i &lt; n; i++) {
+	<span class="hljs-keyword">let</span> b = arr[i]
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for assigned&quot;</span>)
+<span class="hljs-comment">// for assigned: 10.945068359375 ms</span>
+<span class="hljs-comment">// min: 10.9, max: 10.3</span>
+
+<span class="hljs-comment">/* ====== FOR 倒序 ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for reverse&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = arr.length; i; i--) {
+	<span class="hljs-keyword">let</span> b = arr[i]
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for reverse&quot;</span>)
+<span class="hljs-comment">// for reverse: 12.486083984375 ms</span>
+<span class="hljs-comment">// min: 9.0, max: 16（多次）</span>
+
+<span class="hljs-comment">/* ====== FOREACH ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;forEach&quot;</span>)
+
+arr.forEach(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+	<span class="hljs-keyword">let</span> b = e
+})
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;forEach&quot;</span>)
+<span class="hljs-comment">// forEach: 165.9423828125 ms</span>
+<span class="hljs-comment">// min: 120, max: 166</span>
+
+<span class="hljs-comment">/* ====== FOR OF ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for of&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> arr) {
+	<span class="hljs-keyword">let</span> b = i
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for of&quot;</span>)
+<span class="hljs-comment">// for of: 169.17822265625 m</span>
+<span class="hljs-comment">// min: 130, max: 170</span>
+</code></pre>
+<p>在运行中，<code>for</code> 默认版本是最快的 —— 而且是多次运行下，都保持到 8.5ms 上下的水平，但反观 <code>for</code> 倒序版本，最快 9.0ms，平均在 10.3ms 上下，但是出现了 14ms, 16ms 多次，反复试验仍然如此，不知道是什么原因 = =。</p>
+<p>而 <code>forEach</code> 就太拉垮了，继续拉开十倍差距，和 <code>for of</code> 不相上下（误。</p>
+<h2>数组修改</h2>
+<p>在这里，我们还是去测试了 <code>for</code> 循环正序、赋值后正序以及倒序，还有 <code>forEach</code> 等版本：</p>
+<pre class="hljs"><code><span class="hljs-comment">/* ====== FOR 正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for normal&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) {
+	arr[i] = <span class="hljs-number">2</span>
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for normal&quot;</span>)
+<span class="hljs-comment">// for normal: 10.177734375 ms</span>
+<span class="hljs-comment">// min: 10.0, max: 11</span>
+
+<span class="hljs-comment">/* ====== FOR 赋值后正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for assigned&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, n = arr.length; i &lt; n; i++) {
+	arr[i] = <span class="hljs-number">1</span>
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for assigned&quot;</span>)
+<span class="hljs-comment">// for assigned: 12.109130859375 ms</span>
+<span class="hljs-comment">// min: 12.1, max: 13</span>
+
+<span class="hljs-comment">/* ====== FOR 倒序 ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for reverse&quot;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = arr.length; i; i--) {
+	arr[i] = <span class="hljs-number">2</span>
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for reverse&quot;</span>)
+<span class="hljs-comment">// for reverse: 25.362060546875 ms</span>
+<span class="hljs-comment">// min: 25, max: 27</span>
+
+<span class="hljs-comment">/* ====== FOREACH ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;forEach&quot;</span>)
+
+arr.forEach(<span class="hljs-function">(<span class="hljs-params">_, i</span>) =&gt;</span> {
+	<span class="hljs-built_in">this</span>[i] = <span class="hljs-number">1</span>
+}, arr)
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;forEach&quot;</span>)
+<span class="hljs-comment">// forEach: 4897.624755859375 ms</span>
+<span class="hljs-comment">// min: 4856, max: 5072</span>
+
+<span class="hljs-comment">/* ====== MAP ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;map&quot;</span>)
+
+arr = arr.map(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> {
+	<span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+})
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;map&quot;</span>)
+<span class="hljs-comment">// min: 152, max: 195</span>
+
+<span class="hljs-comment">/* ====== WHILE ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;while&quot;</span>)
+
+<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> (i &lt; arr.length) {
+	arr[i] = <span class="hljs-number">2</span>;
+	i++;
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;while&quot;</span>)
+<span class="hljs-comment">// while: 31.573974609375 ms</span>
+<span class="hljs-comment">// min: 31.5, max: 34</span>
+
+<span class="hljs-comment">/* ====== WHILE 倒序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;while reverse&quot;</span>)
+
+<span class="hljs-keyword">var</span> i = arr.length;
+<span class="hljs-keyword">while</span> (i) {
+	arr[i] = <span class="hljs-number">1</span>;
+	i--;
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;while reverse&quot;</span>)
+<span class="hljs-comment">// while reverse: 33.184814453125 ms</span>
+<span class="hljs-comment">// min: 33, max: 34</span>
+</code></pre>
+<p>结果很喜人，还是正序 <code>for</code> 循环的结果最漂亮啦！什么，你问 <code>forEach</code>？别用了，这也太好看了。至于 <code>map</code>？还行吧说得过去。</p>
+<h2>数组筛选</h2>
+<p>首先先是用了自定义函数 <code>getNumberInNormalDistribution(0.5, 0.5)</code> 在运行测试之前给 10^7 大小的数组赋值正态分布的数据，得到的数据小于 <code>0.5</code> 的总数从 <code>4998322</code> 到 <code>5002251</code> 不等。</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) {
+	arr[i] = getNumberInNormalDistribution(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>)
+}
+</code></pre>
+<p>然后多次运行了以下代码，值得注意的是，由于每次 Math.random() 所产生的值并不一样，最终结果有一定数量的浮动</p>
+<pre class="hljs"><code><span class="hljs-comment">/* ====== FOR 正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for normal&quot;</span>)
+
+<span class="hljs-keyword">let</span> filtered1 = []
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) {
+	<span class="hljs-keyword">if</span> (arr[i] &gt; <span class="hljs-number">0.5</span>) filtered1.push(arr[i])
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for normal&quot;</span>)
+<span class="hljs-comment">// min: 133, max: 170</span>
+
+<span class="hljs-comment">/* ====== FOR 赋值后正序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for assigned&quot;</span>)
+
+<span class="hljs-keyword">let</span> filtered2 = []
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, n = arr.length; i &lt; n; i++) {
+	<span class="hljs-keyword">if</span> (arr[i] &gt; <span class="hljs-number">0.5</span>) filtered2.push(arr[i])
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for assigned&quot;</span>)
+<span class="hljs-comment">// min: 134, max: 155</span>
+
+<span class="hljs-comment">/* ====== FOR 倒序 ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;for reverse&quot;</span>)
+
+<span class="hljs-keyword">let</span> filtered3 = []
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = arr.length; i &gt; <span class="hljs-number">0</span>; i--) {
+	<span class="hljs-keyword">if</span> (arr[i] &gt; <span class="hljs-number">0.5</span>) filtered3.push(arr[i])
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;for reverse&quot;</span>)
+<span class="hljs-comment">// min: 195, max: 204</span>
+
+<span class="hljs-comment">/* ====== FOREACH ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;forEach&quot;</span>)
+
+<span class="hljs-keyword">let</span> filtered4 = []
+arr.forEach(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+	<span class="hljs-keyword">if</span> (e &gt; <span class="hljs-number">0.5</span>) filtered4.push(e)
+})
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;forEach&quot;</span>)
+<span class="hljs-comment">// min: 274, max: 331</span>
+
+<span class="hljs-comment">/* ====== FILTER ====== */</span>
+
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;filter&quot;</span>)
+
+arr.filter(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+	<span class="hljs-keyword">return</span> e &gt; <span class="hljs-number">0.5</span>
+})
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;filter&quot;</span>)
+<span class="hljs-comment">// min: 285, max: 326</span>
+
+<span class="hljs-comment">/* ====== WHILE ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;while&quot;</span>)
+
+<span class="hljs-keyword">let</span> filtered5 = []
+<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>;
+<span class="hljs-keyword">while</span> (i &lt; arr.length) {
+	<span class="hljs-keyword">if</span> (arr[i] &gt; <span class="hljs-number">0.5</span>) filtered5.push(arr[i])
+	i++;
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;while&quot;</span>)
+<span class="hljs-comment">// min: 39, max: 42</span>
+
+<span class="hljs-comment">/* ====== WHILE 倒序 ====== */</span>
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&quot;while reverse&quot;</span>)
+
+<span class="hljs-keyword">let</span> filtered6 = []
+<span class="hljs-keyword">var</span> i = arr.length;
+<span class="hljs-keyword">while</span> (i &gt; <span class="hljs-number">0</span>) {
+	<span class="hljs-keyword">if</span> (arr[i] &gt; <span class="hljs-number">0.5</span>) filtered6.push(arr[i])
+	i--;
+}
+
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&quot;while reverse&quot;</span>)
+<span class="hljs-comment">// min: 36, max: 38</span>
+</code></pre>
+<p>显然，还是 <code>for</code> 循环更胜一筹，但值得注意的是，在这里 <code>while</code> 好快啊..值得注意的是 <code>filter</code> 比 <code>forEach</code> 还要慢不少？</p>
+<h2>结论</h2>
+<p>还是那句话，如果数据量比较小，或者你的应用程序对时间并不敏感，那其实完全可以使用那些看起来并不那么快但是你很喜欢，或者可读性很强的代码。但如果数据量比较大，那还是建议使用 <code>for</code> 循环解决一切问题～</p>
+<p>基本上所有测试中，<code>for</code> 第一，<code>while</code> 第二，<code>Array.prototype</code> 所提供的 <code>forEach</code>、<code>filter</code>、<code>map</code> 这些方法基本都排在末尾，至于 <code>for of</code>？也还行吧。</p>
+<p>另外！非常出乎我的意料，使用 Firefox Nightly（v88.0a1）的运行速度比 Chrome 甚至慢了 200 倍（10ms =&gt; 2389ms），运行第一段代码甚至还无响应一分钟还没结果。</p>
+<p>至于 Safari，我大概明白了为什么会有人说 <code>while</code> 循环快，因为 Safari 上，最后一段代码 <code>while</code> 循环测试部分只用 120ms，基本可以说比 Chrome 的 <code>for</code> 快！</p>
+<p>Firefox 则更擅长 <code>Array.prototype</code>，据说做了优化，不过我没仔细看它的代码（笑）。</p>
+<p><img src="../images/javascript-loops-competition.md-200245d5d5ff40598cdeccd7d84474e7~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p><img src="../images/javascript-loops-competition.md-9a0acf9537f54b3ab2e1fc31cff3fab9~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p><img src="../images/javascript-loops-competition.md-2e30a155a9684d81a502ccff65d8ec8d~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>Chrome stable</th>
+<th>Firefox Nightly</th>
+<th>Safari stable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>for</code></td>
+<td>巨快</td>
+<td>慢啊，Chrome <code>for</code> 的三四倍都有了</td>
+<td>一般般</td>
+</tr>
+<tr>
+<td><code>for assigned</code></td>
+<td>比 <code>for</code> 慢一丢丢</td>
+<td>比 <code>for</code> 快一倍</td>
+<td><code>for</code> 的 75%</td>
+</tr>
+<tr>
+<td><code>for reverse</code></td>
+<td>比 <code>for</code> 慢一丢丢</td>
+<td>比 <code>for</code> 快一倍</td>
+<td>比 <code>for</code> 慢一丢丢</td>
+</tr>
+<tr>
+<td><code>forEach</code></td>
+<td><code>for</code> 的两倍</td>
+<td>慢啊，Chrome <code>for</code> 的三四倍都有了</td>
+<td><code>for</code> 的两倍</td>
+</tr>
+<tr>
+<td><code>filter</code></td>
+<td><code>for</code> 的两倍</td>
+<td>算是 FF 最快的，Chrome 的 <code>for</code> 的 150%</td>
+<td><code>for</code> 的两倍</td>
+</tr>
+<tr>
+<td><code>while</code></td>
+<td><code>for</code> 的 25%</td>
+<td>慢死了，Chrome <code>for</code> 的两倍</td>
+<td>比 Chrome <code>for</code> 快</td>
+</tr>
+<tr>
+<td><code>while reverse</code></td>
+<td><code>for</code> 的 27%</td>
+<td>慢死了，Chrome <code>for</code> 的两倍</td>
+<td>接近 Chrome <code>for</code> 水平</td>
+</tr>
+</tbody>
+</table>
+<p>所以我们是不是要针对不同平台给出不同的代码？（哭死</p>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

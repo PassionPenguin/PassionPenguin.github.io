@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>面向 JavaScript 开发人员的 Monads - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://js.plainenglish.io/monads-for-javascript-developers-af29819823c">Monads For JavaScript Developers</a></li>
+<li>原文作者：<a href="https://medium.com/@melkornemesis">MelkorNemesis</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/monads-for-javascript-developers.md">https://github.com/xitu/gold-miner/blob/master/article/2021/monads-for-javascript-developers.md</a></li>
+<li>译者：<a href="https://github.com/zenblo">zenblo</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/ZavierTang">ZavierTang</a></li>
+</ul>
+</blockquote>
+<h1>面向 JavaScript 开发人员的 Monads</h1>
+<p><img src="../images//Library/WebServer/Documents/documents/monads-for-javascript-developers.md-1*gA2dHvfpZEylFTBuiLiKxw.jpeg" alt=""></p>
+<p>和别的程序员一样，我也很想知道 <strong>Monads</strong> 到底是什么。但每当我在网上搜索 Monads 的时候，都只会找到大量的 Monads 理论范畴文章，而其它的资源似乎也并没有什么参考意义。</p>
+<p>为了搞清楚什么是 Monads，我花费了大量的时间精力。我开始去学习 Haskell，但在学了几个月后，我才突然意识到，大家都在 Monads 上面太小题大做了。如果你是一名 JavaScript 开发人员，那么你肯定每天都在使用它，只是你并没有意识到而已。</p>
+<hr>
+<p>本文并不会提及太多有关 Monads 的理论范畴或 Haskell 的细节，但有一件事我们始终需要知道 —— 当我们在互联网上搜索 Monads 时，不能错过这个定义：</p>
+<pre class="hljs"><code>(&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b
+</code></pre>
+<p>这是 Haskell 中 <code>bind</code> 运算符的定义。不同的语言对这个操作有不同的叫法，但意思都是一样的。比如一些替代名称是 <code>chain</code>、<code>bind</code>、<code>flatMap</code>、<code>then</code>、<code>andThen</code>。</p>
+<h2>Monadic 上下文</h2>
+<pre class="hljs"><code>(&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b
+
+m    :: monadic 上下文
+a, b :: 上下文的值 (string, number, ..)
+</code></pre>
+<p><strong>Monadic 上下文（Monadic Context）</strong> 只是一个盒子，它实现了使该盒子成为一个 Monad 所需的全部功能。一个很简单的（非 Monadic）盒子可能是这样的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> Box = <span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> ({ val }); 
+<span class="hljs-keyword">const</span> foo = Box(<span class="hljs-string">&quot;John&quot;</span>);
+</code></pre>
+<p>这是一个只包装了值的盒子，该盒子没有任何功能，因为它没有任何方法实现。</p>
+<blockquote>
+<p><strong>要使某个东西成为一个 Monad，你必须使其表现得像一个 Monad。</strong></p>
+</blockquote>
+<p>接着让我们回到 <code>(&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b</code>。<code>(&gt;&gt;=)</code> 用作 <code>m a &gt;&gt;= (a -&gt; m b)</code> 的中缀运算符，而 <code>(&gt;&gt;=)</code> 运算的结果是 <code>m b</code>。</p>
+<h2>存在的问题</h2>
+<p>你有没有注意到我们有 <code>m a</code>，但是函数以 <code>a</code> 为参数？这就是 Monads 的意义所在。</p>
+<p><code>(&gt;&gt;=)</code> 操作是在 Monadic 上下文 <code>m a</code> 中取一个值展开它，所以我们只得到 <code>a</code>，再将其传递给函数 <code>(a -&gt; m b)</code>。这并不奇怪，你还要自己制定这种行为准则，我们稍后会介绍。</p>
+<h2>JavaScript 的 Promises</h2>
+<p>JavaScript 中的 Promises 类似于 Monads，更确切地说，他们都有 Monad 式（<strong>Monad-ish</strong>）行为。要成为 Monad，它还必须实现一个仿函数（<strong>Functor</strong>）和应用程序接口（<strong>Applicative</strong>）。我提这一点只是为了表述完整，但我们不会更深入地讨论这些。</p>
+<p>JavaScript 的 <strong>Promises</strong> 使用 <code>.then()</code> 方法实现 Monadic 接口。我们来看以下示例：</p>
+<pre class="hljs"><code><span class="hljs-comment">// p :: m a :: Promise { 42 }</span>
+<span class="hljs-keyword">const</span> p = <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">42</span>);
+</code></pre>
+<p>这通常会创建一个箱子，在 <strong>Promise</strong> 中有一个值为 <code>42</code>。
+☝️ 这是我们的 <code>m a</code>。</p>
+<p>接着我们有一个将数字除以二的函数，输入的内容没有包装在 <strong>Promise</strong> 中，但是返回的函数包装在 <strong>Promise</strong> 中。</p>
+<pre class="hljs"><code><span class="hljs-comment">// divideByTwo :: (a -&gt; m b)</span>
+<span class="hljs-keyword">const</span> divideByTwo = <span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-built_in">Promise</span>.resolve(val / <span class="hljs-number">2</span>);
+</code></pre>
+<p>☝️ 这就是我们的 <code>(a -&gt; m b)</code>。</p>
+<p>再次注意，我们在 <strong>Promise</strong> 中有一个值 <code>42</code>，但是函数 <code>divideByTwo</code>  接受一个未包装的值，并且我们仍然可以链接这些。</p>
+<pre class="hljs"><code><span class="hljs-comment">// p :: m a :: Promise { 42 }</span>
+<span class="hljs-keyword">const</span> p = <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">42</span>);
+<span class="hljs-comment">// p2 :: m a :: Promise { 21 }</span>
+<span class="hljs-keyword">const</span> p2 = p.then(divideByTwo);
+<span class="hljs-comment">// p3 :: m a :: Promise { 10.5 }</span>
+<span class="hljs-keyword">const</span> p3 = p2.then(divideByTwo);
+</code></pre>
+<p>或者更明显的是：</p>
+<pre class="hljs"><code><span class="hljs-comment">// p :: m a :: Promise { 10.5 }</span>
+<span class="hljs-keyword">const</span> p4 = p.then(divideByTwo).then(divideByTwo);
+</code></pre>
+<p><strong>这是 Monads 最重要的特性。</strong></p>
+<p>箱子中有一个值 —— <code>Promise { 42 }</code>，你有一个采用展开值 <code>42</code> 的函数。<code>m a</code> 与 <code>a</code> 的类型不匹配，你仍然可以将该函数应用于封装的值。</p>
+<p><strong>那怎么可能呢？</strong></p>
+<p>这是因为 <strong>Promise</strong> 实现 <code>then</code> 方法并以这种方式工作。大多数时候，在 <strong>Promise</strong> 中运行的代码是异步的。但是 <strong>Promise</strong> 的单步行为使得它可以链接一系列函数。</p>
+<p>Monads 抽象出辅助数据管理、控制流或函数副作用（<strong>side-effects</strong>），将可能复杂的函数序列转换成简明的管道。</p>
+<h2>自定义 Monad 式类</h2>
+<p>我使用 TypeScript 整理了一个非常简单的 Monad 式类例子，它不产生任何函数副作用，并且允许链接函数。</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Dummy</span>&lt;<span class="hljs-title">T</span>&gt; </span>{
+  <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> val: T</span>)</span> {}
+
+  chain&lt;TResult&gt;(fn: <span class="hljs-function">(<span class="hljs-params">value: T</span>) =&gt;</span> Dummy&lt;TResult&gt;): Dummy&lt;TResult&gt; {
+    <span class="hljs-keyword">return</span> fn(<span class="hljs-built_in">this</span>.val);
+  }
+
+  <span class="hljs-keyword">static</span> unit&lt;T&gt;(val: T): Dummy&lt;T&gt; {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Dummy(val);
+  }
+}
+
+<span class="hljs-keyword">const</span> d = <span class="hljs-keyword">new</span> Dummy(<span class="hljs-number">41</span>);
+d.chain(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-keyword">new</span> Dummy(val + <span class="hljs-number">1</span>))
+ .chain(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-keyword">new</span> Dummy(<span class="hljs-string">&quot;The answer is: &quot;</span> + val));
+</code></pre>
+<h2>Monad 规则</h2>
+<p>具有 Monad 特性的类必须遵循一些规则。</p>
+<ul>
+<li>左单位元</li>
+<li>右单位元</li>
+<li>可结合性</li>
+</ul>
+<p>你可以在网上查找更多有关信息。在这里放一段代码，以证明 Dummy 类遵循这些规则。</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> m = Dummy.unit(<span class="hljs-number">1</span>);
+<span class="hljs-keyword">const</span> f = <span class="hljs-function">(<span class="hljs-params">val: number</span>) =&gt;</span> <span class="hljs-keyword">new</span> Dummy(val + <span class="hljs-number">1</span>);
+<span class="hljs-keyword">const</span> g = <span class="hljs-function">(<span class="hljs-params">val: number</span>) =&gt;</span> <span class="hljs-keyword">new</span> Dummy(val + <span class="hljs-number">2</span>);
+
+<span class="hljs-comment">// 1. 左单位元</span>
+Dummy.unit(<span class="hljs-number">1</span>).chain(f) ==== f(<span class="hljs-number">1</span>)
+
+<span class="hljs-comment">// 2. 右单位元</span>
+m.chain(Dummy.unit) ==== m
+
+<span class="hljs-comment">// 3. 可结合性</span>
+<span class="hljs-keyword">const</span> m1 = Dummy.unit(<span class="hljs-number">1</span>);
+m.chain(f).chain(g) ==== m.chain(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> f(val).chain(g)
+</code></pre>
+<p><code>==</code> 或 <code>===</code> 在这里不起作用，因为对象引用是不同的。为此，我使用不存在的 <code>====</code>，但可以理解为 Monad 式类的对象的内部值。</p>
+<h2>本文总结</h2>
+<p>我希望本文能使你了解 Monads，如果你是 JavaScript 开发人员，则每天都会使用它们。例如将 <strong>Promise</strong> 中装箱的值提供给需要未包装值的函数，并再次返回包装在 <strong>Promise</strong> 中的新值。</p>
+<h2>参考资料</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">https://en.wikipedia.org/wiki/Monad_(functional_programming)</a></li>
+</ul>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

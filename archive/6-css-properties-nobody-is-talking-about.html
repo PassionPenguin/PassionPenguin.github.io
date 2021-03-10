@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>6 个没人讲过的 CSS 属性 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://js.plainenglish.io/6-css-properties-nobody-is-talking-about-e6cab5138d02">6 CSS Properties Nobody Is Talking About</a></li>
+<li>原文作者：<a href="https://medium.com/@anuragkanoria">Anurag Kanoria</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/6-css-properties-nobody-is-talking-about.md">https://github.com/xitu/gold-miner/blob/master/article/2021/6-css-properties-nobody-is-talking-about.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/zenblo">zenblo</a>、<a href="https://github.com/Chorer">Chorer</a></li>
+</ul>
+</blockquote>
+<h1>6 个没人讲过的 CSS 属性</h1>
+<p><img src="https://cdn-images-1.medium.com/max/9640/0*bs0OAqfhQkkn-9YY" alt="由 Kristina Flour 上传至 Unsplash"></p>
+<p>数十年来，CSS 和 HTML 一直都是互联网的基石。</p>
+<p>虽然 HTML 能够负责创建网站结构并进行图文排列，但在设计网站上却无能为力。</p>
+<p>自 1994 年以来，设计网站一直是 CSS 的唯一目的，它是一门描述网站外观的语言。</p>
+<p>多年来，CSS 不断地推出更多的新属性，例如 Flexbox（弹性盒）或是 Grid（网格）。</p>
+<p>尽管创建 Web 应用广受欢迎且日趋复杂，但大多数开发者仍有很多不了解的 CSS 属性和技巧。</p>
+<p>以下是你可能从未听说过的 6 个 CSS 属性：</p>
+<h2>1. <code>all</code></h2>
+<p>你是否曾经使用过 CSS 框架呢？如果是的话，我可以肯定你有好几次都想要根据自己的喜好覆盖某些元素的样式定义。</p>
+<p>最常用的方法是使用 CSS 中的 <code>!important</code> 属性来强调当前属性，而忽略所有其他设置和规则。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.header</span> {
+    <span class="hljs-attribute">color</span>: blue <span class="hljs-meta">!important</span>;
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span> <span class="hljs-meta">!important</span>;
+}
+</code></pre>
+<p>但是，重复书写相同的关键字会让 CSS 文件看起来很混乱。</p>
+<p>而一个更简单的覆盖样式定义的方法，是使用 <code>all</code> 属性。</p>
+<p><code>all</code> 共有 3 个可用的属性值 —— <code>initial</code>、<code>inherit</code> 和 <code>unset</code>。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.header</span> {
+    all: initial;
+    <span class="hljs-attribute">color</span>: blue;
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;
+}
+</code></pre>
+<p><code>all: initial</code> 会将元素的所有属性设置为回退值或初始值。</p>
+<p>从 Chrome 版本 37 和 Firefox 版本 27 开始它们都支持了这个属性。Edge 浏览器也支持此属性，但 IE 并不支持。</p>
+<h2>2. <code>writing-mode</code></h2>
+<p>我最近写过一篇有关<a href="https://medium.com/javascript-in-plain-english/8-amazing-places-to-find-design-inspirations-for-free-dd2e64abc1b0">寻找设计灵感的神奇地方</a>的文章，里面列举的网站和我偶然发现的许多站点中，文本都是在一侧竖直排列的。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2600/1*m5Ut8kRsp8oSIUogG_EMuw.jpeg" alt="来源：httpster"></p>
+<p>在上图的右侧（滚动条附近），我们可以看到侧边竖直排列的文本，而这恰好就是一种显示附加信息的巧妙方法。</p>
+<p><code>writing-mode</code> 属性可以让我们实现这个效果。</p>
+<p>该属性支持以下值：</p>
+<ul>
+<li><code>sideways-rl</code>：文本和其他内容从上到下垂直排列，并向右横向放置。</li>
+<li><code>sideways-lr</code>：和 <code>sideways-rl</code> 一样，文本和其他内容从上到下垂直排列，但向左倾斜。</li>
+<li><code>vertical-rl</code>：文本和其他内容从上到下垂直排列，从右到左水平排列。如果有两行或更多行，则这些行会被<strong>放置在前一行的左侧</strong>。</li>
+<li><code>vertical-lr</code>：与 <code>vertical-rl</code> 不同，水平地将文本从左到右排列，并且如果有两行或更多行，则这些行会被放置在前一行的右侧。</li>
+</ul>
+<p><code>horizontal-tb</code> 属性则实现默认排列文本的效果。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*enCsNGgsHPLsCxLnu0-FJA.png" alt="来源：MDN Web 文档"></p>
+<p>你可以在<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/writing-mode">这里</a>找到相关实现和代码块。</p>
+<h2>3. <code>background-clip</code></h2>
+<p>这是一个有趣的属性，它让我们可以为元素的背景设置自定义图形。</p>
+<p>我们的自定义图形可以延伸到元素的边框，内边距盒或内容盒。</p>
+<p>以下是此属性的简短实现：</p>
+<p>HTML：</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;border-box&quot;</span>&gt;</span>背景延伸到边框。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;padding-box&quot;</span>&gt;</span>背景延伸到边框的内部边缘。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;content-box&quot;</span>&gt;</span>背景仅延伸到内容盒的边缘。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;text&quot;</span>&gt;</span>背景被裁剪为前景文本。<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+<p>CSS：</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">p</span> {
+    <span class="hljs-attribute">border</span>: .<span class="hljs-number">8em</span> darkviolet;
+    <span class="hljs-attribute">border-style</span>: dotted double;
+    <span class="hljs-attribute">margin</span>: <span class="hljs-number">1em</span> <span class="hljs-number">0</span>;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">1.4em</span>;
+    <span class="hljs-attribute">background</span>: <span class="hljs-built_in">linear-gradient</span>(<span class="hljs-number">60deg</span>, red, yellow, red, yellow, red);
+    <span class="hljs-attribute">font</span>: <span class="hljs-number">900</span> <span class="hljs-number">1.2em</span> sans-serif;
+    <span class="hljs-attribute">text-decoration</span>: underline;
+}
+
+<span class="hljs-selector-class">.border-box</span> {
+    <span class="hljs-attribute">background-clip</span>: border-box;
+}
+
+<span class="hljs-selector-class">.padding-box</span> {
+    <span class="hljs-attribute">background-clip</span>: padding-box;
+}
+
+<span class="hljs-selector-class">.content-box</span> {
+    <span class="hljs-attribute">background-clip</span>: content-box;
+}
+
+<span class="hljs-selector-class">.text</span> {
+    <span class="hljs-attribute">background-clip</span>: text;
+    -webkit-<span class="hljs-attribute">background-clip</span>: text;
+    <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, .<span class="hljs-number">2</span>);
+}
+</code></pre>
+<p>效果：</p>
+<p><img src="../images//Library/WebServer/Documents/documents/6-css-properties-nobody-is-talking-about.md-1*Ugb8RTSg7qFGkcSFUWfkHw.jpeg" alt="图源作者"></p>
+<p>我们也可以使用自定义图片作为文本的背景：</p>
+<p><img src="../images//Library/WebServer/Documents/documents/6-css-properties-nobody-is-talking-about.md-1*ng2WZRQ1HOIBSHWdizCzBw.jpeg" alt="图源作者"></p>
+<p>值得注意的是，在 Chrome 上我们需要使用 <code>-webkit-background-clip</code> 属性，并确保文本颜色设置为透明。</p>
+<h2>4. <code>user-select</code></h2>
+<p>如果我们的网站上有着一些不想让用户复制的文本，我们可以使用此属性。</p>
+<p><code>user-select</code> 属性指定是否可以选择元素的文本。</p>
+<p>这对除文本框之外的内容没有任何影响。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.row-of-icons</span> {
+    -webkit-user-select: none; <span class="hljs-comment">/* Chrome &amp; Safari all */</span>
+    -moz-user-select: none; <span class="hljs-comment">/* Firefox all */</span>
+    -ms-user-select: none; <span class="hljs-comment">/* IE 10+ */</span>
+    user-select: none;
+}
+</code></pre>
+<p>此属性也可用于确保选择了整个元素。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.force-select</span> {
+    user-select: all;
+    -webkit-user-select: all; <span class="hljs-comment">/* Chrome 49+ */</span>
+    -moz-user-select: all; <span class="hljs-comment">/* Firefox 43+ */</span>
+
+}
+</code></pre>
+<p>你可以在<a href="https://developer.mozilla.org/en-US/docs/Web/CSS/user-select">这里</a>找到完整的说明。</p>
+<h2>5. <code>white-space</code></h2>
+<p>在使用 <code>text-overflow</code> 的时候，该属性非常有用，因为它允许我们控制元素的文本流。</p>
+<p>它接受 <code>nowrap</code>、<code>pre</code>、<code>pre-wrap</code>、<code>pre-line</code> 和 <code>normal</code> 作为属性值。</p>
+<p><code>nowrap</code> 可防止文本环绕在元素的宽度和高度内，并使其溢出。</p>
+<p><code>pre</code> 值强制浏览器渲染代码中默认会去除的换行符和空格。<code>pre-wrap</code> 值和 <code>pre</code> 值作用相同，但是它不会让文本溢出元素。</p>
+<p><code>pre-line</code> 属性会在代码中相应的地方换行，但是不会显示多余的空格。</p>
+<p>通过以下示例可以清楚地看出它们的区别：</p>
+<p>HTML:</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&#x27;zero&#x27;</span>&gt;</span>
+
+        Some text
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&#x27;first&#x27;</span>&gt;</span>
+
+        Some text
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&#x27;second&#x27;</span>&gt;</span>
+        Some text
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&#x27;third&#x27;</span>&gt;</span>
+        Some text
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&#x27;fourth&#x27;</span>&gt;</span>
+        Some text
+    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+<p>CSS:</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">div</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;
+}
+
+<span class="hljs-selector-tag">p</span> {
+    <span class="hljs-attribute">background</span>: red;
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">2rem</span>;
+}
+
+<span class="hljs-selector-class">.first</span> {
+    <span class="hljs-attribute">white-space</span>: nowrap;
+}
+
+<span class="hljs-selector-class">.second</span> {
+    <span class="hljs-attribute">white-space</span>: pre;
+}
+
+<span class="hljs-selector-class">.third</span> {
+    <span class="hljs-attribute">white-space</span>: pre-line;
+}
+
+<span class="hljs-selector-class">.fourth</span> {
+    <span class="hljs-attribute">white-space</span>: nowrap;
+    <span class="hljs-attribute">text-overflow</span>: ellipsis;
+    <span class="hljs-attribute">overflow</span>: hidden;
+}
+</code></pre>
+<p>效果:</p>
+<p><img src="../images//Library/WebServer/Documents/documents/6-css-properties-nobody-is-talking-about.md-1*9L39xG8cZkPXO2rkiuvHOg.jpeg" alt="图源作者"></p>
+<h2>6. <code>border-image</code></h2>
+<p>此属性非常适合设计我们的网站，我们可以使用此属性在元素周围创建漂亮的边框 —— <code>border-image</code> 允许你将自定义图像设置为边框。</p>
+<p>下面的图像就展示了这个属性的应用：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*7SOVwmouXHD1lxWGVeSEMw.png" alt="图源: MDN 网站"></p>
+<p>HTML 和 CSS 代码如下：</p>
+<pre class="hljs"><code>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>This is a title<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-selector-tag">h1</span> {
+    <span class="hljs-attribute">border</span>: <span class="hljs-number">10px</span> solid transparent;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">15px</span>;
+    <span class="hljs-attribute">border-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">border.png</span>) <span class="hljs-number">20%</span> round;
+}
+</code></pre>
+<p>效果:</p>
+<p><img src="../images//Library/WebServer/Documents/documents/6-css-properties-nobody-is-talking-about.md-1*go4Ajp41jzEj5bPsHAnOkQ.jpeg" alt="图源作者"></p>
+<p>此属性可用于创建精美卡片或强调部分文本。</p>
+<h2>最后的想法</h2>
+<p>前端开发者们除了使用 JavaScript 之外，还同时使用着 CSS 和 HTML。了解更多的 CSS 属性知识，能够帮助我们更快、更好地构建 Web 应用程序。</p>
+<p>尽管我分享了一些较少被人们所提及的 CSS 属性，但这样的属性还有很多。</p>
+<p>虽然 CSS 已有 20 多年的历史了，但它仍然具有许多奇技淫巧。</p>
+<p>知道这些 CSS 属性可以实现具有艺术气息的网站。</p>
+<p>感谢阅读！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

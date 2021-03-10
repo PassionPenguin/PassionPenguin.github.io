@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript Temporal API —— Date API 问题的一个解决方案 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/javascript-temporal-api-a-fix-for-the-date-api-aa8381a4234c">JavaScript Temporal API- A Fix for the Date API</a></li>
+<li>原文作者：<a href="https://medium.com/@nathansebhastian">Nathan Sebhastian</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/javascript-temporal-api-a-fix-for-the-date-api.md">https://github.com/xitu/gold-miner/blob/master/article/2021/javascript-temporal-api-a-fix-for-the-date-api.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/Chorer">Chorer</a>、<a href="https://github.com/Usualminds">Usualminds</a></li>
+</ul>
+</blockquote>
+<h1>JavaScript Temporal API —— Date API 问题的一个解决方案</h1>
+<p><img src="../images//Library/WebServer/Documents/documents/javascript-temporal-api-a-fix-for-the-date-api.md-1*iq9Xe8BZue94e2BD4ecpqA.png" alt=""></p>
+<p>JavaScript 的日期处理 API 比较糟糕，因为它是直接对 <a href="https://docs.oracle.com/javase/6/docs/api/java/util/Date">Java 的 <code>Date</code> 类</a> 进行复制来实现了 <code>Date</code> 对象，而 Java 维护者最终弃用了许多 <code>Date</code> 类的方法，并于 1997 年创建了 <code>Calendar</code> 类以取代它。</p>
+<p>但是 JavaScript 的 <code>Date</code> API 还没有进行进一步修复，这就是为什么我们今天会遇到以下问题：</p>
+<ul>
+<li><code>Date</code> 对象是可变的</li>
+<li>用于日期和时间计算的混乱 API（例如，天数的加减）</li>
+<li>仅支持 UTC 和本地时区</li>
+<li>从字符串中解析日期的不可靠</li>
+<li>不支持公历以外的其他历法</li>
+</ul>
+<p>但由于目前 <code>Date</code> API 被广泛地应用于各种库和浏览器引擎中，我们暂时不可能修复其错误部分。如果我们更改它的底层实现，就会很可能对许多现有的网站和库造成破坏性影响。</p>
+<p>新的 <code>Temporal</code> API 提案旨在解决 <code>Date</code> API 的问题，它对 JavaScript 的日期和时间操作进行了以下改进：</p>
+<ul>
+<li>仅创建和处理不可变的 <code>Temporal</code> 对象</li>
+<li>用于日期和时间计算的简单 API</li>
+<li>支持所有时区</li>
+<li>遵循 ISO-8601 格式进行严格的日期解析</li>
+<li>支持非公历的历法</li>
+</ul>
+<blockquote>
+<p>请记住，<code>Temporal</code> 提案<a href="https://github.com/tc39/proposal-temporal#status">当前处于第二阶段</a>，尚未准备好用于生产环境中。</p>
+</blockquote>
+<p>让我们借助代码示例理解 <code>Temporal</code> API 的功能吧。下文中的所有 <code>Temporal</code> API 代码都是使用 <a href="https://www.npmjs.com/package/proposal-temporal">Temporal Polyfill</a> 创建的。</p>
+<h2>不可变的日期对象</h2>
+<p>使用 JavaScript 的 <code>new Date()</code> 构造器创建的 <code>Date</code> 对象是可变的，意味着你可以在初始化以后修改它的值：</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">&quot;2021-02-20&quot;</span>);
+<span class="hljs-built_in">console</span>.log(date); <span class="hljs-comment">// 2021-02-20T00:00:00.000Z</span>
+date.setYear(<span class="hljs-number">2000</span>);
+<span class="hljs-built_in">console</span>.log(date); <span class="hljs-comment">// 2000-02-20T00:00:00.000Z</span>
+</code></pre>
+<p>尽管看似无关紧要，但这种可变的对象在处理不当时可能会导致错误，其中一种情况就是当我们尝试将天数添加到当前日期时。</p>
+<p>例如，这是一个将当前日期增加一周的功能。 由于 <code>setDate</code> 会修改对象本身，因此我们会得到<strong>两个具有相同日期值的对象</strong>：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addOneWeek</span>(<span class="hljs-params">date</span>) </span>{
+    date.setDate(date.getDate() + <span class="hljs-number">7</span>);
+    <span class="hljs-keyword">return</span> date;
+}
+
+<span class="hljs-keyword">let</span> today = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+<span class="hljs-keyword">let</span> oneWeekLater = addOneWeek(today);
+
+<span class="hljs-built_in">console</span>.log(today);
+<span class="hljs-built_in">console</span>.log(oneWeekLater); <span class="hljs-comment">//  值和变量 today 一样</span>
+</code></pre>
+<p><code>Temporal</code> 提供了不直接修改对象的方法，进而修复了这个问题，例如下面就是使用 <code>Temporal</code> API 添加一周的例子：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> date = Temporal.now.plainDateISO();
+<span class="hljs-built_in">console</span>.log(date); <span class="hljs-comment">// 2021-02-20</span>
+<span class="hljs-built_in">console</span>.log(date.add({<span class="hljs-attr">days</span>: <span class="hljs-number">7</span>})); <span class="hljs-comment">// 2021-02-27</span>
+<span class="hljs-built_in">console</span>.log(date); <span class="hljs-comment">// 2021-02-20</span>
+</code></pre>
+<p>如上面的代码所示，<code>Temporal</code> 为我们提供了 <code>.add()</code> 方法，让我们能将天、周、月或年添加到当前日期对象中而不会修改原始值。</p>
+<h2>用于日期和时间计算的 API</h2>
+<p>前面的 <code>Temporal</code> 示例中我们了解到了 <code>.add()</code> 方法，它能帮助我们对日期对象执行计算。我们现在使用的 <code>Date</code> API 仅提供了获取和设置日期值的方法，不如 <code>Temporal</code> 来得简单直接。</p>
+<p><code>Temporal</code> 还为我们提供了多个 API 来计算日期值。比如说 <code>until()</code> 方法，它可以计算 <code>firstDate</code> 和 <code>secondDate</code> 之间的时间差。</p>
+<p>而如果使用 <code>Date</code> API，我们需要手动计算两个日期之间的天数，如下所示：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> oneDay = <span class="hljs-number">24</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>;
+<span class="hljs-keyword">const</span> firstDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2008</span>, <span class="hljs-number">1</span>, <span class="hljs-number">12</span>);
+<span class="hljs-keyword">const</span> secondDate = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2008</span>, <span class="hljs-number">1</span>, <span class="hljs-number">22</span>);
+
+<span class="hljs-keyword">const</span> diffDays = <span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">Math</span>.abs((firstDate - secondDate) / oneDay));
+<span class="hljs-built_in">console</span>.log(diffDays); <span class="hljs-comment">// 10</span>
+</code></pre>
+<p>如果是 <code>Temporal</code> API，我们可以通过 <code>until()</code> 方法简单地计算 <code>diffDays</code>：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> firstDate = Temporal.PlainDate.from(<span class="hljs-string">&#x27;2008-01-12&#x27;</span>);
+<span class="hljs-keyword">const</span> secondDate = Temporal.PlainDate.from(<span class="hljs-string">&#x27;2008-01-22&#x27;</span>);
+
+<span class="hljs-keyword">const</span> diffDays = firstDate.until(secondDate).days;
+<span class="hljs-built_in">console</span>.log(diffDays); <span class="hljs-comment">// 10</span>
+</code></pre>
+<p>其他的帮助我们计算的方法还有：</p>
+<ul>
+<li><a href="https://tc39.es/proposal-temporal/docs/plaindate.html#subtract"><code>.subtract()</code> 方法</a>，用于减少当前日期的天数、月数或年数。</li>
+<li><a href="https://tc39.es/proposal-temporal/docs/plaindate.html#since"><code>.since()</code> 方法</a>，用于计算一个特定日期迄今为止所经历的天数、月数或年数。</li>
+<li><a href="https://tc39.es/proposal-temporal/docs/plaindate.html#equals"><code>.equals()</code> 方法</a>，用于比较两个日期是否相同。</li>
+</ul>
+<p>这些 API 能够帮助我们去完成计算，而无需自己创建解决方案。</p>
+<h2>支持所有时区</h2>
+<p>当前的 <code>Date</code> API 在系统中以 UTC 标准跟踪时间，通常会在计算机的时区中生成日期对象，操纵时区没有简单的方法。</p>
+<p>我发现操纵时区的一种方式是使用 <code>Date.toLocaleString()</code> 方法，如下所示：</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();
+<span class="hljs-keyword">let</span> tokyoDate = date.toLocaleString(<span class="hljs-string">&quot;en-US&quot;</span>, {
+    <span class="hljs-attr">timeZone</span>: <span class="hljs-string">&quot;Asia/Tokyo&quot;</span>
+});
+<span class="hljs-keyword">let</span> singaporeDate = date.toLocaleString(<span class="hljs-string">&quot;en-US&quot;</span>, {
+    <span class="hljs-attr">timeZone</span>: <span class="hljs-string">&quot;Asia/Singapore&quot;</span>,
+});
+
+<span class="hljs-built_in">console</span>.log(tokyoDate); <span class="hljs-comment">// 2/21/2021, 1:36:46 PM</span>
+<span class="hljs-built_in">console</span>.log(singaporeDate); <span class="hljs-comment">// 2/21/2021, 12:36:46 PM</span>
+</code></pre>
+<p>但是由于此方法返回一个字符串，因此进一步的日期和时间操作要求我们先将字符串转换回日期。</p>
+<p>而 <code>Temporal</code> API 允许我们在使用 <code>zonedDateTimeISO()</code> 方法创建日期的时候去定义时区。我们可以使用 <code>.now</code> 对象去获取当前的日期、时间：</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> tokyoDate = Temporal.now.zonedDateTimeISO(<span class="hljs-string">&#x27;Asia/Tokyo&#x27;</span>);
+<span class="hljs-keyword">let</span> singaporeDate = Temporal.now.zonedDateTimeISO(<span class="hljs-string">&#x27;Asia/Singapore&#x27;</span>);
+
+<span class="hljs-built_in">console</span>.log(tokyoDate);
+<span class="hljs-comment">// 2021-02-20T13:48:24.435904429+09:00[Asia/Tokyo]</span>
+<span class="hljs-built_in">console</span>.log(singaporeDate);
+<span class="hljs-comment">// 2021-02-20T12:48:24.429904404+08:00[Asia/Singapore]</span>
+</code></pre>
+<p>由于返回的值仍然是 <code>Temporal</code> 日期，因此我们可以使用 <code>Temporal</code> 本身的方法进一步对其进行操作：</p>
+<pre class="hljs"><code><span class="hljs-keyword">let</span> date = Temporal.now.zonedDateTimeISO(<span class="hljs-string">&#x27;Asia/Tokyo&#x27;</span>);
+<span class="hljs-keyword">let</span> oneWeekLater = date.add({<span class="hljs-attr">weeks</span>: <span class="hljs-number">1</span>});
+
+<span class="hljs-built_in">console</span>.log(oneWeekLater);
+<span class="hljs-comment">// 2021-02-27T13:48:24.435904429+09:00[Asia/Tokyo]</span>
+</code></pre>
+<p><code>Temporal</code> API 遵循使用类型的约定，其中以 <code>Plain</code> 开头的名称是没有时区的（<code>.PlainDate</code>、<code>.PlainTime</code>、<code>.PlainDateTime</code>），而 <code>.ZonedDateTime</code> 则相反。</p>
+<h2>遵循 ISO-8601 标准进行严格的日期解析</h2>
+<p>现有的从字符串解析日期的方式是不可靠的，因为当我们传递 ISO-8601 格式的日期字符串时，返回值将根据是否传递了时区偏移量而有所不同。</p>
+<p>考虑以下示例：</p>
+<pre class="hljs"><code><span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">&quot;2021-02-20&quot;</span>).toISOString();
+<span class="hljs-comment">// 2021-02-20T00:00:00.000Z</span>
+<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">&quot;2021-02-20T05:30&quot;</span>).toISOString();
+<span class="hljs-comment">// 2021-02-20T10:30:00.000Z</span>
+</code></pre>
+<p>上面的第一个 <code>Date</code> 构造器将字符串视为 UTC+0 时区，而第二个构造器将字符串视为 UTC-5 时区（我当前所在的时区），因此返回值会被调整到 UTC+0 时区**（5:30 UTC-5 相当于 10:30 UTC+0）**。</p>
+<p><code>Temposal</code> 提案通过区分 <code>PlainDateTime</code> 和 <code>ZonedDateTime</code> 来解决此问题，如下所示：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*Y4XViVCg-Cl6KtivlWbF5A.png" alt="来源：临时提案文档"></p>
+<p>当我们想要使日期成为包含时区的对象时，我们需要使用 <a href="https://tc39.es/proposal-temporal/docs/index.html#Temporal-ZonedDateTime">ZonedDateTime</a> 对象，反之则使用 <a href="https://tc39.es/proposal-temporal/docs/index.html#Temporal-PlainDateTime">PlainDateTime</a> 对象。</p>
+<p>通过分开创建包含时区和不包含时区的日期，<code>Temporal</code> API 可帮助我们从提供的字符串中解析正确的日期、时间组合：</p>
+<pre class="hljs"><code>Temporal.PlainDateTime.from(<span class="hljs-string">&quot;2021-02-20&quot;</span>);
+<span class="hljs-comment">// 2021-02-20T00:00:00</span>
+
+Temporal.PlainDateTime.from(<span class="hljs-string">&quot;2021-02-20T05:30&quot;</span>);
+<span class="hljs-comment">// 2021-02-20T05:30:00</span>
+
+Temporal.ZonedDateTime.from(<span class="hljs-string">&quot;2021-02-20T05:30[Asia/Tokyo]&quot;</span>);
+<span class="hljs-comment">// 2021-02-20T05:30:00+09:00[Asia/Tokyo]</span>
+</code></pre>
+<p>从上面的示例中可以看到，<code>Temporal</code> API 不会对你所在的时区进行预设。</p>
+<h2>支持公历以外的历法</h2>
+<p>尽管公历是世界上使用最广泛的日历系统，但有时我们可能需要使用其他日历系统以查看具有文化或宗教意义的特殊日期。</p>
+<p><code>Temporal</code> API 允许我们指定要用于日期、时间计算的日历系统。</p>
+<p>日历的 NPM Polyfill 实现尚未完成，因此我们需要尝试使用 Browser Polyfill 中的 <code>withCalendar()</code> 方法。请访问 <a href="https://tc39.es/proposal-temporal/docs/">Temporal 文档页面</a>，然后将以下代码粘贴到浏览器的控制台中：</p>
+<pre class="hljs"><code>Temporal.PlainDate.from(<span class="hljs-string">&quot;2021-02-06&quot;</span>).withCalendar(<span class="hljs-string">&quot;gregory&quot;</span>).day;
+<span class="hljs-comment">// 6</span>
+
+Temporal.PlainDate.from(<span class="hljs-string">&quot;2021-02-06&quot;</span>).withCalendar(<span class="hljs-string">&quot;chinese&quot;</span>).day;
+<span class="hljs-comment">// 25</span>
+
+Temporal.PlainDate.from(<span class="hljs-string">&quot;2021-02-06&quot;</span>).withCalendar(<span class="hljs-string">&quot;japanese&quot;</span>).day;
+<span class="hljs-comment">// 6</span>
+
+Temporal.PlainDate.from(<span class="hljs-string">&quot;2021-02-06&quot;</span>).withCalendar(<span class="hljs-string">&quot;hebrew&quot;</span>).day;
+<span class="hljs-comment">// 24</span>
+
+Temporal.PlainDate.from(<span class="hljs-string">&quot;2021-02-06&quot;</span>).withCalendar(<span class="hljs-string">&quot;islamic&quot;</span>).day;
+<span class="hljs-comment">// 24</span>
+</code></pre>
+<p>一旦提案通过，<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#parameters">Intl.DateTimeFormat</a> 中所有可能的日历值都将被实现。</p>
+<h2>结论</h2>
+<p><code>Temporal</code> API 是针对 JavaScript 的一项新提案，有望为该语言提供现代化的日期和时间 API。而根据我基于 Polyfill 的测试，该 API 确实提供了更简单的日期和时间操作，同时也考虑到了时区和日历的差异。</p>
+<p>该提案本身仍处于第二阶段，因此，如果你有兴趣了解更多信息并提供反馈，你可以访问 <a href="https://tc39.es/proposal-temporal/docs/index.html">Temporal 文档</a> 并尝试其提供的 <a href="https://www.npmjs.com/package/proposal-temporal">Polyfill NPM 包</a>。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

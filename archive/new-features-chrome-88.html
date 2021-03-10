@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chrome 88 DevTools 中的新功能 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://www.infoq.com/news/2021/03/new-features-chrome-88/?topicPageSponsorship=eb89fa44-b190-43ef-87d0-4bc8727e7413">New Features in Chrome 88 Devtools</a></li>
+<li>原文作者：<a href="https://www.infoq.com/profile/Guy-Nesher/">Guy Nesher</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/new-features-chrome-88.md">https://github.com/xitu/gold-miner/blob/master/article/2021/new-features-chrome-88.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/Chorer">Chorer</a></li>
+</ul>
+</blockquote>
+<h1>Chrome 88 DevTools 中的新功能</h1>
+<p>最近发布的 Chrome 88 对 Chrome DevTools 进行了重大更新，包括改进的网络调试、实验性的 CSS Flexbox 调试工具、改进的框架详细信息视图、新的 WASM 调试功能以及总体性能上的提高。</p>
+<p>网络选项卡提供了三种旨在简化调试过程的新功能：</p>
+<ol>
+<li>现在，我们可以通过右键单击特定请求并选择<code>复制值</code>（<code>Copy value</code>），直接从<code>网络</code>（<code>Network</code>）选项卡中复制请求属性。</li>
+<li>现在可以通过选择<code>复制堆栈跟踪</code>（<code>Copy stack trace</code>）选项，从单个网络请求中复制网络启动器的堆栈跟踪。</li>
+<li>现在可以在网络视图上正确地标记 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS/Errors"><strong>C</strong>ross-<strong>O</strong>rigin-<strong>R</strong>esource-<strong>S</strong>haring 的错误</a>。</li>
+</ol>
+<p><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox">CSS Flexbox</a> 是一种功能强大的设计工具，但由于它在两个轴上进行操作，因此通常很难调试。为了简化调试过程，Chrome 提供了两个新标志。第一个标志出现在元素层次结构视图上，并标记了带有 <em><code>display：flex</code></em> 的元素。</p>
+<p>第二个标志是上下文敏感的对齐指示符，该指示符基于以下 <code>flexbox</code> 属性：</p>
+<ul>
+<li><code>flex-direction</code></li>
+<li><code>align-items</code></li>
+<li><code>align-content</code></li>
+<li><code>align-self</code></li>
+<li><code>justify-items</code></li>
+<li><code>justify-content</code></li>
+</ul>
+<p>同时也会顾及到基于以下属性的方向：</p>
+<ul>
+<li><code>flex-direction</code></li>
+<li><code>direction</code></li>
+<li><code>writing-mode</code></li>
+</ul>
+<p>要使用 Flexbox 的调试，开发人员需要在“设置”&gt;“实验”标签下启用它。</p>
+<p><img src="../images//Library/WebServer/Documents/documents/new-features-chrome-88.md-113-flex-debugging-1614281700033.png" alt=""></p>
+<p>Chrome 88 Devtools 还提供了改进的框架详细信息视图，其中包括有关跨域隔离信息状态的额外信息、有关框架 Web Worker 的专用信息，以及发现哪个框架触发了另一个窗口打开的功能。</p>
+<p>Chrome 88 还使 <a href="https://developer.mozilla.org/zh-CN/docs/WebAssembly">Wasm</a> 调试与现有的 JavaScript 调试功能保持一致。在打断点暂停代码执行时，开发人员可以将鼠标悬停在变量上以查看其当前值，或在控制台中对其进行计算。</p>
+<p>最后，从  JavaScript 编译速度的角度来说，由于减少了启动过程中的序列化、解析和反序列化所带来的性能开销，DevTools 现在的启动速度提高了近 40％。</p>
+<p>Chrome DevTools 提供了丰富的实用程序集以调试 Web 应用，并且用于大多数基于 Chromium 的浏览器中。Chrome 开发团队将继续改进 DevTools，并在每次发布新版本的 Chrome 时都提供新功能。开发者可以在 <a href="https://developers.google.com/web/updates/tags/devtools">Google 开发者网站</a>上跟进最新功能，并在<a href="https://groups.google.com/forum/#!forum/google-chrome-developer-tools">邮件列表</a>中讨论可能出现的功能、更新和漏洞。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

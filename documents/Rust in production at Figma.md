@@ -1,7 +1,7 @@
 > * 原文地址：[Rust in production at Figma](https://www.figma.com/blog/rust-in-production-at-figma/)
 > * 原文作者：[Evan Wallace](https://twitter.com/evanwallace)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
-> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/Rust in production at Figma.md](https://github.com/xitu/gold-miner/blob/master/article/2021/Rust in production at Figma.md)
+> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/Rust%20in%20production%20at%20Figma.md](https://github.com/xitu/gold-miner/blob/master/article/2021/Rust%20in%20production%20at%20Figma.md)
 > * 译者：[霜羽 Hoarfroster](https://github.com/PassionPenguin)
 > * 校对者：[lsvih](https://github.com/lsvih)、[zhuzilin](https://github.com/zhuzilin)、[youngjuning](https://github.com/youngjuning)
 
@@ -9,7 +9,7 @@
 
 > Mozilla 的新语言究竟是如何显著地提升了我们服务端的性能的呢？
 
-![](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*LoKiYs4SoAtkpFufNdD0AA.png)
+![](https://miro.medium.com/max/4320/1*LoKiYs4SoAtkpFufNdD0AA.png)
 
 对于我们 [Figma](https://www.figma.com/) 来说，性能永远是我们最重要的卖点之一。我们力争去让团队能够所思即所得，而我们的多人同步引擎就是决定这个愿景能否实现的关键部分。我们希望能够让每个协作者都可以实时看到别人在 Figma 文档中所做的修改！
 
@@ -25,35 +25,35 @@
 
 我们的多人服务是运行在固定数量的一些机器，每个服务都拥有着固定数目的进程（Worker），并且每个文档都独立运行在一个特定的进程上。这意味着每一个进程都负责当前打开的 Figma 的文档的一部分。这看起来会是这样的：
 
-![https://miro.medium.com/max/2230/1*b_L0C2dgCIsZSuRtdT2aOg.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*b_L0C2dgCIsZSuRtdT2aOg.png)
+![https://miro.medium.com/max/2230/1*b_L0C2dgCIsZSuRtdT2aOg.png](https://miro.medium.com/max/2230/1*b_L0C2dgCIsZSuRtdT2aOg.png)
 
 我们遇到的最主要的问题，就是旧服务器会在同步时候遇到无法预计的延迟高峰。这个服务器是使用 TypeScript 编写的，并且是单线程的，完全不能同时处理多项操作。这意味着单一一个操作的缓慢会导致整个进程在这个操作完成前的停止。而常见的操作就是对文档的解码。Figma 上的文档可能会非常大，因此这个操作会显然会消耗一长段时间，让连接在这个进程上的用户暂时无法同步他们的更改。
 
 扔给这项服务更多的硬件丝毫不能缓解这个问题，因为一个缓慢的操作就会让这个进程所负责的所有文件都无法使用，而且我们无法为每一个文档都单独创建一个 Node.js 线程，因为 JavaScript 虚拟机的内存开销实在太大了。事实上只有很少一部分大文件会造成麻烦，但这就会影响所有用户的服务体验啊！我们的临时解决方法是将那些疯了的巨大的文档独立，隔离到一个单独的进程池中：
 
-![https://miro.medium.com/max/2230/1*8bzkHy9Fg3fZXTEHIm65kg.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*8bzkHy9Fg3fZXTEHIm65kg.png)
+![https://miro.medium.com/max/2230/1*8bzkHy9Fg3fZXTEHIm65kg.png](https://miro.medium.com/max/2230/1*8bzkHy9Fg3fZXTEHIm65kg.png)
 
 这能让服务器跟上来了，但是这个方案注定让我们被迫持续关注所有这类型的文档，并将它们人工独立出去。我们借助这个方案还是争取来了一些时间，并且通过将对性能敏感的服务移动到单独的子进程中，我们能够继续去探索解决这些问题的方法了。这些子进程是用 Rust 编写的，并且通过标准输入输出与它的父进程沟通。而这些新的小不点使用的内存，也像他们的年龄那般 —— 对比起那些年老珠黄的旧服务来说嘛。现在我们完全可以通过为每一个文档提供一个单独的子进程来让所有的文档能够并行使用了，并且序列化时间是原有的 10 倍那么快，甚至在最差的情况下也完全可以接受了。新的架构看起来是这样的：
 
-![https://miro.medium.com/max/2350/1*JvrV35TNvuARMRcvFpeMaQ.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*JvrV35TNvuARMRcvFpeMaQ.png)
+![https://miro.medium.com/max/2350/1*JvrV35TNvuARMRcvFpeMaQ.png](https://miro.medium.com/max/2350/1*JvrV35TNvuARMRcvFpeMaQ.png)
 
 ## 服务端的性能提升
 
 我们的服务器的性能提升令人难以置信。下图显示了逐步的推出新服务架构之前、之时和之后一周的各种性能指标。图片中间的大幅下降的部分是我们完全部署时候的指标。请记住，这些改进是针对服务器端的性能，而不是客户端的性能，因此，它们的主要作用只是为了让该进程能够为所有人不会造成任何麻烦顺利进行他们的工作
 
-![https://miro.medium.com/max/1440/1*s7uU1Sd7IF7xOjR2mv4xRA.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*s7uU1Sd7IF7xOjR2mv4xRA.png)
+![https://miro.medium.com/max/1440/1*s7uU1Sd7IF7xOjR2mv4xRA.png](https://miro.medium.com/max/1440/1*s7uU1Sd7IF7xOjR2mv4xRA.png)
 
-![https://miro.medium.com/max/2230/1*1sXGPC5m0cc_u_L-tt0m-Q.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*1sXGPC5m0cc_u_L-tt0m-Q.png)
+![https://miro.medium.com/max/2230/1*1sXGPC5m0cc_u_L-tt0m-Q.png](https://miro.medium.com/max/2230/1*1sXGPC5m0cc_u_L-tt0m-Q.png)
 
-![https://miro.medium.com/max/1440/1*b3y9hIkhXJFe4aeVQQBOqQ.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*b3y9hIkhXJFe4aeVQQBOqQ.png)
+![https://miro.medium.com/max/1440/1*b3y9hIkhXJFe4aeVQQBOqQ.png](https://miro.medium.com/max/1440/1*b3y9hIkhXJFe4aeVQQBOqQ.png)
 
-![https://miro.medium.com/max/1440/1*Ta8MtAg17e_L9qo09r-IxA.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*Ta8MtAg17e_L9qo09r-IxA.png)
+![https://miro.medium.com/max/1440/1*Ta8MtAg17e_L9qo09r-IxA.png](https://miro.medium.com/max/1440/1*Ta8MtAg17e_L9qo09r-IxA.png)
 
-![https://miro.medium.com/max/2230/1*YxXXHIm6PTXEx-muh_h2xQ.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*YxXXHIm6PTXEx-muh_h2xQ.png)
+![https://miro.medium.com/max/2230/1*YxXXHIm6PTXEx-muh_h2xQ.png](https://miro.medium.com/max/2230/1*YxXXHIm6PTXEx-muh_h2xQ.png)
 
-Here are the numeric changes in peak metrics as compared to the old server:
+与旧服务器相比，这是峰值指标的数字变化：
 
-![https://miro.medium.com/max/2230/1*48agi3zbT2Ifc2rDxE85pQ.png](../images//Library/WebServer/Documents/documents/Rust in production at Figma.md-1*48agi3zbT2Ifc2rDxE85pQ.png)
+![https://miro.medium.com/max/2230/1*48agi3zbT2Ifc2rDxE85pQ.png](https://miro.medium.com/max/2230/1*48agi3zbT2Ifc2rDxE85pQ.png)
 
 ## Rust 的优缺点
 

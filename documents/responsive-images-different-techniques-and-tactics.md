@@ -2,6 +2,7 @@
 > * 原文作者：[Lahiruka Wijesinghe](https://medium.com/@lahiruka_)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
 > * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/responsive-images-different-techniques-and-tactics.md](https://github.com/xitu/gold-miner/blob/master/article/2021/responsive-images-different-techniques-and-tactics.md)
+> * 译者：[zenblo](https://github.com/zenblo)
 > * 校对者：[PassionPenguin](https://github.com/PassionPenguin)、[Chorer](https://github.com/Chorer)
 
 # 实现响应式图像的四种技术策略

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bash 中的 if else 语句 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://linuxize.com/post/bash-if-else-statement/">Bash if..else Statement</a></li>
+<li>原文作者：<a href="https://twitter.com/linuxize">linuxize</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/bash-if-else-statement.md">https://github.com/xitu/gold-miner/blob/master/article/2021/bash-if-else-statement.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/zenblo">zenblo</a>、<a href="https://github.com/flying-yogurt">flying-yogurt</a>、<a href="https://github.com/lsvih">lsvih</a></li>
+</ul>
+</blockquote>
+<h1>Bash 中的 if else 语句</h1>
+<p><img src="https://linuxize.com/post/bash-if-else-statement/featured_hu91e1d6741dfcdbd79b4fecce3479ee44_25821_480x0_resize_q75_lanczos.jpg" alt="Bash 中的 if else 语句"></p>
+<p>在本篇教程中，我们会逐步深入 Bash 中的 if 语句基础，带着大家一起学习如何在 Shell 脚本中使用 if 语句。</p>
+<p>决策，计算机程序中的一个最基础的要素。就如同其他的编程语言一样，通过使用 <code>if</code>、<code>if..else</code>、<code>if..elif..else</code> 以及嵌套 <code>if</code> 语句，我们可以在 Bash 中基于特定条件执行对应的代码。</p>
+<h2><code>if</code> 语句</h2>
+<p>Bash 中的 <code>if</code> 条件语句拥有不同的实现格式。例如最基本的形式：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> TEST-COMMAND
+<span class="hljs-keyword">then</span>
+  STATEMENTS
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<p><code>if</code> 语句由 <code>if</code> 关键字引导，接上一段条件表达式，然后是 <code>then</code> 关键字，并以 <code>fi</code> 关键字结束。</p>
+<p>如果 <code>TEST-COMMAND</code> 执行后为真，那么相应地， <code>STATEMENTS</code> 就会被执行；而如果为假，则 <code>STATEMENTS</code> 会被忽略。</p>
+<p>大多数情况下，（在原文件中）保持你的代码拥有优秀的缩进及空行，可是个很好的习惯，能让你的代码具有更强的可读性和组织性结构性。大多数人都是用 4 个空格或 2 个空格的缩进。</p>
+<p>让我们看看如下用于检查给定数字是否大于 10 的一段代码：</p>
+<pre class="hljs"><code><span class="hljs-meta">#!/bin/zsh</span>
+
+<span class="hljs-built_in">echo</span> -n <span class="hljs-string">&quot;输入一个数字：&quot;</span>
+<span class="hljs-built_in">read</span> VAR
+
+<span class="hljs-keyword">if</span> [[ <span class="hljs-variable">$VAR</span> -gt 10 ]]
+<span class="hljs-keyword">then</span>
+  <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;该变量大于 10。&quot;</span>
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<p>保存上面的代码并在命令行中执行它：</p>
+<pre class="hljs"><code><span class="hljs-comment"># 注意，在运行该段代码前，你可能需要先赋予其相应权限。</span>
+<span class="hljs-comment"># chmod +x test.sh</span>
+<span class="hljs-comment"># ./test.sh</span>
+
+bash test.sh
+</code></pre>
+<p>这段脚本会要求你输入一个数字，举个例子，如果你输入了 15，那么 <code>TEST-COMMAND</code> 即 <code>[[ $VAR -gt 10 ]]</code> 等同于真，然后 <code>then</code> 分句中的 <a href="https://linuxize.com/post/echo-command-in-linux-with-examples/"><code>echo</code></a> 语句就会被执行。</p>
+<p>因此上述代码的输出是：</p>
+<pre class="hljs"><code>该变量大于 10。
+</code></pre>
+<h2><code>if..else</code> 语句</h2>
+<p>Bash 中的 <code>if..else</code> 语句是这个样子的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> TEST-COMMAND
+<span class="hljs-keyword">then</span>
+  STATEMENTS1
+<span class="hljs-keyword">else</span>
+  STATEMENTS2
+<span class="hljs-keyword">fi</span>
+</code></pre>
+<p>如果 <code>TEST-COMMAND</code> 为真，那么 <code>STATEMENT1</code> 会被执行；而如果为假，那么 <code>STATEMENT2</code> 就会被执行。对于每一个 <code>if</code> 语句，只能有一个 <code>else</code> 语句与之对应。</p>
+<p>让我们给上一个例子加一个 <code>else</code> 语句：</p>
+<pre class="hljs"><code>#!/bin/bash
+
+echo -n &quot;输入一个数字：&quot;
+read VAR
+
+if [[ $VAR -gt 10 ]]
+then
+  echo &quot;该变量大于 10。&quot;
+else
+  echo &quot;该变量小于等于 10。&quot;
+fi
+</code></pre>
+<p>如果你执行上述代码并输入一段数字，脚本会给予你输入的数字与 10 之间的大小关系输出不同的信息。</p>
+<h2><code>if..elif..else</code> 语句</h2>
+<p>Bash 的 <code>if..elif..else</code> 语句是这样子的：</p>
+<pre class="hljs"><code>if TEST-COMMAND1
+then
+  STATEMENTS1
+elif TEST-COMMAND2
+then
+  STATEMENTS2
+else
+  STATEMENTS3
+fi
+</code></pre>
+<p>如果 <code>TEST-COMMAND1</code> 条件为真，那么 <code>STATEMENTS1</code> 就会被执行。若为假，则继续如下判断：如果 <code>TEST-COMMAND2</code> 条件为真，那么 <code>STATEMENTS2</code> 就会被执行。否则，<code>STATEMENTS3</code> 将会被执行。</p>
+<p>你可以拥有一个或多个 <code>elif</code> 语句在一段语句中，而 <code>else</code> 则是可有可无的。</p>
+<p>这些条件判断语句是按顺序执行的，一旦其中一个条件从句是真，那么剩下的判断都不会执行，并且程序会在执行完语句以后，直接跳转到 <code>if</code> 整个段落的末尾，执行下一段代码。</p>
+<p>让我们给上一个例子添加 <code>elif</code> 语句吧：</p>
+<pre class="hljs"><code>#!/bin/bash
+
+echo -n &quot;输入一个数字：&quot;
+read VAR
+
+if [[ $VAR -gt 10 ]]
+then
+  echo &quot;该变量大于 10。&quot;
+elif [[ $VAR -eq 10 ]]
+then
+  echo &quot;该变量等于 10。&quot;
+else
+  echo &quot;该变量小于 10。&quot;
+fi
+</code></pre>
+<h2>嵌套 <code>if</code> 语句</h2>
+<p>Bash 允许在一个 <code>if</code> 语句中嵌套一个或多个<code>if</code> 语句。</p>
+<p>下面的脚本会要求你输入三个数字，然后会打印其中最大的数字：</p>
+<pre class="hljs"><code>#!/bin/bash
+
+echo -n &quot;输入一个数字：&quot;
+read VAR1
+echo -n &quot;再输入一个数字：&quot;
+read VAR2
+echo -n &quot;再再输入一个数字：&quot;
+read VAR3
+
+if [[ $VAR1 -ge $VAR2 ]] &amp;&amp; [[ $VAR1 -ge $VAR3 ]]
+then
+  echo &quot;$VAR1 是最大的数字。&quot;
+elif [[ $VAR2 -ge $VAR1 ]] &amp;&amp; [[ $VAR2 -ge $VAR3 ]]
+then
+  echo &quot;$VAR2 是最大的数字。&quot;
+else
+  echo &quot;$VAR3 是最大的数字。&quot;
+fi
+</code></pre>
+<p>而输出就是这样子的：</p>
+<pre class="hljs"><code>7 是最大的数字。
+</code></pre>
+<p>一般来说，使用 <a href="https://linuxize.com/post/bash-case-statement/"><code>case</code></a> 语句比使用 <code>if</code> 语句更高效。</p>
+<h2>多重条件</h2>
+<p>逻辑运算符 <code>OR</code> 和 <code>AND</code> 能够让你在一条 <code>if</code> 语句中使用多重条件。</p>
+<p>下面就是获取三个数中最大数字的另一种写法，而在这个版本中，我们用了逻辑 <code>AND</code>（<code>&amp;&amp;</code>） 运算符而非嵌套 <code>if</code> 语句。</p>
+<pre class="hljs"><code>#!/bin/bash
+
+echo -n &quot;输入一个数字：&quot;
+read VAR1
+echo -n &quot;再输入一个数字：&quot;
+read VAR2
+echo -n &quot;再再输入一个数字：&quot;
+read VAR3
+
+if [[ $VAR1 -ge $VAR2 ]] &amp;&amp; [[ $VAR1 -ge $VAR3 ]]
+then
+  echo &quot;$VAR1 是最大的数字&quot;
+elif [[ $VAR2 -ge $VAR1 ]] &amp;&amp; [[ $VAR2 -ge $VAR3 ]]
+then
+  echo &quot;$VAR2 是最大的数字&quot;
+else
+  echo &quot;$VAR3 是最大的数字&quot;
+fi
+</code></pre>
+<h2><code>test</code> 操作</h2>
+<p>在 Bash 中，<code>test</code> 语句可以长这样的：</p>
+<p><code>test EXPRESSION [ EXPRESSION ] [[ EXPRESSION ]]</code></p>
+<p>为了使我们的脚本可移植，最好使用兼容所有 POSIX shell 的旧版本 <code>[</code> …… <code>]</code>语句。使用 Bash、Zsh、Ksh 作为默认 shell 的大多数现代系统都支持 <code>[[</code> …… <code>]]</code>（双括号）新版语法。</p>
+<p>要否定测试表达式，请使用逻辑 <code>NOT</code>（<code>!</code>）运算符。在<a href="https://linuxize.com/post/how-to-compare-strings-in-bash/">比较字符串</a>时，请始终使用单引号或双引号，以避免单词拆分和乱码问题。</p>
+<p>以下是一些最常用的运算符：</p>
+<ul>
+<li><code>n VAR</code> —— 如果 <code>VAR</code> 的长度大于零，则为真。</li>
+<li><code>z VAR</code> —— 如果 <code>VAR</code> 为空，则为真。</li>
+<li><code>STRING1 = STRING2</code> —— 如果 <code>STRING1</code> 和 <code>STRING2</code> 相等，则为真。</li>
+<li><code>STRING1 != STRING2</code> —— 如果 <code>STRING1</code> 和 <code>STRING2</code> 不相等，则为真。</li>
+<li><code>INTEGER1 -eq INTEGER2</code> —— 如果 <code>INTEGER1</code> 和 <code>INTEGER2</code>相等则为真。</li>
+<li><code>INTEGER1 -gt INTEGER2</code> —— 如果 <code>INTEGER1</code> 大于 <code>INTEGER2</code>，则为真。</li>
+<li><code>INTEGER1 -lt INTEGER2</code> —— 如果 <code>INTEGER1</code> 小于 <code>INTEGER2</code>，则为真。</li>
+<li><code>INTEGER1 -ge INTEGER2</code> —— 如果 <code>INTEGER1</code> 等于或大于 <code>INTEGER2</code>，则为真。</li>
+<li><code>INTEGER1 -le INTEGER2</code> —— 如果 <code>INTEGER1</code> 等于或小于 <code>INTEGER2</code>，则为真。</li>
+<li><code>h FILE</code> —— 如果 <code>FILE</code> 存在并且是符号链接，则为真。</li>
+<li><code>r FILE</code> —— 如果 <code>FILE</code> 存在并且可读，则为真。</li>
+<li><code>w FILE</code> —— 如果 <code>FILE</code> 存在且可写，则为真。</li>
+<li><code>x FILE</code> —— 如果 <code>FILE</code> 存在且可执行，则为真。</li>
+<li><code>d FILE</code> —— 如果 <code>FILE</code> 存在并且是目录，则为真。</li>
+<li><code>e FILE</code> —— 如果 <code>FILE</code> 存在并且是一个文件并且不管它的类型（不管是节点、目录还是 socket），则为真。</li>
+<li><code>f FILE</code> —— 如果 <a href="https://linuxize.com/post/bash-check-if-file-exists/"><code>FILE</code> 存在</a>，并且是常规文件（不是目录或设备什么的） ，则为真。</li>
+</ul>
+<h2>结论</h2>
+<p><code>if</code>、<code>if..else</code> 和 <code>if..elif..else</code> 语句让我们能够基于不同的判断条件来控制 Bash 脚本中逻辑语句的执行。</p>
+<p>如果你有任何疑问或反馈，请随时发表评论。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

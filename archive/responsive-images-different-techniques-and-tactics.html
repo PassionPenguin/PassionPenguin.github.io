@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实现响应式图像的四种技术策略 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/responsive-images-different-techniques-and-tactics-6045a1fa7ea2">Responsive Images: Different Techniques and Tactics</a></li>
+<li>原文作者：<a href="https://medium.com/@lahiruka_">Lahiruka Wijesinghe</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/responsive-images-different-techniques-and-tactics.md">https://github.com/xitu/gold-miner/blob/master/article/2021/responsive-images-different-techniques-and-tactics.md</a></li>
+<li>译者：<a href="https://github.com/zenblo">zenblo</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/Chorer">Chorer</a></li>
+</ul>
+</blockquote>
+<h1>实现响应式图像的四种技术策略</h1>
+<p><img src="../images//Library/WebServer/Documents/documents/responsive-images-different-techniques-and-tactics.md-1*AeGGYFx8qjpVRaSw4jPPzQ.jpeg" alt=""></p>
+<p>创建响应式图像并不像是火箭科学那么的深奥，我相信你已经使用 CSS 创建了很多类似工具。然而，当谈到响应式图像时，灵活的尺寸只是其中的一个因素。</p>
+<blockquote>
+<p>有时根据不同的设备类型，我们需要调整图像质量甚至图像类型，以获得更好的用户体验。</p>
+</blockquote>
+<p>今天，我们有了不同的技术帮助我们加载合适的质量和尺寸的图片。本文将探讨这些方法，帮助你找到最适合你项目的方法。</p>
+<h2>响应式图像方法简介</h2>
+<ul>
+<li><strong>基于设备像素方法</strong>：这种方法使用同一图片的多个版本。它会以不同的分辨率来选择最合适的一个图片来渲染。这种方法比较适合不渲染高分辨率图像的设备。</li>
+<li><strong>流式图像方法</strong>：默认情况下，图像不是流式的，因而当屏幕尺寸改变时，它们往往会被裁切或仍然保持一个固定的尺寸。使用流式图像方法，我们就可以将图像放入到响应式布局中，并根据需要拉伸或收缩。</li>
+<li><strong>艺术指导方法</strong>：艺术指导是我们在处理不同屏幕尺寸时普遍采用的方法。我们可以通过改变图片内容，裁剪图片，或者根据用户的屏幕尺寸使用不同的图片来解决这个问题。</li>
+<li><strong>类型切换方法</strong>：有些浏览器和设备不支持 WebP 等现代图像类型。类型切换方法可用于在图像类型之间进行切换，从而允许你基于设备和浏览器的兼容性向用户提供最佳内容。</li>
+</ul>
+<p>既然你了解了这些方法和它们最适用的场景，那就让我们看一下如何实现这些方法。</p>
+<h2>实现响应式图像方法</h2>
+<p>如上文所述，有多种实现响应式图像的方法。了解这些方法的最佳实现方式，从而让你的项目获得最大收益是非常重要的。</p>
+<p>默认情况下，HTML 提供了几个优秀的标签和属性，如 <code>img</code>、<code>picture</code>、<code>size</code> 和 <code>srcset</code>，用于 Web 开发中的图片渲染。现在，我将向大家展示如何使用这些标签和属性在短时间内实现上述方法。</p>
+<h3>1. 基于设备像素方法</h3>
+<p>在深入探讨之前，我需要解释一下有关高密度显示屏的信息。现代旗舰移动设备（例如三星 Galaxy S10）具有 4 倍的密度显示屏，而某些经济型机型可能只有低密度显示屏。</p>
+<blockquote>
+<p>如果我们在低密度的显示屏中推送加载高密度的图片，那么会导致用户体验非常差，而且会浪费资源。因此，我们需要针对不同的设备像素比使用不同的图像。</p>
+</blockquote>
+<p>在如下示例中，我们对比了两张图片。<code>320×240</code> 像素的 <strong>small-kitten.jpg</strong> 图像和 <code>640×480</code> 像素的 <strong>large-kitten.jpg</strong> 图像，显然后者适合高分辨率显示。（<code>x</code> 描述符表示预期的设备像素比）</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+   <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;small-kitten.jpg 1x, large-kitten.jpg 2x&quot;</span>
+   <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;small-kitten.jpg&quot;</span> 
+   <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;A cute kitten&quot;</span> 
+/&gt;</span>
+</code></pre>
+<p>如果用户的设备分辨率高于 <code>640×480</code> 像素，则将渲染 <strong>large-kitten.jpg</strong> 图像，否则，将渲染 <strong>small-kitten.jpg</strong> 图像。最重要的是，具有低分辨率设备的用户不会感到图像加载时间有任何延迟，而具有高分辨率设备的用户不会感到图像质量有任何问题。</p>
+<h3>2. 流式图像方法</h3>
+<p>这种方法的核心在于使用同一图像的不同尺寸，而不是使用不同的图像。</p>
+<p>例如，我们可以通过给出相对比例的图像大小而不是给出精确的像素值来实现简单的流式图像。最常用的方法是 <code>max-width:100%</code>。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+   <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;black-dog.jpg&quot;</span> 
+   <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;max-width: 100%; 
+   height: auto;&quot;</span>
+   <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Black dog image&quot;</span>
+&gt;</span>
+</code></pre>
+<p><img src="../images//Library/WebServer/Documents/documents/responsive-images-different-techniques-and-tactics.md-1*qRrsflBr2ijjicwLijLZxw.gif" alt="最大宽度缩放图像的行为"></p>
+<blockquote>
+<p>如你所见，上面的图像可以自由缩放并适应浏览器窗口大小。在文章头图较大时，该方法将是理想的选择。</p>
+</blockquote>
+<p>此外，还有一种使用流式图像的高级方法，可以使用图像的宽度和页面的整体宽度来计算尺寸。</p>
+<p>例如，考虑一个 <code>1200px</code> 宽的网页和一个 <code>500px</code> 宽的图像。然后，按照如下方法计算图像在页面上占用的空间：</p>
+<pre class="hljs"><code>图像宽度占用量 = 图像宽度 / 页面宽度
+
+(500/1200) x 100% = 41.66%
+</code></pre>
+<p>然后，我们可以在下面的代码块中使用这个值。它将使图像始终与网页大小保持相同比例。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+   <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;black-dog.jpg&quot;</span> 
+   <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;float: right;
+   width: 41.66%;&quot;</span>
+   <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Black dog image&quot;</span>
+&gt;</span>
+</code></pre>
+<p><img src="../images//Library/WebServer/Documents/documents/responsive-images-different-techniques-and-tactics.md-1*71Fwlv3IISxAwLGUZNyFXw.gif" alt="按百分比宽度缩放图像的行为"></p>
+<blockquote>
+<p>但是，当视口太大或太小时，这种计算可能会引起一些问题。</p>
+</blockquote>
+<p>我们可以通过给图像添加以像素为单位的最大宽度和最小宽度来设置上限和下限，从而解决这个问题。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">img</span> 
+   <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;black-dog.jpg&quot;</span> 
+   <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;width: 41.66%;
+   max-width: 500px;&quot;</span>
+   <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Black dog image&quot;</span>
+&gt;</span>
+</code></pre>
+<h3>3. 艺术指导方法</h3>
+<p>艺术指导方法的核心是根据设备的屏幕大小显示不同的图像。我们可以通过切换到 <code>picture</code> 标签而不是使用 <code>img</code> 标签来做到这一点，因为它允许在不同的设备上查看时提供多比例或多焦点的图像。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*owaoaROx5LN6QVYe6edlEg.gif" alt="著名的猫咪实验艺术指导方法— Google Chrome"></p>
+<p>像下面这样简单的代码片段就可以得到上述结果。这里，我们在 <code>&lt;source&gt;</code> 元素中提供了 2 个不同的属性值：<code>media</code> 和 <code>srcset</code> 分别定义了图像的大小和来源。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">&quot;(min-width: 650px)&quot;</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;kitten-stretching.png&quot;</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">media</span>=<span class="hljs-string">&quot;(min-width: 465px)&quot;</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;kitten-sitting.png&quot;</span>&gt;</span>
+ 
+ <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;kitten-curled.png&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;A cute kitten&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p>在上面的示例中，如果屏幕尺寸大于 <code>560px</code>，浏览器将显示第一张图片的图像。如果屏幕尺寸大于 <code>465px</code> 且低于 <code>650px</code>，浏览器将使用第二张图片。</p>
+<p>你会注意到常规的 <code>&lt;img&gt;</code> 标签是 <code>&lt;picture&gt;</code> 元素的最后一个嵌套标签。使用 <code>&lt;img&gt;</code> 元素对于代码是否能够正常工作至关重要 —— 当媒体查询中的条件不匹配时，它将作为备选方案，并且会兼容不支持 <code>&lt;picture&gt;</code> 元素的浏览器。</p>
+<h3>4. 类型切换方法</h3>
+<p>随着技术的飞速发展，<code>avif</code>、<code>webp</code> 等不同类型的现代图像类型日渐被引入。虽然它们提供了更高的用户体验，但是有些浏览器还不支持这些图像类型。</p>
+<blockquote>
+<p>因此，我们可以通过改变图像格式来使用类型切换去解决这种情况。</p>
+</blockquote>
+<p>例如，下面的代码包含 2 种现代图像类型和 <code>gif</code> 图像。首先，浏览器将尝试 <code>avif</code> 格式，如果失败，它将尝试 <code>webp</code> 格式。如果浏览器不支持这两种格式，它将使用 <code>png</code> 图像。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">picture</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;image/avif&quot;</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;avif-kitten.svg&quot;</span> /&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">source</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;image/webp&quot;</span> <span class="hljs-attr">srcset</span>=<span class="hljs-string">&quot;webp-kitten.webp&quot;</span> /&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;kitten.gif&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;A cute kitten&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">picture</span>&gt;</span>
+</code></pre>
+<p>你也可以使用 Chrome DevTools 来模拟这一点，看看当浏览器不支持现代图像类型时，你的图像会是什么样子。</p>
+<p><img src="../images//Library/WebServer/Documents/documents/responsive-images-different-techniques-and-tactics.md-1*6Ey8MZsWnVkB74lQYfOBBw.gif" alt="使用 Chrome DevTools 来模拟图像切换"></p>
+<h2>总结</h2>
+<p>我相信现在大家对可以用什么方法来实现响应式图像，以及它们大多适合什么情况有了一定的了解。</p>
+<p>开发任何 Web 应用程序时，请确保充分利用这些知识，因为以正确的方式实现响应式图像有助于提供更好的用户体验。</p>
+<p>因此，我希望大家尝试这些方法，并在评论区分享你的想法。</p>
+<p>感谢你的阅读！</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

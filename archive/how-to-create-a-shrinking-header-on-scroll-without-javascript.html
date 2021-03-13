@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>如何不使用 JavaScript 在页面滚动时自动折叠标题？ - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://css-tricks.com/how-to-create-a-shrinking-header-on-scroll-without-javascript/">How to Create a Shrinking Header on Scroll Without JavaScript</a></li>
+<li>原文作者：<a href="https://css-tricks.com/author/havardbrynjulfsen/">Håvard Brynjulfsen</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+</ul>
+</blockquote>
+<h1>如何不使用 JavaScript 在页面滚动时自动折叠标题？</h1>
+<p>想象以下我们有一个看起来很棒而且很厚的一个标题栏，在标题内容的上下都有着不小的内间距。当页面向下滚动时，标题栏的内间距会被缩小而被折叠，从而让页面中的其他内容拥有了更多的屏幕空间展示它们的风采。</p>
+<p>通常，我们必须使用一些 JavaScript 代码才能制作出类似的折叠效果，但是自 <code>position: sticky</code> 的引入以来，我们现在可以使用纯 CSS 完成标题栏的折叠。</p>
+<p><img src="../images//Library/WebServer/Documents/documents/how-to-create-a-shrinking-header-on-scroll-without-javascript.md-1s0Ea8DEbYPwwbzrt3C1g4g.gif" alt=""></p>
+<p><img src="../images//Library/WebServer/Documents/documents/how-to-create-a-shrinking-header-on-scroll-without-javascript.md-1s0Ea8DEbYPwwbzrt3C1g4g.gif" alt=""></p>
+<p>让我就此解决这个问题：我通常不喜欢粘在顶部的标题栏，因为它们真的占用了屏幕太多的空间了。但是我们是否应该在自己的网站上使用粘顶的标题栏就是一个完全不同的问题了，而这实际上取决于我们的内容，以及我们是否有一个一直存在的导航，会给标题栏中添加导航内容。如果我们真的要使用粘顶的标题栏，我们应该格外小心，以免无意间让粘性区域覆盖或遮盖了部分的内容或功能，造成了数据的丢失。</p>
+<p>不管怎么说，就让我们从 HTML 标记开始，了解一下无 JavaScript 代码构建自动折叠的标题栏的方法。下面的 HTML 代码没有什么复杂的 —— 只有一个 <code>&lt;header&gt;</code> 以及一个包含徽标和导航的子 <code>div</code>。</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-outer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-inner&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-logo&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">nav</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-navigation&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+</code></pre>
+<p>至于样式，我们将为父元素 <code>&lt;header&gt;</code> 声明一个高度（120px），并将其设置为一个 <code>flex</code> 的容器，以使其子元素始终保持中心对齐。然后，我们让其具有粘性：</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.header-outer</span> {
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">120px</span>;
+}
+</code></pre>
+<p>内部容器包含了所有标题栏元素，例如徽标和导航。内部容器在某种程度上是实际的标题栏，而父 <code>&lt;header&gt;</code> 元素的唯一功能是使标题栏更大，因此我们需要缩小它让它折叠。</p>
+<p>我们将内部容器 <code>.header-inner</code> 设置 70px 的高度，并使其具有粘性。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.header-inner</span> {
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">70px</span>;
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+}
+</code></pre>
+<p>那 <code>top: 0</code> 是干什么的？它用于确保容器变粘时将其自身放置在最顶部。</p>
+<p>现在是窍门！为了使内部容器实际粘贴到页面的“天花板”，我们需要为父容器 <code>&lt;header&gt;</code> 设置一个拥有负值的 <code>top</code>，该负值等于两个容器之间的高度差，从而使其内部“停留”在视口上方（也就是 70px - 120px，也就是 -50px！）让我们把这个高度差添加回去一下。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.header-outer</span> {
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">top</span>: -<span class="hljs-number">50px</span>; <span class="hljs-comment">/* 等同于 header-outer 和 header-inner 的高度差 */</span>
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">120px</span>;
+} 
+</code></pre>
+<p>让我们现在糅合一下代码 —— <code>&lt;header&gt;</code> 滑出了视窗，而内部容器在视口的顶端放置本身整齐。</p>
+<pre class="hljs"><code><span class="hljs-comment">&lt;!-- Sticky header --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-outer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-inner responsive-wrapper&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-logo&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://assets.codepen.io/285131/acme-2.svg&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">nav</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-navigation&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>About<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Blog<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Contact Us<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">button</span>&gt;</span>Menu<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- Content --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">main</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main-content responsive-wrapper&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">article</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;widget&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>How does it work without JS? 🤯<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>This sticky header consists of two elements: an <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>outer<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> and an <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>inner<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> container. The outer container is taller than the inner — and the inner is centered vertically.
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>By utilizing the <span class="hljs-tag">&lt;<span class="hljs-name">code</span>&gt;</span>position: sticky<span class="hljs-tag">&lt;/<span class="hljs-name">code</span>&gt;</span> property <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>twice<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span>, both on the header&#x27;s <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>outer container<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> and <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>inner container<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> the outer container will stick to the <span class="hljs-tag">&lt;<span class="hljs-name">code</span>&gt;</span>body<span class="hljs-tag">&lt;/<span class="hljs-name">code</span>&gt;</span>, while the inner container will stick to the outer container.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Note that the outer container has a negative <span class="hljs-tag">&lt;<span class="hljs-name">code</span>&gt;</span>top<span class="hljs-tag">&lt;/<span class="hljs-name">code</span>&gt;</span> value equal to the height difference between the two containers. This causes the outer container to stick <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>above<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> the <span class="hljs-tag">&lt;<span class="hljs-name">code</span>&gt;</span>body<span class="hljs-tag">&lt;/<span class="hljs-name">code</span>&gt;</span>, making the inner container stick to the &quot;ceiling&quot; on scroll.
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">article</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-keyword">@import</span> url(<span class="hljs-string">&quot;https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap&quot;</span>);
+
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+<span class="hljs-selector-pseudo">:root</span> {
+    --<span class="hljs-selector-tag">header</span>-outer-<span class="hljs-attribute">height</span>: <span class="hljs-number">110px</span>;
+    --<span class="hljs-selector-tag">header</span>-inner-<span class="hljs-attribute">height</span>: <span class="hljs-number">70px</span>;
+    --<span class="hljs-selector-tag">header</span>-<span class="hljs-attribute">height</span>-difference: <span class="hljs-built_in">calc</span>(
+            <span class="hljs-built_in">var</span>(--header-outer-height) - <span class="hljs-built_in">var</span>(--header-inner-height)
+    );
+    --<span class="hljs-selector-tag">header</span>-bg: <span class="hljs-number">#fff</span>;
+}
+
+<span class="hljs-selector-tag">body</span> {
+    <span class="hljs-attribute">font-family</span>: <span class="hljs-string">&quot;DM Sans&quot;</span>, sans-serif;
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f2f5f7</span>;
+    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.5</span>;
+    <span class="hljs-attribute">min-height</span>: <span class="hljs-number">300vh</span>;
+    <span class="hljs-attribute">position</span>: relative;
+}
+
+<span class="hljs-selector-class">.responsive-wrapper</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">90%</span>;
+    <span class="hljs-attribute">max-width</span>: <span class="hljs-number">1280px</span>;
+    <span class="hljs-attribute">margin-left</span>: auto;
+    <span class="hljs-attribute">margin-right</span>: auto;
+}
+
+<span class="hljs-comment">/* Sticky header */</span>
+<span class="hljs-selector-class">.header-outer</span> {
+    <span class="hljs-comment">/* Make it stick */</span>
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--header-outer-height);
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">top</span>: <span class="hljs-built_in">calc</span>(
+            <span class="hljs-built_in">var</span>(--header-height-difference) * -<span class="hljs-number">1</span>
+    ); <span class="hljs-comment">/* Multiply by -1 to get a negative value */</span>
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+
+    <span class="hljs-comment">/* Other */</span>
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--header-bg);
+    <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">2px</span> <span class="hljs-number">10px</span> <span class="hljs-number">0</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>);
+}
+
+<span class="hljs-selector-class">.header-inner</span> {
+    <span class="hljs-comment">/* Make it stick */</span>
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--header-inner-height);
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+
+    <span class="hljs-comment">/* Other */</span>
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+    <span class="hljs-attribute">justify-content</span>: space-between;
+}
+
+<span class="hljs-comment">/* Styling of other elements */</span>
+<span class="hljs-selector-class">.header-logo</span> <span class="hljs-selector-tag">img</span> {
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--header-inner-height) - <span class="hljs-number">30px</span>);
+}
+
+<span class="hljs-selector-class">.header-navigation</span> {
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">flex-wrap</span>: wrap;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span>,
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">button</span> {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.125rem</span>;
+    <span class="hljs-attribute">color</span>: inherit;
+    <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">1.75rem</span>;
+    <span class="hljs-attribute">position</span>: relative;
+    <span class="hljs-attribute">font-weight</span>: <span class="hljs-number">500</span>;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">display</span>: none;
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.125rem</span>;
+    <span class="hljs-attribute">color</span>: inherit;
+    <span class="hljs-attribute">text-decoration</span>: none;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">button</span> {
+    <span class="hljs-attribute">border</span>: <span class="hljs-number">0</span>;
+    <span class="hljs-attribute">background-color</span>: transparent;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span>:after,
+.header-navigation button:hover:after {
+    transform: <span class="hljs-built_in">scalex</span>(<span class="hljs-number">1</span>);
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span>:after,
+.header-navigation button:after {
+    transition: <span class="hljs-number">0.25s</span> ease;
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;&quot;</span>;
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">2px</span>;
+    <span class="hljs-attribute">background-color</span>: currentcolor;
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scalex</span>(<span class="hljs-number">0</span>);
+    <span class="hljs-attribute">position</span>: absolute;
+    <span class="hljs-attribute">bottom</span>: -<span class="hljs-number">2px</span>;
+    <span class="hljs-attribute">left</span>: <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-selector-class">.main</span> {
+    <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">3rem</span>;
+}
+
+<span class="hljs-selector-class">.widget</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
+    <span class="hljs-attribute">max-width</span>: <span class="hljs-number">600px</span>;
+    <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">8px</span>;
+    <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">15px</span> <span class="hljs-number">30px</span> <span class="hljs-number">0</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>);
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#fff</span>;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">2.5rem</span>;
+    <span class="hljs-attribute">margin-left</span>: auto;
+    <span class="hljs-attribute">margin-right</span>: auto;
+    <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">2rem</span>;
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.125rem</span>;
+}
+
+<span class="hljs-selector-class">.widget</span> &gt; * + * {
+    <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">1.25em</span>;
+}
+
+<span class="hljs-selector-class">.widget</span> <span class="hljs-selector-tag">h2</span> {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.5rem</span>;
+    <span class="hljs-attribute">font-weight</span>: <span class="hljs-number">700</span>;
+    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.25</span>;
+}
+
+<span class="hljs-selector-class">.widget</span> <span class="hljs-selector-tag">code</span> {
+    <span class="hljs-attribute">display</span>: inline-block;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0.125em</span> <span class="hljs-number">0.25em</span>;
+    <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">2px</span>;
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#bee5d3</span>;
+}
+
+<span class="hljs-selector-class">.widget</span> <span class="hljs-selector-tag">strong</span> {
+    <span class="hljs-attribute">font-weight</span>: <span class="hljs-number">700</span>;
+}
+
+<span class="hljs-keyword">@media</span> (<span class="hljs-attribute">min-width</span>: <span class="hljs-number">800px</span>) {
+    <span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span> {
+        <span class="hljs-attribute">display</span>: inline-block;
+    }
+
+    <span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">button</span> {
+        <span class="hljs-attribute">display</span>: none;
+    }
+}
+</code></pre>
+<p><img src="../images/how-to-create-a-shrinking-header-on-scroll-without-javascript-gif-1.gif" alt=""></p>
+<p>我们可以将其扩展到其他元素！一个持续的提示如何？</p>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;banner-outer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;banner-inner responsive-wrapper&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Save up to 70% on selected merch. <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Go to sale<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-outer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-inner responsive-wrapper&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-logo&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://assets.codepen.io/285131/acme-2.svg&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">nav</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-navigation&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>About<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Blog<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;#&quot;</span>&gt;</span>Contact Us<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">button</span>&gt;</span>Menu<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+</code></pre>
+<pre class="hljs"><code><span class="hljs-keyword">@import</span> url(<span class="hljs-string">&#x27;https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap&#x27;</span>);
+
+*,
+*:after,
+*:before {
+    box-sizing: border-box;
+}
+
+<span class="hljs-selector-pseudo">:root</span> {
+    <span class="hljs-comment">/* Banner */</span>
+    --banner-outer-<span class="hljs-attribute">height</span>: <span class="hljs-number">75px</span>;
+    --banner-inner-<span class="hljs-attribute">height</span>: <span class="hljs-number">50px</span>;
+    --banner-<span class="hljs-attribute">height</span>-difference: <span class="hljs-built_in">calc</span>(
+            <span class="hljs-built_in">var</span>(--banner-outer-height) - <span class="hljs-built_in">var</span>(--banner-inner-height)
+    );
+    --banner-bg: <span class="hljs-number">#ffc75f</span>;
+
+    <span class="hljs-comment">/* Header */</span>
+    --<span class="hljs-selector-tag">header</span>-outer-<span class="hljs-attribute">height</span>: <span class="hljs-number">110px</span>;
+    --<span class="hljs-selector-tag">header</span>-inner-<span class="hljs-attribute">height</span>: <span class="hljs-number">70px</span>;
+    --<span class="hljs-selector-tag">header</span>-bg: <span class="hljs-number">#FFF</span>;
+}
+
+<span class="hljs-selector-tag">body</span> {
+    <span class="hljs-attribute">font-family</span>: <span class="hljs-string">&quot;DM Sans&quot;</span>, sans-serif;
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f2f5f7</span>;
+    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.5</span>;
+    <span class="hljs-attribute">min-height</span>: <span class="hljs-number">300vh</span>;
+    <span class="hljs-attribute">position</span>: relative;
+}
+
+
+<span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">color</span>: inherit;
+}
+
+<span class="hljs-selector-class">.responsive-wrapper</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">90%</span>;
+    <span class="hljs-attribute">max-width</span>: <span class="hljs-number">1280px</span>;
+    <span class="hljs-attribute">margin-left</span>: auto;
+    <span class="hljs-attribute">margin-right</span>: auto;
+}
+
+<span class="hljs-comment">/* Sticky banner */</span>
+<span class="hljs-selector-class">.banner-outer</span> {
+    <span class="hljs-comment">/* Make it stick */</span>
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--banner-outer-height);
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">top</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--banner-height-difference) * -<span class="hljs-number">1</span>); <span class="hljs-comment">/* Multiply by -1 to get a negative value */</span>
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+
+    <span class="hljs-comment">/* Other */</span>
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--banner-bg);
+    <span class="hljs-attribute">z-index</span>: <span class="hljs-number">1</span>;
+}
+
+<span class="hljs-selector-class">.banner-inner</span> {
+    <span class="hljs-comment">/* Make it stick */</span>
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--banner-inner-height);
+    <span class="hljs-attribute">position</span>: sticky;
+    <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+
+    <span class="hljs-comment">/* Other */</span>
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+    <span class="hljs-attribute">justify-content</span>: center;
+    <span class="hljs-attribute">text-align</span>: center;
+    <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.25</span>;
+}
+
+<span class="hljs-selector-class">.header-outer</span> {
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--header-outer-height);
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+    <span class="hljs-attribute">background-color</span>: <span class="hljs-built_in">var</span>(--header-bg);
+    <span class="hljs-attribute">box-shadow</span>: <span class="hljs-number">0</span> <span class="hljs-number">2px</span> <span class="hljs-number">10px</span> <span class="hljs-number">0</span> <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, .<span class="hljs-number">1</span>);
+}
+
+<span class="hljs-selector-class">.header-inner</span> {
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">var</span>(--header-inner-height);
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">align-items</span>: center;
+    <span class="hljs-attribute">justify-content</span>: space-between;
+}
+
+
+<span class="hljs-comment">/* Styling of other elements */</span>
+<span class="hljs-selector-class">.header-logo</span> <span class="hljs-selector-tag">img</span> {
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">height</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-built_in">var</span>(--header-inner-height) - <span class="hljs-number">30px</span>);
+}
+
+<span class="hljs-selector-class">.header-navigation</span> {
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">flex-wrap</span>: wrap;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span>,
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">button</span> {
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.125rem</span>;
+    <span class="hljs-attribute">color</span>: inherit;
+    <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">1.75rem</span>;
+    <span class="hljs-attribute">position</span>: relative;
+    <span class="hljs-attribute">font-weight</span>: <span class="hljs-number">500</span>;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">display</span>: none;
+    <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.125rem</span>;
+    <span class="hljs-attribute">color</span>: inherit;
+    <span class="hljs-attribute">text-decoration</span>: none;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">button</span> {
+    <span class="hljs-attribute">border</span>: <span class="hljs-number">0</span>;
+    <span class="hljs-attribute">background-color</span>: transparent;
+    <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span>:after,
+.header-navigation button:hover:after {
+    transform: <span class="hljs-built_in">scalex</span>(<span class="hljs-number">1</span>);
+}
+
+<span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span>:after,
+.header-navigation button:after {
+    transition: <span class="hljs-number">0.25s</span> ease;
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;&quot;</span>;
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">2px</span>;
+    <span class="hljs-attribute">background-color</span>: currentcolor;
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">scalex</span>(<span class="hljs-number">0</span>);
+    <span class="hljs-attribute">position</span>: absolute;
+    <span class="hljs-attribute">bottom</span>: -<span class="hljs-number">2px</span>;
+    <span class="hljs-attribute">left</span>: <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-selector-class">.main</span> {
+    <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">3rem</span>;
+}
+
+<span class="hljs-keyword">@media</span> (<span class="hljs-attribute">min-width</span>: <span class="hljs-number">800px</span>) {
+    <span class="hljs-selector-class">.header-navigation</span> <span class="hljs-selector-tag">a</span> {
+        <span class="hljs-attribute">display</span>: inline-block;
+    }
+
+    <span class="hljs-selector-class">.header-navgitaion</span> <span class="hljs-selector-tag">button</span> {
+        <span class="hljs-attribute">display</span>: none;
+    }
+}
+</code></pre>
+<p><img src="../images/how-to-create-a-shrinking-header-on-scroll-without-javascript-gif-2.gif" alt=""></p>
+<p>尽管我们可以使用 CSS 做到折叠的效果，但它确实仍然有着一定的局限性。例如，内部和外部容器使用固定的高度。这使得它们不易于更改，就像把导航元素包装起来一样，因为菜单项的数量可能会超过了尺寸，从而导致内容的溢出。</p>
+<p>另一个限制？徽标不能缩小。这可能是最大的缺点，因为徽标通常是占用空间的最大罪魁祸首。也许有一天，我们将能够基于元素的粘性来应用样式……</p>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

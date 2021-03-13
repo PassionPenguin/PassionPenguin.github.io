@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在 Flutter 项目中使用 Lottie 构建原生 Splash 启动页 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://medium.com/swlh/native-splash-screen-in-flutter-using-lottie-121ce2b9b0a4">Native Splash Screen in Flutter Using Lottie</a></li>
+<li>原文作者：<a href="https://medium.com/@elaziz-shehadeh">AbedElaziz Shehadeh</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/native-splash-screen-in-flutter-using-lottie.md">https://github.com/xitu/gold-miner/blob/master/article/2021/native-splash-screen-in-flutter-using-lottie.md</a></li>
+<li>译者：<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/zenblo">zenblo</a>、<a href="https://github.com/keepmovingljzy">keepmovingljzy</a></li>
+</ul>
+</blockquote>
+<h1>在 Flutter 项目中使用 Lottie 构建原生 Splash 启动页</h1>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*4vlkTJCWbP2Kh2vyK9BdEw.png" alt=""></p>
+<p>我们当然可以直接使用 Dart 代码为 Flutter 应用程序添加动画启动效果，但是，Flutter 应用程序在 Android 和 iOS 中以 FlutterActivity 或 FlutterViewController 的形式启动，会让 Flutter 应用程序在实际绘制第一帧之前已经耗费了一段时间。因此，在应用启动时设置启动画面将会带来更好的用户体验。</p>
+<p>值得一提的是，在 Flutter 的官方<a href="https://flutter.dev/docs/development/ui/advanced/splash-screen">文档</a>中我们可以轻松地将静态图像添加为启动页，并且这个页面上面有充足的文档信息提供给我们使用。我们事实上只需将图像添加到 Android 的 drawable 文件夹中和 iOS 的资源文件夹中，然后在 Android 的 <code>styles.xml</code> 和 iOS 的 <code>LaunchScreen.storyboard</code> 中使用它们即可。但是，在针对如何使用 Lottie 等其他库实现应用程序启动页面动画的功能，我并不能找到相关的参考资料，而这些就是我将在本文中讲述的内容。</p>
+<h2>为什么我们要使用 Lottie?</h2>
+<p><a href="https://airbnb.io/lottie/#/">Lottie</a> 是一个支持多平台（包括 Android 与 iOS）的库，用于通过 <a href="https://github.com/airbnb/lottie-web">Bodymovin</a> 解析 <a href="http://www.adobe.com/products/aftereffects.html">Adobe After Effects</a> 导出的 JSON 格式的动画，并以本地方式呈现。这意味着动画是由专业的设计人员设计的，并使用的是 <strong>JSON</strong> 文件导出，让我们开发人员无需再额外付出什么努力，轻轻松松完成动画的渲染。在本教程中，我们将使用由 LottieFiles 创建的免费示例文件，可以在<a href="https://lottiefiles.com/38237-thanksgiving-cornucopia">这里</a>中找到该原文件。让我们开始我们的 Flutter + Lottie 之旅吧。</p>
+<p>首先让我们先创建一个新的 Flutter 项目，然后执行以下步骤：</p>
+<h2>Android</h2>
+<ol>
+<li>先添加 Lottie 依赖到你的项目的 <code>app/build.gradle</code> 文件中（相对于 Flutter 应用程序则是 <code>android/app/build.gradle</code> 文件）（在这里我也同样添加了 Constraint Layout）</li>
+</ol>
+<pre class="hljs"><code>dependencies {
+   ...
+   implementation <span class="hljs-string">&quot;com.airbnb.android:lottie:3.5.0&quot;</span> # 当前版本 <span class="hljs-number">3.6</span><span class="hljs-number">.0</span>
+   implementation <span class="hljs-string">&quot;androidx.constraintlayout:constraintlayout:2.0.4&quot;</span>
+   # 译者注：原文为 implementation <span class="hljs-string">&quot;com.android.support.constraint:constraint-layout:2.0.4&quot;</span> 但 Lottie <span class="hljs-number">2.8</span>+ 只支持 AndroidX 项目
+   ...
+}
+</code></pre>
+<ol start="2">
+<li>在 <code>AndroidManifest.xml</code> 中删去 <code>name</code> 为 io.flutter.embedding.android.SplashScreenDrawable 的 <code>&lt;meta-data&gt;</code> 标记并替换 <code>activity</code> 标签下面的 <code>LaunchTheme</code> 为 <code>NormalTheme</code>，现在你的文件是这样的：</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-tag">&lt;<span class="hljs-name">manifest</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>
+          <span class="hljs-attr">package</span>=<span class="hljs-string">&quot;com.abedelazizshe.flutter_lottie_splash_app&quot;</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- io.flutter.app.FlutterApplication is an android.app.Application that
+         calls FlutterMain.startInitialization(this); in its onCreate method.
+         In most cases you can leave this as-is, but you if you want to provide
+         additional functionality it is fine to subclass or reimplement
+         FlutterApplication and put your custom class here. --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">application</span>
+            <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;io.flutter.app.FlutterApplication&quot;</span>
+            <span class="hljs-attr">android:label</span>=<span class="hljs-string">&quot;flutter_lottie_splash_app&quot;</span>
+            <span class="hljs-attr">android:icon</span>=<span class="hljs-string">&quot;@mipmap/ic_launcher&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">activity</span>
+                <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.MainActivity&quot;</span>
+                <span class="hljs-attr">android:launchMode</span>=<span class="hljs-string">&quot;singleTop&quot;</span>
+                <span class="hljs-attr">android:theme</span>=<span class="hljs-string">&quot;@style/NormalTheme&quot;</span>
+                <span class="hljs-attr">android:configChanges</span>=<span class="hljs-string">&quot;orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode&quot;</span>
+                <span class="hljs-attr">android:hardwareAccelerated</span>=<span class="hljs-string">&quot;true&quot;</span>
+                <span class="hljs-attr">android:windowSoftInputMode</span>=<span class="hljs-string">&quot;adjustResize&quot;</span>&gt;</span>
+            <span class="hljs-comment">&lt;!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">meta-data</span>
+                    <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;io.flutter.embedding.android.NormalTheme&quot;</span>
+                    <span class="hljs-attr">android:resource</span>=<span class="hljs-string">&quot;@style/NormalTheme&quot;</span>
+            /&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">intent-filter</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">action</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.action.MAIN&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">category</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;android.intent.category.LAUNCHER&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">intent-filter</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Don&#x27;t delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">meta-data</span>
+                <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;flutterEmbedding&quot;</span>
+                <span class="hljs-attr">android:value</span>=<span class="hljs-string">&quot;2&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">application</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span>
+</code></pre>
+<p>你可以在 <code>/android/app/res/values/styles.xml</code> 文件夹中删除 <code>LaunchTheme</code> 的定义，因为你将不再需要它。</p>
+<ol start="3">
+<li>
+<p>在 <code>/android/app/res/values</code> 文件夹下创建一个 <code>raw</code> 目录，并复制生成的 <code>.json</code> 文件（无论你是创建自己的文件还是从上面的链接下载了免费示例）。 在本案例中，JSON 文件夹的名字应该是 <code>splash_screen.json</code>。</p>
+</li>
+<li>
+<p>为了使用 <code>.json</code> 文件并显示动画视图，我们需要创建具有其布局的启动视图类。 在 <code>/android/app/res</code> 下，创建一个名为 <code>layout</code> 的新目录（如果不存在的话），然后创建一个名为 <code>splash_view.xml</code> 的新的布局资源文件。 打开这个 XML 文件，修改文件的代码为：</p>
+</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">androidx.constraintlayout.widget.ConstraintLayout</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span>
+    <span class="hljs-attr">xmlns:app</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res-auto&quot;</span>
+    <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span>
+    <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">com.airbnb.lottie.LottieAnimationView</span>
+        <span class="hljs-attr">android:layout_width</span>=<span class="hljs-string">&quot;match_parent&quot;</span>
+        <span class="hljs-attr">android:layout_height</span>=<span class="hljs-string">&quot;match_parent&quot;</span>
+        <span class="hljs-attr">app:layout_constraintBottom_toBottomOf</span>=<span class="hljs-string">&quot;parent&quot;</span>
+        <span class="hljs-attr">app:layout_constraintStart_toStartOf</span>=<span class="hljs-string">&quot;parent&quot;</span>
+        <span class="hljs-attr">app:layout_constraintTop_toTopOf</span>=<span class="hljs-string">&quot;parent&quot;</span>
+        <span class="hljs-attr">app:lottie_autoPlay</span>=<span class="hljs-string">&quot;true&quot;</span>
+        <span class="hljs-attr">app:lottie_rawRes</span>=<span class="hljs-string">&quot;@raw/splash_screen&quot;</span>
+        <span class="hljs-attr">app:lottie_loop</span>=<span class="hljs-string">&quot;false&quot;</span>
+        <span class="hljs-attr">app:lottie_speed</span>=<span class="hljs-string">&quot;1.00&quot;</span> /&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">androidx.constraintlayout.widget.ConstraintLayout</span>&gt;</span>
+</code></pre>
+<p>在这个示例中，我将动画设置为自动播放，设置的播放速度为 <code>1.0</code>，并且禁止循环播放功能。你可以根据需要使用不同的值。 最重要的部分是 <code>app:lottie_rawRes</code> 属性，它定义了我们要使用在 <code>raw</code> 目录中添加的 JSON 文件。现在，我们需要创建启动视图的类。让我们在 <code>/android/app/src/main/kotlin/YOUR-PACKAGE-NAME</code> 中来创建一个新的 Kotlin 类。将这个类命名为 <code>SplashView</code>，然后修改它的内容为：</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> android.content.Context
+<span class="hljs-keyword">import</span> android.os.Bundle
+<span class="hljs-keyword">import</span> android.view.LayoutInflater
+<span class="hljs-keyword">import</span> android.view.View
+<span class="hljs-keyword">import</span> io.flutter.embedding.android.SplashScreen
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SplashView</span> : <span class="hljs-type">SplashScreen {</span></span>
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">createSplashView</span><span class="hljs-params">(context: <span class="hljs-type">Context</span>, savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span>: View? =
+            LayoutInflater.from(context).inflate(R.layout.splash_view, <span class="hljs-literal">null</span>, <span class="hljs-literal">false</span>)
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">transitionToFlutter</span><span class="hljs-params">(onTransitionComplete: <span class="hljs-type">Runnable</span>)</span></span> {
+        onTransitionComplete.run()
+    }
+}
+</code></pre>
+<p>如你所见，此视图 Inflate 了 <code>splash_view</code> 布局文件。最后一步是告诉 <code>MainActivity</code> 我们的自定义启动视图。</p>
+<p>5.转到 <code>/android/app/src/main/kotlin/YOUR-PACKAGE-NAME</code> 文件夹，然后单击 <code>MainActivity.kt</code>。 <code>FlutterActivity</code> 提供了一种称为 <code>provideSplashScreen</code> 的方法，修改代码为：</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> io.flutter.embedding.android.FlutterActivity
+<span class="hljs-keyword">import</span> io.flutter.embedding.android.SplashScreen
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MainActivity</span>: <span class="hljs-type">FlutterActivity</span></span>() {
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">provideSplashScreen</span><span class="hljs-params">()</span></span>: SplashScreen? = SplashView()
+}
+</code></pre>
+<p>现在项目的目录应该像这样：</p>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*kj2sZaD-YWBgNaEXYAwqbg.png" alt="Android 项目目录"></p>
+<p>这就是 Android 下 Lottie 构建 Splash 启动页的方法，只需要跑一下这个应用程序然后你就能够看到应用程序启动时候的动画了。</p>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*EDVg6zpUrwJ39ppvlN7nTA.gif" alt="Android 中使用了动画的 Splash 页面"></p>
+<h2>iOS</h2>
+<p>让我们在 iOS 中添加启动页：</p>
+<ol>
+<li>打开项目所在的目录，单击 ios 文件夹，然后双击 <code>Runner.xcworkspace</code> 打开你的项目。</li>
+</ol>
+<p>2.单击 <code>Main.storyboard</code>，你将看到带有一个屏幕的布局编辑器。 我们需要添加一个新的 <code>ViewController</code>，这将是我们的启动页（你可以通过单击右上角的 <code>+</code> 号来做到这一点。点击之后，屏幕中将弹出一个窗口。我们在输入框处输入 View Controller 搜索并将这个控件拖动到编辑器中即可），如以下屏幕快照所示：</p>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*L9EKQQFnxtozE_xgcpVkfw.png" alt="添加一个新的 View Controller"></p>
+<ol start="3">
+<li>完成了第二步之后，你会看到两个屏幕。选择新的 View Controller 然后点击 <code>attributes inspector</code>，然后再点击 <code>is initial view controller</code> .</li>
+</ol>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*TzWohD3MyARxjm7Vetmzow.png" alt="设置 Splash View Controller 为起始的 View Controller"></p>
+<ol start="4">
+<li>我们需要在 <code>ios/Podfile</code> 文件中添加 Lottie 依赖;</li>
+</ol>
+<pre class="hljs"><code>pod &#x27;lottie-ios&#x27;
+</code></pre>
+<p>这个文件中现在应该是这样的：（编者注：可能你已经修改了一部分设置了，这里只是一个案例）</p>
+<pre class="hljs"><code><span class="hljs-meta">#</span><span class="bash">platform :ios, <span class="hljs-string">&#x27;9.0&#x27;</span></span> 
+
+target &#x27;Runner&#x27; do  
+   use_frameworks!  
+  
+   pod &#x27;lottie-ios&#x27; 
+
+end
+</code></pre>
+<p>然后运行这个应用程序（确保命令行当前在 ios 目录中。如果不是，那么就使用 <code>cd</code> 命令将你的目录移动到 ios 目录中）</p>
+<pre class="hljs"><code>pod install
+</code></pre>
+<ol start="5">
+<li>使用 Xcode 将你的生成的 <code>.json</code> 文件拖到中的根目录中（请选择 <code>Copy items if needed</code> 选项），这个文件可能是你自己创建的文件，也有可能是你从上面的链接下载了免费样本。在本案例中它的名字是 <code>splash_screen.json</code>。</li>
+</ol>
+<p>6.在已经添加了依赖项和 <code>splash_screen.json</code> 文件的情况下，我们可以创建我们的初始视图控制器，该控制器将处理显示的动画。打开你的 ios 项目，在项目根目录处（相对于 Flutter 根目录：/ios/Runner）创建一个新的名为 <code>SplashViewController</code> 的 Swift 文件。在类中编写任何内容之前，我们先来修改一下 <code>AppDelegate.swift</code> 以创建 <code>FlutterEngine</code>。 如果你跳过了这个步骤，则动画启动画面的动画播放完了以后不能跳转至 <code>FlutterViewController</code>。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> UIKit
+<span class="hljs-keyword">import</span> Flutter
+
+<span class="hljs-keyword">@UIApplicationMain</span>
+<span class="hljs-keyword">@objc</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppDelegate</span>: <span class="hljs-title">FlutterAppDelegate</span> </span>{
+    
+    <span class="hljs-keyword">lazy</span> <span class="hljs-keyword">var</span> flutterEngine <span class="hljs-operator">=</span> <span class="hljs-type">FlutterEngine</span>(name: <span class="hljs-string">&quot;MyApp&quot;</span>)
+    
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">application</span>(
+        <span class="hljs-keyword">_</span> <span class="hljs-params">application</span>: <span class="hljs-type">UIApplication</span>,
+        <span class="hljs-params">didFinishLaunchingWithOptions</span> <span class="hljs-params">launchOptions</span>: [<span class="hljs-type">UIApplication</span>.<span class="hljs-params">LaunchOptionsKey</span>: <span class="hljs-keyword">Any</span>]<span class="hljs-operator">?</span>
+    )</span> -&gt; <span class="hljs-type">Bool</span> {
+        <span class="hljs-comment">// Runs the default Dart entrypoint with a default Flutter route.</span>
+        flutterEngine.run()
+        <span class="hljs-comment">// Used to connect plugins (only if you have plugins with iOS platform code).</span>
+        <span class="hljs-type">GeneratedPluginRegistrant</span>.register(with: <span class="hljs-keyword">self</span>.flutterEngine)
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+}
+</code></pre>
+<p>在这里我们创建了一个名为 <code>MyApp</code> 的 <code>FlutterEngine</code>（你可以自己决定它的名称），然后在 <code>application</code> 的 <code>didFinishLaunchingWithOptions</code> 中运行了这个引擎并在引擎中注册了插件。需要注意的是默认代码是 <code>GeneratePluginRegistrant.register(with：self)</code>，请确保它已向 <code>self.flutterEngine</code> 注册。</p>
+<ol start="7">
+<li>做完了这些，现在我们可以准备 <code>SplashViewController</code> 以显示动画。导航到 <code>Flutter</code> 的 View Controller 处，修改代码为：</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> UIKit
+<span class="hljs-keyword">import</span> Lottie
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SplashViewController</span>: <span class="hljs-title">UIViewController</span> </span>{
+    
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> animationView: <span class="hljs-type">AnimationView</span>?
+    
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">viewDidAppear</span>(<span class="hljs-keyword">_</span> <span class="hljs-params">animated</span>: <span class="hljs-type">Bool</span>)</span> {
+        animationView <span class="hljs-operator">=</span> .<span class="hljs-keyword">init</span>(name: <span class="hljs-string">&quot;splash_screen&quot;</span>)
+        animationView<span class="hljs-operator">!</span>.frame <span class="hljs-operator">=</span> view.bounds
+        animationView<span class="hljs-operator">!</span>.contentMode <span class="hljs-operator">=</span> .scaleAspectFit
+        animationView<span class="hljs-operator">!</span>.loopMode <span class="hljs-operator">=</span> .playOnce
+        animationView<span class="hljs-operator">!</span>.animationSpeed <span class="hljs-operator">=</span> <span class="hljs-number">1.00</span>
+        view.addSubview(animationView<span class="hljs-operator">!</span>)
+        animationView<span class="hljs-operator">!</span>.play{ (finished) <span class="hljs-keyword">in</span>
+            <span class="hljs-keyword">self</span>.startFlutterApp()
+        }
+    }
+    
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">startFlutterApp</span>()</span> {
+        <span class="hljs-keyword">let</span> appDelegate <span class="hljs-operator">=</span> <span class="hljs-type">UIApplication</span>.shared.delegate <span class="hljs-keyword">as!</span> <span class="hljs-type">AppDelegate</span>
+        <span class="hljs-keyword">let</span> flutterEngine <span class="hljs-operator">=</span> appDelegate.flutterEngine
+        <span class="hljs-keyword">let</span> flutterViewController <span class="hljs-operator">=</span>
+            <span class="hljs-type">FlutterViewController</span>(engine: flutterEngine, nibName: <span class="hljs-literal">nil</span>, bundle: <span class="hljs-literal">nil</span>)
+        
+        flutterViewController.modalPresentationStyle <span class="hljs-operator">=</span> .custom
+        flutterViewController.modalTransitionStyle <span class="hljs-operator">=</span> .crossDissolve
+        
+        present(flutterViewController, animated: <span class="hljs-literal">true</span>, completion: <span class="hljs-literal">nil</span>)
+        
+    }
+}
+</code></pre>
+<p>在 <code>viewDidAppear</code> 中，我们使用添加的 <code>splash_screen.json</code> 文件初始化动画视图。你可以修改诸如 <code>loopMode</code>、<code>animationSpeed</code> 等播放设置。在动画播放结束后，我们将启动我们的 Flutter 应用程序。</p>
+<p>为了获取 <code>FlutterViewController</code>，我们必须获取我们创建并在 <code>AppDelegate.swift</code> 运行的 <code>FlutterEngine</code> 的实例。</p>
+<pre class="hljs"><code>let appDelegate = UIApplication.shared.delegate as! AppDelegate
+let flutterEngine = appDelegate.flutterEngine
+        
+let flutterViewController = FlutterViewController(engine: flutterEngine, nibName: nil, bundle: nil)
+</code></pre>
+<p>然后使用 <code>present(completion :)</code> 启动视图控制器。</p>
+<ol start="8">
+<li>现在是时候将第 2 步创建的 <code>ViewController</code> 与 <code>SplashViewController</code> 类相链接了。单击 <code>Main.storyboard</code> 并选择新的 <code>ViewController</code>，然后从 <code>identity inspector</code> 中选择 <code>SplashViewController</code>，如屏幕快照所示：</li>
+</ol>
+<p><img src="https://cdn-images-1.medium.com/max/7152/1*ghXXOoQqELmNTc4wrbxoJQ.png" alt="链接到 "></p>
+<ol start="9">
+<li>最后一步是设置 <code>Main.storyboard</code> 的主界面，替换掉 <code>LauncherScreen.storyboard</code>。单击 Runner，选择 <code>General</code> 选项卡，在 <code>deployment info</code> 下，从下拉菜单中将 <code>Main interface</code> 设置为 <strong>Main</strong>，如屏幕快照所示：</li>
+</ol>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*KQV8lIB3aRfA_AHtTNXi4g.png" alt="设置 Main interface 为 Main"></p>
+<p>生成并运行该应用程序，你应该能够看到动画的启动页了：</p>
+<p><img src="../images/native-splash-screen-in-flutter-using-lottie.md-1*bdfeeBtOIHW_1A0MfdjnZQ.gif" alt=""></p>
+<p>就是这样，你现在已经生成了针对 Android 和 iOS 应用程序的动画启动页。有关完整的源代码和演示应用程序可以在这里获取到：</p>
+<p><a href="https://github.com/AbedElazizShe/flutter_lottie_splash_app"><strong>AbedElazizShe/flutter_lottie_splash_app</strong></a></p>
+<p>如果你有任何疑问，或者有更好的方法可以解决此问题，请记得发表评论嗷。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

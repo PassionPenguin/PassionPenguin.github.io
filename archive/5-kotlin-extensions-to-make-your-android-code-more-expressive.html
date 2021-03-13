@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>5 个 Kotlin 扩展技巧让你的 Android 代码更具表现力 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://betterprogramming.pub/5-kotlin-extensions-to-make-your-android-code-more-expressive-4c9243cb9466">5 Kotlin Extensions To Make Your Android Code More Expressive</a></li>
+<li>原文作者：<a href="https://medium.com/@sgkantamani">Siva Ganesh Kantamani</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/5-kotlin-extensions-to-make-your-android-code-more-expressive.md">https://github.com/xitu/gold-miner/blob/master/article/2021/5-kotlin-extensions-to-make-your-android-code-more-expressive.md</a></li>
+<li>译者：<a href="https://github.com/keepmovingljzy">keepmovingljzy</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a></li>
+</ul>
+</blockquote>
+<h1>5 个 Kotlin 扩展技巧让你的 Android 代码更具表现力</h1>
+<p><img src="../images/5-kotlin-extensions-to-make-your-android-code-more-expressive.md-0*7wBRYeSryL8YT5u_" alt=""></p>
+<p>你可能已经看过一堆关于 Kotlin 扩展相关的文章了，但这篇文章不仅仅只是关于扩展。它是关于如何让你的代码更具表现力，所以我专门讲解并概括我的顶级扩展，使代码尽可能自然一些。</p>
+<p>本文的主要目的是学习如何使用扩展，而不是复制代码片段，以自己的方式表达代码。</p>
+<h2>介绍</h2>
+<p>Kotlin 是一种现代的、富有表现力的语言，它是为开发人员而构建的。在我看来，好的 Kotlin 代码就是能够以自然、可读的方式表达自己的代码。</p>
+<p>从 Java 转到 Kotlin 对我来说在很多方面都是一个巨大的转变，但我认为这在每个方面都是最好的。你可以参考 <a href="https://medium.com/better-programming/my-journey-from-java-to-kotlin-3bfcbcc6b734">我之前的文章</a>。</p>
+<p>我最喜欢 Kotlin 的一点是扩展。作为一名移动端 Java 开发人员，我从未想过向任何类添加自定义功能，尤其是向第三方库中的类添加自定义功能。但是当我听到扩展的概念时，着实让我大吃一惊。对于 Android 开发者来说，这个特性打开了大量代码增强的大门。</p>
+<blockquote>
+<p>“Kotlin 提供了新功能扩展类的能力，而无需继承该类或使用类似装饰器之类的设计模式。这是通过称为扩展的特殊声明来完成。” — <a href="https://kotlinlang.org/docs/extensions.html">Kotlin 文档</a></p>
+</blockquote>
+<p>如果你想学习更多 Kotlin 扩展相关知识，阅读这篇文章：<a href="https://medium.com/better-programming/advanced-android-programming-with-kotlin-5e40b1be22bb">使用 Kotlin 进行高级 Android 编程</a></p>
+<p>我使用 Kotlin 扩展来使代码更具表现力，并使语言尽可能自然。</p>
+<p>不要再拖了，开干！</p>
+<h2>1. 显示，隐藏，移除（视图）</h2>
+<p>移动开发人员的常见任务之一是隐藏和显示视图。如果你使用 Java，你需要调用 <code>setVisibility</code> 方法传入<code>View.VISIBILE</code>或 <code>View.GONE</code> 来实现。 如下：</p>
+<pre class="hljs"><code>view.setVisibility(View.GONE)
+</code></pre>
+<p>代码可以工作而且没有问题。但是使用 <code>set</code> 和 <code>get</code> 方法让它看起来更笨拙而不自然，Kotlin 提供了一种便利的方式来赋值，而不需要使用 <code>set</code> 和 <code>get</code> 方法。现有代码如下：</p>
+<pre class="hljs"><code>view.visibility = View.GONE
+</code></pre>
+<p>即使现在，由于赋值操作符的存在，它看起来也不自然，所以我想，“为什么我不使用扩展来使它尽可能自然呢？”这时我开始使用以下扩展：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">fun</span> View.<span class="hljs-title">show</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">this</span>.visibility = View.VISIBLE
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> View.<span class="hljs-title">hide</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">this</span>.visibility = View.INVISIBLE
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> View.<span class="hljs-title">remove</span><span class="hljs-params">()</span></span>{
+    <span class="hljs-keyword">this</span>.visibility = View.GONE
+}
+</code></pre>
+<p>现在你可以使用如下方式：</p>
+<pre class="hljs"><code>view.show()
+view.hide() 
+view.remove()
+</code></pre>
+<p>现在看起来更友好更自然。我很乐意优化它，所以如果你有任何建议，请留下评论。</p>
+<h2>2. 校验</h2>
+<p>在任何开发环境中，验证字符串都是至关重要的。回到 2015 年，当我刚开始我的职业生涯，我看到一些应用程序显示<code>null</code>在一些文本字段中。这是因为没有适当的验证。</p>
+<p>在使用 Kotlin 之前，我会维护一个实用工具类，并包含一些静态函数来验证字符串。看看 Java 中的一个简单验证函数：</p>
+<pre class="hljs"><code><span class="hljs-comment">// Function in utility class</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Boolean <span class="hljs-title">isStringNotNullOrEmpty</span><span class="hljs-params">(String data)</span></span>{
+    <span class="hljs-keyword">return</span> data != <span class="hljs-keyword">null</span> &amp;&amp; data.trim().length() &gt; <span class="hljs-number">0</span> 
+            &amp;&amp; !data.equalsIgnoreCase(<span class="hljs-string">&quot;null&quot;</span>);
+}
+
+<span class="hljs-comment">// Usage at call site</span>
+<span class="hljs-keyword">if</span>(Utility.isStringNotNullOrEmpty(data))
+</code></pre>
+<p>从本质上讲数据类型不过是类。 因此我们可以使用 Kotlin 扩展来添加验证功能。 例如，我创建了以下 Kotlin 扩展，其数据类型为 <code>String</code>，以检查其是否有效：</p>
+<pre class="hljs"><code><span class="hljs-comment">//Extension function</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> String?.<span class="hljs-title">valid</span><span class="hljs-params">()</span></span> : <span class="hljs-built_in">Boolean</span> =
+        <span class="hljs-keyword">this</span> != <span class="hljs-literal">null</span> &amp;&amp; !<span class="hljs-keyword">this</span>.equals(<span class="hljs-string">&quot;null&quot;</span>, <span class="hljs-literal">true</span>)
+                &amp;&amp; <span class="hljs-keyword">this</span>.trim().isNotEmpty()
+
+<span class="hljs-comment">// Usage at call site</span>
+<span class="hljs-keyword">if</span>(<span class="hljs-keyword">data</span>.valid())
+</code></pre>
+<p>显然，<code>data.valid()</code> 看起来比 Utility.isStringNotNullOrEmpty(data) 更简洁，可读性更好。调用数据类型上的扩展函数似乎比触发某些工具类函数更自然。下面是几个扩展，可以启发你编写自己的验证扩展：</p>
+<pre class="hljs"><code><span class="hljs-comment">//Email Validation</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> String.<span class="hljs-title">isValidEmail</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span>
+  = <span class="hljs-keyword">this</span>.isNotEmpty() &amp;&amp; Patterns.EMAIL_ADDRESS.matcher(<span class="hljs-keyword">this</span>).matches()
+
+<span class="hljs-comment">//Phone number format</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> String.<span class="hljs-title">formatPhoneNumber</span><span class="hljs-params">(context: <span class="hljs-type">Context</span>, region: <span class="hljs-type">String</span>)</span></span>: String? {
+    <span class="hljs-keyword">val</span> phoneNumberKit = PhoneNumberUtil.createInstance(context)
+    <span class="hljs-keyword">val</span> number = phoneNumberKit.parse(<span class="hljs-keyword">this</span>, region)
+    <span class="hljs-keyword">if</span> (!phoneNumberKit.isValidNumber(number))
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+
+    <span class="hljs-keyword">return</span> phoneNumberKit.format(number, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+}
+</code></pre>
+<h2>3. 提取 Bundle 参数</h2>
+<p>在 Android 中，我们通过捆绑一个键值对在组件之间传递数据。通常在从 bundle 中检索数据之前，我们必须检查一些东西。首先，我们应该检查我们正在寻找的键是否在 bundle 中。然后我们需要检查它是否有一个有效的值。通常做法如下：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">extractData</span><span class="hljs-params">(extras : <span class="hljs-type">Bundle</span>)</span></span>{
+    <span class="hljs-keyword">if</span> (extras.containsKey(<span class="hljs-string">&quot;name&quot;</span>) &amp;&amp; extras.getString(<span class="hljs-string">&quot;name&quot;</span>).valid()){
+        <span class="hljs-keyword">val</span> name = extras.getString(<span class="hljs-string">&quot;name&quot;</span>)
+    }
+}
+</code></pre>
+<p>这涉及到更多的手写代码，坦率地说，它看起来并不漂亮。想象一下，如果有 5 个参数，代码看起来会有多乏味。就像我说的，代码应该尽可能自然，而且需要最少的手动调用。</p>
+<p>在这里，我使用了四个扩展函数：两个用于 Activity，两个用于 Fragment。同样，为每个组件提供一对，以获得一个非空值或一个可空值。如下：</p>
+<pre class="hljs"><code><span class="hljs-comment">// Activity related</span>
+<span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span>  T : Any&gt;</span> Activity.<span class="hljs-title">getValue</span><span class="hljs-params">(
+    lable : <span class="hljs-type">String</span>, defaultvalue : <span class="hljs-type">T</span>? = <span class="hljs-literal">null</span>)</span></span> = lazy{
+    <span class="hljs-keyword">val</span> value = intent?.extras?.<span class="hljs-keyword">get</span>(lable)
+    <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> T) value <span class="hljs-keyword">else</span> defaultvalue
+}
+
+<span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span>  T : Any&gt;</span> Activity.<span class="hljs-title">getValueNonNull</span><span class="hljs-params">(
+    lable : <span class="hljs-type">String</span>, defaultvalue : <span class="hljs-type">T</span>? = <span class="hljs-literal">null</span>)</span></span> = lazy{
+    <span class="hljs-keyword">val</span> value = intent?.extras?.<span class="hljs-keyword">get</span>(lable)
+    requireNotNull((<span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> T) value <span class="hljs-keyword">else</span> defaultvalue)){lable}
+}
+
+<span class="hljs-comment">// Fragment related</span>
+<span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> T: Any&gt;</span> Fragment.<span class="hljs-title">getValue</span><span class="hljs-params">(lable: <span class="hljs-type">String</span>, defaultvalue: <span class="hljs-type">T</span>? = <span class="hljs-literal">null</span>)</span></span> = lazy {
+    <span class="hljs-keyword">val</span> value = arguments?.<span class="hljs-keyword">get</span>(lable)
+    <span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> T) value <span class="hljs-keyword">else</span> defaultvalue
+}
+
+<span class="hljs-keyword">inline</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-type">&lt;<span class="hljs-keyword">reified</span> T: Any&gt;</span> Fragment.<span class="hljs-title">getValueNonNull</span><span class="hljs-params">(lable: <span class="hljs-type">String</span>, defaultvalue: <span class="hljs-type">T</span>? = <span class="hljs-literal">null</span>)</span></span> = lazy {
+    <span class="hljs-keyword">val</span> value = arguments?.<span class="hljs-keyword">get</span>(lable)
+    requireNotNull(<span class="hljs-keyword">if</span> (value <span class="hljs-keyword">is</span> T) value <span class="hljs-keyword">else</span> defaultvalue) { lable }
+}
+</code></pre>
+<p>要了解内联函数和具体类型等高级特性，请参考<a href="https://medium.com/better-programming/advanced-android-programming-with-kotlin-5e40b1be22bb">系列文章</a>。</p>
+<p>现在让我们看看如何使用上面的扩展：</p>
+<pre class="hljs"><code><span class="hljs-keyword">val</span> firstName <span class="hljs-keyword">by</span> getValue&lt;String&gt;(<span class="hljs-string">&quot;firstName&quot;</span>) <span class="hljs-comment">// String?</span>
+<span class="hljs-keyword">val</span> lastName <span class="hljs-keyword">by</span> getValueNonNull&lt;String&gt;(<span class="hljs-string">&quot;lastName&quot;</span>) <span class="hljs-comment">// String</span>
+</code></pre>
+<p>这种方式有三个优点：</p>
+<ol>
+<li>简洁，可读性好，代码量少。</li>
+<li>空安全。</li>
+<li>懒加载。</li>
+</ol>
+<h2>4. 资源扩展</h2>
+<p>在 Android 中，我们需要通过资源类访问项目资源。这涉及到一些每次需要从资源文件中检索数据时都需要手动编写的样板代码。如果没有任何扩展，检索 color 或 drawable 代码如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">val</span> color = ContextCompat.getColor(ApplicationCalss.instance, R.color.dark_blue)
+<span class="hljs-keyword">val</span> drawable = ContextCompat.getDrawable(MavrikApplication.instance, R.drawable.launcher)
+</code></pre>
+<p>当尝试获取任何资源时，您需要通过生成的 R 文件中的资源 ID 访问它。ID 的数据类型是<code>Int</code>。因此，我们可以为每种资源类型编写 integer 类的扩展，并使用它们以减少样板代码增加可读性：</p>
+<pre class="hljs"><code><span class="hljs-comment">//Extensions</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-built_in">Int</span>.<span class="hljs-title">asColor</span><span class="hljs-params">()</span></span> = ContextCompat.getColor(ApplicationCalss.instance, <span class="hljs-keyword">this</span>)
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-built_in">Int</span>.<span class="hljs-title">asDrawable</span><span class="hljs-params">()</span></span> = ContextCompat.getDrawable(MavrikApplication.instance, <span class="hljs-keyword">this</span>)
+
+<span class="hljs-comment">//Usage at call site</span>
+<span class="hljs-keyword">val</span> color = R.color.dark_blie.asColor()
+<span class="hljs-keyword">val</span> drawable = R.drawable.launcher.asDrawable()
+</code></pre>
+<h2>5. 显示 Alert Dialog, Toast, or Snackbar</h2>
+<p>当涉及到前端开发时，无论使用哪种平台，有时都需要向用户显示弹出框。可能是用于显示不重要的数据，或者弹出提示用户确定或者显示一些错误。</p>
+<p>当你想要显示一个简单的弹出信息，你需要写的代码可能会很长。甚至不打算弹出对话框。这些都是常见的场景。它们应该简洁且易于实现。这就是为什么我使用下面的扩展，使代码尽可能被简洁的调用：</p>
+<pre class="hljs"><code><span class="hljs-comment">// Show alert dialog</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> Context.<span class="hljs-title">showAlertDialog</span><span class="hljs-params">(positiveButtonLable : <span class="hljs-type">String</span> = getString(R.string.okay)</span></span>,
+                            title : String = getString(R.string.app_name) , message : String,
+                               actionOnPositveButton : () -&gt; <span class="hljs-built_in">Unit</span>) {
+    <span class="hljs-keyword">val</span> builder = AlertDialog.Builder(<span class="hljs-keyword">this</span>)
+            .setTitle(title)
+            .setMessage(message)
+            .setCancelable(<span class="hljs-literal">false</span>)
+            .setPositiveButton(positiveButtonLable) { dialog, id -&gt;
+                dialog.cancel()
+                actionOnPositveButton()
+            }
+    <span class="hljs-keyword">val</span> alert = builder.create()
+    alert?.show()
+}
+
+<span class="hljs-comment">// Toash extensions</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> Context.<span class="hljs-title">showShotToast</span><span class="hljs-params">(message : <span class="hljs-type">String</span>)</span></span>{
+    Toast.makeText(<span class="hljs-keyword">this</span>, message, Toast.LENGTH_SHORT).show()
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> Context.<span class="hljs-title">showLongToast</span><span class="hljs-params">(message : <span class="hljs-type">String</span>)</span></span>{
+    Toast.makeText(<span class="hljs-keyword">this</span>, message, Toast.LENGTH_LONG).show()
+}
+
+<span class="hljs-comment">// Snackbar Extensions</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> View.<span class="hljs-title">showShotSnackbar</span><span class="hljs-params">(message : <span class="hljs-type">String</span>)</span></span>{
+    Snackbar.make(<span class="hljs-keyword">this</span>, message, Snackbar.LENGTH_SHORT).show()
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> View.<span class="hljs-title">showLongSnackbar</span><span class="hljs-params">(message : <span class="hljs-type">String</span>)</span></span>{
+    Snackbar.make(<span class="hljs-keyword">this</span>, message, Snackbar.LENGTH_LONG).show()
+}
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> View.<span class="hljs-title">snackBarWithAction</span><span class="hljs-params">(message : <span class="hljs-type">String</span>, actionlable : <span class="hljs-type">String</span>,
+                            block : () -&gt; <span class="hljs-type">Unit</span>)</span></span>{
+    Snackbar.make(<span class="hljs-keyword">this</span>, message, Snackbar.LENGTH_LONG)
+            .setAction(actionlable) {
+                block()
+            }
+}
+</code></pre>
+<p>编写这些扩展是一次性的工作。看看这些扩展的用法：</p>
+<pre class="hljs"><code><span class="hljs-comment">// To show an alert dialog in activities, fragments and more</span>
+showAlertDialog(message){
+  <span class="hljs-comment">//TODO on user click on positive button on alert dialog</span>
+}
+
+<span class="hljs-comment">//To show toast in activities, fragments and more</span>
+showShotToast(message)
+showLongToast(message)
+
+<span class="hljs-comment">//To show Snackbar applied on any active view</span>
+showShotSnackbar(message)
+showLongSnackbar(message)
+snackBarWithAction(message, lable){
+  <span class="hljs-comment">//TODO on user click on snackbar action lable</span>
+}
+</code></pre>
+<p>常见的场景应该尽可能容易实现、可读性好和自然。</p>
+<p>我希望你学到了一些有用的东西。感谢你的阅读。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

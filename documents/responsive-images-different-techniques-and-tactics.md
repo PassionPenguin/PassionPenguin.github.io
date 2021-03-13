@@ -7,7 +7,7 @@
 
 # 实现响应式图像的四种技术策略
 
-![](https://cdn-images-1.medium.com/max/5760/1*AeGGYFx8qjpVRaSw4jPPzQ.jpeg)
+![](../images/responsive-images-different-techniques-and-tactics.md-1*AeGGYFx8qjpVRaSw4jPPzQ.jpeg)
 
 创建响应式图像并不像是火箭科学那么的深奥，我相信你已经使用 CSS 创建了很多类似工具。然而，当谈到响应式图像时，灵活的尺寸只是其中的一个因素。
 
@@ -63,7 +63,7 @@
 >
 ```
 
-![最大宽度缩放图像的行为](https://cdn-images-1.medium.com/max/2000/1*qRrsflBr2ijjicwLijLZxw.gif)
+![最大宽度缩放图像的行为](../images/responsive-images-different-techniques-and-tactics.md-1*qRrsflBr2ijjicwLijLZxw.gif)
 
 > 如你所见，上面的图像可以自由缩放并适应浏览器窗口大小。在文章头图较大时，该方法将是理想的选择。
 
@@ -88,7 +88,7 @@
 >
 ```
 
-![按百分比宽度缩放图像的行为](https://cdn-images-1.medium.com/max/2000/1*71Fwlv3IISxAwLGUZNyFXw.gif)
+![按百分比宽度缩放图像的行为](../images/responsive-images-different-techniques-and-tactics.md-1*71Fwlv3IISxAwLGUZNyFXw.gif)
 
 > 但是，当视口太大或太小时，这种计算可能会引起一些问题。
 
@@ -142,7 +142,7 @@
 
 你也可以使用 Chrome DevTools 来模拟这一点，看看当浏览器不支持现代图像类型时，你的图像会是什么样子。
 
-![使用 Chrome DevTools 来模拟图像切换](https://cdn-images-1.medium.com/max/2706/1*6Ey8MZsWnVkB74lQYfOBBw.gif)
+![使用 Chrome DevTools 来模拟图像切换](../images/responsive-images-different-techniques-and-tactics.md-1*6Ey8MZsWnVkB74lQYfOBBw.gif)
 
 ## 总结
 

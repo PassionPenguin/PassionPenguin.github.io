@@ -7,7 +7,7 @@
 
 # API、WebSockets 和 WebHooks：究竟应该选谁
 
-![](https://cdn-images-1.medium.com/max/5760/1*k3Etz0QztOVwxIMYg1Tatw.jpeg)
+![](../images/apis-vs-websockets-vs-webhooks-what-to-choose.md-1*k3Etz0QztOVwxIMYg1Tatw.jpeg)
 
 无论开发什么应用，我们都需要一种可靠的机制来进行组件间通信。
 
@@ -25,7 +25,7 @@
 
 让我们假设一个场景 —— 用户在电商网站上搜索商品。一旦用户使用搜索查询请求了自己想要查找的商品，他就会在几秒钟内得到响应。API 的工作方式就是如此简单。
 
-![API 调用在 Web 应用中的工作方式](https://cdn-images-1.medium.com/max/2000/1*2P5Wwur2TEno1WY0lZHP3w.png)
+![API 调用在 Web 应用中的工作方式](../images/apis-vs-websockets-vs-webhooks-what-to-choose.md-1*2P5Wwur2TEno1WY0lZHP3w.png)
 
 > **正如我最初提到的，API 请求是用户发起的，因此它们非常适合如下应用程序：持久状态、执行快速操作以接收来自后端操作的实时响应。**
 
@@ -41,7 +41,7 @@
 
 使用全双工信道可以让服务器随时向用户发送消息。由于所有现代浏览器都支持 WebSockets，可以说它是实时 Web 应用场景的最佳解决方案。
 
-![WebSockets 的工作方式](https://cdn-images-1.medium.com/max/2690/1*6pyJqsMadK3ItpzWa3qdSA.png)
+![WebSockets 的工作方式](../images/apis-vs-websockets-vs-webhooks-what-to-choose.md-1*6pyJqsMadK3ItpzWa3qdSA.png)
 
 > **然而一直保持连接打开会消耗资源、影响能耗（移动设备），并且难以扩展服务。**
 
@@ -49,7 +49,7 @@
 
 **WebHooks 这类机制在这里就派上用场了。**
 
-![如何使用 WebSockets 和 WebHooks 连接用户、后端和外部服务。](Https://cdn-images-1.medium.com/max/2006/1*vhbQNBBr2Lmzz2QBa5KYkQ.png)
+![如何使用 WebSockets 和 WebHooks 连接用户、后端和外部服务。](../images/apis-vs-websockets-vs-webhooks-what-to-choose.md-1*vhbQNBBr2Lmzz2QBa5KYkQ.png)
 
 ## WebHooks —— 完美的后端回调解决方案
 
@@ -61,7 +61,7 @@ WebHooks 通过提供一种断开机制以接收来自服务商的响应，从�
 
 如果深入研究通信的过程，我们可以将该过程分为四个部分：
 
-![WebHooks 的工作方式](https://cdn-images-1.medium.com/max/3000/1*2BYW_05KftDQ4U3XVrXQOA.png)
+![WebHooks 的工作方式](../images/apis-vs-websockets-vs-webhooks-what-to-choose.md-1*2BYW_05KftDQ4U3XVrXQOA.png)
 
 * **事件触发器**：这是由你指定的运行 WebHooks 的事件。每当此事件发生时，WebHooks 都会发送请求。
 * **WebHooks 提供程序创建 WebHooks 并发送 POST 请求：** WebHooks 提供程序负责监听事件并构建 WebHooks。一旦事件被触发，WebHooks 提供程序会发送一个 HTTP POST 请求发送给第三方应用程序。

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新的 Svelte NodeGUI 让我们可以使用 Qt 和 Svelte 构建原生桌面端应用程序 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：前端</li>
+</ul>
+</blockquote>
+<h1>新的 Svelte NodeGUI 让我们可以使用 Qt 和 Svelte 构建原生桌面端应用程序</h1>
+<p><a href="https://twitter.com/LinguaBrowse">Jamie Birch</a> 最近<a href="https://twitter.com/LinguaBrowse/status/1367929896685756422">发布了 Svelte NodeGUI</a>，一个用于在 Windows、Linux 和 macOS 上构建桌面端应用程序的框架。这是一个相较 Electron 来说更轻量的代替方案，让我们能够使用 <a href="https://svelte.dev/">Svelte 前端框架和编译器</a>，以及 <a href="https://www.qt.io/">Qt 控件工具包</a>，还可以用 HTM'L 和 CSS 子集，构建桌面端应用程序。</p>
+<p>Svelte NodeGUI 的文档展现了它的基本原理以及使用它的好处，如下所示：</p>
+<blockquote>
+<p>Svelte NodeGUI 是一个 Svelte 对 <a href="https://nodegui.org/">NodeGUI</a>) 的渲染器。这是一个高效的 JavaScript 库，与跨平台 GUI 库 <code>Qt</code> 相捆绑。Qt 是最成熟最高效的构建桌面应用的库之一。这让 Svelte NodeGUI 在内存和 CPU 上更具效率，与其它的 JavaScript 桌面端 GUI 解决方案形成了明显的对比。一个用 Svelte NodeGUI 构建的 <em>Hello World</em> 应用程序在内存上比其他 GUI 解决方案少占用 20 MB。</p>
+</blockquote>
+<p>有的开发者已经报告称一个基础的 <em>Hello World</em> 的用 Electron 构建的应用程序的尺寸会高达 <a href="https://medium.com/gowombat/how-to-reduce-the-size-of-an-electron-app-installer-a2bc88a37732">115 MB</a> 甚至是 <a href="https://stackoverflow.com/questions/59731319/how-can-i-reduce-my-275mb-hello-world-electron-package-size">275 MB</a>。Svelte NodeGUI 则成功地通过不内置 Chromium 浏览器包，编译一个内存更优的尺寸更小的可执行文件。</p>
+<p>相反，我们无法在 Svelte NodeGUI 应用程序中使用所有的浏览器中有的 API 以及 HTML 和 CSS 的功能。Svelte NodeGUI 应用程序本质上是一个 Node.js 应用程序，其用户界面由 Qt 控件如 <a href="https://doc.qt.io/qt-5/qmainwindow.html"><code>QMainWindow</code></a>、<a href="https://doc.qt.io/qt-5/qcheckbox.html"><code>QCheckBox</code></a> 构建的，我们可以使用 <a href="https://doc.qt.io/qt-5/stylesheet-syntax.html">Qt 样式表语法</a>样式化应用程序。它使用了 <a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox">Flexbox</a> 进行布局 —— 这是网络浏览器的一维布局方法。Qt 控件的数量和覆盖范围可能小于 <a href="https://www.htmlquick.com/reference/tags.html">HTML 原生元素</a> 的数量和覆盖范围，这实际上也限制了我们 —— 我们只能使用 Qt 支持的 HTML 子集。Svelte NodeGUI 附带 13 种标签或称之为 UI 组件，包括按钮，图像标签，可编辑文本区域，进度条和窗口。</p>
+<p>Qt 窗口小部件可能会发出事件（称为信号），可以监听事件并以编程方式将其与事件处理程序关联。NodeGUI 还提供了一组的内部事件，应用程序可以对其监听（即 <a href="https://svelte.nodeGUI.org/docs/GUIdes/handle-events#event-handling">QEvents</a>）。Svelte NodeGUI 的文档提供了<a href="https://svelte.nodeGUI.org/docs/GUIdes/handle-events#how-do-i-know-which-events-are-supported-">以下示例，说明了布局机制和事件语法</a>：</p>
+<pre class="hljs"><code>&lt;script lang=<span class="hljs-string">&quot;ts&quot;</span>&gt;
+  <span class="hljs-keyword">import</span> { onMount } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;svelte&quot;</span>;
+  <span class="hljs-keyword">import</span> { Direction } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@nodegui/nodegui&quot;</span>;
+  <span class="hljs-keyword">import</span> type { QPushButtonSignals } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@nodegui/nodegui&quot;</span>;
+
+  <span class="hljs-keyword">let</span> additionalButtons: string[] = [];
+  <span class="hljs-keyword">let</span> direction: Direction = Direction.LeftToRight;
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addHandler</span>(<span class="hljs-params"></span>): <span class="hljs-title">void</span> </span>{
+    additionalButtons = [...additionalButtons, <span class="hljs-string">`Button <span class="hljs-subst">${additionalButtons.length}</span>`</span>];
+  }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeHandler</span>(<span class="hljs-params"></span>): <span class="hljs-title">void</span> </span>{
+    additionalButtons = [...additionalButtons.slice(<span class="hljs-number">0</span>, additionalButtons.length - <span class="hljs-number">1</span>)];
+  }
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toggleDirection</span>(<span class="hljs-params"></span>): <span class="hljs-title">void</span> </span>{
+    direction = ((direction + <span class="hljs-number">1</span>) % <span class="hljs-number">4</span>) <span class="hljs-keyword">as</span> Direction;
+  }
+
+  onMount(<span class="hljs-function">() =&gt;</span> {
+    (<span class="hljs-built_in">window</span> <span class="hljs-keyword">as</span> any).win = win; <span class="hljs-comment">// Prevent garbage collection.</span>
+    win.nativeView.show();
+    <span class="hljs-keyword">return</span> <span class="hljs-function">() =&gt;</span> {
+      <span class="hljs-keyword">delete</span> (<span class="hljs-built_in">window</span> <span class="hljs-keyword">as</span> any).win;
+    };
+  });
+&lt;/script&gt;
+
+<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">window</span> <span class="hljs-attr">bind:this</span>=<span class="hljs-string">{win}</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">boxView</span> <span class="hljs-attr">direction</span>=<span class="hljs-string">{direction}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;Add&quot;</span> <span class="hljs-attr">on</span>=<span class="hljs-string">{addHandler}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;Remove&quot;</span> <span class="hljs-attr">on</span>=<span class="hljs-string">{removeHandler}</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">text</span>=<span class="hljs-string">&quot;Toggle direction&quot;</span> <span class="hljs-attr">on</span>=<span class="hljs-string">{toggleDirection}</span> /&gt;</span>
+    {#each additionalButtons as additionalButton (additionalButton)}
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">text</span>=<span class="hljs-string">{additionalButton}/</span>&gt;</span>
+    {/each}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">boxView</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">window</span>&gt;</span></span>
+</code></pre>
+<p>如前面的代码示例所示，常规的 <a href="https://svelte.dev/tutorial/basics">Svelte 单文件组件语法</a>用于描述应用程序逻辑。Svelte 的 <code>onMount</code> 生命周期挂钩用于显示原生应用程序窗口。窗口的内容被包装在 <code>&lt;window&gt;</code> 标签内，由四个按给定方向布置的按钮组成，用户可以通过单击按钮来切换。每次切换时，生成的桌面应用程序的用户界面都会在以下两个布局之间改变：</p>
+<p><img src="../images/svelte-nodegui-native-desktop.md-box-layout-1.png" alt="框布局示例 1">
+<img src="../images/svelte-nodegui-native-desktop.md-box-layout-2.png" alt="框布局示例 2"></p>
+<p>（来源：<a href="https://svelte.nodegui.org/docs/guides/layout#boxview-layout">Svelte NodeGUI 文档</a>）</p>
+<p>尽管我们无法使用使用浏览器 API，我们可以从大量现有的 Node.js 软件包中挑选我们想要的功能（例如 <a href="https://github.com/node-fetch/node-fetch">Node Fetch</a>）。我们<a href="https://svelte.nodegui.org/docs/guides/using-native-node-modules">也可以安装原生的 Node.js 模块</a>并使用这些模块。我们还可以使用 <a href="https://nodejs.org/en/docs/inspector/">Chromium 开发者工具</a><a href="https://svelte.nodegui.org/docs/guides/debugging">调试我们的 Svelte NodeGUI 应用程序</a>，就像开发 Node.js 应用程序那样。</p>
+<p>该版本在 HackerNews 上引起了热烈的讨论。一位用户<a href="https://news.ycombinator.com/item?id=26361924">热烈地欢迎了桌面端原生应用程序的新功能</a>，如下：</p>
+<blockquote>
+<p>看起来真的很好！乍一看，这似乎是我在 HackerNews 上看到的最好的替代品。</p>
+<p>除了一致的 GUI 层，我认为许多团队坚持使用 Electron 的一个被低估的原因是用于跨平台构建和升级的成熟工具。DIY 真的非常痛苦。</p>
+<p>NodeGUI 目前似乎不支持交叉编译，这是否在计划中？升级、自动升级工具怎么样？代码签名？</p>
+</blockquote>
+<p><a href="https://electron-react-boilerplate.js.org/">react-electron-boilerplate</a>，<a href="https://neutralino.js.org/">neutralino</a> 和 <a href="https://tauri.studio/en/">tauri</a> 则也同样是替代 Web 技术开发轻量级桌面应用程序的选项。Google 最近还<a href="https://www.infoq.com/news/2021/03/flutter-2-released/">发布了 Flutter 2</a>，一个跨平台的 UI 工具包，致力于支持我们编写用于移动，网络，和单个代码库的桌面平台的应用程序。一名 HackerNews 读者还<a href="https://news.ycombinator.com/item?id=26364927">提及了 Sciter.js</a>，它为 <a href="https://sciter.com/">Sciter</a>，一种可嵌入的 HTML / CSS / Script 引擎，提供了 JavaScript 接口：</p>
+<blockquote>
+<p>VanilaJS 和 Sciter.JS 中的相同演示：<a href="https://github.com/c-smile/sciter-js-sdk">https://github.com/c-smile/sciter-js-sdk</a>（请参阅屏幕截图）。</p>
+<p>二进制文件约为 5 MB，即 HTML / CSS + QuickJS + NodeJS 运行时。</p>
+<p>与 50MB+ 的 NodeGUI 相对应，即 Node.JS + QT。</p>
+<p>SvelteJS 也可以直接在 Sciter.JS 中使用。</p>
+</blockquote>
+<p>Qt <a href="https://www.qt.io/licensing/">针对商业和开源许可证提供了两种许可</a>。<a href="https://docs.nodegui.org/">NodeGUI 项目</a> 的创建者则强调了<a href="https://twitter.com/a7ulr/status/1225498258233053184?s=21">许可对软件分发的影响</a>：</p>
+<blockquote>
+<p>只要遵守 LGPL 许可要求，你就可以免费将 Qt 用于商业应用程序。对于桌面应用程序，这相对容易实现。我们需要确保你正在动态链接到 Qt 库和额外的许可证和信用信息。更多信息请点击<a href="https://www.youtube.com/watch?v=bwTlCBbB3RY">此处</a>。</p>
+</blockquote>
+<p><a href="https://github.com/nodegui/svelte-nodegui">Svelte NodeGUI</a> 则是根据 MIT 许可分发的开源项目。</p>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

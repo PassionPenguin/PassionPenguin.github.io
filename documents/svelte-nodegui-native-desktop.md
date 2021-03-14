@@ -6,7 +6,7 @@
 
 Svelte NodeGUI 的文档展现了它的基本原理以及使用它的好处，如下所示：
 
-> Svelte NodeGUI 是一个 Svelte 对 [NodeGUI](https://nodegui.org/)) 的渲染器。这是一个高效的 JavaScript 库，与跨平台 GUI 库 `Qt` 相捆绑。Qt 是最成熟最高效的构建桌面应用的库之一。这让 Svelte NodeGUI 在内存和 CPU 上更具效率，与其它的 JavaScript 桌面端 GUI 解决方案形成了明显的对比。一个用 Svelte NodeGUI 构建的 *Hello World* 应用程序在内存上比其他 GUI 解决方案少占用 20 MB。
+> Svelte NodeGUI 是一个 Svelte 对 [NodeGUI](https://nodegui.org/) 的渲染器。这是一个高效的 JavaScript 库，与跨平台 GUI 库 `Qt` 相捆绑。Qt 是最成熟最高效的构建桌面应用的库之一。这让 Svelte NodeGUI 在内存和 CPU 上更具效率，与其它的 JavaScript 桌面端 GUI 解决方案形成了明显的对比。一个用 Svelte NodeGUI 构建的 *Hello World* 应用程序在内存上比其他 GUI 解决方案少占用 20 MB。
 
 有的开发者已经报告称一个基础的 *Hello World* 的用 Electron 构建的应用程序的尺寸会高达 [115 MB](https://medium.com/gowombat/how-to-reduce-the-size-of-an-electron-app-installer-a2bc88a37732) 甚至是 [275 MB](https://stackoverflow.com/questions/59731319/how-can-i-reduce-my-275mb-hello-world-electron-package-size)。Svelte NodeGUI 则成功地通过不内置 Chromium 浏览器包，编译一个内存更优的尺寸更小的可执行文件。
 

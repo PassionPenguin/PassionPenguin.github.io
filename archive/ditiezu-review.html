@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基于 Discuz X 系统的论坛手机版应用构建｜项目复盘 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：Kotlin、JavaScript、Flutter、安卓</li>
+</ul>
+</blockquote>
+<h1>基于 Discuz X 系统的论坛手机版应用构建｜项目复盘</h1>
+<h2>总得聊点天先吧</h2>
+<p>说实在的，我也不知道是什么促使我投入到应用程序的开发之中。似乎一开始是 <a href="https://github.com/HumanBeingXenon">HumanBeingXenon</a> 以及一众论坛朋友们在看到我开发了 <a href="https://github.com/PassionPenguin/GZMTR">GZMTR，这个项目现在代码被混淆过了，并且弃坑了</a>应用程序之后，希望我做出一款应用程序，以代替 Discuz X 可怜的手机版网页视图。</p>
+<p>我实际上是个论坛的活跃er，等级在论坛运营的 20 年内也能排前几了（虽然我只注册了不到一年），也是一个无名的【Web 前端】开发者。</p>
+<h2>背景有些啥</h2>
+<h3>现存的主要问题在乎</h3>
+<ul>
+<li>渲染内容少（大量的样式标签在移动端都被忽略掉了）</li>
+<li>功能少（少了评分（加减分）、高级搜索、传图（多张传图））</li>
+<li>加载慢（Discuz X 优化拉胯）</li>
+<li>广告多（10 条回复，AdBlock 能够拦截 10 条广告）</li>
+<li>不会渲染个性签名以及编辑个性签名</li>
+</ul>
+<h3>希望实现的功能</h3>
+<ul>
+<li>编辑器能够使用样式</li>
+<li>一次性上传多张照片</li>
+<li>去广告</li>
+<li>优化加载（lazy-loading 等）</li>
+<li>补回缺失的渲染内容</li>
+<li>渲染个性签名以及提供编辑个性签名的入口</li>
+</ul>
+<h2>歪路 —— 资源脚本注入</h2>
+<p>首先尝试用最擅长的 Web 技术尝试去构建，事实上，也构建过几版应用程序，并使用 <a href="https://developer.android.google.cn/reference/android/webkit/WebView"><code>WebView</code></a> 打包整个 Web 项目包。但是在实践中，发现了不少问题，最大的问题还是集中在资源加载的速度 —— <strong>方向选错了！</strong></p>
+<p>我那时候直接了当地选择了 <strong>资源脚本注入</strong> 的方法，借助 <a href="https://developer.android.com/reference/android/webkit/WebView#evaluateJavascript(java.lang.String,%20android.webkit.ValueCallback%3Cjava.lang.String%3E)">WebView.evaluateJavascript</a> 往 WebView 中注入 <code>window.onload = () =&gt; {}</code> 并使用 JavaScript 往页面内注入自定义的 CSS 以及改善的脚本。</p>
+<p>然而事实证明，我太天真了。WebView 加载页面的速度奇慢，大量的图片没有懒加载，堵塞进程，让页面一直处于加载中状态，并且大量的功能还是缺失，并且难以修改，难以调试。</p>
+<p>那时候，平均一个页面的加载时间（原网页的加载时间）为 16s（100 Mbps），而用蜂窝数据，那就可怕咯，直接把我头扬了 😂，令人痛苦 = =。</p>
+<p>现在还记得论坛中最多反馈的声音是：</p>
+<blockquote>
+<h3>一直在加载，从未有停止</h3>
+<p>—— <em>笑死，根本加载不出来。</em></p>
+</blockquote>
+<h2>转入正轨 —— 原生</h2>
+<blockquote>
+<p>最近想要重构（原来真的就是一边学一边写，思路很乱），原始代码的 <code>hash</code> 是 <code>afd615412f0d0679a65faa327629fa8a80c78954</code></p>
+</blockquote>
+<p>还是 <a href="https://github.com/HumanBeingXenon">HumanBeingXenon</a> 这个憨憨的提议，让我本就不充实的寒假生活更加不充实 = =。</p>
+<p>他问我，要不要以他为开发核心，开发 Java 版的应用程序（笑死，他根本不会 Android 开发 - -），优化现有的应用程序。</p>
+<p>我先是犹豫，毕竟初三的寒假，我还想着刷点题目，但是熬不过他的劝说，我竟然开始了 = =。</p>
+<p>说实在我也真的没有<strong>任何 Android 开发的经验</strong>，可以说我在安卓领域上就是个萌新。</p>
+<p>我是咋干的？看 <a href="https://developer.android.com/">developer.android.com</a> 的英文页面，一边摸索功能一边搜功能一边拷贝 Exception 到 Google 去搜索。</p>
+<p>不过我不是论坛的站长，也没有权限在论坛的系统内搞些什么东西，也只能够借助现有的数据去处理了。</p>
+<p>便开始了我的 <code>爬虫</code> 生涯。使用 <a href="https://developer.android.google.cn/reference/java/net/URLConnection"><code>URLConnection</code></a> 爬取数据后使用 <a href="https://jsoup.org/">Jsoup</a> 处理数据。每天的日子就是在调试和修改中度过，一周内解决了主要功能的开发，基本实现了论坛手机端应用的现代化（doge 🐶）。</p>
+<h4>反爬的处理</h4>
+<p>试了挺多 HTTP 标头，与现在我们的校验不同（毕竟复古），它会检测 <code>User-Agent</code>（网页版本）、<code>Origin</code> <code>Referer</code> <code>Host</code>（不确定，有的功能会检查有的却不检查）、<code>Cookie</code>（用户状态）。于是乎就简简单单的 <a href="https://developer.android.com/reference/java/net/URLConnection?hl=en#setRequestProperty(java.lang.String,%20java.lang.String)"><code>URLConnection.setRequestProperty</code></a> 解决掉这个问题，甚至后来我还顺便包装成了一个函数，直接返回 <a href="https://developer.android.google.cn/reference/java/net/URLConnection"><code>URLConnection</code></a>：</p>
+<pre class="hljs"><code><span class="hljs-meta">@WorkerThread</span>
+<span class="hljs-meta">@Throws(NetworkOnMainThreadException::class)</span>
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">openConn</span><span class="hljs-params">(url: <span class="hljs-type">String</span>, retrieveAsDesktopPage: <span class="hljs-type">Boolean</span>)</span></span>: HttpURLConnection {
+    <span class="hljs-keyword">val</span> urlConnection = URL(url).openConnection() <span class="hljs-keyword">as</span> HttpURLConnection
+    urlConnection.setRequestProperty(<span class="hljs-string">&quot;Cookie&quot;</span>, CookieManager.getInstance().getCookie(url) ?: <span class="hljs-string">&quot;&quot;</span>)
+    urlConnection.setRequestProperty(<span class="hljs-string">&quot;Referer&quot;</span>, <span class="hljs-string">&quot;http://www.ditiezu.com&quot;</span>)
+    urlConnection.setRequestProperty(<span class="hljs-string">&quot;Origin&quot;</span>, <span class="hljs-string">&quot;http://www.ditiezu.com&quot;</span>)
+    urlConnection.setRequestProperty(<span class="hljs-string">&quot;Host&quot;</span>, <span class="hljs-string">&quot;www.ditiezu.com&quot;</span>)
+    urlConnection.setRequestProperty(<span class="hljs-string">&quot;DNT&quot;</span>, <span class="hljs-string">&quot;1&quot;</span>)
+    urlConnection.setRequestProperty(<span class="hljs-string">&quot;Proxy-Connection&quot;</span>, <span class="hljs-string">&quot;keep-alive&quot;</span>)
+    <span class="hljs-keyword">if</span> (retrieveAsDesktopPage)
+        urlConnection.setRequestProperty(<span class="hljs-string">&quot;User-Agent&quot;</span>, userAgent)
+    <span class="hljs-keyword">return</span> urlConnection
+}
+</code></pre>
+<p><small><a href="https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/com/passionpenguin/NetUtils.kt#L50">com.passionpenguin/NetUtils.kt#L50</a></small></p>
+<h4>个性签名</h4>
+<p>第二个大的问题是个性签名，也是为数不多的需要自己深挖 API 的功能。这个功能因为论坛在春季的时候遭遇了大面积的广告刷帖，最后站长等管理员决定关闭个人空间，而拉胯的 Discuz X 个人空间包含了密码、个人信息的编辑页面，也顺带着被 ban 掉了。</p>
+<p>然而包括管理员都希望重启这个功能，却又发现难以找到一个方法。最后发了上了到应用的更新帖中，我就去看了一下 Discuz X 的源代码（下面的链接是第三方的仓库），发现了这个：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span>(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;signaturenew&#x27;</span>]) {
+    <span class="hljs-variable">$signaturenew</span> = censor(<span class="hljs-variable">$_GET</span>[<span class="hljs-string">&#x27;signaturenew&#x27;</span>]);
+    <span class="hljs-variable">$sightmlnew</span> = discuzcode(<span class="hljs-variable">$signaturenew</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-variable">$member</span>[<span class="hljs-string">&#x27;allowsigbbcode&#x27;</span>], <span class="hljs-variable">$member</span>[<span class="hljs-string">&#x27;allowsigimgcode&#x27;</span>], <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>);
+} <span class="hljs-keyword">else</span> {
+    <span class="hljs-variable">$sightmlnew</span> = <span class="hljs-variable">$signaturenew</span> = <span class="hljs-string">&#x27;&#x27;</span>;
+}
+</code></pre>
+<p><small><a href="https://github.com/codersclub/DiscuzX/blob/50c43cf86738f6e3a4d76b75f2ee456ede14cbd9/upload/source/include/modcp/modcp_member.php#L39">/upload/source/include/modcp/modcp_member.php#L39</a></small></p>
+<p>表单的处理很是简单，直接处理 POST（这个文件是系统内部受保护的文件，见 <a href="https://github.com/codersclub/DiscuzX/blob/50c43cf86738f6e3a4d76b75f2ee456ede14cbd9/upload/source/include/modcp/modcp_member.php#L10">L10</a>，所以上面代码是 GET）的内容 <code>signaturenew</code>，因而我们也只需要发送用户信息 + <code>editsubmit</code> + <code>signaturenew</code> 即可。</p>
+<h4>图片处理</h4>
+<p>Discuz X 是很远古的系统，受限于处理器以及存储空间，默认设置图片上传尺寸应该是 16MP，超过该尺寸的图片能够上传，但不会被服务器写入系统，只会返回错误。</p>
+<p>市面上大多数的图片压缩解决思路都不可用 —— 要么压缩后图片反而大小变大了，要么操控起来速度很慢。</p>
+<p>搜了搜 GitHub，就发现了 <code>libjpeg-turbo</code> 的解决思路，简单的翻译下，就是，Android 使用的 Skia 最初使用 <code>libjpeg</code> 时候出于设备的性能（又是你！）而取消掉了 Huffman 算法的压缩，而我们可以使用 JNI + NDK，导入一个自己编译过后的 <code>libjpeg</code> 或 <code>libjpeg-turbo</code> 并修改接口（话说 Java 16 现在似乎不用写 JNI 接口了？），就可以实现压缩功能。</p>
+<blockquote>
+<p>Ref: https://github.com/bither/bither-android-lib</p>
+</blockquote>
+<p>一番折腾过后，总算搞定了这个功能，具体实现就是先<a href="https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/com/passionpenguin/NetUtils.kt#L397">判断图片尺寸</a>，然后调用 <a href="https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/net/bither/util/NativeUtil.kt#L30"><code>NativeUtils</code> 类</a>，调用 JNI 的 <a href="https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/jni/bitherlibjni.c#L148"><code>Java_net_bither_util_NativeUtil_compressBitmap</code></a>函数，执行压缩。</p>
+<p>一番折腾后，设置压缩比率为 90%，亲测一般图片都能压缩到 10% 甚至最低试过 5%（小米设备截图不优化的吗！ = =）。</p>
+<h5>但其实</h5>
+<p>但其实，实现起来很是简单：</p>
+<pre class="hljs"><code><span class="hljs-keyword">object</span> NativeUtil {
+    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">compressBitmap</span><span class="hljs-params">(bit: <span class="hljs-type">Bitmap</span>, fileName: <span class="hljs-type">String</span>, optimize: <span class="hljs-type">Boolean</span>, quality: <span class="hljs-type">Int</span> = <span class="hljs-number">75</span>)</span></span> {
+        compressBitmap(bit, quality, fileName, optimize)
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">compressBitmap</span><span class="hljs-params">(bit: <span class="hljs-type">Bitmap</span>, quality: <span class="hljs-type">Int</span>, fileName: <span class="hljs-type">String</span>, optimize: <span class="hljs-type">Boolean</span>)</span></span> {
+        Log.d(<span class="hljs-string">&quot;native&quot;</span>, <span class="hljs-string">&quot;compress of native&quot;</span>)
+        <span class="hljs-keyword">if</span> (bit.config != Bitmap.Config.ARGB_8888) {
+            <span class="hljs-keyword">val</span> result: Bitmap = Bitmap.createBitmap(bit.width, bit.height, Bitmap.Config.ARGB_8888)
+            <span class="hljs-keyword">val</span> canvas = Canvas(result)
+            <span class="hljs-keyword">val</span> rect = Rect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, bit.width, bit.height)
+            canvas.drawBitmap(bit, <span class="hljs-literal">null</span>, rect, <span class="hljs-literal">null</span>)
+            saveBitmap(result, quality, fileName, optimize)
+            result.recycle()
+        } <span class="hljs-keyword">else</span> {
+            saveBitmap(bit, quality, fileName, optimize)
+        }
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">saveBitmap</span><span class="hljs-params">(bit: <span class="hljs-type">Bitmap</span>, quality: <span class="hljs-type">Int</span>, fileName: <span class="hljs-type">String</span>, optimize: <span class="hljs-type">Boolean</span>)</span></span> {
+        compressBitmap(bit, bit.width, bit.height, quality, fileName.toByteArray(), optimize)
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">external</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">compressBitmap</span><span class="hljs-params">(bit: <span class="hljs-type">Bitmap</span>, w: <span class="hljs-type">Int</span>, h: <span class="hljs-type">Int</span>, quality: <span class="hljs-type">Int</span>, fileNameBytes: <span class="hljs-type">ByteArray</span>, optimize: <span class="hljs-type">Boolean</span>)</span></span>: String?
+
+    <span class="hljs-keyword">init</span> {
+        System.loadLibrary(<span class="hljs-string">&quot;jpegbither&quot;</span>)
+        System.loadLibrary(<span class="hljs-string">&quot;bitherjni&quot;</span>)
+    }
+}
+</code></pre>
+<p>以及 C++ 部分写一个接口，剩下的 <code>libjpeg-turbo</code> 代码原封不动都不需要修改 = =。</p>
+<h4>转向 RecyclerView</h4>
+<p>一开始使用的是 <a href="https://developer.android.google.cn/reference/android/widget/ListView"><code>ListView</code></a>，在大量数据上页面极度迟缓，滑都滑不开。一番搜索后，选择使用了 <a href="https://developer.android.google.cn/reference/kotlin/androidx/recyclerview/widget/RecyclerView"><code>RecyclerView</code></a> 解决问题。现在还能清楚记得，主页的 RecyclerView 的 adapter 像<a href="https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/com/ditiezu/android/adapters/ThreadItemAdapter.kt#L61">狗啃了</a>一样：</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadItemAdapter</span></span>(<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> activity: Activity, items: List&lt;ThreadItem&gt;, <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> isHomeMixed: <span class="hljs-built_in">Boolean</span> = <span class="hljs-literal">false</span>) : RecyclerView.Adapter&lt;ThreadItemAdapter.ViewHolder&gt;() {
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> mInflater: LayoutInflater = LayoutInflater.from(activity)
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> mItems: List&lt;ThreadItem&gt; = items
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getItemViewType</span><span class="hljs-params">(position: <span class="hljs-type">Int</span>)</span></span>: <span class="hljs-built_in">Int</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> (position == <span class="hljs-number">0</span> &amp;&amp; isHomeMixed) <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreateViewHolder</span><span class="hljs-params">(parent: <span class="hljs-type">ViewGroup</span>, viewType: <span class="hljs-type">Int</span>)</span></span>: ViewHolder {
+        <span class="hljs-keyword">return</span> ViewHolder(mInflater.inflate(<span class="hljs-keyword">if</span> (viewType == <span class="hljs-number">1</span>) R.layout.item_home_mixed <span class="hljs-keyword">else</span> R.layout.item_thread_item, parent, <span class="hljs-literal">false</span>))
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getItemCount</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Int</span> {
+        <span class="hljs-keyword">return</span> mItems.size + <span class="hljs-keyword">if</span> (isHomeMixed) <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+    }
+
+    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ViewHolder</span></span>(view: View) : RecyclerView.ViewHolder(view) {
+        <span class="hljs-keyword">var</span> base: ViewGroup = <span class="hljs-keyword">if</span> (view.findViewById&lt;LinearLayout&gt;(R.id.threadItem) != <span class="hljs-literal">null</span>) view.threadItem <span class="hljs-keyword">else</span> view.homeMixed
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onBindViewHolder</span><span class="hljs-params">(holder: <span class="hljs-type">ViewHolder</span>, position: <span class="hljs-type">Int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> (position == <span class="hljs-number">0</span> &amp;&amp; isHomeMixed) {
+            <span class="hljs-comment">/* TOP BANNER SHORTCUT */</span>
+        }
+        <span class="hljs-keyword">val</span> item = mItems[position - <span class="hljs-keyword">if</span> (isHomeMixed) <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>]
+        <span class="hljs-comment">/* THREAD VIEW */</span>
+    }
+}
+</code></pre>
+<p>这个代码里面用了一堆的判断语句，来判断当前 View 是什么类型，从而有针对的渲染内容，不过，代码可读性可真&quot;高&quot;！</p>
+<h4>登录</h4>
+<p>这个现在还是不明所以然，目前使用的是看网页端 XHR 得出的 <code>fastlogin</code> 功能，然而代码着实<a href="https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/com/ditiezu/android/LoginActivity.kt">很混乱</a>，而且现在还有很多错误：</p>
+<ul>
+<li>验证码加载</li>
+<li>一切信息都正确，但提示 <code>请输入用户名和密码</code></li>
+</ul>
+<p>反正我是没搞懂，这个错误为什么在多次登录尝试后又能进去？</p>
+<p>不过这个页面的代码是最乱的 = =。</p>
+<p><strong>你看这缩进，多么的恐怖，多么的吓人！！！</strong></p>
+<p><img src="../images/ditiezu-review.md-1c00f0afba224f29b46566c354d70247~tplv-k3u1fbpfcp-watermark.image" alt="Screen Shot 2021-03-18 at 3.50.11 AM.png"></p>
+<h2>你别问我为什么我想 Flutter 重构</h2>
+<p>不知道是三月还是四月，还是什么时候，Flutter 跑到我的眼皮底下，感觉挺有趣的，又是一边读文档（当时还不知道有中文站，不过中文站也是一堆漏洞，读起来不如英文舒服），一边写代码。</p>
+<p>思路其实都差不多，最终应用效果却千差万别 —— Skia 等一众优化的工具顺利的将页面动画和流畅性提高几个数量级，也将开发的难度降低了几个数量级，GitHub 仓库在此：<a href="https://github.com/PassionPenguin/Ditiezu_Flutter">Ditiezu_Flutter</a>。</p>
+<p>当时 Flutter 我感觉很不成熟，很多功能都太封闭了，无奈一堆功能难以实现，我修改了 Dart 和 Flutter SDK（/usr/local/bin/flutter/……）仓库的源代码，顺利编译（这真的得夸 Dart 和 Flutter 在这方面的优势）。</p>
+<blockquote>
+<h3>没人能够编译我的仓库的代码</h3>
+<p>—— 我也不行，因为我更新了 Flutter，覆盖掉了 SDK 的更新 = =</p>
+</blockquote>
+<p>不过真的得说，Flutter 的代码有几个特点：</p>
+<ul>
+<li>很简洁，至少，比 Kotlin、Java 写起来要舒服很多</li>
+<li>很混乱，毕竟，人家的布局，不像是 HTML 支持 CSS，导致一堆控件必须互相套娃，才能实现一定的样式</li>
+</ul>
+<h3>一些刚刚截图的 Flutter 版本应用程序效果图</h3>
+<h4>登录</h4>
+<p><img src="../images/ditiezu-review.md-bf302e20f68b482392e03d04861bc8cd~tplv-k3u1fbpfcp-watermark.image" alt="331616010065_.pic.jpg"></p>
+<h4>首页</h4>
+<p><img src="../images/ditiezu-review.md-3ffb22103935402aa250ddcb3b6565bb~tplv-k3u1fbpfcp-watermark.image" alt="341616010067_.pic.jpg"></p>
+<h4>账户</h4>
+<p><img src="../images/ditiezu-review.md-6792c13bf7594e218335c721e616ee76~tplv-k3u1fbpfcp-watermark.image" alt="351616010068_.pic.jpg"></p>
+<h4>分区</h4>
+<p><img src="../images/ditiezu-review.md-a71e1223b619483dbc7fecb5d28b1ae2~tplv-k3u1fbpfcp-watermark.image" alt="361616010070_.pic.jpg"></p>
+<h4>消息</h4>
+<p><img src="../images/ditiezu-review.md-de8c38e5584845f18f6bd7c7fa9eaaca~tplv-k3u1fbpfcp-watermark.image" alt="371616010073_.pic.jpg"></p>
+<h4>看帖</h4>
+<p><img src="../images/ditiezu-review.md-7123056efb0f40bdb10c9170d598b5f1~tplv-k3u1fbpfcp-watermark.image" alt="411616010078_.pic.jpg"></p>
+<p><img src="../images/ditiezu-review.md-26eac1a1635b4bf5b541db0c9ddde86c~tplv-k3u1fbpfcp-watermark.image" alt="381616010075_.pic.jpg"></p>
+<h4>加分</h4>
+<p><img src="../images/ditiezu-review.md-94d9fffd8cd34945bb4b0e48bc3ca55c~tplv-k3u1fbpfcp-watermark.image" alt="391616010076_.pic.jpg"></p>
+<p><img src="../images/ditiezu-review.md-e4f87f7c02754960bd6df208067e94da~tplv-k3u1fbpfcp-watermark.image" alt="401616010077_.pic.jpg"></p>
+<p>太难截图了……</p>
+<h4>发帖</h4>
+<p><img src="../images/ditiezu-review.md-5e384bc7a6a744f9a0a1bd3cca839c0f~tplv-k3u1fbpfcp-watermark.image" alt="431616010083_.pic.jpg"></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e384bc7a6a744f9a0a1bd3cca839c0f~tplv-k3u1fbpfcp-watermark.image" alt="421616010079_.pic.jpg"></p>
+<h2>完事后的反思总结</h2>
+<p>其实一开始的思路也不是不可行，现在也有不少的应用程序是这个思路开发的，但是应该是使用 Node.js 后端处理数据，前端渲染页面，然而当时我在后端前端都是个萌新（虽然说那时候我已经有了开发的履历有了四五年了）。</p>
+<p>然后到 Kotlin 版本，架构混乱，代码混乱，像极了初学者的仓库一样，View 和 Script 夹杂在一起，混乱的不能不夸。</p>
+<p>Flutter 版本也是一样，架构混乱，代码混乱，像极了初学者的仓库一样，Widget 和 Script 夹杂在一起，混乱的不能不夸。</p>
+<p>三种思路其实都有着共同点：</p>
+<ul>
+<li>我的架构应该优化一下</li>
+<li>我的代码应该有更多的注释</li>
+<li>我的代码应该严格的将功能分开，不要堆在一起</li>
+</ul>
+<h3>收获的东西吧</h3>
+<p>在以上所有尝试中，我都是以全栈的形式，参与到开发中，甚至 <a href="https://github.com/HumanBeingXenon">HumanBeingXenon</a> 至今也没有 commit 任何一段代码。我包揽了设计、绘图（矢量图图标 + Banner + ……）、构思、编程、部署、运维。</p>
+<p>也正是这段经历，我确实在初三这一年，由一个只会 HTML + CSS 以及一丢丢 C++ 和 JS 的萌新成功转入其他领域，拓展了我对 GitHub 等工具的认识以及对不同语言的理解。</p>
+<h3>不过，我还是得说</h3>
+<p>我的绘图和设计真的丑死了 = =。</p>
+<p>感谢一切使用过应用程序的朋友们，也感谢这次机会。</p>
+<ul>
+<li>本文正在参与「掘金 2021 春招闯关活动」, 点击查看 <a href="https://juejin.cn/post/6939329638506168334">活动详情</a></li>
+</ul>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

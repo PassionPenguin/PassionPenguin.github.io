@@ -27,14 +27,14 @@
 <p><strong>答案其实是：</strong> <code>for</code>（倒序）</p>
 <p>最让我感到惊讶的事情是，当我在本地计算机上进行测试之后，我不得不接受 <code>for</code>（倒序）是所有 <code>for</code> 循环中最快的这一事实。下面我会举个对一个包含超过一百万项元素的数组执行一次循环遍历的例子。</p>
 <p><strong>声明</strong>：<code>console.time()</code> 结果的准确度在很大程度上取决于我们运行测试的系统配置。你可以在<a href="https://johnresig.com/blog/accuracy-of-javascript-time/">此处</a>对准确度作进一步了解。</p>
-<pre class="hljs"><code>const million = 1000000; 
-const arr = Array(million);
-console.time('⏳');
-for (let i = arr.length; i &gt; 0; i--) {} // for(倒序) 	:- 1.5ms
-for (let i = 0; i &lt; arr.length; i++) {} // for          :- 1.6ms
-arr.forEach(v =&gt; v)                     // foreach      :- 2.1ms
-for (const v of arr) {}                 // for...of     :- 11.7ms
-console.timeEnd('⏳');
+<pre class="hljs"><code><span class="hljs-keyword">const</span> million = <span class="hljs-number">1000000</span>; 
+<span class="hljs-keyword">const</span> arr = <span class="hljs-built_in">Array</span>(million);
+<span class="hljs-built_in">console</span>.time(<span class="hljs-string">&#x27;⏳&#x27;</span>);
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = arr.length; i &gt; <span class="hljs-number">0</span>; i--) {} <span class="hljs-comment">// for(倒序) 	:- 1.5ms</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) {} <span class="hljs-comment">// for          :- 1.6ms</span>
+arr.forEach(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> v)                     <span class="hljs-comment">// foreach      :- 2.1ms</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> v <span class="hljs-keyword">of</span> arr) {}                 <span class="hljs-comment">// for...of     :- 11.7ms</span>
+<span class="hljs-built_in">console</span>.timeEnd(<span class="hljs-string">&#x27;⏳&#x27;</span>);
 </code></pre>
 <p>造成这样结果的原因很简单，在代码中，正序和倒序的 <code>for</code> 循环几乎花费一样的时间，仅仅相差了 0.1 毫秒。原因是，<code>for</code>（倒序）只需要计算一次起始变量 <code>let i = arr.length</code>，而在正序的 <code>for</code> 循环中，它在每次变量增加后都会检查条件 <code>i&lt;arr.length</code>。这个细微的差别不是很重要，你可以忽略它。（译者注：在数据量小或对时间不敏感的代码上，我们大可忽略它，但是根据译者的测试，当数据量扩大，例如十亿，千亿等的数量级，差距就显著提升，我们就需要考虑时间对应用程序性能的影响了。）</p>
 <p>而 <code>forEach</code> 是 <code>Array</code> 原型的一个方法，与普通的 <code>for</code> 循环相比，<code>forEach</code> 和 <code>for…of</code> 需要花费更多的时间进行数组迭代。（译者注：但值得注意的是，<code>for…of</code> 和 <code>forEach</code> 都从对象中获取了数据，而原型并没有，因此没有可比性。）</p>
@@ -43,45 +43,45 @@ console.timeEnd('⏳');
 <p>我想，也许大家都应该对这个基础循环非常熟悉了。我们可以在任何我们需要的地方使用 <code>for</code> 循环，按照核定的次数运行一段代码。最基础的 <code>for</code> 循环运行最迅速的，那我们每一次都应该使用它，对吗？并不然，性能不仅仅只是唯一尺度，代码可读性往往更加重要，就让我们选择适合我们应用程序的变形即可。</p>
 <h3><strong>2. <code>forEach</code></strong></h3>
 <p>这个方法需要接受一个回调函数作为输入参数，遍历数组的每一个元素，并执行我们的回调函数（以元素本身和它的索引（可选参数）作为参数赋予给回调函数）。<code>forEach</code> 还允许在回调函数中使用一个可选参数 <code>this</code>。</p>
-<pre class="hljs"><code>const things = ['have', 'fun', 'coding'];
-const callbackFun = (item, idex) =&gt; {
-    console.log(`${item} - ${index}`);
+<pre class="hljs"><code><span class="hljs-keyword">const</span> things = [<span class="hljs-string">&#x27;have&#x27;</span>, <span class="hljs-string">&#x27;fun&#x27;</span>, <span class="hljs-string">&#x27;coding&#x27;</span>];
+<span class="hljs-keyword">const</span> callbackFun = <span class="hljs-function">(<span class="hljs-params">item, idex</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">${item}</span> - <span class="hljs-subst">${index}</span>`</span>);
 }
 things.foreach(callbackFun); 
-/* 输出 	have - 0
+<span class="hljs-comment">/* 输出 	have - 0
       	fun - 1
-      	coding - 2 */
+      	coding - 2 */</span>
 </code></pre>
 <p>需要注意的是，如果我们要使用 <code>forEach</code>，我们不能使用 JavaScript 的短路运算符，即不能在每一次循环中跳过或结束循环。</p>
 <h3><strong>3. <code>for…of</code></strong></h3>
 <p><code>for…of</code> 是在 ES6（ECMAScript 6）中实现标准化的。它会对一个可迭代的对象（例如 <code>array</code>、<code>map</code>、<code>set</code>、<code>string</code> 等）创建一个循环，并且有一个突出的优点，即优秀的可读性。</p>
-<pre class="hljs"><code>const arr = [3, 5, 7];
-const str = 'hello';
-for (let i of arr) {
-   console.log(i); // 输出 3, 5, 7
+<pre class="hljs"><code><span class="hljs-keyword">const</span> arr = [<span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>];
+<span class="hljs-keyword">const</span> str = <span class="hljs-string">&#x27;hello&#x27;</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> arr) {
+   <span class="hljs-built_in">console</span>.log(i); <span class="hljs-comment">// 输出 3, 5, 7</span>
 }
-for (let i of str) {
-   console.log(i); // 输出 'h', 'e', 'l', 'l', 'o'
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> str) {
+   <span class="hljs-built_in">console</span>.log(i); <span class="hljs-comment">// 输出 &#x27;h&#x27;, &#x27;e&#x27;, &#x27;l&#x27;, &#x27;l&#x27;, &#x27;o&#x27;</span>
 }
 </code></pre>
 <p>需要注意的是，请不要在生成器中使用 <code>for……of</code>，即便 <code>for……of</code> 循环提前终止。在退出循环后，生成器被关闭，并尝试再次迭代，不会产生任何进一步的结果。</p>
 <h3><strong>4. <code>for</code> <code>in</code></strong></h3>
 <p><code>for…in</code> 会在对象的所有可枚举属性上迭代指定的变量。对于每个不同的属性，<code>for…in</code> 语句除返回数字索引外，还将返回用户定义的属性的名称。
 因此，在遍历数组时最好使用带有数字索引的传统 <code>for</code> 循环。 因为 <code>for…in</code> 语句还会迭代除数组元素之外的用户定义属性，就算我们修改了数组对象（例如添加自定义属性或方法），依然如此。</p>
-<pre class="hljs"><code>const details = {firstName: 'john', lastName: 'Doe'};
-let fullName = '';
-for (let i in details) {
-    fullName += details[i] + ' '; // fullName: john doe
+<pre class="hljs"><code><span class="hljs-keyword">const</span> details = {<span class="hljs-attr">firstName</span>: <span class="hljs-string">&#x27;john&#x27;</span>, <span class="hljs-attr">lastName</span>: <span class="hljs-string">&#x27;Doe&#x27;</span>};
+<span class="hljs-keyword">let</span> fullName = <span class="hljs-string">&#x27;&#x27;</span>;
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">in</span> details) {
+    fullName += details[i] + <span class="hljs-string">&#x27; &#x27;</span>; <span class="hljs-comment">// fullName: john doe</span>
 }
 </code></pre>
 <h3><code>for…of</code> 和 <code>for…in</code></h3>
 <p><code>for…of</code> 和 <code>for…in</code> 之间的主要区别是它们迭代的内容。<code>for…in</code> 循环遍历对象的属性，而 <code>for…of</code> 循环遍历可迭代对象的值。</p>
-<pre class="hljs"><code>let arr= [4, 5, 6];
-for (let i in arr) {
-   console.log(i); // '0', '1', '2'
+<pre class="hljs"><code><span class="hljs-keyword">let</span> arr= [<span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>];
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">in</span> arr) {
+   <span class="hljs-built_in">console</span>.log(i); <span class="hljs-comment">// &#x27;0&#x27;, &#x27;1&#x27;, &#x27;2&#x27;</span>
 }
-for (let i of arr) {
-   console.log(i); // '4', '5', '6'
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> arr) {
+   <span class="hljs-built_in">console</span>.log(i); <span class="hljs-comment">// &#x27;4&#x27;, &#x27;5&#x27;, &#x27;6&#x27;</span>
 }
 </code></pre>
 <p><img src="https://miro.medium.com/max/12000/0*E9FPH2LFeFnTGWF5" alt="由 Tine Ivanič 上传至 Unsplash"></p>

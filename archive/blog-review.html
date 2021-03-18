@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自己构建一个博客系统｜项目复盘 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：Kotlin、JavaScript、前端</li>
+</ul>
+</blockquote>
+<h1>自己构建一个博客系统｜项目复盘</h1>
+<h2>为神马要搞这个</h2>
+<p>最近参与了掘金的翻译计划，产出了大量的 Markdown 文章，希望搭建一个个人站，存放自己的一些文章～</p>
+<p>看了一些现成的解决方案，感觉局限性太多，不利于后期自定义，再加上我这个超级喜欢造轮子的性格，于是乎 👀</p>
+<p><img src="../images/blog-review.md-c7798e9279b942c4a4e9e38a7b461250~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<h3>我就搭建了一个自己的处理系统</h3>
+<p>别问我为啥这样做，我觉得好玩（，而且自定义能力超强，可以随意加控件！！！</p>
+<p><a href="https://github.com/PassionPenguin/passionpenguin.github.io/"><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/67c7b9be335b41a4818643ac7a33f588~tplv-k3u1fbpfcp-watermark.image" width="360px" /></a></p>
+<h2>需求功能</h2>
+<ul>
+<li>渲染 Markdown 标记</li>
+<li>自定义页面</li>
+<li>后期可以简单的对所有文章页面作更新</li>
+<li>便于移植</li>
+</ul>
+<h3>本次使用的工具有：</h3>
+<h4>前端部分</h4>
+<p>基础的前端页面构造使用了原生 Vanilla JavaScript + CSS + HTML，构造一个静态的文章展示系统。</p>
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/752532eed7324e869f9be889bda9cfa8~tplv-k3u1fbpfcp-watermark.image" alt="HTML CSS JS" width="640px" />
+<p>在样式方面使用了 SCSS 语言，并且顺带使用了 GitHub 的主题 <code>@primer</code> 库，并顺带魔改了一番～</p>
+<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0f40b5ac72840338aaf4d7bdcee2b77~tplv-k3u1fbpfcp-watermark.image" alt="SCSS" width="240px" />
+<h4>后端部分</h4>
+<p>在文章处理（标签获取、图片爬取）上使用了 Java + Kotlin 的组合，主要是我对 Kotlin 挺熟的，毕竟做了一年 Kotlin 项目了 = =。</p>
+<p><img src="../images/blog-review.md-887cbf9766fa44ffa1bbe9e0c9de9eb5~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<p><img src="../images/blog-review.md-3d4156bd11d9450b936181d989fe3453~tplv-k3u1fbpfcp-watermark.image" alt=""></p>
+<h2>构建思路</h2>
+<h3>后端处理</h3>
+<h4>元数据处理</h4>
+<p>Java 主要处理元数据，包括文章的标签（分类）的读取，文章图片的解析爬取，以及文章标题简介等信息的读取，具体思路如下：</p>
+<pre class="hljs"><code>sequenceDiagram
+    participant z as Markdown 文件
+    participant l as JSON 文件
+    loop 处理数据
+        z-&gt;&gt;l: 是否存在 远程 图片
+        activate z
+        alt 有
+            l-&gt;&gt;z: 下载
+        else 没有
+            l-&gt;&gt;z: 跳过
+        end
+        z-&gt;&gt;l: 是否已经有标签数据
+        activate z
+        alt 有
+            l-&gt;&gt;z: 跳过
+        else 没有
+            l-&gt;&gt;z: 加载数据（GitHub / 本地）
+        end
+    end
+</code></pre>
+<p>先看一下模版内容，默认模版：</p>
+<pre class="hljs"><code><span class="hljs-quote">&gt; <span class="hljs-emphasis">* 标签：标签 A、标签 B
+
+# 标题
+</span></span></code></pre>
+<p>翻译模版：</p>
+<pre class="hljs"><code><span class="hljs-quote">&gt; <span class="hljs-emphasis">* 原文地址：[]()
+&gt; *</span> 原文作者：[]()</span>
+<span class="hljs-quote">&gt; <span class="hljs-emphasis">* 译文出自：[<span class="hljs-string">掘金翻译计划</span>](<span class="hljs-link">https://github.com/xitu/gold-miner</span>)
+&gt; *</span> 本文永久链接：[<span class="hljs-string">https://github.com/xitu/gold-miner/blob/master/article/2021/.md</span>](<span class="hljs-link">https://github.com/xitu/gold-miner/blob/master/article/2021/.md</span>)</span>
+<span class="hljs-quote">&gt; <span class="hljs-emphasis">* 译者：
+&gt; *</span> 校对者：</span>
+
+<span class="hljs-section"># 标题</span>
+</code></pre>
+<hr>
+<p>这里的所有的代码都保存在了这里：<a href="https://github.com/PassionPenguin/PageGenerator/tree/master/src/main/kotlin/io/hoarfroster">PassionPenguin:PageGenerator/io.hoarfroster</a>，首先是实现获取所有文件：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">main</span><span class="hljs-params">(args: <span class="hljs-type">Array</span>&lt;<span class="hljs-type">String</span>&gt;)</span></span> {
+    <span class="hljs-keyword">var</span> downloadImage = <span class="hljs-literal">false</span>
+    <span class="hljs-keyword">var</span> inputDir: String? = <span class="hljs-literal">null</span>
+
+    <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> args) {
+        <span class="hljs-keyword">if</span> (name.contains(Regex(<span class="hljs-string">&quot;--input=(.+?)&quot;</span>)))
+            inputDir = name.substring(<span class="hljs-number">8</span>)
+    }
+    <span class="hljs-keyword">if</span> (inputDir == <span class="hljs-literal">null</span>)
+        <span class="hljs-keyword">return</span>
+
+    <span class="hljs-keyword">val</span> dir = File(<span class="hljs-string">&quot;<span class="hljs-subst">${inputDir}</span>/documents/&quot;</span>)
+    <span class="hljs-keyword">val</span> files = dir.listFiles { _, name -&gt; name.endsWith(<span class="hljs-string">&quot;.md&quot;</span>) }
+}
+</code></pre>
+<p>然后使用 <code>mapIndexed</code> 遍历所有 Markdown 文件，读取文件：</p>
+<pre class="hljs"><code>files?.mapIndexed { index, it -&gt; 
+    <span class="hljs-keyword">var</span> sourceMarkdown = it.readText()
+    <span class="hljs-keyword">val</span> document = Jsoup.parse(HtmlRenderer.builder().build().render(Parser.builder().build().parse(sourceMarkdown)))
+}
+</code></pre>
+<p>这里使用了 <code>commonmark</code> 和 <code>Jsoup</code> 解析了 Markdown 文件为 HTML 文件（其实也可以不用，全文正则匹配，但感觉还是有些麻烦）。</p>
+<p>我们需要的信息有：</p>
+<ul>
+<li>标题</li>
+<li>标签</li>
+<li>简介</li>
+<li>文件名</li>
+<li>最后修改时间</li>
+<li>（远程链接）</li>
+<li>（译者）</li>
+</ul>
+<h5>标题</h5>
+<pre class="hljs"><code>document.selectFirst(<span class="hljs-string">&quot;h1&quot;</span>).text()
+</code></pre>
+<h5>标签</h5>
+<ol>
+<li>GitHub 标签</li>
+</ol>
+<p>思路很简单，直接用 URLConnection 读取数据并解析就好了：</p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> io.hoarfroster
+
+<span class="hljs-keyword">import</span> org.jsoup.Jsoup
+<span class="hljs-keyword">import</span> java.net.URL
+<span class="hljs-keyword">import</span> javax.net.ssl.HttpsURLConnection
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RetrieveResult</span></span>(<span class="hljs-keyword">val</span> tags: MutableList&lt;Tag&gt;)
+
+<span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">retrieveResult</span><span class="hljs-params">(repoUrl: <span class="hljs-type">String</span>)</span></span>: RetrieveResult {
+    println(<span class="hljs-string">&quot; - Processing tags data&quot;</span>)
+    <span class="hljs-keyword">val</span> tags: MutableList&lt;Tag&gt; = mutableListOf()
+    <span class="hljs-keyword">val</span> connection = URL(repoUrl.replace(<span class="hljs-string">&quot;blob&quot;</span>, <span class="hljs-string">&quot;commits&quot;</span>).replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;%20&quot;</span>)).openConnection() <span class="hljs-keyword">as</span> HttpsURLConnection
+    <span class="hljs-keyword">val</span> document = Jsoup.parse(connection.inputStream.bufferedReader().readText())
+    document.select(<span class="hljs-string">&quot;[data-hovercard-type=\&quot;pull_request\&quot;][data-url].issue-link.js-issue-link&quot;</span>)
+        .filter { e -&gt;
+            Regex(<span class="hljs-string">&quot;#([0-9]+?)$&quot;</span>).matches(e.html())
+        }.map { e -&gt;
+            Regex(<span class="hljs-string">&quot;#([0-9]+?)$&quot;</span>).find(e.html())?.groupValues?.<span class="hljs-keyword">get</span>(<span class="hljs-number">1</span>)
+        }.forEach { it -&gt;
+            Thread.sleep(<span class="hljs-number">1000</span>)
+            <span class="hljs-keyword">val</span> conn = URL(<span class="hljs-string">&quot;https://github.com/xitu/gold-miner/pull/<span class="hljs-variable">$it</span>&quot;</span>).openConnection() <span class="hljs-keyword">as</span> HttpsURLConnection
+            <span class="hljs-keyword">val</span> doc = Jsoup.parse(conn.inputStream.bufferedReader().readText())
+            <span class="hljs-keyword">if</span> (doc.select(<span class="hljs-string">&quot;.js-issue-labels &gt; *&quot;</span>).size &gt; <span class="hljs-number">0</span>
+                &amp;&amp; doc.selectFirst(<span class="hljs-string">&quot;.js-issue-labels&quot;</span>).text().contains(<span class="hljs-string">&quot;翻译完成&quot;</span>)
+            ) {
+                doc.select(<span class="hljs-string">&quot;.js-issue-labels &gt; *&quot;</span>).forEach {
+                    <span class="hljs-keyword">if</span>(!it.text().contains(<span class="hljs-string">&quot;翻译完成&quot;</span>))
+                        tags.add(Tag(it.text()))
+                }
+            }
+        }
+    <span class="hljs-keyword">return</span> RetrieveResult(tags = tags)
+}
+</code></pre>
+<ol start="2">
+<li>文内标签</li>
+</ol>
+<p>更简单了，直接 RegEx：</p>
+<pre class="hljs"><code><span class="hljs-keyword">val</span> tags = mutableListOf&lt;Tag&gt;()
+Regex(<span class="hljs-string">&quot;标签：(.+?)\n&quot;</span>).find(sourceMarkdown)?.groupValues?.<span class="hljs-keyword">get</span>(<span class="hljs-number">1</span>)?.split(<span class="hljs-string">&quot;、&quot;</span>)?.forEach {
+    tags.add(Tag(it))
+}
+</code></pre>
+<h5>简介</h5>
+<p>直接读取第一段文字内容，当作简介内容：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> description = <span class="hljs-string">&quot;&quot;</span>
+<span class="hljs-keyword">for</span> (e <span class="hljs-keyword">in</span> document.select(<span class="hljs-string">&quot;p&quot;</span>)) {
+    <span class="hljs-keyword">if</span> (e.text().isNotBlank()) {
+        description = e.text()
+        <span class="hljs-keyword">break</span>
+    }
+}
+</code></pre>
+<h5>文件名</h5>
+<pre class="hljs"><code>it.path.replace(<span class="hljs-string">&quot;<span class="hljs-subst">${inputDir}</span>/documents/&quot;</span>, <span class="hljs-string">&quot;&quot;</span>)
+</code></pre>
+<h5>最后修改时间</h5>
+<pre class="hljs"><code>Date(it.lastModified()).toString()
+</code></pre>
+<h5>（远程链接）</h5>
+<pre class="hljs"><code>Regex(<span class="hljs-string">&quot;本文永久链接：\\[.+?]\\((.+?)\\)&quot;</span>).find(sourceMarkdown)?.groupValues?.<span class="hljs-keyword">get</span>(<span class="hljs-number">1</span>) ?: <span class="hljs-string">&quot;&quot;</span>
+</code></pre>
+<h5>（译者）</h5>
+<pre class="hljs"><code>Regex(&quot;译者：\\[(.+?)]&quot;).find(sourceMarkdown)?.groupValues?.get(1) ?: &quot;&quot;
+</code></pre>
+<h4>图片下载</h4>
+<p>挺简单的 = =：</p>
+<pre class="hljs"><code>println(<span class="hljs-string">&quot; - Processing image&quot;</span>)
+document.select(<span class="hljs-string">&quot;img&quot;</span>).forEach { img -&gt;
+    <span class="hljs-comment">/* Download external resources */</span>
+    <span class="hljs-keyword">val</span> alt = img.attr(<span class="hljs-string">&quot;alt&quot;</span>)
+    <span class="hljs-keyword">val</span> urlString = img.attr(<span class="hljs-string">&quot;src&quot;</span>)
+
+    with(
+        File(
+        <span class="hljs-string">&quot;<span class="hljs-subst">${inputDir}</span>/images/<span class="hljs-subst">${it.path.replace(<span class="hljs-string">&quot;<span class="hljs-subst">${inputDir}</span>/documents/&quot;</span>,<span class="hljs-string">&quot;&quot;</span>)
+            }</span>-<span class="hljs-subst">${urlString.getLastSegment()}</span>&quot;</span>
+        )
+    ) {
+        <span class="hljs-comment">/* Only download the image if the file is not existed */</span>
+        <span class="hljs-keyword">if</span> ((!<span class="hljs-keyword">this</span>.isFile || !<span class="hljs-keyword">this</span>.exists()) &amp;&amp; !urlString.startsWith(<span class="hljs-string">&quot;../images/&quot;</span>)) {
+            Thread.sleep(<span class="hljs-number">1000</span>)
+            println(<span class="hljs-string">&quot;   - Processing image <span class="hljs-variable">$urlString</span>&quot;</span>)
+            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.parentFile.isDirectory || <span class="hljs-keyword">this</span>.parentFile.exists())
+                <span class="hljs-keyword">this</span>.parentFile.mkdirs()
+            <span class="hljs-keyword">this</span>.createNewFile()
+            <span class="hljs-keyword">val</span> imageUrlConn = URL(urlString).openConnection()
+            imageUrlConn.setRequestProperty(<span class="hljs-string">&quot;referer&quot;</span>, URL(urlString).host)
+            imageUrlConn.setRequestProperty(
+                <span class="hljs-string">&quot;user-agent&quot;</span>,
+                <span class="hljs-string">&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36&quot;</span>
+            )
+            imageUrlConn.setRequestProperty(<span class="hljs-string">&quot;origin&quot;</span>, <span class="hljs-string">&quot;https://www.medium.com/&quot;</span>)
+
+            <span class="hljs-keyword">val</span> `<span class="hljs-keyword">in</span>`: InputStream = BufferedInputStream(imageUrlConn.getInputStream())
+
+            <span class="hljs-keyword">val</span> <span class="hljs-keyword">out</span> = ByteArrayOutputStream()
+            <span class="hljs-keyword">val</span> buf = ByteArray(<span class="hljs-number">1024</span>)
+            <span class="hljs-keyword">var</span> n: <span class="hljs-built_in">Int</span>
+            <span class="hljs-keyword">while</span> (-<span class="hljs-number">1</span> != `<span class="hljs-keyword">in</span>`.read(buf).also { n = it }) {
+                <span class="hljs-keyword">out</span>.write(buf, <span class="hljs-number">0</span>, n)
+            }
+            <span class="hljs-keyword">out</span>.close()
+            `<span class="hljs-keyword">in</span>`.close()
+            <span class="hljs-keyword">val</span> response = <span class="hljs-keyword">out</span>.toByteArray()
+            <span class="hljs-keyword">this</span>.outputStream().write(response)
+            sourceMarkdown = sourceMarkdown.replace(
+                <span class="hljs-string">&quot;&quot;&quot;![<span class="hljs-variable">$alt</span>](<span class="hljs-variable">$urlString</span>)&quot;&quot;&quot;</span>,
+                <span class="hljs-string">&quot;&quot;&quot;![<span class="hljs-variable">$alt</span>](../images/<span class="hljs-subst">${
+                    it.path.replace(
+            <span class="hljs-string">&quot;<span class="hljs-subst">${inputDir}</span>/documents/&quot;</span>,
+            <span class="hljs-string">&quot;&quot;</span>
+                    )
+                }</span>-<span class="hljs-subst">${urlString.getLastSegment()}</span>)&quot;&quot;&quot;</span>
+            )
+            it.writeText(sourceMarkdown)
+        }
+    }
+}
+</code></pre>
+<p>然后每次运行的时候，直接执行：</p>
+<ul>
+<li>/Users/penguin/Desktop/PageGenerator/build/libs/PageGenerator.jar：Gradle 生成的 JAR 文件</li>
+<li>/Library/WebServer/Documents：文件仓库</li>
+</ul>
+<pre class="hljs"><code>java -jar /Users/penguin/Desktop/PageGenerator/build/libs/PageGenerator.jar --input=/Library/WebServer/Documents/ --downloadImage
+</code></pre>
+<h4>生成 HTML 文件：</h4>
+<p>继续魔改了 <code>markdown-it</code> 库，关键代码挺简单的：</p>
+<pre class="hljs"><code><span class="hljs-built_in">exports</span>.render = <span class="hljs-keyword">async</span> (config) =&gt; {
+  <span class="hljs-keyword">const</span> mdFilePath = path.resolve(config.cwd, config[<span class="hljs-string">&#x27;mdFile&#x27;</span>])
+  <span class="hljs-keyword">let</span> renderContent = md.render(fse.readFileSync(mdFilePath, <span class="hljs-string">&#x27;utf-8&#x27;</span>))
+  <span class="hljs-keyword">let</span> parser = <span class="hljs-keyword">new</span> DOMParser()
+  <span class="hljs-keyword">let</span> <span class="hljs-built_in">document</span> = parser.parseFromString(renderContent, <span class="hljs-string">&#x27;text/html&#x27;</span>)
+  <span class="hljs-keyword">let</span> title = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">&#x27;h1&#x27;</span>)[<span class="hljs-number">0</span>].textContent
+  <span class="hljs-keyword">let</span> html = <span class="hljs-string">`&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;<span class="hljs-subst">${title}</span> - Hoarfroster&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/assets/styles/post.css&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot;
+      href=&quot;//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/styles/atom-one-light.min.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container post markdown-body&quot;&gt;<span class="hljs-subst">${renderContent}</span>&lt;/div&gt;
+&lt;div class=&quot;footer&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;script src=&quot;/assets/scripts/index.js&quot;&gt;&lt;/script&gt;
+&lt;script&gt;init()&lt;/script&gt;
+&lt;/html&gt;
+`</span>
+  config.out = path.resolve(config.cwd, config.out)
+  <span class="hljs-keyword">const</span> fileReg = <span class="hljs-regexp">/([^/\\]*)\.[^/\\]+$/</span>
+  <span class="hljs-keyword">if</span> (!config.out.match(fileReg)) {
+    <span class="hljs-comment">// if no file suffix, use the same as markdown file</span>
+    config.out = path.resolve(
+      config.out,
+      mdFilePath.match(fileReg)[<span class="hljs-number">1</span>] + <span class="hljs-string">&#x27;.html&#x27;</span>
+    )
+  }
+  fse.writeFileSync(config.out, html)
+}
+</code></pre>
+<h3>前端部分</h3>
+<p>这里遇到了一个超级大的坑，即 GitHub 的样式和 <code>@primer</code> 库的内容完全不一样！于是乎我被迫控制台抄了几千行的 CSS 颜色变量：</p>
+<p><img src="../images/blog-review.md-9ee3d640ea4c4069b86855811642e0bb~tplv-k3u1fbpfcp-watermark.image" alt=" .png"></p>
+<p>结果 GitHub 最近又推了新的主题，这是要榨干企鹅嘛 = =。</p>
+<p>最后使用了 JavaScript 为每一篇文章加上 Header 以及 Footer：</p>
+<p><img src="../images/blog-review.md-c3994e529946467c9b68232ae11bdc17~tplv-k3u1fbpfcp-watermark.image" alt="Screen Shot 2021-03-18 at 10.31.33 PM.png"></p>
+<h2>当前效果</h2>
+<h3>主页</h3>
+<p><img src="../images/blog-review.md-1736ba3f839441a19bb0874a7adefc11~tplv-k3u1fbpfcp-watermark.image" alt="gh.hoarfroster.space_.png"></p>
+<h3>404 Not Found</h3>
+<p><img src="../images/blog-review.md-b212c1f946424abe9d231f025cf6e3ff~tplv-k3u1fbpfcp-watermark.image" alt="gh.hoarfroster.space_404.png"></p>
+<h3>About</h3>
+<p><img src="../images/blog-review.md-996cc67b25af46df98a092b369a04643~tplv-k3u1fbpfcp-watermark.image" alt="gh.hoarfroster.space_about.html.png"></p>
+<h3>正文内容</h3>
+<p><img src="../images/blog-review.md-2e694e71557b4018957ff4ffc9b58e3b~tplv-k3u1fbpfcp-watermark.image" alt="gh.hoarfroster.space_archive_messengers-like-imageview.html.png"></p>
+<h2>GitHub CI</h2>
+<pre class="hljs"><code><span class="hljs-attr">name:</span> <span class="hljs-string">Page</span> <span class="hljs-string">Automator</span>
+
+<span class="hljs-attr">on:</span>
+  <span class="hljs-attr">push:</span>
+    <span class="hljs-attr">branches:</span> [ <span class="hljs-string">master</span> ]
+  <span class="hljs-attr">pull_request:</span>
+    <span class="hljs-attr">branches:</span> [ <span class="hljs-string">master</span> ]
+
+<span class="hljs-attr">jobs:</span>
+  <span class="hljs-attr">build:</span>
+    <span class="hljs-attr">runs-on:</span> <span class="hljs-string">ubuntu-latest</span>
+
+    <span class="hljs-attr">steps:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Set</span> <span class="hljs-string">up</span> <span class="hljs-string">JDK</span> <span class="hljs-number">1.8</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-java@v1</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">java-version:</span> <span class="hljs-number">1.8</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Use</span> <span class="hljs-string">Node.js</span> <span class="hljs-number">15.</span><span class="hljs-string">x</span>
+        <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/setup-node@v1</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">node-version:</span> <span class="hljs-number">15.</span><span class="hljs-string">x</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">setup</span> <span class="hljs-string">git</span> <span class="hljs-string">config</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          git config --global user.name &quot;Hoarfroster Bot&quot;
+          git config --global user.email &quot;&lt;penguin.zhang@qq.com&gt;&quot;
+</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@master</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">repository:</span> <span class="hljs-string">PassionPenguin/PageGenerator</span>
+          <span class="hljs-attr">path:</span> <span class="hljs-string">./page-generator</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">uses:</span> <span class="hljs-string">actions/checkout@master</span>
+        <span class="hljs-attr">with:</span>
+          <span class="hljs-attr">path:</span> <span class="hljs-string">./documents</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Build</span> <span class="hljs-string">with</span> <span class="hljs-string">Gradle</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          cd ./page-generator
+          ./gradlew build
+</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Generate</span> <span class="hljs-string">Structure</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          echo &quot;Processing Markdown Files&quot;
+          java -jar page-generator/build/libs/PageGenerator.jar --input=./documents
+          cd ./documents
+</span>
+          <span class="hljs-string">git</span> <span class="hljs-string">add</span> <span class="hljs-string">*</span>
+          <span class="hljs-string">if</span> [[ <span class="hljs-string">-n</span> <span class="hljs-string">$(git</span> <span class="hljs-string">status</span> <span class="hljs-string">-uno</span> <span class="hljs-string">--porcelain)</span> ]]
+          <span class="hljs-string">then</span>
+            <span class="hljs-string">git</span> <span class="hljs-string">commit</span> <span class="hljs-string">-m</span> <span class="hljs-string">&quot;Generate Structure&quot;</span>
+            <span class="hljs-string">git</span> <span class="hljs-string">push</span> <span class="hljs-string">origin</span> <span class="hljs-string">master</span>
+          <span class="hljs-string">fi</span>
+
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">NPM</span> <span class="hljs-string">Install</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          npm i -g markdown-html-gen
+</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Generate</span> <span class="hljs-string">HTML</span> <span class="hljs-string">Pages</span> <span class="hljs-string">with</span> <span class="hljs-string">Markdown</span> <span class="hljs-string">Files</span>
+        <span class="hljs-attr">run:</span> <span class="hljs-string">|
+          echo &quot;Generating HTML Files&quot;
+          cd ./documents
+          for f in documents/*.md
+            do
+              htmlpath=${f/documents/archive}
+              htmlpath=${htmlpath/md/html}
+              md2html &quot;$f&quot; -o ./archive
+              echo &quot; - Generated $htmlpath&quot;
+            done
+</span>
+          <span class="hljs-string">git</span> <span class="hljs-string">add</span> <span class="hljs-string">*</span>
+          <span class="hljs-string">if</span> [[ <span class="hljs-string">-n</span> <span class="hljs-string">$(git</span> <span class="hljs-string">status</span> <span class="hljs-string">-uno</span> <span class="hljs-string">--porcelain)</span> ]]
+          <span class="hljs-string">then</span>
+            <span class="hljs-string">git</span> <span class="hljs-string">commit</span> <span class="hljs-string">-m</span> <span class="hljs-string">&quot;Build Pages&quot;</span>
+            <span class="hljs-string">git</span> <span class="hljs-string">push</span> <span class="hljs-string">origin</span> <span class="hljs-string">master</span>
+          <span class="hljs-string">fi</span>
+</code></pre>
+<h2>反思与总结</h2>
+<p>尝试倒是不错，不过还有待继续改善：</p>
+<ul>
+<li>按照 Tag 查看（雏形倒是搭建好了）</li>
+<li>搜索</li>
+<li>优化 CI/CD（现在还是手工本地跑，准备用 WebHook，让服务器接 GitHub 的 WebHook，爬取，然后 Push 回 GitHub 上面）</li>
+</ul>
+<p>有个问题应该优化：</p>
+<ul>
+<li>Kotlin 的 PageGenerator 代码混乱</li>
+</ul>
+<p>话说，在这三个月内，翻译+校对+原创文到了 100 篇咯，撒花撒花，芜湖湖～ 🎉🎉</p>
+<blockquote>
+<p>最后的最后，继续推广一下 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>，这是一个翻译优质互联网技术文章的社区，文章来源为 掘金 上的英文分享文章。内容覆盖区块链、人工智能、Android、iOS、前端、后端、设计、产品、算法和其他等领域，以及各大型优质 官方文档及手册，读者为热爱新技术的新锐开发者。</p>
+<p>掘金翻译计划目前翻译完成 2345 余篇文章，官方文档及手册 13 个，共有 1000 余名译者贡献翻译和校对。</p>
+<p>欢迎各位加入我们嗷！</p>
+</blockquote>
+<ul>
+<li>本文正在参与「掘金 2021 春招闯关活动」, 点击查看 <a href="https://juejin.cn/post/6939329638506168334">活动详情</a></li>
+</ul>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

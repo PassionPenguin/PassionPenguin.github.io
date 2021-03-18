@@ -1,4 +1,4 @@
-> * 标签：阅读、Kotlin、Flutter
+> * 标签：Kotlin、JavaScript、Flutter、安卓
 
 # 基于 Discuz X 系统的论坛手机版应用构建｜项目复盘
 
@@ -92,10 +92,10 @@ private fun openConn(url: String, retrieveAsDesktopPage: Boolean): HttpURLConnec
 
 ```php
 if($_GET['signaturenew']) {
-	$signaturenew = censor($_GET['signaturenew']);
-	$sightmlnew = discuzcode($signaturenew, 1, 0, 0, 0, $member['allowsigbbcode'], $member['allowsigimgcode'], 0, 0, 1);
+    $signaturenew = censor($_GET['signaturenew']);
+    $sightmlnew = discuzcode($signaturenew, 1, 0, 0, 0, $member['allowsigbbcode'], $member['allowsigimgcode'], 0, 0, 1);
 } else {
-	$sightmlnew = $signaturenew = '';
+    $sightmlnew = $signaturenew = '';
 }
 ```
 
@@ -116,6 +116,45 @@ Discuz X 是很远古的系统，受限于处理器以及存储空间，默认�
 一番折腾过后，总算搞定了这个功能，具体实现就是先[判断图片尺寸](https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/com/passionpenguin/NetUtils.kt#L397)，然后调用 [`NativeUtils` 类](https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/java/net/bither/util/NativeUtil.kt#L30)，调用 JNI 的 [`Java_net_bither_util_NativeUtil_compressBitmap`](https://github.com/PassionPenguin/Ditiezu/blob/afd615412f0d0679a65faa327629fa8a80c78954/app/src/main/jni/bitherlibjni.c#L148)函数，执行压缩。
 
 一番折腾后，设置压缩比率为 90%，亲测一般图片都能压缩到 10% 甚至最低试过 5%（小米设备截图不优化的吗！ = =）。
+
+##### 但其实
+
+但其实，实现起来很是简单：
+
+```kotlin
+object NativeUtil {
+    fun compressBitmap(bit: Bitmap, fileName: String, optimize: Boolean, quality: Int = 75) {
+        compressBitmap(bit, quality, fileName, optimize)
+    }
+
+    private fun compressBitmap(bit: Bitmap, quality: Int, fileName: String, optimize: Boolean) {
+        Log.d("native", "compress of native")
+        if (bit.config != Bitmap.Config.ARGB_8888) {
+            val result: Bitmap = Bitmap.createBitmap(bit.width, bit.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(result)
+            val rect = Rect(0, 0, bit.width, bit.height)
+            canvas.drawBitmap(bit, null, rect, null)
+            saveBitmap(result, quality, fileName, optimize)
+            result.recycle()
+        } else {
+            saveBitmap(bit, quality, fileName, optimize)
+        }
+    }
+
+    private fun saveBitmap(bit: Bitmap, quality: Int, fileName: String, optimize: Boolean) {
+        compressBitmap(bit, bit.width, bit.height, quality, fileName.toByteArray(), optimize)
+    }
+
+    private external fun compressBitmap(bit: Bitmap, w: Int, h: Int, quality: Int, fileNameBytes: ByteArray, optimize: Boolean): String?
+
+    init {
+        System.loadLibrary("jpegbither")
+        System.loadLibrary("bitherjni")
+    }
+}
+```
+
+以及 C++ 部分写一个接口，剩下的 `libjpeg-turbo` 代码原封不动都不需要修改 = =。
 
 #### 转向 RecyclerView
 
@@ -144,7 +183,7 @@ class ThreadItemAdapter(private val activity: Activity, items: List<ThreadItem>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (position == 0 && isHomeMixed) {
-        	/* TOP BANNER SHORTCUT */
+            /* TOP BANNER SHORTCUT */
         }
         val item = mItems[position - if (isHomeMixed) 1 else 0]
         /* THREAD VIEW */
@@ -165,6 +204,10 @@ class ThreadItemAdapter(private val activity: Activity, items: List<ThreadItem>,
 
 不过这个页面的代码是最乱的 = =。
 
+**你看这缩进，多么的恐怖，多么的吓人！！！**
+
+![Screen Shot 2021-03-18 at 3.50.11 AM.png](../images/ditiezu-review.md-1c00f0afba224f29b46566c354d70247~tplv-k3u1fbpfcp-watermark.image)
+
 ## 你别问我为什么我想 Flutter 重构
 
 不知道是三月还是四月，还是什么时候，Flutter 跑到我的眼皮底下，感觉挺有趣的，又是一边读文档（当时还不知道有中文站，不过中文站也是一堆漏洞，读起来不如英文舒服），一边写代码。
@@ -176,6 +219,53 @@ class ThreadItemAdapter(private val activity: Activity, items: List<ThreadItem>,
 > ### 没人能够编译我的仓库的代码
 > 
 > —— 我也不行，因为我更新了 Flutter，覆盖掉了 SDK 的更新 = =
+
+不过真的得说，Flutter 的代码有几个特点：
+
+* 很简洁，至少，比 Kotlin、Java 写起来要舒服很多
+* 很混乱，毕竟，人家的布局，不像是 HTML 支持 CSS，导致一堆控件必须互相套娃，才能实现一定的样式
+
+### 一些刚刚截图的 Flutter 版本应用程序效果图
+
+#### 登录
+
+![331616010065_.pic.jpg](../images/ditiezu-review.md-bf302e20f68b482392e03d04861bc8cd~tplv-k3u1fbpfcp-watermark.image)
+
+#### 首页
+
+![341616010067_.pic.jpg](../images/ditiezu-review.md-3ffb22103935402aa250ddcb3b6565bb~tplv-k3u1fbpfcp-watermark.image)
+
+#### 账户
+
+![351616010068_.pic.jpg](../images/ditiezu-review.md-6792c13bf7594e218335c721e616ee76~tplv-k3u1fbpfcp-watermark.image)
+
+#### 分区
+
+![361616010070_.pic.jpg](../images/ditiezu-review.md-a71e1223b619483dbc7fecb5d28b1ae2~tplv-k3u1fbpfcp-watermark.image)
+
+#### 消息
+
+![371616010073_.pic.jpg](../images/ditiezu-review.md-de8c38e5584845f18f6bd7c7fa9eaaca~tplv-k3u1fbpfcp-watermark.image)
+
+#### 看帖
+
+![411616010078_.pic.jpg](../images/ditiezu-review.md-7123056efb0f40bdb10c9170d598b5f1~tplv-k3u1fbpfcp-watermark.image)
+
+![381616010075_.pic.jpg](../images/ditiezu-review.md-26eac1a1635b4bf5b541db0c9ddde86c~tplv-k3u1fbpfcp-watermark.image)
+
+#### 加分
+
+![391616010076_.pic.jpg](../images/ditiezu-review.md-94d9fffd8cd34945bb4b0e48bc3ca55c~tplv-k3u1fbpfcp-watermark.image)
+
+![401616010077_.pic.jpg](../images/ditiezu-review.md-e4f87f7c02754960bd6df208067e94da~tplv-k3u1fbpfcp-watermark.image)
+
+太难截图了……
+
+#### 发帖
+
+![431616010083_.pic.jpg](../images/ditiezu-review.md-5e384bc7a6a744f9a0a1bd3cca839c0f~tplv-k3u1fbpfcp-watermark.image)
+
+![421616010079_.pic.jpg](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5e384bc7a6a744f9a0a1bd3cca839c0f~tplv-k3u1fbpfcp-watermark.image)
 
 ## 完事后的反思总结
 
@@ -199,6 +289,8 @@ Flutter 版本也是一样，架构混乱，代码混乱，像极了初学者的
 
 ### 不过，我还是得说
 
-我的绘图和设计真的丑死了 = =
+我的绘图和设计真的丑死了 = =。
 
-## 全文完
+感谢一切使用过应用程序的朋友们，也感谢这次机会。
+
+* 本文正在参与「掘金 2021 春招闯关活动」, 点击查看 [活动详情](https://juejin.cn/post/6939329638506168334)

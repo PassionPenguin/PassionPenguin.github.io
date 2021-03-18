@@ -8,7 +8,7 @@
 
 看了一些现成的解决方案，感觉局限性太多，不利于后期自定义，再加上我这个超级喜欢造轮子的性格，于是乎 👀
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7798e9279b942c4a4e9e38a7b461250~tplv-k3u1fbpfcp-watermark.image)
+![](../images/blog-review.md-c7798e9279b942c4a4e9e38a7b461250~tplv-k3u1fbpfcp-watermark.image)
 
 ### 我就搭建了一个自己的处理系统
 
@@ -40,9 +40,9 @@
 
 在文章处理（标签获取、图片爬取）上使用了 Java + Kotlin 的组合，主要是我对 Kotlin 挺熟的，毕竟做了一年 Kotlin 项目了 = =。
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/887cbf9766fa44ffa1bbe9e0c9de9eb5~tplv-k3u1fbpfcp-watermark.image)
+![](../images/blog-review.md-887cbf9766fa44ffa1bbe9e0c9de9eb5~tplv-k3u1fbpfcp-watermark.image)
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3d4156bd11d9450b936181d989fe3453~tplv-k3u1fbpfcp-watermark.image)
+![](../images/blog-review.md-3d4156bd11d9450b936181d989fe3453~tplv-k3u1fbpfcp-watermark.image)
 
 ## 构建思路
 
@@ -349,31 +349,31 @@ exports.render = async (config) => {
 
 这里遇到了一个超级大的坑，即 GitHub 的样式和 `@primer` 库的内容完全不一样！于是乎我被迫控制台抄了几千行的 CSS 颜色变量：
 
-![ .png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9ee3d640ea4c4069b86855811642e0bb~tplv-k3u1fbpfcp-watermark.image)
+![ .png](../images/blog-review.md-9ee3d640ea4c4069b86855811642e0bb~tplv-k3u1fbpfcp-watermark.image)
 
 结果 GitHub 最近又推了新的主题，这是要榨干企鹅嘛 = =。
 
 最后使用了 JavaScript 为每一篇文章加上 Header 以及 Footer：
 
-![Screen Shot 2021-03-18 at 10.31.33 PM.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c3994e529946467c9b68232ae11bdc17~tplv-k3u1fbpfcp-watermark.image)
+![Screen Shot 2021-03-18 at 10.31.33 PM.png](../images/blog-review.md-c3994e529946467c9b68232ae11bdc17~tplv-k3u1fbpfcp-watermark.image)
 
 ## 当前效果
 
 ### 主页
 
-![gh.hoarfroster.space_.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1736ba3f839441a19bb0874a7adefc11~tplv-k3u1fbpfcp-watermark.image)
+![gh.hoarfroster.space_.png](../images/blog-review.md-1736ba3f839441a19bb0874a7adefc11~tplv-k3u1fbpfcp-watermark.image)
 
 ### 404 Not Found
 
-![gh.hoarfroster.space_404.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b212c1f946424abe9d231f025cf6e3ff~tplv-k3u1fbpfcp-watermark.image)
+![gh.hoarfroster.space_404.png](../images/blog-review.md-b212c1f946424abe9d231f025cf6e3ff~tplv-k3u1fbpfcp-watermark.image)
 
 ### About
 
-![gh.hoarfroster.space_about.html.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/996cc67b25af46df98a092b369a04643~tplv-k3u1fbpfcp-watermark.image)
+![gh.hoarfroster.space_about.html.png](../images/blog-review.md-996cc67b25af46df98a092b369a04643~tplv-k3u1fbpfcp-watermark.image)
 
 ### 正文内容
 
-![gh.hoarfroster.space_archive_messengers-like-imageview.html.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2e694e71557b4018957ff4ffc9b58e3b~tplv-k3u1fbpfcp-watermark.image)
+![gh.hoarfroster.space_archive_messengers-like-imageview.html.png](../images/blog-review.md-2e694e71557b4018957ff4ffc9b58e3b~tplv-k3u1fbpfcp-watermark.image)
 
 ## GitHub CI
 

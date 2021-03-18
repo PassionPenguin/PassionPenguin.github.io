@@ -23,7 +23,7 @@ JavaScript 是 Web 开发领域的“常青树”。无论是 JavaScript 框架�
 
 **声明**：`console.time()` 结果的准确度在很大程度上取决于我们运行测试的系统配置。你可以在[此处](https://johnresig.com/blog/accuracy-of-javascript-time/)对准确度作进一步了解。
 
-```
+```js
 const million = 1000000; 
 const arr = Array(million);
 console.time('⏳');
@@ -48,7 +48,7 @@ console.timeEnd('⏳');
 
 这个方法需要接受一个回调函数作为输入参数，遍历数组的每一个元素，并执行我们的回调函数（以元素本身和它的索引（可选参数）作为参数赋予给回调函数）。`forEach` 还允许在回调函数中使用一个可选参数 `this`。
 
-```
+```js
 const things = ['have', 'fun', 'coding'];
 const callbackFun = (item, idex) => {
     console.log(`${item} - ${index}`);
@@ -65,7 +65,7 @@ things.foreach(callbackFun);
 
 `for…of` 是在 ES6（ECMAScript 6）中实现标准化的。它会对一个可迭代的对象（例如 `array`、`map`、`set`、`string` 等）创建一个循环，并且有一个突出的优点，即优秀的可读性。
 
-```
+```js
 const arr = [3, 5, 7];
 const str = 'hello';
 for (let i of arr) {
@@ -83,7 +83,7 @@ for (let i of str) {
 `for…in` 会在对象的所有可枚举属性上迭代指定的变量。对于每个不同的属性，`for…in` 语句除返回数字索引外，还将返回用户定义的属性的名称。
 因此，在遍历数组时最好使用带有数字索引的传统 `for` 循环。 因为 `for…in` 语句还会迭代除数组元素之外的用户定义属性，就算我们修改了数组对象（例如添加自定义属性或方法），依然如此。
 
-```
+```js
 const details = {firstName: 'john', lastName: 'Doe'};
 let fullName = '';
 for (let i in details) {
@@ -95,7 +95,7 @@ for (let i in details) {
 
 `for…of` 和 `for…in` 之间的主要区别是它们迭代的内容。`for…in` 循环遍历对象的属性，而 `for…of` 循环遍历可迭代对象的值。
 
-```
+```js
 let arr= [4, 5, 6];
 for (let i in arr) {
    console.log(i); // '0', '1', '2'

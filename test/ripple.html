@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            height: 25vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+        button {
+            position: relative; /* 下文中会用到的相对绝对位置 */
+            overflow: hidden;
+            transition: background 400ms ease-in-out; /* 设置切换 */
+            color: #fff;
+            background-color: #662D91;
+            padding: 1rem 2rem;
+            font-family: 'Roboto', sans-serif;
+            outline: 0;
+            border: 0;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        span.ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 600ms linear;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<button>这是一个简单的按钮</button>
+</body>
+<script>
+    const showRipple = (event) => {
+        const btn = event.currentTarget;
+
+        const circle = document.createElement("span");
+        const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+        const radius = diameter / 2;
+
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${event.clientX - (btn.offsetLeft + radius)}px`;
+        circle.style.top = `${event.clientY - (btn.offsetTop + radius)}px`;
+        circle.classList.add("ripple");
+
+        btn.appendChild(circle);
+        setTimeout(() => {
+            btn.removeChild(circle)
+        }, 1000); /* 记得移除元素 */
+    }
+
+    const listener = (mutationsList) => {
+        for (const mutationRecord of mutationsList) {
+            if (mutationRecord.type === "attributes" && mutationRecord.attributeName === "ripple" && !mutationRecord.target.hasAttribute("ripple-init")) {
+                mutationRecord.target.addEventListener("click", showRipple);
+                mutationRecord.target.setAttribute("ripple-init", "");
+            }
+            if (mutationRecord.addedNodes && mutationRecord.addedNodes.length > 0)
+                mutationRecord.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE && !node.hasAttribute("ripple-init") && node.hasAttribute("ripple")) {
+                        node.addEventListener("click", showRipple);
+                        node.setAttribute("ripple-init", "");
+                    }
+                });
+        }
+    }
+
+    const mutationObserver = new MutationObserver(listener);
+    mutationObserver.observe(document, {subtree: true, childList: true, attributes: true});
+
+    setTimeout(() => {
+        document.querySelector("button").setAttribute("ripple", "");
+        let btn = document.createElement("button");
+        btn.setAttribute("ripple", "");
+        btn.innerText = "这是另外一个简单的按钮"
+        document.body.appendChild(btn);
+    }, 2000);
+</script>
+</html>

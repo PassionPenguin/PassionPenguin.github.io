@@ -24,7 +24,7 @@
 <p>在以下文章中，我将使用位置数据作为示例。它必须有一个经度，纬度，外加一个可选的地址。在 C 语言中，可以使用 <code>struct</code> 来表示，而在 Java 中，我们只需创建一个类。在 Python，我们则有六种方法可供选择。让我们来探索他们每一个的优点和缺点吧！</p>
 <h2>普通类</h2>
 <p>普通类是标准库为组织数据而提供的默认方式。你可以（而且应该！）使用以下示例中的<a href="(https://medium.com/analytics-vidhya/type-annotations-in-python-3-8-3b401384403d)">类型注释</a>：</p>
-<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Optional
+<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Optional</span>
 
 
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Position</span>:</span>
@@ -34,31 +34,31 @@
     MAX_LONGITUDE = <span class="hljs-number">180</span>
 
     <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">
-        self, longitude: <span class="hljs-built_in">float</span>, latitude: <span class="hljs-built_in">float</span>, address: Optional[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
+        self, longitude: <span class="hljs-built_in">float</span>, latitude: <span class="hljs-built_in">float</span>, address: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
     </span>):</span>
         self.longitude = longitude
         self.latitude = latitude
         self.address = address
 
 <span class="hljs-meta">    @property</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self</span>) -&gt; float:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Getter for latitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">return</span> self._latitude
 
 <span class="hljs-meta">    @latitude.setter</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self, latitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-keyword">None</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self, latitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-literal">None</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Setter for latitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (Position.MIN_LATITUDE &lt;= latitude &lt;= Position.MAX_LATITUDE):
             <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">f&quot;latitude was <span class="hljs-subst">{latitude}</span>, but has to be in [-90, 90]&quot;</span>)
         self._latitude = latitude
 
 <span class="hljs-meta">    @property</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self</span>) -&gt; float:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Getter for longitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">return</span> self._longitude
 
 <span class="hljs-meta">    @longitude.setter</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self, longitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-keyword">None</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self, longitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-literal">None</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Setter for longitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (Position.MIN_LONGITUDE &lt;= longitude &lt;= Position.MAX_LONGITUDE):
             <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">f&quot;longitude was <span class="hljs-subst">{longitude}</span>, but has to be in [-180, 180]&quot;</span>)
@@ -69,7 +69,7 @@ pos1 = Position(<span class="hljs-number">49.0127913</span>, <span class="hljs-n
 pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-number">9.1649964</span>)
 
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 </code></pre>
 <p>你可以看到我们需要编写一个构造器方法 <code>__init__</code>。构造器的代码在大部分情况下是简单的，尽管有一些例外。</p>
@@ -78,26 +78,26 @@ pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-n
 <p>由于所有的编辑器都需要支持普通类，因此它的工具支持性是很有保证的。并且能够在调用的时候获取全部的有用信息。</p>
 <h2>1. 元组</h2>
 <p>元组是一种基本的 Python 数据类型。它的内存占用很低，因此我们可以通过索引非常快的寻址到所需的元素。元组的问题则是我们无法获知成员属性的名称，我们不得不记住每一个索引代表队属性。元组总是不可修改的。</p>
-<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Tuple, Optional
+<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Tuple</span>, <span class="hljs-type">Optional</span>
 pos1 = (<span class="hljs-number">49.0127913</span>, <span class="hljs-number">8.4231381</span>, <span class="hljs-string">&quot;Parkstraße 17&quot;</span>)
 pos2 = (<span class="hljs-number">42.1238762</span>, <span class="hljs-number">9.1649964</span>, <span class="hljs-literal">None</span>)
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Tuple[<span class="hljs-built_in">float</span>, <span class="hljs-built_in">float</span>, Optional[<span class="hljs-built_in">str</span>]],
-                 p2: Tuple[<span class="hljs-built_in">float</span>, <span class="hljs-built_in">float</span>, Optional[<span class="hljs-built_in">str</span>]]</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: <span class="hljs-type">Tuple</span>[<span class="hljs-built_in">float</span>, <span class="hljs-built_in">float</span>, <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>]],
+                 p2: <span class="hljs-type">Tuple</span>[<span class="hljs-built_in">float</span>, <span class="hljs-built_in">float</span>, <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>]]</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 </code></pre>
 <p><code>get_distance</code> 方法的注解看起来非常的杂乱。开发者需要知道的信息是 <code>p1</code> 表示的是地点，而非这个地点信息包含着两个浮点数以及一个可选的字符串——这是编辑器需要做的工作。</p>
 <p>编辑器的支持程度取决于你注解的透彻性。在上面的例子中，你也可以只写 <code>Tuple</code> 而省略掉指出这个元组所包含的内容。由于人们大多是比较懒惰的，我认为这里的编辑器支持做的不是很好。这不是编辑器的错，但是它因此经常无法提供较好的代码提示支持。</p>
 <h2>2. 字典</h2>
 <p>字典是 Python 的基本数据类型，并且可能是 Python 中最常见的传递数据的载体。与元组相比，字典由于要保存属性的名称，它的内存占用会大一些，但是这仍是可以接受的。通过索引来获取数据<strong>很快</strong>。字典总是可以修改的，不过有一个第三方的库 <a href="https://pypi.org/project/frozendict/">frozendict</a> 可以解决字典可以被随意修改的问题。</p>
-<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Any, Dict
+<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Any</span>, <span class="hljs-type">Dict</span>
 pos1 = {<span class="hljs-string">&quot;longitude&quot;</span>: <span class="hljs-number">49.0127913</span>,
         <span class="hljs-string">&quot;latitude&quot;</span>: <span class="hljs-number">8.4231381</span>,
         <span class="hljs-string">&quot;address&quot;</span>: <span class="hljs-string">&quot;Parkstraße 17&quot;</span>}
 pos2 = {<span class="hljs-string">&quot;longitude&quot;</span>: <span class="hljs-number">42.1238762</span>,
         <span class="hljs-string">&quot;latitude&quot;</span>: <span class="hljs-number">9.1649964</span>,
         <span class="hljs-string">&quot;address&quot;</span>: <span class="hljs-literal">None</span>}
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Dict[<span class="hljs-built_in">str</span>, Any],
-                 p2: Dict[<span class="hljs-built_in">str</span>, Any]</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: <span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-type">Any</span>],
+                 p2: <span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-type">Any</span>]</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 </code></pre>
 <p>在实际中，注解确实很糟糕。通常来说几乎没有字典的注解，在大部分情况下的注解会是 <code>Dict[str, Any]</code>。</p>
@@ -113,7 +113,7 @@ Position = namedtuple(<span class="hljs-string">&quot;Position&quot;</span>, att
 pos1 = Position(<span class="hljs-number">49.0127913</span>, <span class="hljs-number">8.4231381</span>, <span class="hljs-string">&quot;Parkstraße 17&quot;</span>)
 pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-number">9.1649964</span>)
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 </code></pre>
 <p>命名元组解决了类型声明注解难以阅读的问题。因此，它也解决了我上文中提到的编辑器支持不完全的问题。</p>
@@ -132,7 +132,7 @@ BMI(weight=<span class="hljs-number">60</span>, size=<span class="hljs-number">1
 </code></pre>
 <h2>4. attrs</h2>
 <p><a href="https://pypi.org/project/attrs/">attrs</a> 是一个第三方的库，用来减少一些重复模板代码的编写。开发者可以在类上面添加一个 <code>@attrs.s</code> 装饰器来引入。属性则可以使用一个 <code>attr.ib()</code> 方法来赋值：</p>
-<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Optional
+<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Optional</span>
 <span class="hljs-keyword">import</span> attr
 
 
@@ -140,7 +140,7 @@ BMI(weight=<span class="hljs-number">60</span>, size=<span class="hljs-number">1
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Position</span>:</span>
     longitude: <span class="hljs-built_in">float</span> = attr.ib()
     latitude: <span class="hljs-built_in">float</span> = attr.ib()
-    address: Optional[<span class="hljs-built_in">str</span>] = attr.ib(default=<span class="hljs-literal">None</span>)
+    address: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>] = attr.ib(default=<span class="hljs-literal">None</span>)
 
 <span class="hljs-meta">    @longitude.validator</span>
     <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">check_long</span>(<span class="hljs-params">self, attribute, v</span>):</span>
@@ -157,7 +157,7 @@ pos1 = Position(<span class="hljs-number">49.0127913</span>, <span class="hljs-n
 pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-number">9.1649964</span>)
 
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 </code></pre>
 <p>通过把装饰器改成 <code>[@attr.s(frozen=True)](https://www.attrs.org/en/stable/api.html)</code> 来使这个类变得不可修改。</p>
@@ -173,7 +173,7 @@ pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-n
 <p>Dataclasses 在 <a href="https://www.python.org/dev/peps/pep-0557/">PEP 557</a> 中被加入 Python 3.7。它与 attrs 类似，但是被收录于标准库中。一个很重要的点是 dataclass 就是普通的类， 不过是其中保存大量的数据而已。</p>
 <p>与 attrs 不同的是，dataclass 使用类型注解而非 <code>attr.ib()</code> 这样的注解。我认为这样大大提高了可读性。另外，由于现在对属性有了注解，编辑器的支持效果也更好了。</p>
 <p>你可以很容易的利用装饰器 <code>@dataclass(frozen=True)</code> 使 dataclass 变成不可修改的——这与 attrs 类似。</p>
-<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Optional
+<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Optional</span>
 <span class="hljs-keyword">from</span> dataclasses <span class="hljs-keyword">import</span> dataclass
 
 
@@ -181,14 +181,14 @@ pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-n
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Position</span>:</span>
     longitude: <span class="hljs-built_in">float</span>
     latitude: <span class="hljs-built_in">float</span>
-    address: Optional[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
+    address: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
 
       
 pos1 = Position(<span class="hljs-number">49.0127913</span>, <span class="hljs-number">8.4231381</span>, <span class="hljs-string">&quot;Parkstraße 17&quot;</span>)
 pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-number">9.1649964</span>, <span class="hljs-literal">None</span>)
 
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 </code></pre>
 <p>这里我少说的一部分是属性的验证。可以在构造器中使用 <code>__post_init__(self)</code> 来实现：</p>
@@ -205,27 +205,27 @@ pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-n
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Position</span>:</span>
     longitude: <span class="hljs-built_in">float</span>
     latitude: <span class="hljs-built_in">float</span>
-    address: Optional[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
+    address: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
 
 <span class="hljs-meta">    @property</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self</span>) -&gt; float:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Getter for latitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">return</span> self._latitude
 
 <span class="hljs-meta">    @latitude.setter</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self, latitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-keyword">None</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">latitude</span>(<span class="hljs-params">self, latitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-literal">None</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Setter for latitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (-<span class="hljs-number">90</span> &lt;= latitude &lt;= <span class="hljs-number">90</span>):
             <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">f&quot;latitude was <span class="hljs-subst">{latitude}</span>, but has to be in [-90, 90]&quot;</span>)
         self._latitude = latitude
 
 <span class="hljs-meta">    @property</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self</span>) -&gt; float:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Getter for longitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">return</span> self._longitude
 
 <span class="hljs-meta">    @longitude.setter</span>
-    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self, longitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-keyword">None</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude</span>(<span class="hljs-params">self, longitude: <span class="hljs-built_in">float</span></span>) -&gt; <span class="hljs-literal">None</span>:</span>
         <span class="hljs-string">&quot;&quot;&quot;Setter for longitude.&quot;&quot;&quot;</span>
         <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> (-<span class="hljs-number">180</span> &lt;= longitude &lt;= <span class="hljs-number">180</span>):
             <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">f&quot;longitude was <span class="hljs-subst">{longitude}</span>, but has to be in [-180, 180]&quot;</span>)
@@ -234,7 +234,7 @@ pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-n
 <p>但是，我不太喜欢这种超级冗长且丢失了许多 dataclass 独有魅力的手段。 如果你需要类型未涵盖的验证，请使用 Pydantic。</p>
 <h2>6. Pydantic</h2>
 <p><a href="https://pydantic-docs.helpmanual.io/">Pydantic</a> 是一个专注于数据各实验组和设置管理的第三方库。要使用它，你可以继承自 <code>pydantic.BaseModel</code> 或者创建一个 Pydantic 的 dataclass：</p>
-<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> Optional
+<pre class="hljs"><code><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">Optional</span>
 <span class="hljs-keyword">from</span> pydantic <span class="hljs-keyword">import</span> validator
 <span class="hljs-keyword">from</span> pydantic.dataclasses <span class="hljs-keyword">import</span> dataclass
 
@@ -243,7 +243,7 @@ pos2 = Position(<span class="hljs-number">42.1238762</span>, <span class="hljs-n
 <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Position</span>:</span>
     longitude: <span class="hljs-built_in">float</span>
     latitude: <span class="hljs-built_in">float</span>
-    address: Optional[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
+    address: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">str</span>] = <span class="hljs-literal">None</span>
 
 <span class="hljs-meta">    @validator(<span class="hljs-params"><span class="hljs-string">&quot;longitude&quot;</span></span>)</span>
     <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">longitude_value_range</span>(<span class="hljs-params">cls, v</span>):</span>
@@ -262,7 +262,7 @@ pos1 = Position(<span class="hljs-number">49.0127913</span>, <span class="hljs-n
 pos2 = Position(longitude=<span class="hljs-number">42.1238762</span>, latitude=<span class="hljs-number">9.1649964</span>)
 
 
-<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; float:</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_distance</span>(<span class="hljs-params">p1: Position, p2: Position</span>) -&gt; <span class="hljs-built_in">float</span>:</span>
     <span class="hljs-keyword">pass</span>
 
 </code></pre>
@@ -274,7 +274,7 @@ pos2 = Position(longitude=<span class="hljs-number">42.1238762</span>, latitude=
 <h2>默认字符串表示</h2>
 <p>拥有合理的字符串表示形式非常有帮助（例如，用于日志记录）。老实说：很多人都在进行 <code>print</code> 调试。</p>
 <p>如果我们打印上面例子中的 <code>pos1</code>，下面是我们能得到的。为了方便阅读已经添加了换行和缩进。原始的输出是在一行内的：</p>
-<pre class="hljs"><code><span class="hljs-meta">&gt;&gt;&gt; </span>print(pos1)
+<pre class="hljs"><code><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">print</span>(pos1)
 
 Plain <span class="hljs-class"><span class="hljs-keyword">class</span>   :</span> &lt;__main__.Position <span class="hljs-built_in">object</span> at <span class="hljs-number">0x7f1562750640</span>&gt;
 <span class="hljs-comment"># 1 Tuples    : (49.0127913, 8.4231381, &#x27;Parkstraße 17&#x27;)</span>
@@ -338,7 +338,7 @@ mr = GitlabMr(
     author=GitlabUser(<span class="hljs-built_in">id</span>=<span class="hljs-number">42</span>, username=<span class="hljs-string">&quot;Joe&quot;</span>),
 )
 json_str = mr.json()
-print(json_str)
+<span class="hljs-built_in">print</span>(json_str)
 </code></pre>
 <p>这返回了：</p>
 <pre class="hljs"><code>{<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;squash&quot;</span>: true, <span class="hljs-string">&quot;web_url&quot;</span>: <span class="hljs-string">&quot;http://foo&quot;</span>, <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-string">&quot;title&quot;</span>, <span class="hljs-string">&quot;author&quot;</span>: {<span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-number">42</span>, <span class="hljs-string">&quot;username&quot;</span>: <span class="hljs-string">&quot;Joe&quot;</span>}}

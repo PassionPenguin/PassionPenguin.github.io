@@ -91,6 +91,6 @@ func main() {
 当然我们也可以直接用 Shell 执行这段代码：
 
 ```shell
-$ go run hello.go 
+$ go run hello.go
 Hello, World!
 ```

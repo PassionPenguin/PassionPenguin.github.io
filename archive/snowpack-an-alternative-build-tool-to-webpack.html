@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snowpack: 一个可代替 Webpack 的构建工具 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/snowpack-an-alternative-build-tool-to-webpack-9e8da197071d">Snowpack: An Alternative Build Tool to Webpack</a></li>
+<li>原文作者：<a href="https://medium.com/@nathansebhastian">Nathan Sebhastian</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/snowpack-an-alternative-build-tool-to-webpack.md">https://github.com/xitu/gold-miner/blob/master/article/2021/snowpack-an-alternative-build-tool-to-webpack.md</a></li>
+<li>译者：<a href="https://github.com/felixliao">felixliao</a></li>
+<li>校对者：<a href="https://github.com/nia3y">niayyy</a>、<a href="https://github.com/Usualminds">Joe</a>、<a href="https://github.com/PassionPenguin">霜羽 Hoarfroster</a></li>
+</ul>
+</blockquote>
+<h1>Snowpack: 一个可代替 Webpack 的构建工具</h1>
+<p><img src="https://cdn-images-1.medium.com/max/2024/1*XElS7rQXRta2vXlqLti4VQ.png" alt=""></p>
+<p>得益于它灵活的构建配置以及丰富的官方支持的第三方插件，<a href="https://webpack.js.org/">Webpack</a> 是近几年最流行的 JavaScript 构建工具。</p>
+<p>Webpack 的主要功能是将你所有的 JavaScript 文件，连带所有从 NPM 导入的模块、图片、CSS 和其他网络资源，全部打包到一个可以被浏览器执行的文件中。</p>
+<p><img src="https://cdn-images-1.medium.com/max/3840/1*XRoIfAWL1JkSECMDC6n5Hw.png" alt="用一句话形容 Webpack，来源"></p>
+<p>但是 Webpack 也是一个复杂的工具，伴随着陡峭的学习曲线，因为它的灵活性意味着它有非常多的功能来应对各种不同的使用场景。更进一步讲，哪怕只是对一个文件进行了很小的改动，Webpack 会将你的整个 JavaScript 应用重新打包和构建。如果对 Webpack 的工作原理理解不到位，构建一个应用时可能要等<a href="https://stackoverflow.com/questions/56431031/why-does-npm-run-build-take-30-minutes-on-development-server-and-less-than-a">半小时以上</a>。</p>
+<p>但是话说回来，Webpack 是 2014 年发布的。在那个时候，浏览器基本不支持 ECMAScript Module (ESM) 的 <code>import</code> 和 <code>export</code> 语法，所以在浏览器中运行 JavaScript 的方式只能是将项目中所有的模块全部打包进一个文件。</p>
+<p>这其中还包括其他的流程，比如使用 Babel 将 JavaScript 从较新版本转换为稍旧版本，以便浏览器可以运行该应用。但是使用 Webpack 最主要的目的是创造最好的开发体验，让 JavaScript 开发者可以使用最新的功能（ES6+）。</p>
+<p>如今 ESM 语法已经被所有主流浏览器支持，所以将你所有的 JavaScript 文件打包在一起已经不是在浏览器中运行应用的必要条件了。</p>
+<h2>使用 Snowpack 无需进行打包配置</h2>
+<p><a href="https://www.snowpack.dev/">Snowpack</a> 是一个 JavaScript 构建工具，它利用了浏览器对 ESM 的支持，让我们可以构建单个文件并将其发送到浏览器中。每一个被构建的文件都会被缓存，在我们每修改一个文件时，只有这一个文件会被 Snowpack 重新构建。</p>
+<p><img src="https://cdn-images-1.medium.com/max/3840/1*Ep5bOeYn1t-Y0XnSRUD2mA.png" alt="Snowpack 服务端打包的文件，来源"></p>
+<p>Snowpack 的开发服务器也做了优化，它只会在浏览器请求后构建该文件。这使得 Snowpack 可以即时启动（<strong>小于 50 毫秒</strong>）并且扩展到大型项目时也不会增加启动速度。我自己做尝试时启动服务器只用了 35 毫秒：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2906/1*EpNPrzN0EeeEYlMM3SLIWw.png" alt="Snowpack 的调试服务器启动"></p>
+<h2>Snowpack 的构建过程</h2>
+<p>Snowpack 默认会将你的未打包应用部署到生产环境，但是你也要进行一些构建相关的优化，比如最小化、代码分割、tree-shaking、懒加载等等。</p>
+<p>Snowpack 同时支持通过<a href="https://www.npmjs.com/package/@snowpack/plugin-webpack">插件连接 Webpack</a> 来打包生产版本的应用。这样，由于 Snowpack 已经转译了你的代码，你的打包工具（Webpack）只需要将常规的 HTML、CSS 和 JavaScript 文件打包。这也是为什么你在打包过程中不需要复杂的 Webpack 配置文件。</p>
+<p>最后，你也可以设置 <code>package.json</code> 中的 <code>browserslist</code> 属性，来设定支持的浏览器版本：</p>
+<pre class="hljs"><code><span class="hljs-comment">/* package.json */</span>
+<span class="hljs-string">&quot;browserslist&quot;</span>: <span class="hljs-string">&quot;&gt;0.75%, not ie 11, not UCAndroid &gt;0, not OperaMini all&quot;</span>,
+</code></pre>
+<p>在你执行 <code>snowpack build</code> 指令来构建生产环境的项目时，该属性会自动被应用。Snowpack 不会在构建开发版本时执行任何转译，所以这不是一个问题，因为大部分时间你都会在最新的浏览器版本下开发。</p>
+<h2>上手 Snowpack</h2>
+<p>要开始使用 Snowpack，你可以立即使用 Create Snowpack App (CSA) 和 NPX 来创建 Snowpack 应用。例如，你可以用如下指令来用 CSA 新建一个初始化 React 应用：</p>
+<pre class="hljs"><code>npx create-snowpack-app react-snowpack --template @snowpack/app-template-react
+</code></pre>
+<p>一个新的 <code>react-snowpack</code> 文件夹会被创建，并且附带最基础的依赖：</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">&quot;scripts&quot;</span>: {
+    <span class="hljs-attr">&quot;start&quot;</span>: <span class="hljs-string">&quot;snowpack dev&quot;</span>,
+    <span class="hljs-attr">&quot;build&quot;</span>: <span class="hljs-string">&quot;snowpack build&quot;</span>,
+    <span class="hljs-attr">&quot;test&quot;</span>: <span class="hljs-string">&quot;web-test-runner \&quot;src/**/*.test.jsx\&quot;&quot;</span>,
+    <span class="hljs-attr">&quot;format&quot;</span>: <span class="hljs-string">&quot;prettier --write \&quot;src/**/*.{js,jsx}\&quot;&quot;</span>,
+    <span class="hljs-attr">&quot;lint&quot;</span>: <span class="hljs-string">&quot;prettier --check \&quot;src/**/*.{js,jsx}\&quot;&quot;</span>
+  },
+  <span class="hljs-attr">&quot;dependencies&quot;</span>: {
+    <span class="hljs-attr">&quot;react&quot;</span>: <span class="hljs-string">&quot;^17.0.0&quot;</span>,
+    <span class="hljs-attr">&quot;react-dom&quot;</span>: <span class="hljs-string">&quot;^17.0.0&quot;</span>
+  },
+  <span class="hljs-attr">&quot;devDependencies&quot;</span>: {
+    <span class="hljs-attr">&quot;@snowpack/plugin-dotenv&quot;</span>: <span class="hljs-string">&quot;^2.0.5&quot;</span>,
+    <span class="hljs-attr">&quot;@snowpack/plugin-react-refresh&quot;</span>: <span class="hljs-string">&quot;^2.4.0&quot;</span>,
+    <span class="hljs-attr">&quot;@snowpack/web-test-runner-plugin&quot;</span>: <span class="hljs-string">&quot;^0.2.0&quot;</span>,
+    <span class="hljs-attr">&quot;@testing-library/react&quot;</span>: <span class="hljs-string">&quot;^11.0.0&quot;</span>,
+    <span class="hljs-attr">&quot;@web/test-runner&quot;</span>: <span class="hljs-string">&quot;^0.12.0&quot;</span>,
+    <span class="hljs-attr">&quot;chai&quot;</span>: <span class="hljs-string">&quot;^4.2.0&quot;</span>,
+    <span class="hljs-attr">&quot;prettier&quot;</span>: <span class="hljs-string">&quot;^2.0.5&quot;</span>,
+    <span class="hljs-attr">&quot;snowpack&quot;</span>: <span class="hljs-string">&quot;^3.0.1&quot;</span>
+  }
+}
+</code></pre>
+<p>你立即就可以使用 <code>npm start</code> 指令运行这个应用。本地的调试服务器会在 8080 端口运行。CSA 的 React 模板和 Create React App 的默认模板非常相似：</p>
+<p><img src="https://cdn-images-1.medium.com/max/3104/1*j3OQj_TV0ODHJZZpiaTzew.png" alt="CSA 的默认 React 页面"></p>
+<p>Snowpack 支持主流库的 <a href="https://github.com/snowpackjs/snowpack/tree/main/create-snowpack-app/cli#official-app-templates">许多官方模板</a>，如 React、Vue 和 Svelte。你只需要在指令中加入 <code>--template</code> 选项。</p>
+<h2>结语</h2>
+<blockquote>
+<p>你使用一个打包工具时应该是因为你想要使用它，而不是因为你需要使用它 —— <a href="https://www.snowpack.dev/concepts/build-pipeline#bundle-for-production">Snowpack 官方文档</a></p>
+</blockquote>
+<p>Webpack 和 Snowpack 的发布相隔了数年，尽管 Webpack 一直是打包 JavaScript 模块时人气最高的选择，但浏览器对 ESM 模块的支持开创了一种新的开发 Web 应用的方式。</p>
+<p>伴随着不打包开发以及开发中快速构建应用的能力，Snowpack 将成为一个激动人心的 Webpack 替代品，它让我们可以更轻松地开发 JavaScript 应用。与此同时，它还能让你利用 Webpack 打包生产版本，对你的应用实现构建优化。</p>
+<p>别忘了去看看 <a href="https://www.snowpack.dev/">Snowpack 的官方文档</a> 来了解更多。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

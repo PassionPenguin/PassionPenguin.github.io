@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的基础语法｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的基础语法｜Go 主题月</h1>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h2>Go 标记（Token）</h2>
+<p><strong>Go 程序由多个标记组成。</strong></p>
+<p>这些标识符是关键字、标识符、常量、字符串或是符号。</p>
+<p>如下 Go 程序语句就由 6 个标记组成：</p>
+<pre class="hljs"><code>fmt.Println(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+</code></pre>
+<p>他们分别是：</p>
+<ul>
+<li><code>fmt</code></li>
+<li><code>.</code></li>
+<li><code>Println</code></li>
+<li><code>(</code></li>
+<li><code>Hello, World!</code></li>
+<li><code>)</code></li>
+</ul>
+<h2>行分隔符以及换行</h2>
+<p>但如果语句不完整，例如如果 <code>(</code> 没有对应的 <code>)</code> 或者 <code>[</code> 没有对应的 <code>]</code>，则不会认定为是句子的末尾。譬如说：</p>
+<pre class="hljs"><code>fmt.Println(  <span class="hljs-comment">// 这里不是一只 🍊 的末尾</span>
+    <span class="hljs-string">&quot;Hello, World!&quot;</span>) <span class="hljs-comment">// 🍊 的末尾</span>
+fmt.Println(<span class="hljs-string">&quot;I&#x27;m from Guangzhou China 🇨🇳&quot;</span>) <span class="hljs-comment">// 🍊 的末尾</span>
+</code></pre>
+<p>我们无须人为给语句以 <code>;</code> 作结（不像 C++、C、Java、JavaScript 那样），因为这些分开语句的工作都将由 Go 编译器自动完成（就像是 Kotlin 那样，可省略也可麻烦～）。</p>
+<p>如果你打算将多个语句写在同一行，那它们之间必须添加 <code>;</code> 分隔符，人为分开，譬如说：</p>
+<pre class="hljs"><code>fmt.Println(<span class="hljs-string">&quot;Hello, World!&quot;</span>); fmt.Println(<span class="hljs-string">&quot;I&#x27;m from Guangzhou China 🇨🇳&quot;</span>) <span class="hljs-comment">// 🍊 的末尾</span>
+</code></pre>
+<p>不过为了代码的可读性，以及整洁性，还是分开的好～（话说你是哪一派？一步到胃派还是？）</p>
+<h2>注释</h2>
+<p>编译器会忽略它们，但高效地使用注释能够在未来程序的重构、维护中帮到我们 —— 至少不会两眼瞎。它们以 <code>/*</code> 开头并以 <code>*/</code> 结束，或者用 <code>//</code> 为始，就像这样：</p>
+<pre class="hljs"><code><span class="hljs-comment">/* 霜羽好可爱 */</span>
+<span class="hljs-comment">// 我不信！</span>
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/133d923f152949199409944f65ba0252~tplv-k3u1fbpfcp-zoom-1.image" alt="i-am-cute.avi"></p>
+<p>Go 中注释的食用方法与 JavaScript、C++、Java 等语言一致（叭），那企鹅就能够放心地去食用啦～</p>
+<h2>标识符</h2>
+<p>Go 中的标识符专门用于标识变量、函数或任何其他用户定义项的名称。Go 标识符以字母（<code>A</code> 到 <code>Z</code> 或 <code>a</code> 到 <code>z</code>）或下划线 <code>_</code> 开头，后跟零个或多个字母、下划线或数字（<code>0</code> 到 <code>9</code>）。</p>
+<p>但是 Go 不允许在标识符内使用标点符号，例如 <code>@</code>、<code>$</code> 和 <code>％</code>。Go 是区分大小写的编程语言。因此，<code>Person</code> 和 <code>person</code> 是 Go 中两个不同的标识符。这是一些符合规范的标识符：</p>
+<table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>formHash</td>
+<td>username</td>
+<td>pwd</td>
+<td>available_state</td>
+<td>tmp_1</td>
+</tr>
+<tr>
+<td>GitHubToken</td>
+<td>_tmp</td>
+<td>i</td>
+<td>j</td>
+<td>retVal</td>
+</tr>
+<tr>
+<td>url</td>
+<td>k</td>
+<td>_formdata</td>
+<td>postdata</td>
+<td>retVal</td>
+</tr>
+</tbody>
+</table>
+<p>不过值得注意的是，GoLand <s>强迫</s>（推介）我们使用驼峰式（Camel Case）变量名而不推介蛇形（Snake Case）：</p>
+<p><strong>GoLand 你坏坏！！！</strong></p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0389c01ad132470ba0183a2c021ae056~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h3>命名方式</h3>
+<p>温习一下命名方式，基本有<s>五</s>（四）种：</p>
+<ul>
+<li>camelCase</li>
+<li>PascalCase</li>
+<li>snake_case</li>
+<li>kebab-case</li>
+<li>whatisthiscase</li>
+</ul>
+<h2>字符串的连接</h2>
+<p>在 Go 语言中我们使用 <code>+</code> 连接两个字符串：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day3/string-concat.go"><code>day3/string-concat.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    fmt.Println(<span class="hljs-string">&quot;Hoarfroster&quot;</span> + <span class="hljs-string">&quot; is Handsome&quot;</span>)
+}
+</code></pre>
+<h2>关键字</h2>
+<p>下面列举了 Go 代码中的 25 个关键字或保留字：</p>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>关键字</th>
+<th>关键字</th>
+<th>关键字</th>
+<th>关键字</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>break</td>
+<td>default</td>
+<td>func</td>
+<td>interface</td>
+<td>select</td>
+</tr>
+<tr>
+<td>case</td>
+<td>defer</td>
+<td>go</td>
+<td>map</td>
+<td>struct</td>
+</tr>
+<tr>
+<td>chan</td>
+<td>else</td>
+<td>goto</td>
+<td>package</td>
+<td>switch</td>
+</tr>
+<tr>
+<td>const</td>
+<td>fallthrough</td>
+<td>if</td>
+<td>range</td>
+<td>type</td>
+</tr>
+<tr>
+<td>continue</td>
+<td>for</td>
+<td>import</td>
+<td>return</td>
+<td>var</td>
+</tr>
+</tbody>
+</table>
+<p>除了以上介绍的这些关键字，Go 语言还有 36 个预定义标识符：</p>
+<table>
+<thead>
+<tr>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+<th>标识符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>append</td>
+<td>bool</td>
+<td>byte</td>
+<td>cap</td>
+<td>close</td>
+<td>complex</td>
+<td>complex64</td>
+<td>complex128</td>
+</tr>
+<tr>
+<td>copy</td>
+<td>false</td>
+<td>float32</td>
+<td>float64</td>
+<td>imag</td>
+<td>int</td>
+<td>int8</td>
+<td>int16</td>
+</tr>
+<tr>
+<td>int32</td>
+<td>int64</td>
+<td>iota</td>
+<td>len</td>
+<td>make</td>
+<td>new</td>
+<td>nil</td>
+<td>panic</td>
+</tr>
+<tr>
+<td>print</td>
+<td>println</td>
+<td>real</td>
+<td>recover</td>
+<td>string</td>
+<td>true</td>
+<td>uint</td>
+<td>uint8</td>
+</tr>
+</tbody>
+</table>
+<p>程序一般由关键字、常量、变量、运算符、类型和函数组成。</p>
+<p>程序中可能会使用到这些分隔符：括号 <code>()</code>，中括号 <code>[]</code> 和大括号 <code>{}</code>。</p>
+<p>程序中可能会使用到这些标点符号：.、,、;、: 和 …。</p>
+<h2>Go 语言的空格</h2>
+<p>Go 语言中变量的声明必须使用空格隔开，如：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> age <span class="hljs-keyword">int</span>
+</code></pre>
+<p>语句中适当使用空格能让程序更易阅读。如果木有空格，有些太拥挤了，就像是地狱西路一样：</p>
+<pre class="hljs"><code>fruit=apples+oranges;
+</code></pre>
+<p>在变量与运算符间加入空格，程序看起来更加美观，摇身变成运凳小轻轨：</p>
+<pre class="hljs"><code>fruit = apples + oranges;
+</code></pre>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd7b842ceed541fe805c7ea8db715ee5~tplv-k3u1fbpfcp-zoom-1.image" alt="confusing-simile.webp"></p>
+<h2>格式化字符串</h2>
+<p>Go 语言中使用 <code>fmt.Sprintf</code> 格式化字符串并赋值给新串：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day3/string-format.go"><code>day3/string-format.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	<span class="hljs-comment">// %d 表示整型数字，%s 表示字符串</span>
+	<span class="hljs-keyword">var</span> stockcode = <span class="hljs-number">123</span>
+	<span class="hljs-keyword">var</span> enddate = <span class="hljs-string">&quot;2020-12-31&quot;</span>
+	<span class="hljs-keyword">var</span> url = <span class="hljs-string">&quot;Code=%d&amp;endDate=%s&quot;</span>
+	<span class="hljs-keyword">var</span> targetUrl = fmt.Sprintf(url, stockcode, enddate)
+	fmt.Println(targetUrl)
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

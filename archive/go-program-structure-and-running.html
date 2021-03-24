@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 程序结构和运行｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 程序结构和运行｜Go 主题月</h1>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h2>Hello Go 的结构是什么</h2>
+<p>在继续研究 Go 编程语言的程序构建部分之前，让我们先讨论一下 Go 程序的最基本的结构，帮助我们后续的开发。</p>
+<h3>Go 程序组成</h3>
+<p>Go 程序基本上由以下部分组成-</p>
+<ul>
+<li>包装声明g</li>
+<li>导入包</li>
+<li>函数</li>
+<li>变量</li>
+<li>语句</li>
+<li>注释</li>
+</ul>
+<h3>Hello Go 代码分析</h3>
+<p>让我们看一下上述程序的各个部分 —— 在上一篇文章我们配置好了偏好设置以后试着写的代码：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day1/hello.go"><code>day1/hello.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-comment">/* Print `Hello, World!` */</span>
+    fmt.Println(<span class="hljs-string">&quot;Hello, World!&quot;</span>)
+}
+</code></pre>
+<ul>
+<li>
+<p>程序包（<code>main</code>）定义于我们代码的第一行，声明了该程序位于的包名称。这是强制性不可省略的声明，因为 Go 程序在程序包中运行。主程序包是运行程序的起点，而每个软件包都有与之关联的路径和名称。</p>
+</li>
+<li>
+<p>下一行 <code>import &quot;fmt&quot;</code> 是一个预处理程序命令，告诉 Go 编译器导入位于 <code>fmt</code> 包中的文件。</p>
+</li>
+<li>
+<p>下一行 <code>func main()</code> 声明这是程序执行开始的主函数。</p>
+</li>
+<li>
+<p>下一行 <code>/*...*/</code> 会被编译器忽略。我们可以像在其他语言一样在 Go 程序中添加注释。注释也可以使用 <code>//</code> 开头，就类似于 Java、JavaScript 或 C++ 那样。</p>
+</li>
+<li>
+<p>下一行的 <code>fmt.Println()</code> 调用了 Go 中的一个函数，在控制台中打印了消息 <code>Hello, World!</code>。这个函数是从 <code>fmt</code> 包中导出被调用的。</p>
+</li>
+<li>
+<p>注意 <code>Println</code> 方法的大写字母 <code>P</code>。</p>
+</li>
+</ul>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56e82c7f485f4e20b462a5922ffc9501~tplv-k3u1fbpfcp-zoom-1.image" alt="golang-programstructure.png"></p>
+<blockquote>
+<p>注意：在 Go 语言中，<strong>如果一个函数或变量或是别的什么东西的名称，是以大写字母开头，Go 编译器则会将其导出</strong>。导入这个包意味着我们可以在当前包内访问到导入的包的函数、变量以及常量。</p>
+</blockquote>
+<h2>执行 Go 程序</h2>
+<h3>我们该如何使用终端执行 Go 代码？</h3>
+<h3><code>go run</code></h3>
+<ol>
+<li>
+<p>编辑一个文件，输入上述代码。</p>
+</li>
+<li>
+<p>将文件另存为 <code>hello.go</code></p>
+</li>
+<li>
+<p>打开命令提示符。</p>
+</li>
+<li>
+<p>转到保存文件的目录。</p>
+</li>
+<li>
+<p>键入 <code>go run hello.go</code>，然后按 Enter 键运行代码。</p>
+</li>
+<li>
+<p>如果我们的代码中没有错误，那么我们能看到 <code>Hello, World!</code> 打印了在终端上。</p>
+</li>
+</ol>
+<pre class="hljs"><code><span class="hljs-meta">$</span><span class="bash"> go run hello.go</span>
+Hello, World!
+</code></pre>
+<h3><code>go install</code></h3>
+<p>另外一种运行 Go 程序的方法是执行 <code>go install</code> 命令。</p>
+<ol>
+<li>
+<p>打开命令提示符。</p>
+</li>
+<li>
+<p>转到保存文件的目录。</p>
+</li>
+<li>
+<p>键入 <code>go install day2/hello.go</code>，然后按 Enter 键运行代码。</p>
+</li>
+<li>
+<p>如果我们的代码中没有错误，那么程序就会被安装到 <code>~/go/bin</code>，二进制文件的名称将是 <code>hello</code>。</p>
+</li>
+</ol>
+<p>不过当你尝试安装程序时可能会遇到以下错误：</p>
+<pre class="hljs"><code><span class="hljs-meta">$</span><span class="bash"> go install day2/hello.go</span>
+go install: no install location for .go files listed on command line (GOBIN not set)
+</code></pre>
+<p>上述错误的实际含义是，<code>go install</code> 无法找到安装编译后的二进制文件的位置。因此，让我们先给它添加环境变量。此位置由 <code>GOBIN</code> 环境变量控制。</p>
+<pre class="hljs"><code><span class="hljs-meta">$</span><span class="bash"> <span class="hljs-built_in">export</span> GOBIN=~/go/bin/</span>  
+</code></pre>
+<p>上面的命令指定 <code>go install</code> 的编译的二进制文件复制到 <code>~/go/bin/</code>。这会是一般存放 Go 二进制文件的常位置，但我们也可以随时将其更改为所需的任何位置。现在，尝试再次执行 <code>go install</code>，然后运行二进制文件：</p>
+<pre class="hljs"><code><span class="hljs-meta">$</span><span class="bash"> go install day2/hello.go</span>
+<span class="hljs-meta">$</span><span class="bash"> ~/go/bin/hello</span>
+Hello, World!
+</code></pre>
+<p>上面的命令将执行 <code>hello</code> 二进制文件，输出 <code>Hello World</code>。</p>
+<h3><code>go build</code></h3>
+<p>运行程序的第三个选项是使用 <code>go build</code>，也是 GoLand 的默认的执行方法。除了不将编译的二进制文件安装（复制）到指定路径之外，它与之 <code>go build</code> 非常相似。他会直接在当前目录下（终端所处的目录下）创建二进制文件。在终端中键入以下命令：</p>
+<pre class="hljs"><code><span class="hljs-meta">$</span><span class="bash"> go build day2/hello.go</span>
+<span class="hljs-meta">$</span><span class="bash"> ./hello</span>
+Hello, World!
+</code></pre>
+<h3>Go Play</h3>
+<p>运行程序的最后一种方法是使用 Go Playground。尽管此方法有一定的局限性（网络限制啊什么都），但是使用浏览器执行代码太方便了，还能够贡献代码，一起编辑，不香吗？</p>
+<h3>应该怎么选？</h3>
+<ul>
+<li>install：用于全局使用的应用程序</li>
+<li>build：用于项目使用的应用程序</li>
+<li>run、play：用于简单代码的应用程序</li>
+</ul>
+<h3>注意环境变量</h3>
+<p>我们需要在环境变量中添加 Go 编译器的目录，这样在终端内执行命令系统才能寻址到 Go 编译器。</p>
+<p>不过它不支持 Preprocessors，因此我们也没办法整他……</p>
+<blockquote>
+<p>注意：确保 Go 编译器在我们终端的路径中，并且在包含源文件 <code>hello.go</code> 的目录中运行上述代码。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

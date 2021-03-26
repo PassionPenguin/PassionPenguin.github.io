@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>在 iOS 14 中处理位置权限和管理近似地址访问 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://medium.com/better-programming/handling-location-permissions-in-ios-14-2cdd411d3cca">Handling Location Permissions in iOS 14</a></li>
+<li>原文作者：<a href="https://medium.com/@anupamchugh">Anupam Chugh</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2020/handling-location-permissions-in-ios-14.md">https://github.com/xitu/gold-miner/blob/master/article/2020/handling-location-permissions-in-ios-14.md</a></li>
+<li>译者：<a href="https://github.com/Godlowd">Godlowd</a>，<a href="https://github.com/lsvih">lsvih</a></li>
+<li>校对者：<a href="https://github.com/lsvih">lsvih</a>，<a href="https://github.com/PassionPenguin">Hoarfroster</a></li>
+</ul>
+</blockquote>
+<h1>在 iOS 14 中处理位置权限和管理近似地址访问</h1>
+<p><img src="https://cdn-images-1.medium.com/max/10944/0*AUpXEd4-yyCDLhMn" alt="Photo by Heidi Fin on Unsplash."></p>
+<p>Apple 毫无疑问是数据隐私方面的引领者。访问地理位置这一功能在过去一直被不同的 app 错误地使用或者滥用。这种行为不仅对安全是一种威胁，甚至是一种破坏。在 iOS 14 中，Apple 又一次希望给予用户对他们正在分享的数据更好的控制权。</p>
+<p>iOS 14 小小地修改了一下 <code>CoreLocation</code> 框架。更进一步地说，用户可以选择给予访问精确或者近似的地理位置的权限。</p>
+<p>在我们了解如何掌握 iOS 14 中新的位置改变之前，让我们快速地回顾一下在 iOS 13 的地理位置权限中有哪些新东西。</p>
+<h2>iOS 13 位置权限快速回顾</h2>
+<p>去年，Apple 在 iOS 13 中改变了地理位置跟踪权限的工作方式。</p>
+<ul>
+<li>最明显的改动是，出现了一个新的权限“只允许一次”，它要求设置 <code>NSLocationWhenInUseUsageDescription</code> 配置内容。必须要指明的是，当应用程序被关闭的时候，这个权限会被自动撤销。</li>
+<li>此外，启用“Allow While Using The App”将暂时性地“总是允许”位置追踪。现在，当你尝试在后台访问地理位置时，系统会向用户显示一个对话框来选择是否继续允许追踪。</li>
+<li>iOS 13.4 引入了一种更好的方式去快速的确保“总是允许”权限被授予。只需要请求 <code>authorizedWhenInUse</code>，如果它被授予了权限，就会出现 <code>authorizedAlways</code> 的提示信息。</li>
+</ul>
+<p>想更深入的研究在你的应用中 iOS 13 的地理位置权限，<a href="https://medium.com/better-programming/handling-ios-13-location-permissions-5482abc77961">来看看这篇文章</a>。</p>
+<p>在接下来的部分，我们将会看到一个 iOS 14 的 SwiftUI 应用中管理地理位置产生了哪些改变。</p>
+<p>那就让我们开始吧。</p>
+<h2>iOS 14 CoreLocation 框架的改变</h2>
+<p>Apple 已经废弃了我们之前在 <code>CLLocationManager</code> 中调用的类方法  <code>authorizationStatus()</code>。</p>
+<p>这意味着从 iOS 14 开始，<code>authorizationStatus()</code> 只能被 <code>CLLocationManager</code> 的实例调用.</p>
+<p>Apple 也废弃了 <code>didChangeAuthorization</code> 中带有一个 <code>status</code> 参数的 <code>CoreLocation</code> 方法。取而代之的是，现在有了一个新的 <code>locationManagerDidChangeAuthorization</code> 方法。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2720/1*T6ZJe1MBihTxLgvatZbHPQ.png" alt=""></p>
+<p>为了确保地理位置的精确度状态，我们可以在地理位置管理者的实例中使用新的枚举属性 <code>accuracyAuthorization</code>。这个属性是 <code>CLAccuracyAuthorization</code> 类型的，有两个枚举值：</p>
+<ul>
+<li><code>fullAccuracy</code></li>
+<li><code>reducedAccuracy</code>（返回一个近似的而不是精确的地理位置）</li>
+</ul>
+<p>为更新地理位置而设置 <code>CoreLocation</code> 的方式与在 iOS 13 中完全一样：</p>
+<pre class="hljs"><code>locationManager.delegate <span class="hljs-operator">=</span> <span class="hljs-keyword">self</span>
+locationManager.requestAlwaysAuthorization()
+
+locationManager.startUpdatingLocation()
+
+locationManager.allowsBackgroundLocationUpdates <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>
+locationManager.pausesLocationUpdatesAutomatically <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>
+</code></pre>
+<blockquote>
+<p>请注意：如需 allowsBackgroundLocationUpdates，请确保你在 Xcode 项目设置中启用了后台模式（Background mode）。</p>
+</blockquote>
+<p>现在，当你在你的设备上运行这段代码时，在 iOS 14 下你将得到如下的提示：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*odLcpX6ZTLZbU4dIhFhuug.png" alt="Screenshot from the author’s phone."></p>
+<p>通过拨动“精确度”按钮, 你可以选择允许模糊或者精确的地理位置权限。</p>
+<p>现在，可能会出现只要求你访问用户的准确地理位置的情况。</p>
+<p>谢天谢地，在 iOS 14 中有一个新方法能让我们暂时性的发出请求：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2720/1*2_Y2M6m8lvAcCUOr_hrNYQ.png" alt=""></p>
+<p>这个 <code>requestTemporaryFullAccuracyAuthorization</code> 方法需要一个 <code>purpose</code> 键来解释为何需要访问用户的准确地理位置。这个键被定义在 <code>info.plist</code> 文件中的一个 <code>NSLocationTemporaryUsageDescriptionDictionary</code> 字典里，如下图所示：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*hbgrE7IeurnF6h4VmUmYVw.png" alt=""></p>
+<p>一旦 <code>TemporaryFullAccuracyAuthorization</code> 被调用了，就会出现下面的提示信息：</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*PKM54GYFk_ZxBszrOBt6XA.png" alt="Screenshot by the author."></p>
+<p><code>reducedAccuracy</code> 和 <code>fullAccuracy</code> 位置更新都是在代理方法 <code>didUpdateLocations</code> 中被接收的。</p>
+<p>一个用 Swift UI 编写的 iOS 14 <code>CoreLocation</code> 应用的 demo 的源代码可以在 <a href="https://github.com/anupamchugh/iOS14-Resources/tree/master/iOS14SwiftUICoreLocation">GitHub</a> 获取。</p>
+<p>请务必注意，如果使用 <code>reducedAccuracy</code> 进行后台地理位置更新，更新的时间间隔将不会改变。在这种情况下，信号灯和地区检测也将被禁用。</p>
+<h2>CoreLocation 在 AppClips、Widgets 和默认设置中的更新</h2>
+<p>AppClips 就像一个可以无需安装完整应用程序就可运行的迷你 APP 模块。</p>
+<ul>
+<li>当你通过 AppClips 访问地理位置时，将不会出现”仅当使用 App 时允许”的权限，而是会出现一个在当天结束时自动重置的“在使用期间直到明天”的权限。</li>
+<li>对于在 WidgetKit 中访问地理位置，你需要在 <code>info.plist</code> 文件中定义 <code>NSWidgetWantsLocation</code> 键。</li>
+<li>如果想默认情况下只在访问精确地理位置的时候显示提示信息，你可以在<code>info.plist</code>文件中添加键 <code>NSLocationDefaultAccuracyReduced</code>。这样做，精确地理位置访问按钮就不会显示在权限对话框了。但是用户仍然可以在手机的设置中启用切换开关。</li>
+</ul>
+<h2>总结</h2>
+<p><code>CoreLocation</code> 框架在 iOS 14 中发生了一点有趣的改变，能够让用户对他们的地理位置数据有更多的掌控权。并不是所有的 App 都需要获得准确的地理位置信息，所以你可以选择用 <code>reducedAccuracy</code> 属性来仅获取近似的地理位置。</p>
+<p>这就是这篇文章的全部内容了，谢谢阅读</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

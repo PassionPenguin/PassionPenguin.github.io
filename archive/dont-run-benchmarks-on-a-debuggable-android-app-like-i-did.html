@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>不要在可调试的 Android App 上运行基准测试 (就像我对协程做的那样) - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://medium.com/specto/dont-run-benchmarks-on-a-debuggable-android-app-like-i-did-34d95331cabb">Don’t Run Benchmarks on a Debuggable Android App (Like I Did for Coroutines)</a></li>
+<li>原文作者：<a href="https://medium.com/@nathanaelsilverman">Nathanael</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/dont-run-benchmarks-on-a-debuggable-android-app-like-i-did.md">https://github.com/xitu/gold-miner/blob/master/article/2021/dont-run-benchmarks-on-a-debuggable-android-app-like-i-did.md</a></li>
+<li>译者：<a href="https://github.com/keepmovingljzy">keepmovingljzy</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>、<a href="https://github.com/5Reasons">5Reasons</a></li>
+</ul>
+</blockquote>
+<h1>不要在可调试的 Android App 上运行基准测试 (就像我对协程做的那样)</h1>
+<p>上周我写了一篇关于 <a href="https://medium.com/specto/android-startup-tip-dont-use-kotlin-coroutines-a7b3f7176fe5">Kotlin 协程在 Android 上初始化耗时超过 100ms</a>。Knuttyse 问我是否使用了“生产构建优化”来进行测试，然而实际上我并没有这么做。我本以为这不会有太大的区别，所以我尝试了一下，没想到差别大到难以想象。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2048/1*W1KWLWBcLKVYLKYI0r1sYg.jpeg" alt="图源 Alex E. Proimos — CC BY 2.0"></p>
+<p>一开始我在调试版本下进行测试，这次我们从发行版本开始，启用了代码缩减和资源缩减，运行相同的代码：</p>
+<pre class="hljs"><code><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyApplication</span> : <span class="hljs-type">Application</span></span>() {
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">super</span>.onCreate()
+        
+        <span class="hljs-comment">// Tasks that must happen synchronously.</span>
+
+        CoroutineScope(Dispatchers.Default).launch {
+            <span class="hljs-comment">// Everything else.</span>
+        }
+    }
+}
+</code></pre>
+<p>在运行 Android 9 的 Moto G6 上测试该应用（调试版本），启动协程平均阻塞主线程 110±18ms，如果是发行版本只需要 9±1ms（n=10, 协程版本 <code>1.4.2</code>）。我想我欠开发协程的人们一个道歉，但同时我也好奇到底发生什么，代码缩减有那么好吗？</p>
+<p>答案是否定的，在这种情况下，关闭代码缩减会使阻塞时间减低到 14±1ms。仍然比调试版本快得多。我开始研究调试版本和发行版本之间的差异，但没有发现任何可以解释这个巨大的差异。所以我四处询问，一些友好的工程师（感谢 Romain Guy，cketti 和 John Reck）解释说，严格来说这不是构建的区别，调试构建通常被配置为可调试的，这反过来改变了运行时的行为。让我们深入分析一下。</p>
+<p>“debug” 是 Android 中默认两种构建方式之一，另一种是 “release”。除非修改过，否则调试构建类型会将 “debuggable” 设置为<code>true</code>。任何构建类型都可以这样配置，包括 “release”。可调试的设置不会影响编译过程，但是可以将调试器附加到应用程序。现在我知道实际上附加调试器会减慢速度，但之前却没有意识到启用附加调试器<strong>可能</strong>也会如此。为什么呢？个人觉得，因为应用程序必须做好准备去附加调试器，导致某些运行时的优化不能被应用，必须不断收集元数据，等等。</p>
+<p>无论如何，我决定测试所有场景（十次统计平均耗时）：</p>
+<ul>
+<li>Non-debuggable, minified release 构建：9±1ms</li>
+<li>Non-debuggable, <strong>non-minified</strong> 构建：14±1ms</li>
+<li><strong>Debuggable</strong>, <strong>minified</strong> release 构建：45±5ms</li>
+<li>Debuggable, <strong>non-minified</strong> release 构建：92±2ms</li>
+<li>Debuggable, non-minified <strong>debug</strong> 构建：93±5ms</li>
+</ul>
+<p>首先，我很高兴地发现我的手机比前一周快了 15%，一个（可调试的）调试版本的平均耗时现在是 93ms，而不是110ms。当然，这是可能发生的，这只是说明应该在尽可能相似的环境中进行基准比较。它还证实了可调试和代码缩减设置是默认构建类型之间唯一的性能差异。除此之外我们还能得出什么结论呢？</p>
+<p>假设你的发行版本是不可调试的（默认设置），正如我之前所说的，<strong>Kotlin 协程在 Android 上初始化所需的时间基本不会超过 100ms</strong>。至少在我的设备上，上述数据是成立的，我认为这个结论也适用于现在大部分常用的设备。Kotlin 协程的初始化可能需要 15ms 左右的时间，这么短的耗时可以说是无足轻重的。对于开头提到的、我之前写的那篇文章所造成的误解，我深感抱歉。🙇‍♂️</p>
+<p>同样值得注意的是，启用可以调试模式会导致协程的初始化时间增加 650%。远远超出了<a href="https://youtu.be/ZffMCJdA5Qc?t=635">Android 性能工程师报告</a>的 0**‑**80%。当不使用调试器时，你可以关闭调试模式以提高速度。</p>
+<p>最后，经历了这次惨痛的教训：<strong>永远不要在可调式的应用程序上运行基准测试</strong>。Android 文档在<a href="https://developer.android.com/studio/profile/benchmark#configuration-errors">新的基准库</a>上简单地提了一下，但是我没想到它会产生这样的影响。你呢？甚至 Android Profiler 也用于可调试的应用程序，这意味着在分析过程中所采取的时间度量将不能代表生产性能。</p>
+<hr>
+<p>如果你希望轻松地监控你的应用程序的性能？在生产环境中，关闭可调试模式，并且开销不到 5%？<a href="https://specto.dev">你说对了！</a></p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

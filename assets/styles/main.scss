@@ -22,38 +22,16 @@ html, body {
 
 .banner {
     width: 100%;
-    height: calc(100vw * .75);
-    position: relative;
 
     .image {
-        &::before {
-            background: url("/assets/images/main.png") no-repeat 0 0/cover;
-            content: " ";
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            z-index: 0;
-        }
-
-        &::after {
-            content: " ";
-            display: block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            z-index: 0;
-            filter: blur(6px);
-            background-size: cover;
-            background: #00000044 fixed center top/cover;
-        }
+        display: block;
+        height: 192px;
+        margin: 0 auto;
+        padding-top: 24px;
     }
 
     .tips {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        margin-top: 24px;
         text-align: center;
 
         * {
@@ -68,7 +46,8 @@ html, body {
 
 @media screen and (min-width: 768px) {
     .banner {
-        height: calc(100vw * .25);
+        margin-top: 72px;
+        padding: 24px 0;
 
         .tips {
             h1 {
@@ -109,6 +88,13 @@ html, body {
 }
 
 .container {
+
+    &.postList {
+        background: var(--color-auto-gray-2);
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
     .post {
         margin: 16px 0;
 

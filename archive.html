@@ -1,4 +1,25 @@
-<!doctype html><html lang=en class=lightHeaderBar><meta charset=UTF-8><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><title>Archive - Hoarfroster</title><link rel=stylesheet href=/assets/styles/main.css><div class=banner><div class=image></div><div class=tips><h1>小羽的小窝</h1><h2>这里，就是小羽的文章啦～</h2></div></div><div class="container postList"></div><div class=footer></div><script src=/assets/scripts/index.min.js></script><script>init();
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>小羽的小窝</title>
+    <link href="/assets/styles/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="banner">
+    <img alt="Hoarfroster" class="image" src="/assets/images/Hoarfroster.svg">
+    <div class="tips"><h1>小羽的小窝</h1>
+        <h2 resource="randText">这里是霜羽的文章呀！</h2>
+    </div>
+</div>
+<div class="container postList"></div>
+<div class="footer"></div>
+<script src="/assets/scripts/index.min.js"></script>
+<script>
+    init();
 
     function post(e) {
         let container = ce({name: "div", classList: ["post"]});
@@ -33,7 +54,12 @@
     fetch("config/article.min.json")
         .then(response => response.json())
         .then(data => {
-            data.forEach(e => {
-                post(e);
-            });
-        });</script>
+            window.fetchedResult = data;
+            for (const item of data.sort((a, b) => {
+                return new Date(b['time']).getTime() - new Date(a['time']).getTime();
+            })) post(item);
+        });
+</script>
+</body>
+</html>
+

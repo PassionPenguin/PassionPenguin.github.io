@@ -1,63 +1,74 @@
 <!doctype html>
-<html lang=en class="lightHeaderBar indexPage">
-<meta charset=UTF-8>
-<meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
-<meta http-equiv=X-UA-Compatible content="ie=edge">
-<title>Hoarfroster</title>
-<link rel=stylesheet href=/assets/styles/main.css>
-<div class=banner>
-    <div class=image></div>
-    <div class=tips><h1>小羽的小窝</h1>
-        <h2 resource=randText></h2></div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>小羽的小窝</title>
+    <link href="/assets/styles/main.css" rel="stylesheet">
+</head>
+<body>
+<div class="banner">
+    <img alt="Hoarfroster" class="image" src="/assets/images/Hoarfroster.svg">
+    <div class="tips"><h1>小羽的小窝</h1>
+        <h2 resource="randText">这里是霜羽呀！</h2>
+    </div>
 </div>
 <div class="container postList">
-    <div class=intro><h3>霜羽 Hoarfroster</h3>
+    <div class="intro"><h3>霜羽 Hoarfroster</h3>
         <p>哈喽～这里是霜羽呀，很高兴遇见你嗷～<br>初次见面，请多多指教～
-        <p>霜羽现在生活在魔都广州，正在努力学习 + 为<a href=https://github.com/xitu/gold-miner>掘金翻译计划</a>翻译文章。起初学习 Web 端开发，现在正在学习移动端开发以及数据分析，正在努力成为一名全栈开发者 ψ(｀∇´)ψ
-        <p>霜羽喜欢中长距离（50 KM+）公路骑行、烘培（蛋糕 + 少部分甜点）、计算机、滑雪（尤爱单板）。如果你想聊聊技术或者交个朋友，可以给我<a href=mailto:penguin.zhang@qq.com>发个邮件</a>，也可以加一下我的微信<code>PassionPenguin</code>。
+        <p>霜羽现在生活在魔都广州，正在努力学习 + 为<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>翻译文章。起初学习 Web
+            端开发，现在正在学习移动端开发以及数据分析，正在努力成为一名全栈开发者 ψ(｀∇´)ψ
+        <p>霜羽喜欢中长距离（50 KM+）公路骑行、烘培（蛋糕 + 少部分甜点）、计算机、滑雪（尤爱单板）。如果你想聊聊技术或者交个朋友，可以给我<a
+                href="mailto:penguin.zhang@qq.com">发个邮件</a>，也可以加一下我的微信<code>PassionPenguin</code>。
     </div>
-    <div class=posts><h3>最近的文章～</h3></div>
+    <div class="posts"><h3>最近的文章～</h3></div>
 </div>
-<div class=footer></div>
-<script src=/assets/scripts/index.min.js></script>
-<script>init();
+<div class="footer"></div>
+<script src="/assets/scripts/index.min.js"></script>
+<script>
 
-function post(e) {
-    let container = ce({name: "div", classList: ["post"]});
-    const date = new Date(e["time"]);
-    container.appendChild(ce({
-        name: "h2", classList: ["title"], innerHTML: e["title"] + e["tags"].map(el => {
-            let href = window.location.href;
-            let search = window.location.search;
-            let splitSearch = search.split(';');
-            let src;
-            if (search !== "")
-                if (splitSearch['sort'] !== undefined)
-                    if (splitSearch['sort'].match(RegExp("label%3A*")) !== null)
-                        src = href + search.replace(RegExp("label%3A*(&|\\+|$)"), `label%3A${el.name}`);
-                    else src = href + search.split("+").concat([`label%3A${el.name}`]).join("+");
-                else src = href + search + `&sort=label%3A${el.name}`;
-            else src = href + `?sort%3A${el.name}`
-            return `<a href='${src}' class="${el.name} label">${el.name}</a>`
-        }).join(""), onclick: () => {
-            openUrl(`/archive/${e['url'].replace('md', 'html')}`);
-        }
-    }));
-    container.appendChild(ce({
-        name: "p",
-        classList: ["meta"],
-        innerHTML: date.toDateString()
-    }));
-    container.appendChild(ce({name: "p", classList: ["description"], innerHTML: e["description"]}));
-    $(".container .posts")[0].appendChild(container);
-}
+    init();
 
-fetch("config/article.min.json")
-    .then(response => response.json())
-    .then(data => {
-        data.sort((a, b) => {
-            return (new Date(b['time'])) - (new Date(a['time']));
-        }).splice(0, 10).forEach(e => {
-            post(e);
-        });
-    });</script>
+    function post(e) {
+        let container = ce({name: "div", classList: ["post"]});
+        const date = new Date(e["time"]);
+        container.appendChild(ce({
+            name: "h2", classList: ["title"], innerHTML: e["title"] + e["tags"].map(el => {
+                let href = window.location.href;
+                let search = window.location.search;
+                let splitSearch = search.split(';');
+                let src;
+                if (search !== "")
+                    if (splitSearch['sort'] !== undefined)
+                        if (splitSearch['sort'].match(RegExp("label%3A*")) !== null)
+                            src = href + search.replace(RegExp("label%3A*(&|\\+|$)"), `label%3A${el.name}`);
+                        else src = href + search.split("+").concat([`label%3A${el.name}`]).join("+");
+                    else src = href + search + `&sort=label%3A${el.name}`;
+                else src = href + `?sort%3A${el.name}`
+                return `<a href='${src}' class="${el.name} label">${el.name}</a>`
+            }).join(""), onclick: () => {
+                openUrl(`/archive/${e['url'].replace('md', 'html')}`);
+            }
+        }));
+        container.appendChild(ce({
+            name: "p",
+            classList: ["meta"],
+            innerHTML: date.toDateString()
+        }));
+        container.appendChild(ce({name: "p", classList: ["description"], innerHTML: e["description"]}));
+        $(".container .posts")[0].appendChild(container);
+    }
+
+    fetch("config/article.min.json")
+        .then(response => response.json())
+        .then(data => {
+            data.sort((a, b) => {
+                return (new Date(b['time'])) - (new Date(a['time']));
+            }).splice(0, 10).forEach(e => {
+                post(e);
+            });
+        });</script>
+</body>
+</html>

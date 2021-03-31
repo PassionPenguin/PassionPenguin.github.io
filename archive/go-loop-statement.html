@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的循环句｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的循环句｜Go 主题月</h1>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<p>在不少实际问题中有许多具有规律性的重复操作，因此在程序中就需要重复执行某些语句。一般来说一个循环是这样的：</p>
+<pre class="hljs"><code>graph LR
+id1(START) --&gt; fors[for]
+fors --&gt; cs[条件语句]
+cs --true--&gt; 代码段
+代码段 --&gt; fors
+cs --false--&gt; id2
+</code></pre>
+<h2>Go 的循环句</h2>
+<p>循环提供了一种快速和简单的方式去做一些重复的事。你可以把循环想成一种计算机化的游戏，告诉某人在一个方向上走 X 步，然后在另一个方向上走 Y 步；例如，“向东走 5 步”可以用一个循环来这样表达：</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> step := <span class="hljs-number">0</span>; step &lt; <span class="hljs-number">5</span>; step++ {
+    fmt.Println(<span class="hljs-string">&quot;向东走了一步&quot;</span>)
+}
+</code></pre>
+<p>循环有很多种类，但本质上它们都做的是同一件事 —— 把一个动作重复了很多次（虽然说可能不重复，即重复次数为 0）。</p>
+<p>各种循环机制提供了不同的方法去确定循环的开始和结束。不同情况下，某一种类型循环会比其它的循环用起来更简单。</p>
+<p>Go 语言为我们提供了：</p>
+<ul>
+<li>for 循环</li>
+</ul>
+<p>基本上我们可以用 for 循环替代其他所有的循环。</p>
+<h3>栗子</h3>
+<p>一个用于示例的输出企鹅真帅 1000x 的循环是这个样子的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> step := <span class="hljs-number">0</span>; step &lt; <span class="hljs-number">1000</span>; step++ {
+    fmt.Println(<span class="hljs-string">&quot;企鹅真帅&quot;</span>)
+}
+</code></pre>
+<h2><code>for</code> 的组成</h2>
+<p>Go 语言的 <code>for</code> 循环有三个组成部分，可以组成千差万别的，适用于特定情况的循环结构。</p>
+<p>和 C 语言的 <code>for</code> 一样：</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> init; condition; post { }
+</code></pre>
+<p>和 C 的 <code>while</code> 一样：</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> condition { }
+</code></pre>
+<p>和 C 的 <code>for(;;)</code> 一样：</p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> { }
+</code></pre>
+<p>其中：</p>
+<ul>
+<li><code>init</code>： 一般为赋值表达式，给控制变量赋初值；</li>
+<li><code>condition</code>： 关系表达式或逻辑表达式，循环控制条件；</li>
+<li><code>post</code>： 一般为赋值表达式，给控制变量增量或减量。</li>
+</ul>
+<p><code>for</code> 语句执行过程如下：</p>
+<ul>
+<li>
+<ol>
+<li>初始化（执行 <code>init</code>）</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>判别赋值表达式 init 是否满足给定条件</li>
+</ol>
+<ul>
+<li>若其值为 <code>true</code>，满足循环条件，则执行循环体内语句，然后执行 <code>post</code>，进入第二次循环，再判别 <code>condition</code></li>
+<li>如果 <code>condition</code> 的值为 <code>false</code>，不满足条件，就终止 <code>for</code> 循环，执行循环体外下一个语句。</li>
+</ul>
+</li>
+</ul>
+<h3>三元循环</h3>
+<p>Go 默认的 for 循环的与 C 或 Java 一个样子：</p>
+<pre class="hljs"><code>sum := <span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">5</span>; i++ {
+    sum += i
+}
+fmt.Println(sum) <span class="hljs-comment">// 10 (1+2+3+4)</span>
+</code></pre>
+<ul>
+<li>一开始运行 <code>i := 1</code></li>
+<li>条件语句 <code>i &lt; 5</code></li>
+<li>每次循环后运行 <code>i++</code></li>
+</ul>
+<h3>类 While 循环</h3>
+<p>如果省略掉初始化和执行后操作语句，则会出现类似于 while 的循环：</p>
+<pre class="hljs"><code>n := <span class="hljs-number">1</span>
+<span class="hljs-keyword">for</span> n &lt; <span class="hljs-number">5</span> {
+    n *= <span class="hljs-number">2</span>
+}
+fmt.Println(n) <span class="hljs-comment">// 8 (1*2*2*2)</span>
+</code></pre>
+<ul>
+<li>条件语句 <code>n &lt; 5</code></li>
+</ul>
+<h3>无限循环</h3>
+<p>如果继续省略掉条件语句，则会出现无限循环：</p>
+<pre class="hljs"><code>sum := <span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> {
+    sum++ <span class="hljs-comment">// 无限循环</span>
+}
+fmt.Println(sum) <span class="hljs-comment">// 不会被执行</span>
+</code></pre>
+<h3>范围循环</h3>
+<p>通常使用范围循环来更好地遍历 <code>slices</code>、<code>arrays</code>、<code>maps</code>、<code>channel</code> 或 <code>string</code> 中的元素。</p>
+<pre class="hljs"><code>strings := []<span class="hljs-keyword">string</span>{<span class="hljs-string">&quot;霜羽&quot;</span>, <span class="hljs-string">&quot;好看&quot;</span>}
+<span class="hljs-keyword">for</span> i, s := <span class="hljs-keyword">range</span> strings {
+    fmt.Println(i, s)
+}
+</code></pre>
+<h3>跳过循环</h3>
+<p>与 Java 和 C 一样，在 Go 中我们使用 <code>continue</code> 关键词跳过单次循环：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day10/penguin-continue-say-cool.go"><code>day10/penguin-continue-say-cool.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">20</span>; i++ {
+    <span class="hljs-keyword">if</span> i%<span class="hljs-number">2</span> != <span class="hljs-number">0</span> { <span class="hljs-comment">// 跳过循环</span>
+        <span class="hljs-keyword">continue</span>
+    }
+    fmt.Println(<span class="hljs-string">&quot;霜羽在第 &quot;</span> + strconv.Itoa(i) + <span class="hljs-string">&quot; 次循环表示 ta 很酷&quot;</span>)
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

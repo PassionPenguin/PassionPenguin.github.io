@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的条件句｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的条件句｜Go 主题月</h1>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h2>Go 的条件句</h2>
+<p>当需要我们通过限定一个或多个条件下才去执行特定语句的时候，我们就应该选择条件句。</p>
+<p>下图就完美地展示了程序语言中条件语句的结构：</p>
+<pre class="hljs"><code>graph TD
+A -- CONDITION --&gt; Execuation --&gt; B
+A --&gt; B
+</code></pre>
+<p>当 CONDITION 的情况下，将会执行代码，否则直接跳过这个语段。</p>
+<p>比如说如果有人形容 Penguin 词语不是 cute，那么就 gg 了 🐶：</p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	description := <span class="hljs-string">&quot;ugly&quot;</span>
+	<span class="hljs-keyword">if</span> description != <span class="hljs-string">&quot;cute&quot;</span> {
+		fmt.Println(<span class="hljs-string">&quot;You fool. (doge)&quot;</span>)
+	}
+}
+</code></pre>
+<p>Go 语言提供了以下几种条件判断语句：</p>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>if</code> 语句</td>
+<td><code>if</code> 语句由一个布尔表达式后紧跟一个或多个语句组成</td>
+</tr>
+<tr>
+<td><code>if-else</code> 语句</td>
+<td>在 <code>if</code> 语句后可以使用可选的 <code>else</code> 语句，当 if 条件为否时就会执行 <code>else</code> 语句中的语句</td>
+</tr>
+<tr>
+<td><code>if</code> 嵌套语句</td>
+<td>你可以在 <code>if</code> 或 <code>else if</code> 语句中嵌入一个或多个 <code>if</code> 或 <code>else if</code> 语句</td>
+</tr>
+<tr>
+<td><code>switch</code> 语句</td>
+<td><code>switch</code> 语句用于基于不同条件执行不同动作</td>
+</tr>
+<tr>
+<td><code>select</code> 语句</td>
+<td><code>select</code> 语句类似于 <code>switch</code> 语句，但是 <code>select</code> 会随机执行一个可运行的 <code>case</code>。如果没有 <code>case</code> 可运行，它就会被阻塞，直到有匹配的 <code>case</code> 可运行才会恢复</td>
+</tr>
+</tbody>
+</table>
+<p>注意：Go 没有三目运算符，所以不支持 ?: 形式的条件语句，当然，我们也只能够使用自定义函数解决了。</p>
+<h2>三目</h2>
+<p>虽然说三目语句的可读性可维护性不高（我指的是比较长的三目），但是真的好用。</p>
+<p>Go 官方明确支持了不会支持三目，<a href="https://groups.google.com/d/msg/golang-nuts/dbyqx_LGUxM/tLFFSXSfOdQJ">这里这里</a> 或者 <a href="http://golang.org/doc/faq#Does_Go_have_a_ternary_form">这里这里</a>。Go 原生不支持三目语句，说是为了代码可读性（。</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">If</span><span class="hljs-params">(condition <span class="hljs-keyword">bool</span>, trueVal, falseVal <span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">interface</span></span>{} {
+    <span class="hljs-keyword">if</span> condition {
+        <span class="hljs-keyword">return</span> trueVal
+    }
+    <span class="hljs-keyword">return</span> falseVal
+}
+</code></pre>
+<p>挺不方便的……</p>
+<h2>if 语句</h2>
+<p>一般来说 if 语句都由一个布尔表达式引导，后紧跟一个代码段。</p>
+<h3>if 语句语法</h3>
+<p>Go 中一个基本 if 句是这样的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> 布尔表达式 {
+    <span class="hljs-comment">/* 在布尔表达式为 true 时执行 */</span>
+}
+</code></pre>
+<p>if 语句在布尔表达式为 true 时，其后紧跟的代码段会被执行，而如果为 false 则不执行。如图所示：</p>
+<p>流程图如下：</p>
+<pre class="hljs"><code>graph TD
+start(START) --&gt; if --true--&gt; Execuation --&gt; id(END)
+if --false--&gt; id(END)
+</code></pre>
+<p>实例代码还是一样的：</p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	description := <span class="hljs-string">&quot;ugly&quot;</span>
+	<span class="hljs-keyword">if</span> description != <span class="hljs-string">&quot;cute&quot;</span> {
+		fmt.Println(<span class="hljs-string">&quot;You fool. (doge)&quot;</span>)
+	}
+}
+</code></pre>
+<h3>if-else 语句</h3>
+<p>我们可以在 if 语句后跟上 else 语句, 用于在布尔表达式为 false 时执行。</p>
+<h3>if-else 语句语法</h3>
+<p>Go 编程语言中 if-else 语句的语法如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> 布尔表达式 {
+    <span class="hljs-comment">/* 在布尔表达式为 true 时执行 */</span>
+} <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">/* 在布尔表达式为 false 时执行 */</span>
+}
+</code></pre>
+<p>比如说……</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> description == <span class="hljs-string">&quot;cute&quot;</span> {
+	fmt.Println(<span class="hljs-string">&quot;I love u, my dear~&quot;</span>)
+} <span class="hljs-keyword">else</span> {
+	fmt.Println(<span class="hljs-string">&quot;找死&quot;</span>)
+}
+</code></pre>
+<pre class="hljs"><code>graph TD
+id(START) --&gt; if
+if --false--&gt; else --&gt; id2(END)
+if --true--&gt; Execuation --&gt; id2
+</code></pre>
+<h3>if 嵌套语句</h3>
+<p>我们可以在 if 或 else if 语句中嵌入一个或多个 if 或 else if 语句，以期更有针对性的编写条件语句，我指的是，超级套娃！！！</p>
+<h4>嵌套版语法</h4>
+<p>Go 编程语言中 if...else 语句的语法如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> 布尔表达式 <span class="hljs-number">1</span> {
+    <span class="hljs-comment">/* 在布尔表达式 1 为 true 时执行 */</span>
+    
+    <span class="hljs-keyword">if</span> 布尔表达式 <span class="hljs-number">2</span> {
+        <span class="hljs-comment">/* 在布尔表达式 1 和 2 都为 true 时执行 */</span>
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> 布尔表达式 <span class="hljs-number">3</span> {
+            <span class="hljs-comment">/* 在布尔表达式 1 和 3 都为 true 时执行 */</span>
+        }
+    }
+}
+</code></pre>
+<pre class="hljs"><code>graph TD
+id(START) --&gt; if
+if --false--&gt; else --&gt; id2(END)
+if --true--&gt; Execuation --&gt; if2[if] --false--&gt; id2
+if2 --true--&gt; Execuation2 --&gt; id2
+</code></pre>
+<p>当然你也你可以以同样的方式在 if 语句中嵌套 else if-else 语句，不过这里霜羽想不到什么好点子给出好的栗子 🌰，客官放过霜羽叭……</p>
+<h2>switch 语句</h2>
+<p>Go 中的 <code>switch</code> 语句允许我们使用一个变量，对一个列表与值依次比较，当符合条件时就会执行对应的代码块中的代码。</p>
+<p>在 Go 编程中，<code>switch</code> 语句有两种类型：</p>
+<p>表达式 <code>swtich</code> —— 在表达式 <code>switch</code> 中，<code>case</code> 包含一个表达式返回一个布尔值。</p>
+<p>类型 <code>switch</code> —— 在类型 <code>switch</code> 中，<code>case</code> 包含的类型将与所给变量类型进行比较。</p>
+<pre class="hljs"><code>graph TD
+    id(START) --&gt; switch
+    switch --case 1--&gt; s1[代码段 1]
+    switch --&gt;|case 2| s2[代码段 2]
+    switch --&gt;|default| s3[默认代码段]
+    s1 --&gt; id2(END)
+    s2 --&gt; id2(END)
+    s3 --&gt; id2(END)
+</code></pre>
+<h3>表达式 <code>swtich</code></h3>
+<pre class="hljs"><code><span class="hljs-keyword">switch</span> A {
+    <span class="hljs-comment">/* A 可为可执行表达式或变量或留空 */</span>
+    <span class="hljs-keyword">case</span> B:
+        <span class="hljs-comment">/* 代码段 
+            B 可为表达式或变量 A 所对应类型的值
+        */</span>
+    <span class="hljs-keyword">case</span> C:
+        <span class="hljs-comment">/* 代码段 
+            C 可为表达式或变量 A 所对应类型的值
+        */</span>
+        
+    <span class="hljs-comment">/* 你可以有任意数量的表达式 */</span>
+    <span class="hljs-keyword">default</span> : 
+        <span class="hljs-comment">/* 代码段
+            可选，可以省略 */</span>
+}
+</code></pre>
+<p>比如说：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day8/switch-esp.go"><code>day8/switch-esp.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	description := <span class="hljs-string">&quot;ugly&quot;</span>
+	<span class="hljs-keyword">switch</span> description {
+	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ugly&quot;</span>:
+		fmt.Println(<span class="hljs-string">&quot;找死吗？&quot;</span>)
+	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;beautiful&quot;</span>:
+		fmt.Println(<span class="hljs-string">&quot;爱死你了！&quot;</span>)
+	<span class="hljs-keyword">default</span>:
+		fmt.Println(<span class="hljs-string">&quot;我没听懂啊……&quot;</span>)
+	}
+}
+</code></pre>
+<h3>类型 <code>swtich</code></h3>
+<pre class="hljs"><code><span class="hljs-keyword">switch</span> A.(<span class="hljs-keyword">type</span>) {
+    <span class="hljs-keyword">case</span> type1:
+        <span class="hljs-comment">/* 代码段 */</span>
+    <span class="hljs-keyword">case</span> type2:
+        <span class="hljs-comment">/* 代码段 */</span>
+    <span class="hljs-keyword">default</span> : 
+}
+</code></pre>
+<p>比如说：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day8/switch-typ.go"><code>day8/switch-typ.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	<span class="hljs-keyword">var</span> description <span class="hljs-keyword">interface</span>{}
+	<span class="hljs-keyword">switch</span> description.(<span class="hljs-keyword">type</span>) {
+	<span class="hljs-keyword">case</span> <span class="hljs-keyword">string</span>:
+		fmt.Println(<span class="hljs-string">&quot;是个字符串&quot;</span>)
+	<span class="hljs-keyword">case</span> <span class="hljs-keyword">int</span>:
+		fmt.Println(<span class="hljs-string">&quot;是个数字&quot;</span>)
+	<span class="hljs-keyword">default</span>:
+		fmt.Println(<span class="hljs-string">&quot;不知道诶&quot;</span>)
+	}
+}
+</code></pre>
+<h3>fallthrough</h3>
+<p>在一个 <code>case</code> 中使用 <code>fallthrough</code> 会强制执行后面的 <code>case</code> 或 <code>default</code> 语句 —— <code>fallthrough</code> 不会判断下一条 <code>case</code> 的表达式结果是否为 <code>true</code>。</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day8/switch-ft.go"><code>day8/switch-ft.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	description := <span class="hljs-string">&quot;ugly&quot;</span>
+	<span class="hljs-keyword">switch</span> description {
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;beautiful&quot;</span>:
+            fmt.Println(<span class="hljs-string">&quot;爱死你了！&quot;</span>)
+        <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ugly&quot;</span>:
+            fmt.Println(<span class="hljs-string">&quot;找死吗？&quot;</span>)
+            <span class="hljs-keyword">fallthrough</span>
+        <span class="hljs-keyword">default</span>:
+            fmt.Println(<span class="hljs-string">&quot;我没听懂啊……&quot;</span>)
+	}
+}
+</code></pre>
+<h3>多条件</h3>
+<p>Go 支持多条件匹配：</p>
+<pre class="hljs"><code><span class="hljs-keyword">switch</span>{
+    <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>:
+    <span class="hljs-keyword">default</span>:
+}
+</code></pre>
+<p>比如说：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day8/switch-ft.go"><code>day8/switch-mt.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	description := <span class="hljs-string">&quot;ugly&quot;</span>
+	<span class="hljs-keyword">switch</span> description {
+	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;beautiful&quot;</span>, <span class="hljs-string">&quot;cute&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>:
+		fmt.Println(<span class="hljs-string">&quot;爱死你了！&quot;</span>)
+	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ugly&quot;</span>:
+		fmt.Println(<span class="hljs-string">&quot;找死吗？&quot;</span>)
+	<span class="hljs-keyword">default</span>:
+		fmt.Println(<span class="hljs-string">&quot;我没听懂啊……&quot;</span>)
+	}
+}
+</code></pre>
+<h3>break</h3>
+<p>我们可以在 fallthrough 之前使用 break，（例如用 if 判断结果后 break），以退出 <code>switch</code> 流：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day8/switch-ft.go"><code>day8/switch-brk.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	description := <span class="hljs-string">&quot;ugly&quot;</span>
+	<span class="hljs-keyword">switch</span> description {
+	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;beautiful&quot;</span>, <span class="hljs-string">&quot;cute&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>:
+		fmt.Println(<span class="hljs-string">&quot;爱死你了！&quot;</span>)
+		<span class="hljs-keyword">if</span> description == <span class="hljs-string">&quot;cute&quot;</span> {
+			<span class="hljs-keyword">break</span>
+		}
+		<span class="hljs-keyword">fallthrough</span>
+	<span class="hljs-keyword">case</span> <span class="hljs-string">&quot;ugly&quot;</span>:
+		fmt.Println(<span class="hljs-string">&quot;找死吗？&quot;</span>)
+	<span class="hljs-keyword">default</span>:
+		fmt.Println(<span class="hljs-string">&quot;我没听懂啊……&quot;</span>)
+	}
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

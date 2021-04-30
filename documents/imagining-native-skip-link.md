@@ -5,9 +5,9 @@
 > * 译者：[霜羽 Hoarfroster](https://github.com/Hoarfroster)
 > * 校对者：[chzh9311](https://github.com/chzh9311)、[Kimhooo](https://github.com/Kimhooo)
 
-# 假如浏览器支持原生的"跳至内容"链接……
+# 假如浏览器支持原生的“跳至内容“链接……
 
-[我们最近在 [A11y Advent calendar](https://kittygiraudel.com/2020/12/01/a11y-advent-calendar/) 话题中谈到了["跳至内容"链接](https://kittygiraudel.com/2020/12/06/a11y-advent-skip-to-content/)。如果你不熟悉这个概念，我引用一下那里的原文：
+[我们最近在 [A11y Advent calendar](https://kittygiraudel.com/2020/12/01/a11y-advent-calendar/) 话题中谈到了[“跳至内容“链接](https://kittygiraudel.com/2020/12/06/a11y-advent-skip-to-content/)。如果你不熟悉这个概念，我引用一下那里的原文：
 
 > 当点击一个链接时，页面会被重新加载，焦点会恢复到页面顶部。而如果在这时候使用无障碍辅助功能在页面中导航，在访问主要内容之前，必须先逐一跳过整个页眉、导航，有时甚至包括侧边栏。这体验太糟糕了！为了解决这个问题，一个常见的设计模式是实现一个跳过链接，也就是发送至主要内容区域的锚链接。
 

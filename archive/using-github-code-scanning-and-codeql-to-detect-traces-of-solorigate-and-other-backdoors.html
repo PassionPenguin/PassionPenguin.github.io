@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>使用 GitHub 代码扫描和 CodeQL 工具检测 Solorigate 等后门程序 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://github.blog/2021-03-16-using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors/">Using GitHub code scanning and CodeQL to detect traces of Solorigate and other backdoors</a></li>
+<li>原文作者：<a href="https://github.blog/author/sjgithub/">Bas van Schaik</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md">https://github.com/xitu/gold-miner/blob/master/article/2021/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md</a></li>
+<li>译者：<a href="https://juejin.cn/user/1134351730353207">Badd</a></li>
+<li>校对者：<a href="https://github.com/PassionPenguin">PassionPenguin</a>，<a href="https://github.com/greycodee">greycodee</a></li>
+</ul>
+</blockquote>
+<h1>使用 GitHub 代码扫描和 CodeQL 工具检测 Solorigate 等后门程序</h1>
+<p>上个月，CodeQL 安全社区的一位成员向 C# 代码库贡献了关于 <a href="https://github.com/github/codeql/pull/5083">CodeQL 复合查询</a>的代码，这有助于许多组织机构评估他们是否受影响于 SolarWinds 遭到的对全球关键网络基础设施的攻击。这次攻击也被称为 <a href="http://aka.ms/solorigate">Solorigate</a>（微软的说法）或 Sunburst（FireEye 的说法）。在本文中，我们会阐释 GitHub 高级安全客户该如何使用 CodeQL 查询来排查他们的构建设施是否被恶意程序注入。</p>
+<h2>发生了什么事？</h2>
+<p>2020 年 12 月上旬，安全咨询公司 FireEye 公布了关于 SolarWinds 受到的攻击的详细信息。SolarWinds 是一家向多个组织机构提供网络监控工具的公司，其客户包括美国政府。黑客在 SolarWinds 的网络监控产品 Orion 中成功地植入了后门程序，而 SolarWinds 的大量客户都装载了 Orion。攻击者随后获取了部署着 Orion 产品的网络的访问权限。</p>
+<p>过去几年里，Microsoft 一直在用 CodeQL 检测漏洞和数据泄露风险。这次关于 CodeQL 查询的贡献代码主要是为了应对这次的攻击，并优化<a href="https://msrc-blog.microsoft.com/2018/08/16/vulnerability-hunting-with-semmle-ql-part-1/">之前</a>的<a href="https://msrc-blog.microsoft.com/2019/03/19/vulnerability-hunting-with-semmle-ql-part-2/">检测方式</a>。</p>
+<h2>何为构建劫持？</h2>
+<p>这类恶意程序在<strong>构建系统</strong>中植入后门，以便于在发布的产品中的注入恶意代码，方便恶意程序的传播，进而危及使用产品的用户。该恶意程序甚至会监控对 <code>msbuild.exe</code>（<a href="https://docs.microsoft.com/en-us/visualstudio/msbuild/msbuild">Microsoft 构建引擎</a>）的调用。通过给自己开通<strong>调试特权</strong>，构建劫持程序能够把额外的恶意代码注入到构建进程中。这意味着，虽然代码库本身不包含任何恶意代码或其他痕迹，但构建出来的产品却<strong>确实</strong>带有恶意程序。在这份 <a href="https://www.crowdstrike.com/blog/sunspot-malware-technical-analysis/">Crowdstrike 提供的技术分析</a>中，有关于构建劫持过程更加详尽的解释。</p>
+<h2>CodeQL 安全分析</h2>
+<p>GitHub CodeQL 是一个语义代码分析引擎，它使用**查询（Query）**来分析源代码并发现非预期的模式。例如，CodeQL 能追踪来自存在潜在危险（比如一个 SQL 声明中的字符串拼接会导致 SQL 注入漏洞）的不可信来源（比如一个 HTTP 请求）的数据。</p>
+<p>在（编译后语言的）构建过程中，CodeQL 查询可以运行在由它在生成的源代码库中。因而，CodeQL 会密切观察构建过程，并随之提取用于构建二进制文件的相关源码。提取过程的产物是一个关系形式的源码的结构化表示 —— 一个 CodeQL 数据库。</p>
+<h2>使用 CodeQL 检测 Solorigate 的痕迹</h2>
+<p>如果一个构建服务器被 Solorigate 恶意程序的构建劫持组件植入了后门，那么恶意程序会在编译时注入额外代码。如果 CodeQL 在被感染的服务上观察构建进程，它会从真正的源码中提取被注入的恶意源码。产生的 CodeQL 数据库会因此包含 Solorigate 恶意源码的痕迹。请注意，如果你的 CodeQL 数据库生成于<strong>没有</strong>被感染的机器，那么这个数据库就不会包含任何被注入的代码。</p>
+<p><img src="../images/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md-Screen-Shot-2021-03-10-at-4.41.07-PM.png" alt="图示：文中描述的代码扫描流程"></p>
+<p><a href="https://github.com/github/codeql/pull/5083">Microsoft 团队贡献的</a> CodeQL 查询代码会检测被恶意注入的 C# 代码的模式。运行这些查询的最佳方式，是在可能受影响的服务器上手动创建一个 CodeQL 数据库，并用 VS Code 的 CodeQL 插件分析这个数据库。</p>
+<p>你还可以生成一个 CodeQL 数据库，然后通过 CI/CD 管道运行查询。这样就能在运行着 CI/CD 任务（以及用来构建发布文件）的系统中检测到构建注入。</p>
+<h3>使用 VS Code 运行 CodeQL 查询</h3>
+<ol>
+<li>在 VS Code 中安装 <a href="https://codeql.github.com/docs/codeql-for-visual-studio-code/setting-up-codeql-in-visual-studio-code/">CodeQL 插件</a>，然后按照<a href="https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-codeql#quick-start-installing-and-configuring-the-extension-1">快速入门指南</a>设置<a href="https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-codeql#cloning-the-codeql-starter-workspace">起始工作区</a>。</li>
+<li>在可能被注入的构建服务器上构建 C# 源码，从而<a href="https://codeql.github.com/docs/codeql-cli/creating-codeql-databases/">生成一个 CodeQL 数据库</a>。</li>
+<li>把 CodeQL 数据库传到自己的机器上。
+**注意：**CodeQL 数据库本身不包含任何（有潜在危险的）编译文件或被注入的可执行文件。它包含（1）所编译的源码的一份纯文本副本，以及（2）该代码的一份关系展示。</li>
+<li><a href="https://codeql.github.com/docs/codeql-for-visual-studio-code/analyzing-your-projects/">在 VS Code 中加载 CodeQL 数据库</a>。</li>
+<li>定位到 <code>**ql/csharp/ql/src/codeql-suites**</code>，在这里你会找到 CodeQL 查询文件 <strong><code>solorigate.qls</code></strong>。右击该文件，选择 <strong>CodeQL: Run Queries in Selected Files（在选中文件中运行查询）</strong>。</li>
+</ol>
+<p><img src="../images/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md-code-scanning-and-codeql-detect-solorigate-fig-2.png" alt="界面截图：如何运行 CodeQL 查询"></p>
+<p>对每个可能受影响的代码库重复第 2 步至第 5 步。</p>
+<h3>在 GitHub 代码扫描中运行 CodeQL 查询</h3>
+<p>为了用 GitHub 代码扫描功能对一个 C# 代码库运行 CodeQL 查询，我们要在要分析的仓库中创建一个 <code>.github/codeql/solorigate.qls</code> 文件：</p>
+<pre class="hljs"><code><span class="hljs-bullet">-</span> <span class="hljs-attr">import:</span> <span class="hljs-string">codeql-suites/solorigate.qls</span>
+<span class="hljs-attr">from:</span> <span class="hljs-string">codeql-csharp</span>
+</code></pre>
+<p>然后，设置一个默认的 CodeQL 工作流（或编辑一个已有的工作流），并按照下面的代码修改模板的 <code>Initialize CodeQL</code> 部分：</p>
+<pre class="hljs"><code><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">Initialize</span> <span class="hljs-string">CodeQL</span>
+<span class="hljs-attr">uses:</span> <span class="hljs-string">github/codeql-action/init@v1</span>
+<span class="hljs-attr">with:</span>
+<span class="hljs-attr">languages:</span> <span class="hljs-string">csharp</span>
+<span class="hljs-attr">queries:</span> <span class="hljs-string">./.github/codeql/solorigate.qls</span>
+</code></pre>
+<p>如果你的代码需要一个特殊的构建命令来启动编译，那么请参考文档：<a href="https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-the-codeql-workflow-for-compiled-languages">自定义 CodeQL 代码扫描分析</a>。</p>
+<p>通过上面的配置，额外的 CodeQL 查询就可以运行了。如果 CodeQL 在源码中检测到了任何（Solorigate 或其他）恶意程序迹象，它就会在 GitHub 代码扫描界面里生成一个<a href="https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/managing-code-scanning-alerts-for-your-repository">警告</a>。</p>
+<p><img src="../images/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md-code-scanning-and-codeql-detect-solorigate-fig-3.png" alt="截图：代码扫描警告"></p>
+<p>若对更多信息和配置样例感兴趣，请参阅文档：<a href="https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-codeql-code-scanning-in-your-ci-system#running-additional-queries">在 GitHub 代码扫描中运行自定义 CodeQL 查询</a>。</p>
+<h2>后续步骤</h2>
+<p>如果 CodeQL 在产品或代码库中标识出了可疑元素，那你就应该手动复查受影响区域的代码了。我们甚至建议你把源代码和 CodeQL 上看到的代码进行比较。</p>
+<p>Microsoft 的 Solorigate 响应团队贡献的查询代码，对检测 Solorigate 等此类后门植入攻击有着启发性作用。这类攻击的危害不限于系统或网络层面。使用 CodeQL 分析代码库可以算是在审计技术版图中占有一席之地了。关于此次攻击的更多信息以及关于其他技术的建议，请参阅文章：<a href="https://aka.ms/solorigate">Microsoft Solorigate 资源中心</a>。</p>
+<p>如果你有任何关于 CodeQL 和 Solorigate 问题，请联系 GitHub 高级安全客服。如果你目前还不是 GitHub 用户，请<a href="https://enterprise.github.com/contact?utm_source=github&amp;utm_medium=site&amp;utm_campaign=adv-security&amp;ref_page=/features/security&amp;ref_cta=Contact%20Sales&amp;ref_loc=hero">点击这里</a>联系我们，我们会很乐意提供进一步协助。</p>
+<h2>延伸阅读</h2>
+<p>如果你想要了解关于 Solorigate 查询检测的更多技术背景信息，请参阅 <a href="https://www.microsoft.com/security/blog/2021/02/25/microsoft-open-sources-codeql-queries-used-to-hunt-for-solorigate-activity/">Microsoft 的这篇文章</a>。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

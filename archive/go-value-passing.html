@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的值传递｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-value-passing.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的值传递｜Go 主题月</h1>
+<p><img src="../images/go-value-passing.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h2>函数参数</h2>
+<p>函数如果使用参数，那么传递的变量可称为函数的形参 —— 形参就像定义在函数体内的局部变量。</p>
+<p>在调用函数的时候我们有两种传递参数的方法：</p>
+<table>
+<thead>
+<tr>
+<th>传递类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>值传递</td>
+<td>值传递是指在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。</td>
+</tr>
+<tr>
+<td>引用传递</td>
+<td>引用传递是指在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。</td>
+</tr>
+</tbody>
+</table>
+<p>默认情况下，Go 语言使用的是值传递，即在调用过程中不会影响到实际参数。</p>
+<h3>值传递</h3>
+<p>传递是指在调用函数时将实际参数复制一份传递到函数中，这样在函数中如果对参数进行修改，将不会影响到实际参数。</p>
+<p>默认情况下，Go 语言使用的是值传递，即在调用过程中不会影响到实际参数。</p>
+<h3>引用传递</h3>
+<p>引用传递是指在调用函数时将实际参数的地址传递到函数中，那么在函数中对参数所进行的修改，将影响到实际参数。也就是说引用会传递指针参数传递到函数内。</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day12/swap.go"><code>day12/swap.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">swap</span><span class="hljs-params">(x, y <span class="hljs-keyword">string</span>)</span></span> {
+	x, y = y, x
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">swapRef</span><span class="hljs-params">(x, y *<span class="hljs-keyword">string</span>)</span></span> {
+	*x, *y = *y, *x
+}
+</code></pre>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day12/swap-value-passing.go"><code>day12/swap-value-passing.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	<span class="hljs-comment">/* 定义局部变量 */</span>
+	<span class="hljs-keyword">var</span> a = <span class="hljs-string">&quot;cute&quot;</span>
+	<span class="hljs-keyword">var</span> b = <span class="hljs-string">&quot;ugly&quot;</span>
+
+	fmt.Printf(<span class="hljs-string">&quot;Penguin is %s?&quot;</span>, a)
+	fmt.Printf(<span class="hljs-string">&quot;or Penguin is %s?&quot;</span>, b)
+
+	swap(a, b)
+
+	fmt.Printf(<span class="hljs-string">&quot;Not sure if Penguin is %s?&quot;</span>, a)
+	fmt.Printf(<span class="hljs-string">&quot;Not sure if Penguin is %s either.&quot;</span>, b)
+	
+	swapRef(&amp;a, &amp;b)
+	
+	fmt.Printf(<span class="hljs-string">&quot;Penguin is %s?&quot;</span>, a)
+	fmt.Printf(<span class="hljs-string">&quot;No Penguin is %s!&quot;</span>, b)
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

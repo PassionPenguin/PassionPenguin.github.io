@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的变量的作用域｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-variable-scope.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的变量的作用域｜Go 主题月</h1>
+<p><img src="../images/go-variable-scope.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h2>变量的作用域</h2>
+<p>变量在程序中有一定的作用范围。</p>
+<p>如果一个变量声明在函数体的外部，这样的变量被认为是全局变量，全局变量在整个包内，也就是当前的包内都可以被调用得到。而如果变量定义在函数体内部，则被称之为局部变量。而函数定义里的变量就是形式参数。</p>
+<p>作用域其实就是已声明标识符所表示的常量、类型、变量、函数或包在源代码中的作用范围。</p>
+<p>Go 语言中变量可以在三个地方声明：</p>
+<ul>
+<li>函数内定义的变量称为局部变量</li>
+<li>函数外定义的变量称为全局变量</li>
+<li>函数定义中的变量称为形式参数</li>
+</ul>
+<p>接下来让我们具体了解局部变量、全局变量和形式参数。</p>
+<h2>局部变量</h2>
+<p>在函数体内声明的变量称之为局部变量，而它们的作用域只在函数体内，参数和返回值变量也是局部变量。</p>
+<h2>全局变量</h2>
+<p>在函数体外声明的变量称之为全局变量，全局变量可以在整个包甚至外部包（被导出后）使用。</p>
+<p>Go 语言程序中全局变量与局部变量名称可以相同，但是函数内的局部变量会被优先考虑。</p>
+<h2>形式参数</h2>
+<p>形式参数会作为函数的局部变量来使用。</p>
+<h2>栗子</h2>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day13/var-scope.go"><code>day13/var-scope.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-keyword">var</span> str = <span class="hljs-string">&quot;企鹅真丑&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+   <span class="hljs-keyword">var</span> str = <span class="hljs-string">&quot;企鹅真帅&quot;</span>
+
+   fmt.Printf (<span class="hljs-string">&quot;我还是觉得%d\n&quot;</span>, str)
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的函数｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-function.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的函数｜Go 主题月</h1>
+<p><img src="../images/go-function.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<p>函数是基本的代码块，用于执行一个任务，而一个 Go 程序至少就要有一个 <code>main()</code> 函数作为执行的起点。我们可以通过函数来划分不同功能，逻辑上每个函数执行的是指定的任务。</p>
+<p>函数声明告诉了编译器函数的名称，返回类型，和参数。</p>
+<p>Go 语言标准库提供了多种可动用的内置的函数。例如，<code>len()</code> 函数可以接受不同类型参数并返回该类型的长度。如果我们传入的是字符串则返回字符串的长度，如果传入的是数组，则返回数组中包含的元素个数。</p>
+<p>又比如说，我们需要使用 <code>fmt.Itoa()</code> 函数将 <code>int</code> 类型值转化为 <code>string</code> 类型值。</p>
+<h2>函数定义</h2>
+<p>Go 语言函数定义格式如下：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">function_name</span><span class="hljs-params">( [parameter_list] )</span> [<span class="hljs-title">return_types</span>]</span> {
+    <span class="hljs-comment">/* 函数体 */</span> 
+}
+</code></pre>
+<ul>
+<li><code>func</code>：函数声明由 <code>func</code> 引导</li>
+<li><code>function_name</code>：函数名称。函数名和参数列表一起构成了函数签名。</li>
+<li><code>parameter_list</code>：参数列表。参数就像一个占位符，当函数被调用时，你可以将值传递给参数，这个值被称为实际参数。参数列表指定的是参数类型、顺序、及参数个数。参数是可选的，也就是说函数也可以不包含参数。这里的参数可以是引用也可以是传值。</li>
+<li><code>return_types</code>：返回类型。函数返回一列值。<code>return_types</code> 是该列值的数据类型。有些功能不需要返回值，这种情况下 <code>return_types</code> 不是必须的。</li>
+<li>函数体：函数定义的代码集合。</li>
+</ul>
+<h2>栗子</h2>
+<p>以下实例为 <code>max()</code> 函数的代码，该函数传入两个 <code>int</code> 参数 <code>a</code> 和 <code>b</code>，返回这两个参数的最大值：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day11/max.go"><code>day11/max.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-comment">/* 函数返回两个数的最大值 */</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">max</span><span class="hljs-params">(a, b <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> {
+    <span class="hljs-keyword">if</span> a &lt; b {
+        <span class="hljs-keyword">return</span> b
+    }
+    <span class="hljs-keyword">return</span> a
+}
+</code></pre>
+<h2>函数调用</h2>
+<p>当创建函数时，你定义了函数需要做什么。但是我们需要怎么执行这个函数呢？我们需要调用该函数来执行指定任务。比如说：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day11/using-max.go"><code>day11/using-max.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>{
+	fmt.Println(max(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))
+}
+</code></pre>
+<p>以上实例在 <code>main()</code> 函数中调用了同一个包 <code>main</code> 下的 <code>max()</code> 函数输出最大值。</p>
+<h2>多个返回值</h2>
+<p>Go 函数可以返回多个值，比如说</p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">sortDes</span><span class="hljs-params">(a, b <span class="hljs-keyword">int</span>)</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span>)</span></span> {
+	<span class="hljs-keyword">if</span> a &lt; b {
+		<span class="hljs-keyword">return</span> b, a
+	}
+	<span class="hljs-keyword">return</span> a, b
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	fmt.Println(sortDes(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

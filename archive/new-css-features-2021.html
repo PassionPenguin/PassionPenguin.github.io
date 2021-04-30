@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>都 2021 年了，你还不知道这 10 个 CSS 功能？ - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://torquemag.io/2021/03/new-css-features/">10 New CSS Features You Might Not Know About (2021 Edition)</a></li>
+<li>原文作者：<a href="https://torquemag.io/author/NSchaferhoff1234/">Nick Schäferhoff</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/new-css-features-2021.md">https://github.com/xitu/gold-miner/blob/master/article/2021/new-css-features-2021.md</a></li>
+<li>译者：<a href="https://github.com/Hoarfroster">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/Baddyo">Baddyo</a>、<a href="https://github.com/nia3y">nia3y</a></li>
+</ul>
+</blockquote>
+<h1>都 2021 年了，你还不知道这 10 个 CSS 功能？</h1>
+<p>没有 CSS，现代 Web 应用程序将无法实现。标记语言（译者注：这是样式表语言……）负责让网站有良好的视觉体验、令人愉悦的布局，并且每个元素都各居其位。但是，你知道新的 CSS 特性一直在出现吗？</p>
+<p>多年来，CSS 已经超越了单纯设置背景色、边框、文本样式、边距和<a href="https://torquemag.io/2018/06/css-box-model/"><strong>盒模型</strong></a>的范畴。现代的 CSS 现在能够提供过去需要 JavaScript 或其他解决方法才能实现的功能！</p>
+<p>为了庆祝 CSS 的发展，在这篇文章中，我们想看看 CSS 在 2021 年推出的一些令人惊奇而大家可能还不知道的功能（译者注：准确来说，2021 年比较有用但又不热门的功能）。我们将重点介绍 <a href="https://torquemag.io/2017/10/web-designer-vs-web-developer-difference/"><strong>Web 设计师和开发者</strong></a>可以使用的现代 CSS 的出色功能，讨论一下用例和浏览器支持，并为大家提供一个简单的示例。</p>
+<p>让我们开始吧！</p>
+<h2>新的 CSS 功能：现在 CSS 可以做什么</h2>
+<p>这是 CSS 如今具有的一些令人惊奇的功能。</p>
+<h3>自定义属性与变量</h3>
+<p>译者注：这里的自定义属性（Custom Properties）和我们所说的变量是一个东西，见 <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/--*">MDN Web Doc</a></p>
+<p>自定义属性基本上允许我们定义 CSS 属性的替代品以用于我们的设计。一个例子就能让你理解为什么说这个功能有用：</p>
+<p>通常，在构建主题时，我们会选择一种<a href="https://websitesetup.org/website-color-schemes/"><strong>配色方案</strong></a>，然后在必要时声明这些颜色。</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">color</span>: <span class="hljs-number">#cd2653</span>;
+}
+
+<span class="hljs-selector-class">.social-icons</span> <span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">background</span>: <span class="hljs-number">#cd2653</span>;
+}
+
+<span class="hljs-selector-class">.wp-block-button</span><span class="hljs-selector-class">.is-style-outline</span> {
+    <span class="hljs-attribute">color</span>: <span class="hljs-number">#cd2653</span>;
+}
+</code></pre>
+<p>这种方法的问题是，如果我们想要更改一种颜色，则必须在每一处使用了这个颜色的地方做出对应的修改。尽管<a href="https://torquemag.io/2015/12/17-best-code-editors-wordpress-developers-users/"><strong>代码编辑器</strong></a>可以通过搜索和替换轻松地做到这一点，但这仍然很烦人。尤其是如果我们只是想进行快速测试，并且必须再次撤消所有操作。</p>
+<h4>更好的解决方案</h4>
+<p>自定义属性就解决了这个问题。在它们的帮助下，我们可以轻松地将刚才所说的配色分配给一个变量，然后每次使用该颜色时，只需将其作为 CSS 属性输入即可，如下所示：</p>
+<pre class="hljs"><code><span class="hljs-selector-pseudo">:root</span> {
+    --global--<span class="hljs-attribute">color</span>-primary: <span class="hljs-number">#28303d</span>;
+}
+
+<span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">color</span>: <span class="hljs-built_in">var</span>(--global--color-primary);
+}
+
+<span class="hljs-selector-class">.social-icons</span> <span class="hljs-selector-tag">a</span> {
+    <span class="hljs-attribute">background</span>: <span class="hljs-built_in">var</span>(--global--color-primary);
+}
+</code></pre>
+<p>这样，每当我们想要对配色进行更改时，只需要在一个地方进行更改即可。太酷了吧？过去，我们还需要使用 <a href="https://torquemag.io/2017/06/start-using-sass-wordpress-npm-scripts/">Sass</a> 之类的预处理器来使用变量，而现在它是 CSS 的原生功能。</p>
+<p>正如您在上面看到的，自定义属性也非常易于使用。在 <code>:root</code> 选择器下的文档开始处定义变量（请注意，变量前面应使用双连字符 <code>--</code>，这是将变量称为自定义属性的原因，它们也区分大小写！）。之后我们就可以通过 <code>var()</code> 函数在整个文档中使用它们。</p>
+<p>如果要更改变量，只需更改 <code>:root</code> 下面的声明就可以了。</p>
+<p>此 CSS 功能的兼容性如何，<a href="https://caniuse.com/css-variables"><strong>浏览器支持</strong></a>非常好：</p>
+<p><img src="../images/new-css-features-2021.md-css-variables-custom-properties-browser-support-1024x376.jpg" alt="Can I Use"></p>
+<h3>@supports</h3>
+<p>接下来，有一个类似于媒体查询的 CSS 规则。不过我们不是用它基于屏幕大小或设备类型编写特定的样式，而是根据用户浏览器支持的 CSS 属性和值，应用特定的样式。</p>
+<p>这有什么用？</p>
+<p>正如你将在本文中看到的那样，并非所有的浏览器和设备都支持所有 CSS 功能。尽管我们通常可以使用优雅降级来处理此问题，但在某些情况下，如果我们不专门包括对最新的技术的支持，则使用这些技术可能会严重破坏我们的网站的样式结构。</p>
+<p>此外，我们还可以使用 <code>@supports</code> 为支持特定功能的更现代的浏览器添加额外的功能或样式（这就是为什么使用的查询 <code>@supports</code> 也称为“功能查询”的原因）。</p>
+<h4>如何使用功能查询</h4>
+<p>如果您熟悉媒体查询，则使用支持检查将非常容易。使用方法如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@supports</span> (<span class="hljs-attribute">display</span>: <span class="hljs-attribute">grid</span>) {
+    <span class="hljs-selector-class">.site-content</span> {
+        <span class="hljs-attribute">display</span>: grid;
+    }
+}
+</code></pre>
+<p>如你所见，其实不过就是规则的声明后跟要在方括号中检查的属性或属性 — 值对，再加上我们平时用的 CSS 声明用于说明满足条件时要应用哪些样式规则。</p>
+<p>上面的示例指出，如果浏览器支持 CSS 网格功能（稍后将对此进行详细介绍），则应用 <code>display: grid;</code> 样式到 <code>.site-content</code> 的元素。</p>
+<p>同样重要的是要注意 <code>@supports</code> 支持使用运算符 <code>not</code>、<code>and</code> 和 <code>or</code>（也可以结合使用）以创建更具体的规则，例如对不支持该特定功能的浏览器的优雅降级：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@supports</span> <span class="hljs-keyword">not</span> (<span class="hljs-attribute">display</span>: <span class="hljs-attribute">grid</span>) {
+    <span class="hljs-selector-class">.site-content</span> {
+        <span class="hljs-attribute">float</span>: left;
+    }
+}
+</code></pre>
+<p>为了能够正常使用 <code>@supports</code> 功能，你需要知道哪些浏览器支持它（我知道，这是一种元数据）。好消息是**<a href="https://caniuse.com/css-featurequeries">所有的现代浏览器都支持</a>**。</p>
+<p><img src="../images/new-css-features-2021.md-css-feature-queries-browser-support-1024x368.jpg" alt="Can I Use"></p>
+<p>但是，由于这些查询的目的是启用或禁用旧版浏览器无法处理的功能，因此请确保正确编写它们。即如果要使用功能查询，请为支持功能查询的浏览器创建功能查询条件。让浏览器以它无法理解的方式忽略某些内容是没有用的。</p>
+<h3>Flexbox 间隙</h3>
+<p>Flexbox 是另一种 CSS 布局模块，而我们<a href="https://torquemag.io/2020/02/flexbox-tutorial/"><strong>已经讨论过它</strong></a>。长期以来，Flexbox 的缺点是它不支持间隙，我说的是，不支持定义行和列之间的间隔。</p>
+<p>幸运的是，浏览器对此 CSS 功能的支持正在改善。现在，我们可以开始使用 <a href="https://caniuse.com/flexbox-gap"><code>gap</code></a>、<a href="https://caniuse.com/?search=row-gap"><code>row-gap</code></a> 和 <a href="https://caniuse.com/?search=column-gap"><code>column-gap</code></a> 属性，在网格布局、Flexbox 布局和 Multi-Column 布局中创建间隙。</p>
+<p>这是一个在 Flexbox 中创建间隙的快速示例：</p>
+<pre class="hljs"><code>.flex-gap-test {
+	display: inline-flex;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+&lt;div class=&quot;flex-gap-test&quot;&gt;
+	&lt;div&gt;1&lt;/div&gt;
+	&lt;div&gt;2&lt;/div&gt;
+	&lt;div&gt;3&lt;/div&gt;
+	&lt;div&gt;4&lt;/div&gt;
+	&lt;div&gt;5&lt;/div&gt;
+	&lt;div&gt;6&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>这就是效果：</p>
+<p><img src="../images/new-css-features-2021.md-new-css-features-flexbox-gaps-example.jpg" alt="Result"></p>
+<p>尽管我们可以通过 <code>margin</code> 实现相同的布局，但是与简单地声明间隙大小相比，它需要更多的标记和解决方法。</p>
+<h3>内容可见性</h3>
+<p><code>content-visibility</code> 是 CSS 中一个非常酷的新功能，能够有效<a href="https://torquemag.io/2015/08/ways-to-speed-up-wordpress-decrease-page-load-time/">提高网站性能</a>。它基本上像<a href="https://torquemag.io/2018/01/lazy-load-wordpress/">延迟加载</a>一样工作，而且不仅适用于图像，还适用于任何 HTML 元素。我们可以使用它来实现网站的懒加载。</p>
+<p>使用也超级容易。只需将其应用于我们选择的元素，如下所示：</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.content-below-fold</span> {
+    <span class="hljs-attribute">content</span>-<span class="hljs-attribute">visibility</span>: auto;
+}
+</code></pre>
+<p><code>content-visibility</code> 支持三个值。默认情况下为 <code>visible</code>，此时元素将照常加载。我们可以将其设置为 <code>hidden</code>，即无论元素是否可见都不会呈现该元素。设置为 <code>auto</code> 时，则会跳过可见区域之外的元素，然后在它们出现在屏幕上时才开始进行渲染。</p>
+<p>这可是很酷的东西，对不对？</p>
+<p>在这种情况下可能也很重要的一件事是考虑一下 <code>contain-intrinsic-size</code>。由于设置为 <code>content-visibility: hidden;</code> 的元素的大小实际上为零，因此我们可以将理论高度和宽度应用于隐藏的元素，以便浏览器可以从一开始就将其考虑在内，而不是在渲染元素时考虑。这样，我们可以避免在滚动过程中布局被突然改变。</p>
+<p><a href="(https://caniuse.com/css-content-visibility)">浏览器支持方面</a>，<a href="https://caniuse.com/css-content-visibility"><code>content-visibility</code></a> 仍然有些差劲，不过正在朝着那个方向前进着，<a href="https://caniuse.com/mdn-css_properties_contain-intrinsic-size"><code>contain-intrinsic-size</code></a> 同理。</p>
+<p><img src="../images/new-css-features-2021.md-css-content-visibility-browser-support-1024x370.jpg" alt="Can I Use"></p>
+<p>我预计一旦它被更广泛地采用，它将成为加速渲染过程的最有效工具之一。</p>
+<h3>过渡，变换，动画</h3>
+<p>在过去，如果我们想在网站上移动某些内容，通常必须求助于 JavaScript（对于 MySpace 一代的用户来说则需要求助 GIF 动画）。但是你可能不知道的是，CSS 早就能够做到这一点。实现这种目标的三种主要方式是：</p>
+<ul>
+<li><a href="https://www.w3schools.com/css/css3_transitions.asp"><code>transition</code></a> —— 支持平滑地从一个属性值更改为另一个属性值（例如，悬停效果），而不是突然更改。</li>
+<li><a href="https://www.w3schools.com/css/css3_2dtransforms.asp"><code>transform</code></a> —— 支持在 <a href="https://www.w3schools.com/css/css3_2dtransforms.asp"><strong>2D</strong></a> 和 <a href="https://www.w3schools.com/css/css3_3dtransforms.asp"><strong>3D</strong></a> 空间中移动、旋转和缩放元素。</li>
+<li><a href="https://www.w3schools.com/css/css3_animations.asp"><code>animation</code></a> —— 在 CSS 中设置简单或复杂的动画，并配置它们的运行方式和运行时间。</li>
+</ul>
+<p>自然，在这里我们没有空间详细讨论所有这三个部分。如果您想了解更多信息，请务必查看上面的链接。但是，让我们为每个示例做一些快速练习示例，以便您对可能的效果有一个印象。</p>
+<h4>CSS Transition</h4>
+<p>这是 CSS 过渡的快速示例：</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">div</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">100px</span>;
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">100px</span>;
+    <span class="hljs-attribute">transition</span>: height <span class="hljs-number">3s</span>;
+}
+
+<span class="hljs-selector-tag">div</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-attribute">height</span>: <span class="hljs-number">500px</span>;
+}
+</code></pre>
+<p>当有人将鼠标悬停在 <code>div</code> 元素上时，上述的代码会将这个元素高度在三秒内增加到 <code>500px</code>。</p>
+<h4>CSS Transform</h4>
+<p>以下是 CSS 转换的示例 —— 当有人将鼠标悬停在元素上方时，它将使元素顺时针旋转 30 度：</p>
+<pre class="hljs"><code><span class="hljs-selector-tag">div</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">rotate</span>(<span class="hljs-number">30deg</span>);
+}
+</code></pre>
+<h4>CSS Animation</h4>
+<p>最后，是展示 CSS 动画使用方式的简短代码段：</p>
+<pre class="hljs"><code><span class="hljs-keyword">@keyframes</span> color-change {
+    <span class="hljs-selector-tag">from</span> {
+        <span class="hljs-attribute">background-color</span>: blue;
+    }
+    <span class="hljs-selector-tag">to</span> {
+        <span class="hljs-attribute">background-color</span>: yellow;
+    }
+}
+
+<span class="hljs-selector-tag">div</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-attribute">animation-name</span>: color-change;
+    <span class="hljs-attribute">animation-duration</span>: <span class="hljs-number">3s</span>;
+}
+</code></pre>
+<p>请注意我们使用 <code>@keyframes</code> 命名动画并定义其功能，然后我们需要使用 <code>animation-name</code> 将该动画应用于元素。<code>animation-duration</code> 则控制完成所需的时间，然后还有不少其他类似的属性～</p>
+<p>如果你想尝试所有这些方式，那么有个好消息，浏览器对它们的支持非常好（请参见 <a href="https://caniuse.com/css-transitions"><strong>Transition</strong></a>、<a href="https://caniuse.com/transforms2d"><strong>2D Transform</strong></a>、<a href="https://caniuse.com/transforms3d"><strong>3D Transform</strong></a> 和 <a href="https://caniuse.com/css-animation"><strong>Animation</strong></a>）。因此，没有任何障碍可以让您随意玩转 CSS 过渡、转换和动画。</p>
+<h3>滚动捕捉</h3>
+<p>滚动捕捉让我们可以选择将用户的视口锁定到站点的某些部分或元素。对于创建很酷的过渡效果并在向下滚动页面帮助用户专注于最重要的页面元素的场景而言，这个功能非常有用。我们可以<a href="https://codepen.io/tutsplus/pen/qpJYaK">在这里</a>找到一个简单的演示。</p>
+<p>这种效果在移动设备的应用程序中很明显，但是，通过滚动捕捉，我们也可以将其带到网站上。</p>
+<p>在最基本的情况上用法也相对简单。我们只需将滚动捕捉的类型应用于容器并定义其子对象应捕捉到的位置。</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.container</span> {
+    scroll-snap-type: y mandatory;
+}
+
+<span class="hljs-selector-class">.container</span> <span class="hljs-selector-tag">div</span> {
+    scroll-snap-align: start;
+}
+</code></pre>
+<p>当然还有更多有关它的使用特色。如果你想了解它，CSS Tricks 已经有了一篇<a href="https://css-tricks.com/practical-css-scroll-snapping/"><strong>很完美的文章</strong></a>了。</p>
+<p>然后是<a href="https://caniuse.com/css-snappoints">浏览器的兼容性</a>，这是相当不错的。</p>
+<p><img src="../images/new-css-features-2021.md-css-scroll-snap-browser-support-1024x378.jpg" alt="Can I Use"></p>
+<p>但是请注意，<code>scroll-snap</code> 属性之间的支持会有些许不同。因此，请确保检查你的特定用例。</p>
+<h3>:is 和 :where</h3>
+<p>你可能不知道的新 CSS 功能列表中的最后一个条目是 <code>:is</code> 和 <code>:where</code> 伪类，它们允许我们通过缩短 CSS 选择器列表来减少 CSS 样式中的重复代码。</p>
+<p>例如：</p>
+<pre class="hljs"><code><span class="hljs-selector-class">.main</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span>,
+<span class="hljs-selector-class">.sidebar</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span>,
+<span class="hljs-selector-class">.site-footer</span> <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-comment">/* 样式 */</span>
+}
+</code></pre>
+<p>还有这个：</p>
+<pre class="hljs"><code><span class="hljs-selector-pseudo">:is</span>(<span class="hljs-selector-class">.main</span>, <span class="hljs-selector-class">.sidebar</span>, <span class="hljs-selector-class">.site-footer</span>) <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-comment">/* 样式 */</span>
+}
+</code></pre>
+<p>同理 <code>:where</code>:</p>
+<pre class="hljs"><code><span class="hljs-selector-pseudo">:where</span>(<span class="hljs-selector-class">.main</span>, <span class="hljs-selector-class">.sidebar</span>, <span class="hljs-selector-class">.site-footer</span>) <span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span> {
+    <span class="hljs-comment">/* 样式 */</span>
+}
+</code></pre>
+<p>如果包含的样式标记相同，那又会有什么区别？区别在于 <code>:is</code> 更加具体。它采用括号中最具体元素的针对性级别。与此相反，<code>:where</code> 的针对性始终为零。因此更容易按照案例进行覆盖。</p>
+<p>浏览器支持方面 <a href="https://caniuse.com/mdn-css_selectors_is">:is</a> 和 <a href="https://caniuse.com/mdn-css_selectors_where">:where</a> 仍然是有些不完全，但正在逐渐变好起来。因此我们随时开始尝试它们。</p>
+<h2>还有其他值得一看的 CSS 新功能吗？</h2>
+<p>像所有其他 Web 技术一样，CSS 也在不断发展。这意味着总会有新的 CSS 功能出现，有新的东西让我们尝试。</p>
+<p>本文我们主要讲了一些我们可能没注意到的现代 CSS 所具有的功能，并且还有更多的类似功能等待着我们的发掘。—— 如果你还有其他想要分享的，请告诉我们，我们会很开心的。除此之外，祝你编程愉快！</p>
+<p><em>你最喜欢的现代 CSS 功能是什么？在下面的评论部分中分享它！</em></p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

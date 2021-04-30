@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的递归｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-function.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的递归｜Go 主题月</h1>
+<p><img src="../images/go-function.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<p>程序调用自身的编程技巧称为递归（recursion）。递归做为一种算法在程序设计语言中广泛应用，尤其常用于计算当中。一个过程或函数在其定义或说明中有直接或间接调用自身的一种方法，它通常把一个大型复杂的问题层层转化为一个与原问题相似的规模较小的问题来求解，递归策略只需少量的程序就可描述出解题过程所需要的多次重复计算，大大地减少了程序的代码量。</p>
+<p>递归的能力在于用有限的语句来定义对象的无限集合。一般来说，递归需要有：</p>
+<ol>
+<li>边界条件</li>
+<li>递归前进段</li>
+<li>递归返回段。</li>
+</ol>
+<p>此时，当边界条件不满足时，递归前进；当边界条件满足时，递归返回，比如说：</p>
+<pre class="hljs"><code>graph TD;
+ 开始--&gt;递归1
+ 递归1--满足--&gt;递归2;
+ 递归2--满足--&gt;递归3; 
+ 递归3--不满足--&gt;递归2
+ 递归2--返回--&gt;递归1
+ 递归1--结束--&gt;输出
+</code></pre>
+<p>Go 中递归的一个案例如下：</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">recursion</span><span class="hljs-params">()</span></span> {
+   recursion() <span class="hljs-comment">/* 函数调用自身 */</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+   recursion()
+}
+</code></pre>
+<h2>Fibonacci</h2>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">fibonacci</span><span class="hljs-params">(n <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">int</span></span> {
+  <span class="hljs-keyword">if</span> n &lt; <span class="hljs-number">2</span> {
+   <span class="hljs-keyword">return</span> n
+  }
+  <span class="hljs-keyword">return</span> fibonacci(n - <span class="hljs-number">2</span>) + fibonacci(n - <span class="hljs-number">1</span>)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">var</span> i <span class="hljs-keyword">int</span>
+    <span class="hljs-keyword">for</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++ {
+       fmt.Printf(<span class="hljs-string">&quot;%d &quot;</span>, fibonacci(i))
+    }
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

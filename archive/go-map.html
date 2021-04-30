@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的集合｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-function.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的集合｜Go 主题月</h1>
+<p><img src="../images/go-function.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<p>Map 是一种无序的键值对的集合。Map 最重要的一点是通过 key 来快速检索数据，key 类似于索引，指向数据的值。</p>
+<p>在别的语言中我们经常会使用到 Map，就比如说 JavaScript（JSON 也一直）我们就经常使用 <code>{}</code> 定义一个集合关系：</p>
+<pre class="hljs"><code><span class="hljs-keyword">const</span> map = {
+    <span class="hljs-attr">age</span>: -<span class="hljs-number">1</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;Unknown&quot;</span>,
+    <span class="hljs-attr">region</span>: <span class="hljs-string">&quot;Guangzhou, Guangdong Province, China&quot;</span>,
+    <span class="hljs-attr">postcode</span>: <span class="hljs-number">510000</span>
+}
+</code></pre>
+<p>因为 Map 是一种集合，所以我们可以像迭代数组和切片那样迭代它。</p>
+<p>不过需要注意的是，Map 是无序的，我们无法决定它的返回顺序，只因 Map 是使用 hash 表来实现的。</p>
+<h2>定义 Map</h2>
+<p>我们可以使用内建函数 <code>make</code> 来定义 Map。当然，我们也可以使用 <code>map</code> 关键字来定义 Map:</p>
+<pre class="hljs"><code><span class="hljs-comment">/* 声明变量，默认 map 是 nil */</span>
+<span class="hljs-keyword">var</span> map_variable <span class="hljs-keyword">map</span>[key_data_type]value_data_type
+
+<span class="hljs-comment">/* 使用 make 函数 */</span>
+map_variable := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[key_data_type]value_data_type)
+</code></pre>
+<p>如果不初始化 <code>map</code>，那么就会创建一个 <code>nil map</code>（空集，空集合）。<code>nil map</code> 不能用来存放键值对。</p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-string">&quot;fmt&quot;</span>
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+<span class="hljs-keyword">var</span> provinceCapitalMap <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span> <span class="hljs-comment">/* 创建一个集合 */</span>
+provinceCapitalMap = <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]<span class="hljs-keyword">string</span>)
+
+    <span class="hljs-comment">/* 向 map 中插入键值对（key - value），让各个省份对应他们的省会 */</span>
+    provinceCapitalMap [ <span class="hljs-string">&quot;Guangdong&quot;</span> ] = <span class="hljs-string">&quot;Guangzhou&quot;</span>
+    provinceCapitalMap [ <span class="hljs-string">&quot;Fujian&quot;</span> ] = <span class="hljs-string">&quot;Xiamen&quot;</span>
+    provinceCapitalMap [ <span class="hljs-string">&quot;Beijing&quot;</span> ] = <span class="hljs-string">&quot;Beijing&quot;</span>
+    provinceCapitalMap [ <span class="hljs-string">&quot;Sichuan &quot;</span> ] = <span class="hljs-string">&quot;Chengdu&quot;</span>
+
+    <span class="hljs-comment">/* 使用键输出该键在 map 中的对应值 */</span>
+    <span class="hljs-keyword">for</span> province := <span class="hljs-keyword">range</span> provinceCapitalMap {
+        fmt.Println(province, <span class="hljs-string">&quot;&#x27;s captial city is &quot;</span>, countryCapitalMap [country])
+    }
+
+    <span class="hljs-comment">/*查看元素在集合中是否存在 */</span>
+    capital, ok := provinceCapitalMap [ <span class="hljs-string">&quot;Shaanxi&quot;</span> ] <span class="hljs-comment">/* 如果确定 ok 为真则表示记录存在，否则表示没有定义该记录 */</span>
+    <span class="hljs-keyword">if</span> (ok) {
+        fmt.Println(<span class="hljs-string">&quot;Shaanxi&#x27;s capital city is &quot;</span>, capital)
+    } <span class="hljs-keyword">else</span> {
+        fmt.Println(<span class="hljs-string">&quot;Shaanxi&#x27;s capital city is not defined.&quot;</span>)
+    }
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

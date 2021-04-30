@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>构建和 Telegram 一样的上传动画 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://proandroiddev.com/telegram-like-uploading-animation-e284f1404f63">Telegram-like uploading animation</a></li>
+<li>原文作者：<a href="https://programmerr47.medium.com">Michael Spitsin</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/telegram-like-uploading-animation.md">https://github.com/xitu/gold-miner/blob/master/article/2021/telegram-like-uploading-animation.md</a></li>
+<li>译者：<a href="https://github.com/Hoarfroster">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/Kimhooo">Kimhooo</a>、<a href="https://github.com/greycodee">greycodee</a></li>
+</ul>
+</blockquote>
+<h1>构建和 Telegram 一样的上传动画</h1>
+<p><img src="../images/telegram-like-uploading-animation.md-1*Fkn89gxEsTWWefUu1dV0UA.png" alt=""></p>
+<p>前段时间，我研究了一个新功能：在 app 内部聊天中发送图片。这个功能本身很大，包括了多种东西，但实际上，最初并没有设计上传动画与取消上传的功能。当我用到这部分的时候，我决定增加图片上传动画，所以我们就给他们这个功能吧：)</p>
+<p><img src="../images/telegram-like-uploading-animation.md-1*La8YF7kI31hvmawzNVHN6g.gif" alt=""></p>
+<h2>View vs. Drawable</h2>
+<p>其实，这是个好问题。因为如果我们<a href="https://proandroiddev.com/sonar-like-animation-c1e7c5b291bd">看看我的其他一篇关于声纳类动画的文章</a>，我在那里用了一个 <code>Drawable</code>。在我个人看来，<a href="https://stackoverflow.com/questions/12445045/android-custom-drawable-vs-custom-view">StackOverflow</a> 这里就有个很好的简洁的答案。</p>
+<blockquote>
+<p><code>Drawable</code> 只响应绘制操作，而 View 响应绘制和用户界面，比如触摸事件和关闭屏幕等等。</p>
+</blockquote>
+<p>现在我们来分析一下，我们想要做什么。我们希望有一条无限旋转的弧线做圆形动画，并且弧线的圆心角不断增加直到圆心角等于 2π。我觉得一个 Drawable 应该能够帮上我的忙，而且实际上我也应该那样做，但我没有。</p>
+<p>我没有这样做的原因在上面示例图片中的文字右边那三个小的点点的动画上。我已经用自定义 View 完成了这个动画，并且我已经为无限循环的动画准备了背景。对我来说把动画准备逻辑提取到父 View 中重用，而不是把所有东西都重写成 Drawable，应该是更简单的。所以我并不是说我的解决方案是正确的（其实没有什么是正确的），而是它满足了我的需求。</p>
+<h2>Base InfiniteAnimationView</h2>
+<p>为了自己的需要，我将把想要的进度视图分成两个视图：</p>
+<ol>
+<li><code>ProgressView</code> —— 负责绘制所需的进度 View</li>
+<li><code>InfiniteAnimateView</code>  —— 抽象 View，它负责动画的准备、启动和停止。由于进度中包含了无限旋转的部分，我们需要了解什么时候需要启动这个动画，什么时候需要停止这个动画</li>
+</ol>
+<p>在查看了 Android 的 <code>ProgressBar</code> 的<a href="https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/widget/ProgressBar.java">源代码</a>后，我们可以最终得到这样的结果：</p>
+<pre class="hljs"><code><span class="hljs-comment">// InfiniteAnimateView.kt</span>
+
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InfiniteAnimateView</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span></span>(
+    context: Context, attrs: AttributeSet? = <span class="hljs-literal">null</span>, defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>
+) : View(context, attrs, defStyleAttr) {
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> isAggregatedVisible: <span class="hljs-built_in">Boolean</span> = <span class="hljs-literal">false</span>
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> animation: Animator? = <span class="hljs-literal">null</span>
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onVisibilityAggregated</span><span class="hljs-params">(isVisible: <span class="hljs-type">Boolean</span>)</span></span> {
+        <span class="hljs-keyword">super</span>.onVisibilityAggregated(isVisible)
+
+        <span class="hljs-keyword">if</span> (isAggregatedVisible != isVisible) {
+            isAggregatedVisible = isVisible
+            <span class="hljs-keyword">if</span> (isVisible) startAnimation() <span class="hljs-keyword">else</span> stopAnimation()
+        }
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAttachedToWindow</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">super</span>.onAttachedToWindow()
+        startAnimation()
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDetachedFromWindow</span><span class="hljs-params">()</span></span> {
+        stopAnimation()
+        <span class="hljs-keyword">super</span>.onDetachedFromWindow()
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">startAnimation</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> (!isVisible || windowVisibility != VISIBLE) <span class="hljs-keyword">return</span>
+        <span class="hljs-keyword">if</span> (animation == <span class="hljs-literal">null</span>) animation = createAnimation().apply { start() }
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">createAnimation</span><span class="hljs-params">()</span></span>: Animator
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">stopAnimation</span><span class="hljs-params">()</span></span> {
+        animation?.cancel()
+        animation = <span class="hljs-literal">null</span>
+    }
+}
+</code></pre>
+<p>遗憾的是，主要出于 <code>onVisibilityAggregated</code> 方法的原因，它并无法工作 —— 因为[这个方法在 API 24 以上才被支持](https://developer.android.com/reference/android/view/View#onVisibilityAggregated(boolean%29)。此外，我还遇到了 <code>!isVisible || windowVisibility != VISIBLE</code> 上的问题，当视图是可见的，但它的容器却不可见。所以我决定重写这个：</p>
+<pre class="hljs"><code><span class="hljs-comment">// InfiniteAnimateView.kt</span>
+
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InfiniteAnimateView</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span></span>(
+    context: Context, attrs: AttributeSet? = <span class="hljs-literal">null</span>, defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>
+) : View(context, attrs, defStyleAttr) {
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> animation: Animator? = <span class="hljs-literal">null</span>
+
+    <span class="hljs-comment">/**
+     * 我们不可以使用 `onVisibilityAggregated` 方法，因为它只在 SDK 24 以上被支持，而我们的最低 SDK 是 21
+     */</span>
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onVisibilityChanged</span><span class="hljs-params">(changedView: <span class="hljs-type">View</span>, visibility: <span class="hljs-type">Int</span>)</span></span> {
+        <span class="hljs-keyword">super</span>.onVisibilityChanged(changedView, visibility)
+
+        <span class="hljs-keyword">if</span> (isShown) startAnimation() <span class="hljs-keyword">else</span> stopAnimation()
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAttachedToWindow</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">super</span>.onAttachedToWindow()
+        startAnimation()
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDetachedFromWindow</span><span class="hljs-params">()</span></span> {
+        stopAnimation()
+        <span class="hljs-keyword">super</span>.onDetachedFromWindow()
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">startAnimation</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> (!isShown) <span class="hljs-keyword">return</span>
+        <span class="hljs-keyword">if</span> (animation == <span class="hljs-literal">null</span>) animation = createAnimation().apply { start() }
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">createAnimation</span><span class="hljs-params">()</span></span>: Animator
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">stopAnimation</span><span class="hljs-params">()</span></span> {
+        animation?.cancel()
+        animation = <span class="hljs-literal">null</span>
+    }
+}
+</code></pre>
+<p>不幸的是，这也没有用（虽然我觉得它应该能够正常工作的）。说实话，我不知道问题的具体原因。可能在普通的情况下会有效，但是对于 <code>RecyclerView</code> 就不行了。前段时间我就遇到了这个问题：如果使用 <code>isShown</code> 来跟踪一些东西是否在 <code>RecyclerView</code> 中显示。因此可能我的最终解决方案并不正确，但至少在我的方案中，它能按照我的期望工作：</p>
+<pre class="hljs"><code><span class="hljs-comment">// InfiniteAnimateView.kt</span>
+
+<span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InfiniteAnimateView</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span></span>(
+    context: Context, attrs: AttributeSet? = <span class="hljs-literal">null</span>, defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>
+) : View(context, attrs, defStyleAttr) {
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> animation: Animator? = <span class="hljs-literal">null</span>
+
+    <span class="hljs-comment">/**
+     * 我们不可以使用 `onVisibilityAggregated` 方法，因为它只在 SDK 24 以上被支持，而我们的最低 SDK 是 21
+     */</span>
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onVisibilityChanged</span><span class="hljs-params">(changedView: <span class="hljs-type">View</span>, visibility: <span class="hljs-type">Int</span>)</span></span> {
+        <span class="hljs-keyword">super</span>.onVisibilityChanged(changedView, visibility)
+        <span class="hljs-keyword">if</span> (isDeepVisible()) startAnimation() <span class="hljs-keyword">else</span> stopAnimation()
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onAttachedToWindow</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">super</span>.onAttachedToWindow()
+        startAnimation()
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDetachedFromWindow</span><span class="hljs-params">()</span></span> {
+        stopAnimation()
+        <span class="hljs-keyword">super</span>.onDetachedFromWindow()
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">startAnimation</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> (!isAttachedToWindow || !isDeepVisible()) <span class="hljs-keyword">return</span>
+        <span class="hljs-keyword">if</span> (animation == <span class="hljs-literal">null</span>) animation = createAnimation().apply { start() }
+    }
+
+    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">createAnimation</span><span class="hljs-params">()</span></span>: Animator
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">stopAnimation</span><span class="hljs-params">()</span></span> {
+        animation?.cancel()
+        animation = <span class="hljs-literal">null</span>
+    }
+
+    <span class="hljs-comment">/**
+     * 可能这个函数上实现了 View.isShown，但我发觉到它有一些问题。
+     * 我在 Lottie lib 中也遇到了这些问题。不过因为我们总是没有时间去深入研究
+     * 我决定使用了这个简单的方法暂时解决这个问题，只为确保它能够正常运转
+     * 我到底需要什么 = =
+     *
+     * 更新：尝试使用 isShown 代替这个方法，但没有成功。所以如果你知道
+     * 如何改进，欢迎评论区讨论一下
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">isDeepVisible</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Boolean</span> {
+        <span class="hljs-keyword">var</span> isVisible = isVisible
+        <span class="hljs-keyword">var</span> parent = parentView
+        <span class="hljs-keyword">while</span> (parent != <span class="hljs-literal">null</span> &amp;&amp; isVisible) {
+            isVisible = isVisible &amp;&amp; parent.isVisible
+            parent = parent.parentView
+        }
+        <span class="hljs-keyword">return</span> isVisible
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> View.parentView: ViewGroup? <span class="hljs-keyword">get</span>() = parent <span class="hljs-keyword">as</span>? ViewGroup
+}
+</code></pre>
+<h2>进度动画</h2>
+<h3>准备</h3>
+<p>那么首先我们来谈谈我们 View 的结构。它应该包含哪些绘画组件？在当前情境下最好的表达方式就是声明不同的 <code>Paint</code>。</p>
+<pre class="hljs"><code><span class="hljs-comment">// progress_paints.kt</span>
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    style = Paint.Style.FILL
+    color = defaultBgColor
+}
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bgStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    style = Paint.Style.STROKE
+    color = defaultBgStrokeColor
+    strokeWidth = context.resources.getDimension(R.dimen.chat_progress_bg_stroke_width)
+}
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+    style = Paint.Style.STROKE
+    strokeCap = Paint.Cap.BUTT
+    strokeWidth = context.resources.getDimension(R.dimen.chat_progress_stroke_width)
+    color = defaultProgressColor
+}
+</code></pre>
+<p>为了展示我将改变笔触的宽度和其他东西，所以你会看到某些方面的不同。这 3 个 <code>Paint</code> 就与 3 个关键部分的进度相关联：</p>
+<p><img src="../images/telegram-like-uploading-animation.md-1*UnoyHSg3xYZzyRNwYm35HA.gif" alt=""></p>
+<p><strong>左：</strong> background; <strong>中：</strong> stroke; <strong>右：</strong> progress</p>
+<p>你可能想知道为什么我要用 <code>Paint.Cap.BUTT</code>。好吧，为了让这个进度更 &quot;Telegram&quot;（至少在 iOS 设备上是这样），你应该使用 <code>Paint.Cap.ROUND</code>。让我来演示一下这三种可能的样式之间的区别（这里增加了描边宽度以让差异更明显）。</p>
+<p><img src="../images/telegram-like-uploading-animation.md-1*lh_H6Nv_1ixygHP6q8k6Lw.gif" alt=""></p>
+<p><strong>左：</strong> <code>Cap.BUTT</code>，<strong>中：</strong> <code>Cap.ROUND</code>，<strong>右：</strong> <code>Cap.SQUARE</code></p>
+<p>因此，主要的区别是，<code>Cap.ROUND</code> 给笔画的角以特殊的圆角，而 <code>Cap.BUTT</code> 和 <code>Cap.SQUARE</code> 只是切割。<code>Cap.SQUARE</code> 也和 <code>Cap.ROUND</code> 一样预留了额外的空间，但没有圆角效果。这可能导致 <code>Cap.SQUARE</code> 显示的角度与 <code>Cap.BUTT</code> 相同但预留了额外的空间。</p>
+<p><img src="../images/telegram-like-uploading-animation.md-1*auxY8ZqofcNmZMsezh0DkA.png" alt=""></p>
+<p>试图用 <code>Cap.BUTT</code> 和 <code>Cap.SQUARE</code> 来显示 90 度。</p>
+<p>考虑到所有这些情况，我们最好使用 <code>Cap.BUTT</code>，因为它比 <code>Cap.SQUARE</code> 显示的角度表示更恰当。</p>
+<blockquote>
+<p>顺便说一下 <code>Cap.BUTT</code> 是画笔默认的笔刷类型。这里有一个官方的<a href="https://developer.android.com/reference/android/graphics/Paint.Cap">文档链接</a>。但我想向你展示真正的区别，因为最初我想让它变成 <code>ROUND</code>，然后我开始使用 <code>SQUARE</code>，但我注意到了一些特性。</p>
+</blockquote>
+<h3>Base Spinning</h3>
+<p>动画本身其实很简单，因为我们有 <code>InfiniteAnimateView</code>：</p>
+<pre class="hljs"><code>ValueAnimator.ofFloat(currentAngle, currentAngle + MAX_ANGLE)
+    .apply {
+        interpolator = LinearInterpolator()
+        duration = SPIN_DURATION_MS
+        repeatCount = ValueAnimator.INFINITE
+        addUpdateListener { 
+            currentAngle = normalize(it.animatedValue <span class="hljs-keyword">as</span> <span class="hljs-built_in">Float</span>)
+        }
+    }
+</code></pre>
+<p>其中 <code>normalize</code> 是一种简单的方法用于将任意角缩小回 [0, 2π) 区间内。例如，对于角度 <code>400.54</code> <code>normalize</code> 后就是 <code>40.54</code>。</p>
+<pre class="hljs"><code><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">normalize</span><span class="hljs-params">(angle: <span class="hljs-type">Float</span>)</span></span>: <span class="hljs-built_in">Float</span> {
+    <span class="hljs-keyword">val</span> decimal = angle - angle.toInt()
+    <span class="hljs-keyword">return</span> (angle.toInt() % MAX_ANGLE) + decimal
+}
+</code></pre>
+<h3>测量与绘制</h3>
+<p>我们将依靠由父视图提供的测量尺寸或使用在 xml 中定义的精确的 <code>layout_width</code>、<code>layout_height</code> 值进行绘制。因此，我们在 View 的测量方面不需要任何事情，但我们会使用测量的尺寸来准备进度矩形并在其中绘制 View。</p>
+<p>嗯，这并不难，但我们需要记住一些事情：</p>
+<p><img src="../images/telegram-like-uploading-animation.md-1*x0X1dP0bxHg-Z-iU0p-JhA.png" alt=""></p>
+<ul>
+<li>我们不能只拿 <code>measuredWidth</code>、<code>measuredHeight</code> 来画圆圈背景、进度、描边（主要是描边的原因）。如果我们不考虑描边的宽度，也不从尺寸计算中减去它的一半，我们最终会得到看起来像切开的边界：</li>
+</ul>
+<p><img src="../images/telegram-like-uploading-animation.md-1*pQhNsv1OWffDnraP6njZgA.png" alt=""></p>
+<ul>
+<li>如果我们不考虑笔触的宽度，我们可能最终会在绘图阶段将其重叠。（这对于不透明的颜色来说是可以的）</li>
+</ul>
+<p>但是，如果你将使用半透明的颜色，你就会看到很奇怪的重叠（我增加了笔触宽度以更清晰地展示问题所在）。</p>
+<h3>扫描动画的角度</h3>
+<p>好了，最后是进度本身。假设我们可以把它从 0 改成 1：</p>
+<pre class="hljs"><code><span class="hljs-meta">@FloatRange(from = .0, to = 1.0, toInclusive = false)</span>
+<span class="hljs-keyword">var</span> progress.<span class="hljs-built_in">Float</span> = <span class="hljs-number">0f</span> <span class="hljs-built_in">Float</span> = <span class="hljs-number">0f</span>
+</code></pre>
+<p>为了绘制弧线，我们需要计算一个特殊的扫描动画的角度，而它就是绘图部分的一个特殊角度。360 —— 一个完整的圆将被绘制。90 —— 将画出圆的四分之一。</p>
+<p>所以我们需要将进度转换为度数，同时，我们需要保持扫描角不为 0。也就是说即便 <code>progress</code> 值等于 0，我们也要绘制一小块的进度。</p>
+<pre class="hljs"><code><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">convertToSweepAngle</span><span class="hljs-params">(progress: <span class="hljs-type">Float</span>)</span></span>: <span class="hljs-built_in">Float</span> =
+    MIN_SWEEP_ANGLE + progress * (MAX_ANGLE - MIN_SWEEP_ANGLE)
+</code></pre>
+<p>其中 <code>MAX_ANGLE = 360</code>（当然你可以自定义为任何角度），<code>MIN_SWEEP_ANGLE</code> 是最小的进度，以度数为单位。最小进度会在 <code>progress = 0</code> 就会代替 <code>progress</code> 值。</p>
+<h2>代码放一起！</h2>
+<p>现在将所有的代码合并一起，我们就可以构建完整的 View 了：</p>
+<pre class="hljs"><code><span class="hljs-comment">// ChatProgressView.kt</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChatProgressView</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span></span>(
+    context: Context, attrs: AttributeSet? = <span class="hljs-literal">null</span>, defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>
+) : InfiniteAnimateView(context, attrs, defStyleAttr) {
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> defaultBgColor: <span class="hljs-built_in">Int</span> = context.getColorCompat(R.color.chat_progress_bg)
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> defaultBgStrokeColor: <span class="hljs-built_in">Int</span> = context.getColorCompat(R.color.chat_progress_bg_stroke)
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> defaultProgressColor: <span class="hljs-built_in">Int</span> = context.getColorCompat(R.color.white)
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> progressPadding = context.resources.getDimension(R.dimen.chat_progress_padding)
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bgPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = defaultBgColor
+    }
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> bgStrokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        color = defaultBgStrokeColor
+        strokeWidth = context.resources.getDimension(R.dimen.chat_progress_bg_stroke_width)
+    }
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeWidth = context.resources.getDimension(R.dimen.chat_progress_stroke_width)
+        color = defaultProgressColor
+    }
+
+    <span class="hljs-meta">@FloatRange(from = .0, to = 1.0, toInclusive = false)</span>
+    <span class="hljs-keyword">var</span> progress: <span class="hljs-built_in">Float</span> = <span class="hljs-number">0f</span>
+        <span class="hljs-keyword">set</span>(value) {
+            field = <span class="hljs-keyword">when</span> {
+                value &lt; <span class="hljs-number">0f</span> -&gt; <span class="hljs-number">0f</span>
+                value &gt; <span class="hljs-number">1f</span> -&gt; <span class="hljs-number">1f</span>
+                <span class="hljs-keyword">else</span> -&gt; value
+            }
+            sweepAngle = convertToSweepAngle(field)
+            invalidate()
+        }
+
+    <span class="hljs-comment">// [0, 360)</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> currentAngle: <span class="hljs-built_in">Float</span> <span class="hljs-keyword">by</span> observable(<span class="hljs-number">0f</span>) { _, _, _ -&gt; invalidate() }
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> sweepAngle: <span class="hljs-built_in">Float</span> <span class="hljs-keyword">by</span> observable(MIN_SWEEP_ANGLE) { _, _, _ -&gt; invalidate() }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> progressRect: RectF = RectF()
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> bgRadius: <span class="hljs-built_in">Float</span> = <span class="hljs-number">0f</span>
+
+    <span class="hljs-keyword">init</span> {
+        attrs?.parseAttrs(context, R.styleable.ChatProgressView) {
+            bgPaint.color = getColor(R.styleable.ChatProgressView_bgColor, defaultBgColor)
+            bgStrokePaint.color = getColor(R.styleable.ChatProgressView_bgStrokeColor, defaultBgStrokeColor)
+            progressPaint.color = getColor(R.styleable.ChatProgressView_progressColor, defaultProgressColor)
+        }
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMeasure</span><span class="hljs-params">(widthMeasureSpec: <span class="hljs-type">Int</span>, heightMeasureSpec: <span class="hljs-type">Int</span>)</span></span> {
+        <span class="hljs-keyword">super</span>.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        <span class="hljs-keyword">val</span> horizHalf = (measuredWidth - padding.horizontal) / <span class="hljs-number">2f</span>
+        <span class="hljs-keyword">val</span> vertHalf = (measuredHeight - padding.vertical) / <span class="hljs-number">2f</span>
+
+        <span class="hljs-keyword">val</span> progressOffset = progressPadding + progressPaint.strokeWidth / <span class="hljs-number">2f</span>
+
+        <span class="hljs-comment">// 由于笔画在线的中心，我们需要为它留出一半的安全空间，否则它将被截断的界限</span>
+        bgRadius = min(horizHalf, vertHalf) - bgStrokePaint.strokeWidth / <span class="hljs-number">2f</span>
+
+        <span class="hljs-keyword">val</span> progressRectMinSize = <span class="hljs-number">2</span> * (min(horizHalf, vertHalf) - progressOffset)
+        progressRect.apply {
+            left = (measuredWidth - progressRectMinSize) / <span class="hljs-number">2f</span>
+            top = (measuredHeight - progressRectMinSize) / <span class="hljs-number">2f</span>
+            right = (measuredWidth + progressRectMinSize) / <span class="hljs-number">2f</span>
+            bottom = (measuredHeight + progressRectMinSize) / <span class="hljs-number">2f</span>
+        }
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDraw</span><span class="hljs-params">(canvas: <span class="hljs-type">Canvas</span>)</span></span> {
+        <span class="hljs-keyword">super</span>.onDraw(canvas)
+        with(canvas) {
+            <span class="hljs-comment">//(radius - strokeWidth) - because we don&#x27;t want to overlap colors (since they by default translucent)</span>
+            drawCircle(progressRect.centerX(), progressRect.centerY(), bgRadius - bgStrokePaint.strokeWidth / <span class="hljs-number">2f</span>, bgPaint)
+            drawCircle(progressRect.centerX(), progressRect.centerY(), bgRadius, bgStrokePaint)
+            drawArc(progressRect, currentAngle, sweepAngle, <span class="hljs-literal">false</span>, progressPaint)
+        }
+    }
+
+    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">createAnimation</span><span class="hljs-params">()</span></span>: Animator = ValueAnimator.ofFloat(currentAngle, currentAngle + MAX_ANGLE).apply {
+        interpolator = LinearInterpolator()
+        duration = SPIN_DURATION_MS
+        repeatCount = ValueAnimator.INFINITE
+        addUpdateListener { currentAngle = normalize(it.animatedValue <span class="hljs-keyword">as</span> <span class="hljs-built_in">Float</span>) }
+    }
+
+    <span class="hljs-comment">/**
+     * 将任意角转换至 [0, 360)
+     * 比如说 angle = 400.54 =&gt; return 40.54
+     * angle = 360 =&gt; return 0
+     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">normalize</span><span class="hljs-params">(angle: <span class="hljs-type">Float</span>)</span></span>: <span class="hljs-built_in">Float</span> {
+        <span class="hljs-keyword">val</span> decimal = angle - angle.toInt()
+        <span class="hljs-keyword">return</span> (angle.toInt() % MAX_ANGLE) + decimal
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">convertToSweepAngle</span><span class="hljs-params">(progress: <span class="hljs-type">Float</span>)</span></span>: <span class="hljs-built_in">Float</span> =
+        MIN_SWEEP_ANGLE + progress * (MAX_ANGLE - MIN_SWEEP_ANGLE)
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> {
+        <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> SPIN_DURATION_MS = <span class="hljs-number">2_000L</span>
+        <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> MIN_SWEEP_ANGLE = <span class="hljs-number">10f</span> <span class="hljs-comment">//in degrees</span>
+        <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> MAX_ANGLE = <span class="hljs-number">360</span> <span class="hljs-comment">//in degrees</span>
+    }
+}
+</code></pre>
+<h3>补充！</h3>
+<p>补充一下，我们可以在 <code>drawArc</code> 这个方法上拓展一下。你看我们有一个 <code>currentAngle</code> 代表了绘制圆弧的起始点的角度，还有一个 <code>sweepAngle</code> 代表了我们需要绘制多少度数的圆弧。</p>
+<p>当进度增加时，我们只改变 <code>sweepAngle</code>，也就是说，如果 <code>currentAngle</code> 是静态值（不变），那么我们将看到增加的圆弧只有一个方向。我们可以试着修改一下。考虑一下三种情况并看看结果分别是怎样的：</p>
+<pre class="hljs"><code><span class="hljs-comment">// 1. 在这种情况下，弧线只在一个方向上 &quot;增加&quot;</span>
+drawArc(progressRect, currentAngle, sweepAngle, <span class="hljs-literal">false</span>, progressPaint)
+<span class="hljs-comment">// 2. 在这种情况下，弧线在两个方向上 &quot;增加&quot;</span>
+drawArc(progressRect, currentAngle - sweepAngle / <span class="hljs-number">2f</span>, sweepAngle, <span class="hljs-literal">false</span>, progressPaint)
+<span class="hljs-comment">// 3. 在这种情况下，弧线向另一个方向 &quot;增加&quot;</span>
+drawArc(progressRect, currentAngle - sweepAngle, sweepAngle, <span class="hljs-literal">false</span>, progressPaint)
+</code></pre>
+<p>而结果是：</p>
+<p><img src="../images/telegram-like-uploading-animation.md-1*fbLfs0wImFm_GzMyJYWJCA.gif" alt=""></p>
+<p>**左：**第一种情况；**中：**第二种情况；<strong>右</strong>：第三种情况</p>
+<p>如你所见，左边和右边的动画（方案一、三）在速度上并不一致。第一个给人的感觉是旋转速度加快，进度增加，而最后一个则相反，给人的感觉是旋转速度变慢。而反之则是进度递减。</p>
+<p>不过中间的动画在旋转速度上是一致的。所以，如果你不是增加进度（比如上传文件），或者只是减少进度（比如倒计时），那么我建议使用第二个方案。</p>
+<h2>后记</h2>
+<p>动画是伟大的。像素是伟大的。形状是伟大的。我们只需要用爱仔细对待它们。因为细节是产品中最有价值的东西;)</p>
+<p><img src="../images/telegram-like-uploading-animation.md-0*19Qsjr8oaWOKrhLk.gif" alt=""></p>
+<p>如果你喜欢这篇文章，别忘了点赞关注收藏一键三连！如果你有什么问题，可以评论我，我们来讨论一下。祝你编程愉快!</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

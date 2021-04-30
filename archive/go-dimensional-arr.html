@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的多维数组｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-dimensional-arr.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的多维数组｜Go 主题月</h1>
+<p><img src="../images/go-dimensional-arr.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<p>多维数组的维数大于一。</p>
+<p>如果你有过用其它语言的编程经历，那么想必会熟悉数组的概念。有了数组，我们就可以用相同名字引用一系列变量，并用数字（索引）来识别、读取或修改它们。在许多场合，使用数组可以缩短和简化程序，因为我们可以利用索引值设计一个循环，高效地处理多种情况。</p>
+<p>多维数组，有时需要追踪记录数组中的相关信息。例如，为了追踪记录计算机屏幕上的每一个像素，需要引用它的 X、Y 坐标。这时应该用多维数组存储值。</p>
+<p>Go 语言支持多维数组，以下为常用的多维数组声明方式：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> variable_name [一维尺寸][二维尺寸]...[N 维尺寸] variable_type
+</code></pre>
+<p>比如说下面的示例就声明了三维的整型数组：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> arr [<span class="hljs-number">5</span>][<span class="hljs-number">10</span>][<span class="hljs-number">4</span>] <span class="hljs-keyword">int</span>
+</code></pre>
+<h2>二维数组</h2>
+<p>二维数组是最简单的多维数组，二维数组本质上是由两组一维数组组成的。二维数组定义方式如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> variable_name [一维尺寸][二维尺寸] variable_type
+</code></pre>
+<p>二维数组中的元素可通过 <code>a[x][y]</code> 来访问，比如说要访问 <code>a</code> 的第 2 行第 3 列元素，那就是 <code>a[2][3]</code>。</p>
+<h3>初始化二维数组</h3>
+<p>多维数组可通过大括号来初始值。以下实例为一个 3 行 2 列的二维数组：</p>
+<pre class="hljs"><code>descriptor := [<span class="hljs-number">3</span>][<span class="hljs-number">2</span>] <span class="hljs-keyword">string</span>{  
+    {<span class="hljs-string">&quot;penguin&quot;</span>, <span class="hljs-string">&quot;cool&quot;</span>},
+    {<span class="hljs-string">&quot;hoarfroster&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>},
+    {<span class="hljs-string">&quot;passionpenguin&quot;</span>, <span class="hljs-string">&quot;unknown&quot;</span>},
+}
+</code></pre>
+<h3>访问二维数组</h3>
+<p>二维数组通过指定坐标来访问。如数组中的行索引与列索引。要访问上面的第 3 行第 1 个元素，我们需要使用 <code>descriptor[2][0]</code></p>
+<p>当然我们也可以使用循环嵌套来输出二维数组中的每一个元素：</p>
+<p><a href="https://github.com/PassionPenguin/AwesomeGo/blob/master/day14/penguin-descriptor.go"><code>day14/penguin-descriptor.go</code></a></p>
+<pre class="hljs"><code><span class="hljs-keyword">package</span> main
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+	descriptor := [<span class="hljs-number">3</span>][<span class="hljs-number">2</span>]<span class="hljs-keyword">string</span>{
+		{<span class="hljs-string">&quot;penguin&quot;</span>, <span class="hljs-string">&quot;cool&quot;</span>},
+		{<span class="hljs-string">&quot;hoarfroster&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>},
+		{<span class="hljs-string">&quot;passionpenguin&quot;</span>, <span class="hljs-string">&quot;unknown&quot;</span>},
+	}
+	<span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(descriptor); i++ {
+		<span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; <span class="hljs-built_in">len</span>(descriptor[i]); j++ {
+			<span class="hljs-built_in">println</span>(descriptor[i][j])
+		}
+	}
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

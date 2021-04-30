@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>当 Android 的 Compat 库不能拯救你的时候 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://proandroiddev.com/when-compat-libraries-do-not-save-you-dc55f16b4160">When “Compat” libraries won’t save you</a></li>
+<li>原文作者：<a href="https://dpreussler.medium.com">Danny Preussler</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/when-compat-libraries-do-not-save-you.md">https://github.com/xitu/gold-miner/blob/master/article/2021/when-compat-libraries-do-not-save-you.md</a></li>
+<li>译者：<a href="https://github.com/Hoarfroster">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/Kimhooo">Kimhooo</a>、<a href="https://github.com/greycodee">greycodee</a></li>
+</ul>
+</blockquote>
+<h1>当 Android 的 Compat 库不能拯救你的时候</h1>
+<p>—— 还有为什么你应该避免使用 <code>NewApi</code> 抑制警告！</p>
+<p><img src="https://miro.medium.com/max/12000/1*_UZ7BojQmk2vRCTx6XIdLA.jpeg" alt="图源 Unsplash"></p>
+<p>Compat 支持库的概念可能是 Android 主导手机领域的重要方面之一。不像是 iOS，Android 用户往往因为他们的手机不允许更新而在新版本推出后不能更新他们的操作系统，而这就是 Android 的<a href="https://www.androidauthority.com/android-fragmentation-linux-kernel-1057450/">碎片化</a>问题。不过开发者们还是希望在他们的应用程序中使用最新的功能来竞争，而解决方法很简单：我们不需要在操作系统中添加新的 API，而是可以直接通过使用谷歌向我们提供的 &quot;回溯&quot; 版本，直接将这些 API 和你的应用一起打包部署。</p>
+<p>这一切都始于 <a href="https://medium.com/u/8ddd94878165">Jake Wharton</a> 开发的 <a href="https://github.com/JakeWharton/ActionBarSherlock">ActionBar Sherlock</a> 项目。这个项目后来被 Google 采纳，放到了他们的 <strong>支持库</strong> 中。再后来，这个支持库被镜像为 <strong>Jetpack</strong> 下的 <strong>AndroidX</strong> 项目。</p>
+<h2>相同，但也不同</h2>
+<p>从表面上看，并不是所有的 Compat API 都是以同样的方式构建的。有些 API，比如 Fragment 的，是由完整的代码拷贝构建的。你要么使用操作系统中的 <code>android.app.Fragment</code>（实际上已经废弃）类，要么使用 <code>androidx.fragment.app.Fragment</code> 类。两者都不互相共享任何代码，也没有共同的基类（这就是为什么我们有两个版本的 <code>FragmentManager</code>）。</p>
+<p>另一方面，例如 <code>AppCompatActivity</code> 这个类就是简单地扩展了原来的 <code>Activity</code> 类。另外 <code>AppCompatImageButton</code> 仍然是一个 <code>ImageButton</code>!</p>
+<p>我们可以看到，有时这些 Compat 类只是起到一个桥梁的作用，用来添加缺失的功能，而有时它们甚至是完全一样的。</p>
+<h2>让我们看看另一个例子！</h2>
+<p>不过有一个领域随着时间的推移发生了很大的变化，那就是 Android 的通知 API。曾经有一段时间，每一次 Google I/O 大会都会宣布一个新的 API 方面的变化。</p>
+<p>好在我们有 <code>NotificationManagerCompat</code> 来拯救我们！！！</p>
+<p>比如说当我们需要获取通知通道组（<code>NotificationChannelGroup</code>）的时候：</p>
+<pre class="hljs"><code><span class="hljs-keyword">val</span> groups = notificationManagerCompat.notificationChannelGroups
+</code></pre>
+<p>我们不需要担心通道组是否被所有操作系统版本支持，因为它实际上会被在 Compat 类中处理掉：</p>
+<pre class="hljs"><code><span class="hljs-keyword">public</span> List&lt;NotificationChannelGroup&gt; getNotificationChannelGroups() {
+    <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= <span class="hljs-number">26</span>) {
+        <span class="hljs-keyword">return</span> mNotificationManager.getNotificationChannelGroups()
+    }
+    <span class="hljs-keyword">return</span> Collections.emptyList()
+}
+</code></pre>
+<p>如果我们是在 API 26 之前，我们只会得到一个空的列表，如果不是我们就会得到在 API 26 中引入的新通道组。</p>
+<p>你可以在 <a href="https://github.com/androidx/androidx/blob/androidx-main/core/core/src/main/java/androidx/core/app/NotificationManagerCompat.java#L230">NotificationManagerCompat</a> 代码处找到更复杂的检查。</p>
+<p>但如果你仔细观察，<code>NotificationManagerCompat</code> 会返回我们实际的 API 类。在上面的示例代码中列出了 <code>NotificationChannelGroup</code>，这并不是一个复制的 Compat 版本，不过因为它检查了 API 的可用性，我们可以安全使用它。</p>
+<pre class="hljs"><code><span class="hljs-keyword">val</span> groups = notificationManagerCompat.notificationChannelGroups
+<span class="hljs-keyword">val</span> channels = groups.flatMap {
+    it.channels.filter { it.shouldShowLights() }
+}
+</code></pre>
+<p>这里我们只需要那些正在触发灯光的渠道组，也就是 API 26 及以上。由于我们使用的是比最低 SDK 级别更高的 API 级别的类，编译器会在这里警告我们：</p>
+<p><img src="../images/when-compat-libraries-do-not-save-you.md-1*WWdcZVLzzaXduUd1RT0vBg.png" alt=""></p>
+<p>编译器并不在意我们使用 <code>NotificationManagerCompat</code> 来达到目的。</p>
+<p>我们有多种方法来解决这个问题。</p>
+<p><img src="../images/when-compat-libraries-do-not-save-you.md-1*L_wx_xAhVMYE0SVzE7_AJw.png" alt=""></p>
+<p>将 <code>RequiresApi</code> 注解添加到我们的方法中并没有什么意义，因为我们会简单地将警告移到调用函数中。用检查包围似乎已经过时了，因为这个检查已经由 <code>NotificationManagerCompat</code> 完成，如上图所示。</p>
+<p>看来最好的选择是选择抑制这个警告。</p>
+<pre class="hljs"><code><span class="hljs-meta">@SuppressLint(<span class="hljs-meta-string">&quot;NewApi&quot;</span>)</span>
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">checkChannels</span><span class="hljs-params">()</span></span> {
+   <span class="hljs-keyword">val</span> groups = notificationManagerCompat.notificationChannelGroups
+   <span class="hljs-keyword">val</span> channels = groups.flatMap {
+        it.channels.filter { it.shouldShowLights() }
+   }
+   ...
+}
+</code></pre>
+<h2>新的需求即将到来</h2>
+<p>假设我们得到了额外的要求，我们需要过滤掉被屏蔽的组。我们可以为此添加一个简单的检查：</p>
+<pre class="hljs"><code><span class="hljs-meta">@SuppressLint(<span class="hljs-meta-string">&quot;NewApi&quot;</span>)</span>
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">checkChannels</span><span class="hljs-params">()</span></span> {
+    <span class="hljs-keyword">val</span> groups = notificationManager.notificationChannelGroups
+    <span class="hljs-keyword">val</span> channels = groups.filterNot { it.isBlocked }.flatMap {
+        it.channels.filter { it.shouldShowLights()}
+    }
+    ...
+}
+</code></pre>
+<p>一切看起来都很好，对吗？</p>
+<h2>你完了！</h2>
+<p>但我们刚刚引入了一个<strong>崩溃</strong>!</p>
+<p>原因是：<code>isBlocked</code> 是在 API 28 才引入的，而我们没有进行检查! 尽管我们使用了 <code>NotificationManagerCompat</code>，但我们还是遇到了 API 级别上的问题!</p>
+<p>而且因为我们抑制了 <code>NewApi</code> 的警告，所以我们在这个问题上没有收到任何警告!</p>
+<p>所以当涉及到抑制警告的时候，我们就应该<strong>更加审慎</strong>!</p>
+<h2>解决方案？</h2>
+<p>由于只有在方法级别上才能解决这个问题（不适用单个语句），最好的方法是编写能满足我们需求的单行的方法。</p>
+<p>多亏了扩展函数，这可以非常容易地实现：</p>
+<pre class="hljs"><code><span class="hljs-meta">@SuppressLint(<span class="hljs-meta-string">&quot;NewApi&quot;</span>)</span> <span class="hljs-comment">// SDK 26</span>
+<span class="hljs-function"><span class="hljs-keyword">fun</span> NotificationChannelGroup.<span class="hljs-title">lightingChannels</span><span class="hljs-params">()</span></span> = 
+   channels.filterLightingOnes()
+
+<span class="hljs-meta">@SuppressLint(<span class="hljs-meta-string">&quot;NewApi&quot;</span>)</span> <span class="hljs-comment">// SDK 26</span>
+<span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> List<span class="hljs-type">&lt;NotificationChannel&gt;</span>.<span class="hljs-title">filterLightingOnes</span><span class="hljs-params">()</span></span> = 
+   filter { it.shouldShowLights() }
+</code></pre>
+<p>如果我们在上面的例子中使用这种方法，我们在添加 <code>isBlocked</code> 的时候就会得到警告：</p>
+<p><img src="../images/when-compat-libraries-do-not-save-you.md-1*OpkxXOXSGueoW_TyJyXw3A.png" alt=""></p>
+<p>当然，这对于我们开发者来说多了很多工作，但是我们的用户会很喜欢一个无崩溃的应用。</p>
+<h2>The Linter</h2>
+<p>上述例子不是 Compat 库的 Bug，而是被抑制隐藏了。这种情况也可能发生在许多其他 API 上。</p>
+<ul>
+<li>不要掉进这个陷阱!</li>
+<li>使用 Compat 库可能会给我们带来虚假的安全感，并欺骗我们相信我们不必考虑这些问题。</li>
+</ul>
+<p>而且再次强调，尽量<strong>避免抑制</strong> <code>NewApi</code> <strong>警告</strong>！</p>
+<p>相反，我们应该使用直接的版本检查，比如：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.P)
+</code></pre>
+<p>不幸的是，lint 在这里不是很智能。它不会理解一些变型的版本检查，比如说：</p>
+<pre class="hljs"><code>.filter { Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.P }
+</code></pre>
+<h2>求助？</h2>
+<p>也许你们中的一些人想更多地研究这个，用一些自定义的 lint 规则。基本上，我们需要这样的东西：</p>
+<pre class="hljs"><code><span class="hljs-meta">@CheckedUpTo(Build.VERSION_CODES.P)</span>
+</code></pre>
+<p>这将在内部完成类似于 <code>SuppressLint(&quot;NewApi&quot;)</code> 的工作，但只会针对不需要高于 P 版本的 API 调用。</p>
+<p>目前，你可以让现有的 lint 功能为你工作。例如也可以在你自己的代码中添加 <code>@RequiresApi(Build.VERSION_CODES.P)</code>，强制让你处理这些问题。</p>
+<p>记住，这些注释也被认为是你的代码读者的文档。</p>
+<p>PS: 最新的 NotificationCompat alpha 版本将为我们带来 <code>NotificationChannel</code> 和 <code>NotificationChannelGroup</code> 的兼容版本。🥳</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

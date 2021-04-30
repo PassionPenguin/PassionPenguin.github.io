@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>现代 Web 应用程序中的 Web 分享 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>原文地址：<a href="https://blog.bitsrc.io/web-share-for-modern-web-apps-43c3e2329093">Web Share for Modern Web Apps</a></li>
+<li>原文作者：<a href="https://medium.com/@clickforjanaka">Janaka Ekanayake</a></li>
+<li>译文出自：<a href="https://github.com/xitu/gold-miner">掘金翻译计划</a></li>
+<li>本文永久链接：<a href="https://github.com/xitu/gold-miner/blob/master/article/2021/web-share-for-modern-web-apps.md">https://github.com/xitu/gold-miner/blob/master/article/2021/web-share-for-modern-web-apps.md</a></li>
+<li>译者：<a href="https://github.com/Hoarfroster">霜羽 Hoarfroster</a></li>
+<li>校对者：<a href="https://github.com/Chorer">Chorer</a>、<a href="https://github.com/Usualminds">Usualminds</a></li>
+</ul>
+</blockquote>
+<h1>现代 Web 应用程序中的 Web 分享</h1>
+<p><img src="../images/web-share-for-modern-web-apps.md-1*QXEz4H_A4nons0JRZmblhQ.png" alt=""></p>
+<blockquote>
+<p>最近，Windows 和 Chrome OS（译者注：其实还有 macOS）开始支持 Web 分享 和 Web Share API，这吸引了不少 Web 开发者的目光。</p>
+</blockquote>
+<p>不知道你有没有接触过 Web Share API？我想你们中的很多人应该都听说过这个词吧！Web Share API 其实已经出现一段时间了，只不过最初只有移动设备支持 Web Share API。</p>
+<h2>Web Share API —— 快速演示</h2>
+<p>我们可以按照以下步骤，对 Web Share API 进行快速测试 —— 在网页与其他应用程序之间进行数据分享。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/1*sHKOD8KJJxktrFqgPyAQwA.png" alt="来源: https://web-share.glitch.me/"></p>
+<ol>
+<li>首先，确保你使用的是最新版本的谷歌浏览器。</li>
+<li>打开浏览器，打开<a href="https://web-share.glitch.me/">这个链接</a>，点击<strong>分享</strong>按钮。</li>
+<li>你可以打开任何允许分享的应用程序。此外，它还支持与附近的设备分享。</li>
+<li>点击分享后，你就可以在目标应用程序中查看分享的数据。我这里使用<strong>邮件</strong>作为应用程序。如图所示，应用程序会将 Web Share API 传递过来的文本数据添加到电子邮件正文中。</li>
+</ol>
+<p><img src="../images/web-share-for-modern-web-apps.md-1*YSWUxwngdvAWwQOtAHYzvg.png" alt=""></p>
+<p><strong>我希望你在尝试以后会感到高兴！</strong> —— 至少这是我在浏览器中查看 Web Share 功能演示时的第一印象。</p>
+<h2>在实践中使用 Web Share</h2>
+<h3>分享链接和文本</h3>
+<p>你可以使用一个简单的 <code>share()</code> 方法来分享你想要的链接和文本。下面给出的代码片段可以帮助你完成 Web Share：</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (navigator.share) {
+    navigator.share({
+        <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;juejin.cn&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;访问掘金开发者社区&#x27;</span>,
+        <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;https://www.juejin.com/&#x27;</span>,
+    }).then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;分享成功！&#x27;</span>))
+        .catch(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;分享时候遇到了错误……&#x27;</span>, error));
+}
+</code></pre>
+<h3>分享文件</h3>
+<p>文件分享与 URL 分享有些不同 —— 你必须先调用 <code>navigator.canShare()</code> 确认是否可以分享文件，然后才可以在调用 <code>navigator.share()</code> 时添加一个文件数组。</p>
+<pre class="hljs"><code><span class="hljs-keyword">if</span> (navigator.canShare &amp;&amp; navigator.canShare({<span class="hljs-attr">files</span>: fileArr})) {
+    navigator.share({
+        <span class="hljs-attr">files</span>: fileArr,
+        <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;我的相片集&#x27;</span>,
+        <span class="hljs-attr">text</span>: <span class="hljs-string">&#x27;北极de假期&#x27;</span>,
+    }).then(<span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;分享成功！&#x27;</span>))
+        .catch(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;分享时候遇到了错误……&#x27;</span>, error));
+} <span class="hljs-keyword">else</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`你的浏览器不支持分享这些文件……`</span>);
+}
+</code></pre>
+<h3>分享目标</h3>
+<p>要成为分享目标，应用程序需要满足 Chrome 设置的一些标准。你可以浏览一下<a href="https://developers.google.com/web/fundamentals/app-install-banners/#criteria">这篇帮助文档</a>来查看这些条件。</p>
+<p>要在网络应用清单中注册，你必须添加一个 <code>share_target</code>。这会提醒浏览器将该应用视为一个可能的分享选项，如下文所示：</p>
+<ol>
+<li>接收基本信息</li>
+<li>接收文件</li>
+<li>接收应用程序变更</li>
+</ol>
+<p>你必须使用 Web Share Target API 来声明分享目标。它可以明确与其他应用程序分享的文件和内容：</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">&quot;share_target&quot;</span>: {
+    <span class="hljs-attr">&quot;action&quot;</span>: <span class="hljs-string">&quot;/?share-target&quot;</span>,
+    <span class="hljs-attr">&quot;method&quot;</span>: <span class="hljs-string">&quot;POST&quot;</span>,
+    <span class="hljs-attr">&quot;enctype&quot;</span>: <span class="hljs-string">&quot;multipart/form-data&quot;</span>,
+    <span class="hljs-attr">&quot;params&quot;</span>: {
+      <span class="hljs-attr">&quot;files&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;file&quot;</span>,
+          <span class="hljs-attr">&quot;accept&quot;</span>: [
+            <span class="hljs-string">&quot;image/*&quot;</span>
+          ]
+        }
+      ]
+    }
+  }
+}
+</code></pre>
+<p>不过在已安装的应用程序之间传输文件会比较容易。你可以分享链接、文件等多种类型。</p>
+<pre class="hljs"><code><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">share</span>(<span class="hljs-params">title, text, url</span>) </span>{
+    <span class="hljs-keyword">try</span> {
+        <span class="hljs-keyword">await</span> navigator.share({title, text, url});
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    } <span class="hljs-keyword">catch</span> (ex) {
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">&#x27;分享失败……&#x27;</span>, ex);
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    }
+}
+</code></pre>
+<h2>Web Share API —— 功能和局限性</h2>
+<h3>功能</h3>
+<ul>
+<li>使用 Web Share，你的 Web 应用程序可以像特定平台的原生应用程序那样使用系统提供的分享功能。</li>
+<li>开发者可以获得更全面的分享选项。</li>
+<li>可以在设备中自定义分享目标和设备。因此，你可以提高页面加载速度。</li>
+<li>Web Share API 有助于分享文本、URL 和文件。此外，Web Share 也扩展来其支持分享的范围。</li>
+<li>它适用于 Chrome OS、Windows 平台的 Chrome、Safari 和 Android 的 Chromium 内核浏览器。</li>
+</ul>
+<h3>局限性</h3>
+<p>然而，无论这个功能有多好，它也有不少缺点和局限性。</p>
+<ul>
+<li>
+<p>首先，只有通过 https 访问的网站才能使用 Web Share。</p>
+</li>
+<li>
+<p>还有一点就是，你不能用类似于 <code>onload</code> 的操作来调用它，它必须通过用户的交互行为进行调用。比如说，用户可以通过点击调用它。</p>
+</li>
+<li>
+<p>另外，Mac 平台的 Chrome 的这个功能还在开发中。</p>
+</li>
+</ul>
+<h2>小结</h2>
+<p>Web Share API 是一个现代化的 Web 平台功能，它有助于我们在社交网络、短信和注册目标应用之间更轻松地分享内容。</p>
+<p>Chrome 是支持 Web Share Target API 的主要浏览器之一。此外，Safari 也支持它。</p>
+<p><img src="../images/web-share-for-modern-web-apps.md-1*CtRllCb7OzXfmPxJk4eaew.png" alt=""></p>
+<blockquote>
+<p>但是，Web Share API 应该由用户主动操作触发，这样做是为了减少不便和滥用。</p>
+</blockquote>
+<p>谢谢你的阅读。欢迎在下方留言，分享你的经验。</p>
+<blockquote>
+<p>如果发现译文存在错误或其他需要改进的地方，欢迎到 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 对译文进行修改并 PR，也可获得相应奖励积分。文章开头的 <strong>本文永久链接</strong> 即为本文在 GitHub 上的 MarkDown 链接。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p><a href="https://github.com/xitu/gold-miner">掘金翻译计划</a> 是一个翻译优质互联网技术文章的社区，文章来源为 <a href="https://juejin.im">掘金</a> 上的英文分享文章。内容覆盖 <a href="https://github.com/xitu/gold-miner#android">Android</a>、<a href="https://github.com/xitu/gold-miner#ios">iOS</a>、<a href="https://github.com/xitu/gold-miner#%E5%89%8D%E7%AB%AF">前端</a>、<a href="https://github.com/xitu/gold-miner#%E5%90%8E%E7%AB%AF">后端</a>、<a href="https://github.com/xitu/gold-miner#%E5%8C%BA%E5%9D%97%E9%93%BE">区块链</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%A7%E5%93%81">产品</a>、<a href="https://github.com/xitu/gold-miner#%E8%AE%BE%E8%AE%A1">设计</a>、<a href="https://github.com/xitu/gold-miner#%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD">人工智能</a>等领域，想要查看更多优质译文请持续关注 <a href="https://github.com/xitu/gold-miner">掘金翻译计划</a>、<a href="http://weibo.com/juejinfanyi">官方微博</a>、<a href="https://zhuanlan.zhihu.com/juejinfanyi">知乎专栏</a>。</p>
+</blockquote>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

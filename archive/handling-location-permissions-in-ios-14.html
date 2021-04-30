@@ -37,7 +37,7 @@
 <p>Apple 已经废弃了我们之前在 <code>CLLocationManager</code> 中调用的类方法  <code>authorizationStatus()</code>。</p>
 <p>这意味着从 iOS 14 开始，<code>authorizationStatus()</code> 只能被 <code>CLLocationManager</code> 的实例调用.</p>
 <p>Apple 也废弃了 <code>didChangeAuthorization</code> 中带有一个 <code>status</code> 参数的 <code>CoreLocation</code> 方法。取而代之的是，现在有了一个新的 <code>locationManagerDidChangeAuthorization</code> 方法。</p>
-<p><img src="https://cdn-images-1.medium.com/max/2720/1*T6ZJe1MBihTxLgvatZbHPQ.png" alt=""></p>
+<p><img src="../images/handling-location-permissions-in-ios-14.md-1*T6ZJe1MBihTxLgvatZbHPQ.png" alt=""></p>
 <p>为了确保地理位置的精确度状态，我们可以在地理位置管理者的实例中使用新的枚举属性 <code>accuracyAuthorization</code>。这个属性是 <code>CLAccuracyAuthorization</code> 类型的，有两个枚举值：</p>
 <ul>
 <li><code>fullAccuracy</code></li>
@@ -56,15 +56,15 @@ locationManager.pausesLocationUpdatesAutomatically <span class="hljs-operator">=
 <p>请注意：如需 allowsBackgroundLocationUpdates，请确保你在 Xcode 项目设置中启用了后台模式（Background mode）。</p>
 </blockquote>
 <p>现在，当你在你的设备上运行这段代码时，在 iOS 14 下你将得到如下的提示：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*odLcpX6ZTLZbU4dIhFhuug.png" alt="Screenshot from the author’s phone."></p>
+<p><img src="../images/handling-location-permissions-in-ios-14.md-1*odLcpX6ZTLZbU4dIhFhuug.png" alt="Screenshot from the author’s phone."></p>
 <p>通过拨动“精确度”按钮, 你可以选择允许模糊或者精确的地理位置权限。</p>
 <p>现在，可能会出现只要求你访问用户的准确地理位置的情况。</p>
 <p>谢天谢地，在 iOS 14 中有一个新方法能让我们暂时性的发出请求：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2720/1*2_Y2M6m8lvAcCUOr_hrNYQ.png" alt=""></p>
+<p><img src="../images/handling-location-permissions-in-ios-14.md-1*2_Y2M6m8lvAcCUOr_hrNYQ.png" alt=""></p>
 <p>这个 <code>requestTemporaryFullAccuracyAuthorization</code> 方法需要一个 <code>purpose</code> 键来解释为何需要访问用户的准确地理位置。这个键被定义在 <code>info.plist</code> 文件中的一个 <code>NSLocationTemporaryUsageDescriptionDictionary</code> 字典里，如下图所示：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*hbgrE7IeurnF6h4VmUmYVw.png" alt=""></p>
+<p><img src="../images/handling-location-permissions-in-ios-14.md-1*hbgrE7IeurnF6h4VmUmYVw.png" alt=""></p>
 <p>一旦 <code>TemporaryFullAccuracyAuthorization</code> 被调用了，就会出现下面的提示信息：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2000/1*PKM54GYFk_ZxBszrOBt6XA.png" alt="Screenshot by the author."></p>
+<p><img src="../images/handling-location-permissions-in-ios-14.md-1*PKM54GYFk_ZxBszrOBt6XA.png" alt="Screenshot by the author."></p>
 <p><code>reducedAccuracy</code> 和 <code>fullAccuracy</code> 位置更新都是在代理方法 <code>didUpdateLocations</code> 中被接收的。</p>
 <p>一个用 Swift UI 编写的 iOS 14 <code>CoreLocation</code> 应用的 demo 的源代码可以在 <a href="https://github.com/anupamchugh/iOS14-Resources/tree/master/iOS14SwiftUICoreLocation">GitHub</a> 获取。</p>
 <p>请务必注意，如果使用 <code>reducedAccuracy</code> 进行后台地理位置更新，更新的时间间隔将不会改变。在这种情况下，信号灯和地区检测也将被禁用。</p>

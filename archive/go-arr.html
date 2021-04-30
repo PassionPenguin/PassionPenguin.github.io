@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 的数组｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-arr.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 的数组｜Go 主题月</h1>
+<p><img src="../images/go-arr.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h2>Go 语言数组</h2>
+<p>Go 语言提供了数组类型的数据结构，数组是类似于列表的高阶对象。。数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型例如整型、字符串或者自定义类型。</p>
+<p>相比声明 <code>number0</code>、<code>number1</code>、……、<code>number99</code> 这样的变量，使用数组形式 <code>numbers[0]</code>、<code>numbers[1]</code>、……、<code>numbers[99]</code> 更加方便且易于扩展。</p>
+<p>我们可以通过索引（即元素相对于数组来说位置）来访问（或者修改）数组元素（索引从 <code>0</code> 开始）。</p>
+<h2>声明数组</h2>
+<p>Go 语言数组声明需要指定元素类型及元素个数，语法格式如下：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> variable_name [size] variable_type
+</code></pre>
+<ul>
+<li><code>variable_name</code> 变量名</li>
+<li><code>size</code> 数组长度</li>
+<li><code>variable_type</code> 元素类型</li>
+</ul>
+<p>以上为一维数组的定义方式。例如以下定义了名为 <code>descriptor</code> 长度为 <code>4</code> 类型为 <code>string</code> 的数组：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> descriptor [<span class="hljs-number">4</span>] <span class="hljs-keyword">string</span>
+</code></pre>
+<h2>数组初始化</h2>
+<p>以下的代码就展示了数组的初始化：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> descriptor = [<span class="hljs-number">4</span>]<span class="hljs-keyword">string</span>{<span class="hljs-string">&quot;cool&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>, <span class="hljs-string">&quot;great&quot;</span>, <span class="hljs-string">&quot;cute&quot;</span>}
+</code></pre>
+<p>当然其实我们也可以快速初始化数组：</p>
+<pre class="hljs"><code>descriptor := [<span class="hljs-number">4</span>]<span class="hljs-keyword">string</span>{<span class="hljs-string">&quot;cool&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>, <span class="hljs-string">&quot;great&quot;</span>, <span class="hljs-string">&quot;cute&quot;</span>}
+</code></pre>
+<p>如果数组长度不确定该咋办？</p>
+<p>快快使用 <code>...</code> 代替数组的长度。</p>
+<p>把这活交给编译器！让它就会根据元素个数自行推断数组的长度：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> descriptor = [...]<span class="hljs-keyword">string</span>{<span class="hljs-string">&quot;cool&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>, <span class="hljs-string">&quot;great&quot;</span>, <span class="hljs-string">&quot;cute&quot;</span>}
+</code></pre>
+<pre class="hljs"><code>descriptor := [...]<span class="hljs-keyword">string</span>{<span class="hljs-string">&quot;cool&quot;</span>, <span class="hljs-string">&quot;handsome&quot;</span>, <span class="hljs-string">&quot;great&quot;</span>, <span class="hljs-string">&quot;cute&quot;</span>}
+</code></pre>
+<p>如果设置了数组的长度，我们还可以通过指定下标来初始化元素：</p>
+<pre class="hljs"><code><span class="hljs-comment">//  将索引为 1 和 3 的元素初始化</span>
+descriptor := [...]<span class="hljs-keyword">string</span>{<span class="hljs-number">1</span>: <span class="hljs-string">&quot;cool&quot;</span>, <span class="hljs-number">3</span>: <span class="hljs-string">&quot;handsome&quot;</span>}
+</code></pre>
+<p>不过需要注意初始化数组中 <code>{}</code> 中的元素个数不能大于 <code>[]</code> 中的数字。</p>
+<p>如果忽略 <code>[]</code> 中的数字不设置数组大小，Go 语言会根据元素的个数来设置数组的大小：</p>
+<h2>访问数组元素</h2>
+<p>数组元素可以通过索引（位置）来读取。格式为数组名后加中括号，中括号中为索引的值。例如：</p>
+<pre class="hljs"><code><span class="hljs-keyword">var</span> descriptionForPenguin = descriptor[<span class="hljs-number">2</span>]
+</code></pre>
+<p>以上代码就读取了数组 <code>descriptor</code> 第 3 个元素的值。</p>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

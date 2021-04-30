@@ -19,7 +19,7 @@
 </ul>
 </blockquote>
 <h1>Snowpack: 一个可代替 Webpack 的构建工具</h1>
-<p><img src="https://cdn-images-1.medium.com/max/2024/1*XElS7rQXRta2vXlqLti4VQ.png" alt=""></p>
+<p><img src="../images/snowpack-an-alternative-build-tool-to-webpack.md-1*XElS7rQXRta2vXlqLti4VQ.png" alt=""></p>
 <p>得益于它灵活的构建配置以及丰富的官方支持的第三方插件，<a href="https://webpack.js.org/">Webpack</a> 是近几年最流行的 JavaScript 构建工具。</p>
 <p>Webpack 的主要功能是将你所有的 JavaScript 文件，连带所有从 NPM 导入的模块、图片、CSS 和其他网络资源，全部打包到一个可以被浏览器执行的文件中。</p>
 <p><img src="https://cdn-images-1.medium.com/max/3840/1*XRoIfAWL1JkSECMDC6n5Hw.png" alt="用一句话形容 Webpack，来源"></p>
@@ -31,7 +31,7 @@
 <p><a href="https://www.snowpack.dev/">Snowpack</a> 是一个 JavaScript 构建工具，它利用了浏览器对 ESM 的支持，让我们可以构建单个文件并将其发送到浏览器中。每一个被构建的文件都会被缓存，在我们每修改一个文件时，只有这一个文件会被 Snowpack 重新构建。</p>
 <p><img src="https://cdn-images-1.medium.com/max/3840/1*Ep5bOeYn1t-Y0XnSRUD2mA.png" alt="Snowpack 服务端打包的文件，来源"></p>
 <p>Snowpack 的开发服务器也做了优化，它只会在浏览器请求后构建该文件。这使得 Snowpack 可以即时启动（<strong>小于 50 毫秒</strong>）并且扩展到大型项目时也不会增加启动速度。我自己做尝试时启动服务器只用了 35 毫秒：</p>
-<p><img src="https://cdn-images-1.medium.com/max/2906/1*EpNPrzN0EeeEYlMM3SLIWw.png" alt="Snowpack 的调试服务器启动"></p>
+<p><img src="../images/snowpack-an-alternative-build-tool-to-webpack.md-1*EpNPrzN0EeeEYlMM3SLIWw.png" alt="Snowpack 的调试服务器启动"></p>
 <h2>Snowpack 的构建过程</h2>
 <p>Snowpack 默认会将你的未打包应用部署到生产环境，但是你也要进行一些构建相关的优化，比如最小化、代码分割、tree-shaking、懒加载等等。</p>
 <p>Snowpack 同时支持通过<a href="https://www.npmjs.com/package/@snowpack/plugin-webpack">插件连接 Webpack</a> 来打包生产版本的应用。这样，由于 Snowpack 已经转译了你的代码，你的打包工具（Webpack）只需要将常规的 HTML、CSS 和 JavaScript 文件打包。这也是为什么你在打包过程中不需要复杂的 Webpack 配置文件。</p>
@@ -70,7 +70,7 @@
 }
 </code></pre>
 <p>你立即就可以使用 <code>npm start</code> 指令运行这个应用。本地的调试服务器会在 8080 端口运行。CSA 的 React 模板和 Create React App 的默认模板非常相似：</p>
-<p><img src="https://cdn-images-1.medium.com/max/3104/1*j3OQj_TV0ODHJZZpiaTzew.png" alt="CSA 的默认 React 页面"></p>
+<p><img src="../images/snowpack-an-alternative-build-tool-to-webpack.md-1*j3OQj_TV0ODHJZZpiaTzew.png" alt="CSA 的默认 React 页面"></p>
 <p>Snowpack 支持主流库的 <a href="https://github.com/snowpackjs/snowpack/tree/main/create-snowpack-app/cli#official-app-templates">许多官方模板</a>，如 React、Vue 和 Svelte。你只需要在指令中加入 <code>--template</code> 选项。</p>
 <h2>结语</h2>
 <blockquote>

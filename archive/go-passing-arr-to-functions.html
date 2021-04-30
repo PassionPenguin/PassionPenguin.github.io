@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" article>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Go 的奇妙旅程：Go 向函数中传参数组｜Go 主题月 - Hoarfroster</title>
+    <link rel="stylesheet" href="/assets/styles/post.css">
+</head>
+<body>
+<div class="container post markdown-body"><blockquote>
+<ul>
+<li>标签：后端、Golang</li>
+</ul>
+</blockquote>
+<p><img src="../images/go-arr.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<h1>Go 的奇妙旅程：Go 向函数中传参数组｜Go 主题月</h1>
+<p><img src="../images/go-arr.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<p>函数是应用程序开发中极度常见的组成部分，而不少的我们往往需要向函数传递数组作为参数，以对数据进行处理。常见的应用领域为：</p>
+<ol>
+<li>排序</li>
+<li>展示列表</li>
+<li>数据分析</li>
+</ol>
+<p>如果要将一维数组作为函数的参数传递，则我们必须以下面两种方式之一声明函数形式参数（两种声明方法都会产生相似的结果）。我们也可以类似的方式将多维数组作为形式参数传递。</p>
+<h2>方法一</h2>
+<p>形参为固定尺寸的数组，如下：</p>
+<pre class="hljs"><code>void myFunction(param [<span class="hljs-number">10</span>]<span class="hljs-keyword">int</span>) {
+    <span class="hljs-comment">// ……</span>
+}
+</code></pre>
+<h2>方法二</h2>
+<p>形参为非固定尺寸的的数组，如下：</p>
+<pre class="hljs"><code>void myFunction(param []<span class="hljs-keyword">int</span>) {
+    <span class="hljs-comment">// ……</span>
+}
+</code></pre>
+<h2>例子</h2>
+<p>抛出一个例子叭：求一组整数数组的各项平均值。</p>
+<pre class="hljs"><code><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getAverage</span><span class="hljs-params">(arr []<span class="hljs-keyword">int</span>, <span class="hljs-keyword">int</span> size)</span> <span class="hljs-title">float32</span></span> {
+    <span class="hljs-keyword">var</span> i <span class="hljs-keyword">int</span>
+    <span class="hljs-keyword">var</span> avg, sum <span class="hljs-keyword">float32</span>
+    
+    <span class="hljs-keyword">for</span> i = <span class="hljs-number">0</span>; i &lt; size; ++i {
+        sum += arr[i]
+    }
+    
+    avg = sum / size
+    <span class="hljs-keyword">return</span> avg;
+}
+</code></pre>
+</div>
+<div class="footer"></div>
+</body>
+<script src="/assets/scripts/index.min.js"></script>
+<script>init()</script>
+</html>

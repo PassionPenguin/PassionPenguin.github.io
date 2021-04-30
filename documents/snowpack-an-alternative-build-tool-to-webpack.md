@@ -7,7 +7,7 @@
 
 # Snowpack: 一个可代替 Webpack 的构建工具
 
-![](https://cdn-images-1.medium.com/max/2024/1*XElS7rQXRta2vXlqLti4VQ.png)
+![](../images/snowpack-an-alternative-build-tool-to-webpack.md-1*XElS7rQXRta2vXlqLti4VQ.png)
 
 得益于它灵活的构建配置以及丰富的官方支持的第三方插件，[Webpack](https://webpack.js.org/) 是近几年最流行的 JavaScript 构建工具。
 
@@ -31,7 +31,7 @@ Webpack 的主要功能是将你所有的 JavaScript 文件，连带所有从 NP
 
 Snowpack 的开发服务器也做了优化，它只会在浏览器请求后构建该文件。这使得 Snowpack 可以即时启动（**小于 50 毫秒**）并且扩展到大型项目时也不会增加启动速度。我自己做尝试时启动服务器只用了 35 毫秒：
 
-![Snowpack 的调试服务器启动](https://cdn-images-1.medium.com/max/2906/1*EpNPrzN0EeeEYlMM3SLIWw.png)
+![Snowpack 的调试服务器启动](../images/snowpack-an-alternative-build-tool-to-webpack.md-1*EpNPrzN0EeeEYlMM3SLIWw.png)
 
 ## Snowpack 的构建过程
 
@@ -86,7 +86,7 @@ npx create-snowpack-app react-snowpack --template @snowpack/app-template-react
 
 你立即就可以使用 `npm start` 指令运行这个应用。本地的调试服务器会在 8080 端口运行。CSA 的 React 模板和 Create React App 的默认模板非常相似：
 
-![CSA 的默认 React 页面](https://cdn-images-1.medium.com/max/3104/1*j3OQj_TV0ODHJZZpiaTzew.png)
+![CSA 的默认 React 页面](../images/snowpack-an-alternative-build-tool-to-webpack.md-1*j3OQj_TV0ODHJZZpiaTzew.png)
 
 Snowpack 支持主流库的 [许多官方模板](https://github.com/snowpackjs/snowpack/tree/main/create-snowpack-app/cli#official-app-templates)，如 React、Vue 和 Svelte。你只需要在指令中加入 `--template` 选项。
 

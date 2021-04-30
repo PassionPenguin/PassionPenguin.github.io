@@ -1,10 +1,10 @@
 > * 标签：后端、Golang
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-program-structure-and-running.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
 
 # Go 的奇妙旅程：Go 程序结构和运行｜Go 主题月
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-program-structure-and-running.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## Hello Go 的结构是什么
 
@@ -50,7 +50,7 @@ func main() {
 
 * 注意 `Println` 方法的大写字母 `P`。
 
-![golang-programstructure.png](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/56e82c7f485f4e20b462a5922ffc9501~tplv-k3u1fbpfcp-zoom-1.image)
+![golang-programstructure.png](../images/go-program-structure-and-running.md-56e82c7f485f4e20b462a5922ffc9501~tplv-k3u1fbpfcp-zoom-1.image)
 
 > 注意：在 Go 语言中，**如果一个函数或变量或是别的什么东西的名称，是以大写字母开头，Go 编译器则会将其导出**。导入这个包意味着我们可以在当前包内访问到导入的包的函数、变量以及常量。
 

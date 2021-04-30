@@ -1,10 +1,10 @@
 > * 标签：后端、Golang
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-basic-syntax.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
 
 # Go 的奇妙旅程：Go 的基础语法｜Go 主题月
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-basic-syntax.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## Go 标记（Token）
 
@@ -56,7 +56,7 @@ fmt.Println("Hello, World!"); fmt.Println("I'm from Guangzhou China 🇨🇳") /
 // 我不信！
 ```
 
-![i-am-cute.avi](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/133d923f152949199409944f65ba0252~tplv-k3u1fbpfcp-zoom-1.image)
+![i-am-cute.avi](../images/go-basic-syntax.md-133d923f152949199409944f65ba0252~tplv-k3u1fbpfcp-zoom-1.image)
 
 Go 中注释的食用方法与 JavaScript、C++、Java 等语言一致（叭），那企鹅就能够放心地去食用啦～
 
@@ -76,7 +76,7 @@ Go 中的标识符专门用于标识变量、函数或任何其他用户定义�
 
 **GoLand 你坏坏！！！**
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0389c01ad132470ba0183a2c021ae056~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-basic-syntax.md-0389c01ad132470ba0183a2c021ae056~tplv-k3u1fbpfcp-zoom-1.image)
 
 ### 命名方式
 
@@ -151,7 +151,7 @@ fruit=apples+oranges;
 fruit = apples + oranges;
 ```
 
-![confusing-simile.webp](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bd7b842ceed541fe805c7ea8db715ee5~tplv-k3u1fbpfcp-zoom-1.image)
+![confusing-simile.webp](../images/go-basic-syntax.md-bd7b842ceed541fe805c7ea8db715ee5~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 格式化字符串
 

@@ -1,10 +1,10 @@
 > * 标签：后端、Golang
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-installing-golang.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
 
 # Go 的奇妙旅程：设置好 Go 的环境｜Go 主题月
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-installing-golang.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## 什么是 Go 语言
 
@@ -32,13 +32,13 @@ Go 是从 2007 年末由 Robert Griesemer、Rob Pike 以及 Ken Thompson 在 Goo
 
 而就在上个月，Go 发布了 v1.16 🎉
 
-![golang-history.png](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/30fbc965c581427a8c3529e9c366256a~tplv-k3u1fbpfcp-zoom-1.image)
+![golang-history.png](../images/go-installing-golang.md-30fbc965c581427a8c3529e9c366256a~tplv-k3u1fbpfcp-zoom-1.image)
 
 Go 富有表现力，简洁，整洁且高效。它的并发机制使编写程序可以轻松地从多核和联网机器中最高效地运行，而其新颖的类型系统则可以实现灵活的模块化程序构建。Go 可以快速编译为机器代码，同时具有垃圾回收的便利性和运行时反射的功能。它是一种快速的，静态类型的编译语言，感觉就像是一种动态类型的解释语言
 
 Go 的项目仓库可以在 [Google Source](https://go.googlesource.com/go) 或是 [GitHub](https://github.com/golang/go) 上找到：）
 
-![](https://golang.org/doc/gopher/fiveyears.jpg)
+![](../images/go-installing-golang.md-fiveyears.jpg)
 
 ### Go 语言用途
 
@@ -60,15 +60,15 @@ brew install go
 
 毕竟有了学生全套的 License，直接使用了 JetBrains Toolbox 安装了 [GoLand](https://www.jetbrains.com/go/) 工具～
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/858709251a0240bc8c7b5249b73249ef~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-installing-golang.md-858709251a0240bc8c7b5249b73249ef~tplv-k3u1fbpfcp-zoom-1.image)
 
 然后构建了个项目：
 
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9bc3839baa9c490ba1d0b6f08ab45199~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-installing-golang.md-9bc3839baa9c490ba1d0b6f08ab45199~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## Hello Go
 
-![golang-helloworld.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3a7ab61730e240b68c4824f6c8d8ea9a~tplv-k3u1fbpfcp-zoom-1.image)
+![golang-helloworld.png](../images/go-installing-golang.md-3a7ab61730e240b68c4824f6c8d8ea9a~tplv-k3u1fbpfcp-zoom-1.image)
 
 配置好了自己偏好的设置，试着写了一下第一段代码：
 
@@ -86,7 +86,7 @@ func main() {
 
 运行一下，美美的 Hello World 来一勺～
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c121b76cf5d549a6a50c8eb1373773f6~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-installing-golang.md-c121b76cf5d549a6a50c8eb1373773f6~tplv-k3u1fbpfcp-zoom-1.image)
 
 当然我们也可以直接用 Shell 执行这段代码：
 

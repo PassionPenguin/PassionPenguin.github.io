@@ -26,17 +26,17 @@
 
 如果你喜欢手动检查 CSS 代码，我们可以使用 **Inspect** 工具以找出应用于特定元素的 CSS 代码。使用 "Inspect arrow"，我们甚至可以看到关于颜色、字体、大小和可访问性的那些额外的细节。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281211425_devtools-inspect.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281211425_devtools-inspect.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281211425_devtools-inspect.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281211425_devtools-inspect.png)
 
 ### Grid 和 Flex 的检查器
 
 DevTools 界面中有很多实用的实用工具与细节，但我最喜欢的是 Grid 和 Flex 检查器。要启用它们，请进入设置（DevTools 右上方的一个小齿轮图标），点击 `Experiments`，然后启用 CSS Grid 和 Flexbox 调试功能。虽然这个工具主要用于调试布局问题，但我有时也会用它来快速判断页面上是否使用了 CSS Grid 或 Flexbox。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281358961_grid-inspector.png?resize=1342%2C921&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281358961_grid-inspector.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281358961_grid-inspector.png?resize=1342%2C921&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281358961_grid-inspector.png)
 
 ### CSS Overview
 
@@ -46,9 +46,9 @@ DevTools 界面中有很多实用的实用工具与细节，但我最喜欢的�
 
 要打开 CSS Overview 面板，我们可以使用 `⌘ ⇧ P` 或 `Ctrl ⇧ P` 快捷键，输入 `css overview`，然后选择 `Show CSS Overview`。这个工具可以展现 CSS 属性的概览，比如颜色、字体、对比度问题、未使用的声明和媒体查询。我通常用这个工具来判断当前 CSS 代码的好坏。例如，如果有 50 种灰度色彩或过多的排版定义，就意味着样式指南没有被应用到实际，或者甚至可能不存在样式指南。
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281703939_css-overview.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281703939_css-overview.png)
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281703939_css-overview.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281703939_css-overview.png)
 
 不过请注意，该工具会对应用于这个页面的样式做出概览，而不是对单个文件做出概览。
 
@@ -58,9 +58,9 @@ DevTools 界面中有很多实用的实用工具与细节，但我最喜欢的�
 
 你可以在 URL 过滤器输入中输入 `.css` 以用于过滤专门显示 CSS 文件。我通常使用这个工具来了解网站的交付技术。例如，如果我看到 CSS 的覆盖率相当的高，我就可以人为 CSS 文件是为每个页面单独生成的。这可能不是关键数据，但有时它有助于了解缓存策略。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281772886_coverage.png?resize=1342%2C919&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281772886_coverage.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281772886_coverage.png?resize=1342%2C919&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615281772886_coverage.png)
 
 ### Rendering Panel
 
@@ -74,25 +74,25 @@ DevTools 界面中有很多实用的实用工具与细节，但我最喜欢的�
 
 其他选项可能对调试问题更有利，比如模拟和禁用各种功能，强制使用 `prefers-color-scheme` 功能或打印媒体类型，以及禁用本地字体。
 
-![](https://i0.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282108070_renderiing.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282108070_renderiing.png)
 
-![](https://i0.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282108070_renderiing.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282108070_renderiing.png)
 
 ### Performance Monitor
 
 另一个检查 CSS 代码性能的工具是 **Performance Monitor**。要启用它，我们可以使用 `⌘ ⇧ P` 或 `Ctrl ⇧ P` 快捷键，输入 `Performance Monitor`，然后选择 `Show Performance Monitor` 选项。我通常使用这个工具来查看与页面交互或动画发生时会触发多少次重新计算和布局。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282038861_performance-monitor.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282038861_performance-monitor.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282038861_performance-monitor.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282038861_performance-monitor.png)
 
 ### Performance Panel
 
 在 **Performance Panel** 上，我们可以详细查看页面加载过程中的所有浏览器事件。要启用性能工具，我们可以使用 `⌘ ⇧ P` 或 `Ctrl ⇧ P` 快捷键，输入 `Performance`，选择 `Show Performance`，然后点击 "重新加载" 图标。我通常会启用 Screenshots 和 Web Vitals 选项。对我来说，最有趣的是 "首次渲染"、"首次内容丰富的渲染"、"布局转变 "和 "最大内容丰富的渲染" 这几个指标。还有一个饼图显示了绘制和渲染时间。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282240348_performance.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282240348_performance.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282240348_performance.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615282240348_performance.png)
 
 DevTools 可能不算是一个经典的检查工具，但它可以帮助我们了解哪些 CSS 功能被使用，代码的效率，以及代码的执行情况，而这些都是 CSS 代码检查的关键所在。
 
@@ -106,17 +106,17 @@ DevTools 只是用于检查的其中一个包含了许多功能的工具，但�
 
 主图 Main Chart 会显示特定样式与样式表中的位置的关系。另外两个图表显示了特定样式的使用情况。我经常使用这个网站来寻找 "坏的" 选择器。例如，如果我看到许多特定样式被标记为红色，我很容易得出结论 —— 这里的 CSS 代码可以改进得更好。在你努力改进时，保存截图以供参考是很有帮助的。
 
-![](https://i0.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280650448_specificity-visualizer-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280650448_specificity-visualizer-frame.png)
 
-![](https://i0.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280650448_specificity-visualizer-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280650448_specificity-visualizer-frame.png)
 
 ### CSS Specificity Graph Generator
 
 [**CSS Specificity Graph Generator**](https://jonassebastianohlsson.com/specificity-graph/)是一个类似的可视化特定样式工具。它显示了一个略有不同的图表，可能会帮助你看到你的 CSS 选择器是如何按特定样式组织的。正如它在工具页面上所说的那样，"尖峰是不好的，总的趋势应该是在样式表的后期有更高的特定样式"。进一步讨论这个问题会很有意思，但这不在本文的讨论范围内。然而，Harry Roberts 在他的文章 ["The Specificity Graph"](https://csswizardry.com/2014/10/the-specificity-graph/) 中确实广泛地写到了这一点，值得一试。
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280474471_css-specificity-graph-generator-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280474471_css-specificity-graph-generator-frame.png)
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280474471_css-specificity-graph-generator-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280474471_css-specificity-graph-generator-frame.png)
 
 ### CSS Stats
 
@@ -124,17 +124,17 @@ DevTools 只是用于检查的其中一个包含了许多功能的工具，但�
 
 你需要做的就是输入网站的 URL，然后点击 `Enter`。这些信息被分割成有意义的部分，包括了样式的声明数、颜色、排版、`z-index` 和特定样式等等。同样，你可能要把截图存储起来，以备日后参考。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280657659_cssstats-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280657659_cssstats-frame.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280657659_cssstats-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280657659_cssstats-frame.png)
 
 ### Project Wallace
 
 [**Project Wallace**](https://www.projectwallace.com/analyze-css) 是由 Bart Veneman 开发的，而他已经[在 CSS Tricks 上介绍了这个项目](https://css-tricks.com/in-search-of-a-stack-that-monitors-the-quality-and-complexity-of-css/)。Project Wallace 的强大之处在于，它可以比较和可视化基于导入的变化。这意味着你可以看到你的 CSS 代码库以前的状态，并看到你的代码在不同状态之间的变化。我觉得这个功能相当有用，特别是当你想说服别人代码是改进过的。该工具对单个项目是免费的，并为更多项目提供付费计划。
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280724437_projectwallace-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280724437_projectwallace-frame.png)
 
-![](https://i1.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280724437_projectwallace-frame.png?resize=1342%2C918&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280724437_projectwallace-frame.png)
 
 ## CLI 工具
 
@@ -146,17 +146,17 @@ DevTools 只是用于检查的其中一个包含了许多功能的工具，但�
 
 我最喜欢这个工具的地方是，它可以从网站中提取所有的 CSS 代码 —— 不仅是外部文件，还能够包括内联代码。这就是为什么 CSS Stats 和 Wallace 的报告不匹配的原因。
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280252636_wallace-frame.png?resize=671%2C709&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280252636_wallace-frame.png)
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280252636_wallace-frame.png?resize=671%2C709&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280252636_wallace-frame.png)
 
 ### csscss
 
 [**csscss**](https://github.com/zmoazeni/csscss) CLI 工具可以显示哪些规则共享相同的声明，而这对于识别重复的代码和减少编写的代码量是很有用的。在这样做之前，我会三思而后行，因为这可能是不值得的，尤其是在今天的缓存机制下。值得一提的是，csscss 需要 Ruby 运行环境。
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280250407_csscss-frame.png?resize=671%2C709&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280250407_csscss-frame.png)
 
-![](https://i2.wp.com/css-tricks.com/wp-content/uploads/2021/03/s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280250407_csscss-frame.png?resize=671%2C709&ssl=1)
+![](../images/css-auditing-tool.md-s_4B1C4D78EB4B7F4A9199BBB917690297400901EB2ABA2FEBF7F40167C51F9C2A_1615280250407_csscss-frame.png)
 
 ## 其他有用的工具
 

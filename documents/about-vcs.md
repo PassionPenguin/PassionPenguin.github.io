@@ -18,7 +18,7 @@
 
 如果你是位图形或网页设计师，可能会需要保存某一幅图片或页面布局文件的所有修订版本（这或许是你非常渴望拥有的功能，虽然说 Adobe CC、飞书、Wikipedia 这些软件或服务本身就为我们提供了这个功能）。
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9e592ed5982f49a9b4844ef0a4b1b04d~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/about-vcs.md-9e592ed5982f49a9b4844ef0a4b1b04d~tplv-k3u1fbpfcp-zoom-1.image)
 <span>Figure 1: Adobe CC 的版本记录</span>
 
 不过 Adobe CC 这种服务空间有限，并且服务受限，所以……

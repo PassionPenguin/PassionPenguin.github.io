@@ -4674,19 +4674,17 @@ html, body {
 }
 
 .banner {
-    width: 100%;
+  width: 100%;
 }
-
 .banner .image {
-    display: block;
-    height: 192px;
-    margin: 0 auto;
-    padding-top: 24px;
+  display: block;
+  height: 192px;
+  margin: 0 auto;
+  padding-top: 24px;
 }
-
 .banner .tips {
-    margin-top: 24px;
-    text-align: center;
+  margin-top: 24px;
+  text-align: center;
 }
 .banner .tips * {
   color: #fff;
@@ -4697,8 +4695,8 @@ html, body {
 
 @media screen and (min-width: 768px) {
   .banner {
-      margin-top: 72px;
-      padding: 24px 0;
+    margin-top: 72px;
+    padding: 24px 0;
   }
   .banner .tips h1 {
     font-size: 36px;
@@ -4730,15 +4728,13 @@ html, body {
     max-width: 768px;
   }
 }
-
 .container.postList {
-    background: var(--color-auto-gray-2);
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
+  background: var(--color-auto-gray-2);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
-
 .container .post {
-    margin: 16px 0;
+  margin: 16px 0;
 }
 .container .post h2 {
   display: inline-block;

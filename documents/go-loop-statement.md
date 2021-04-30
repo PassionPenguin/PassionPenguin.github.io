@@ -1,10 +1,10 @@
 > * 标签：后端、Golang
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-loop-statement.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
 
 # Go 的奇妙旅程：Go 的循环句｜Go 主题月
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-loop-statement.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
 
 在不少实际问题中有许多具有规律性的重复操作，因此在程序中就需要重复执行某些语句。一般来说一个循环是这样的：
 

@@ -37,9 +37,9 @@ Apple 已经废弃了我们之前在 `CLLocationManager` 中调用的类方法  
 
 Apple 也废弃了 `didChangeAuthorization` 中带有一个 `status` 参数的 `CoreLocation` 方法。取而代之的是，现在有了一个新的 `locationManagerDidChangeAuthorization` 方法。
 
-![](https://cdn-images-1.medium.com/max/2720/1*T6ZJe1MBihTxLgvatZbHPQ.png)
+![](../images/handling-location-permissions-in-ios-14.md-1*T6ZJe1MBihTxLgvatZbHPQ.png)
 
-为了确保地理位置的精确度状态，我们可以在地理位置管理者的实例中使用新的枚举属性 `accuracyAuthorization`。这个属性是 `CLAccuracyAuthorization` 类型的，有两个枚举值： 
+为了确保地理位置的精确度状态，我们可以在地理位置管理者的实例中使用新的枚举属性 `accuracyAuthorization`。这个属性是 `CLAccuracyAuthorization` 类型的，有两个枚举值：
 
 * `fullAccuracy`
 * `reducedAccuracy`（返回一个近似的而不是精确的地理位置）
@@ -60,7 +60,7 @@ locationManager.pausesLocationUpdatesAutomatically = false
 
 现在，当你在你的设备上运行这段代码时，在 iOS 14 下你将得到如下的提示：
 
-![Screenshot from the author’s phone.](https://cdn-images-1.medium.com/max/2000/1*odLcpX6ZTLZbU4dIhFhuug.png)
+![Screenshot from the author’s phone.](../images/handling-location-permissions-in-ios-14.md-1*odLcpX6ZTLZbU4dIhFhuug.png)
 
 通过拨动“精确度”按钮, 你可以选择允许模糊或者精确的地理位置权限。
 
@@ -68,15 +68,15 @@ locationManager.pausesLocationUpdatesAutomatically = false
 
 谢天谢地，在 iOS 14 中有一个新方法能让我们暂时性的发出请求：
 
-![](https://cdn-images-1.medium.com/max/2720/1*2_Y2M6m8lvAcCUOr_hrNYQ.png)
+![](../images/handling-location-permissions-in-ios-14.md-1*2_Y2M6m8lvAcCUOr_hrNYQ.png)
 
 这个 `requestTemporaryFullAccuracyAuthorization` 方法需要一个 `purpose` 键来解释为何需要访问用户的准确地理位置。这个键被定义在 `info.plist` 文件中的一个 `NSLocationTemporaryUsageDescriptionDictionary` 字典里，如下图所示：
 
-![](https://cdn-images-1.medium.com/max/2000/1*hbgrE7IeurnF6h4VmUmYVw.png)
+![](../images/handling-location-permissions-in-ios-14.md-1*hbgrE7IeurnF6h4VmUmYVw.png)
 
 一旦 `TemporaryFullAccuracyAuthorization` 被调用了，就会出现下面的提示信息：
 
-![Screenshot by the author.](https://cdn-images-1.medium.com/max/2000/1*PKM54GYFk_ZxBszrOBt6XA.png)
+![Screenshot by the author.](../images/handling-location-permissions-in-ios-14.md-1*PKM54GYFk_ZxBszrOBt6XA.png)
 
 `reducedAccuracy` 和 `fullAccuracy` 位置更新都是在代理方法 `didUpdateLocations` 中被接收的。
 

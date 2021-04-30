@@ -1,10 +1,10 @@
 > * 标签：后端、Golang
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-vars-and-consts.md-15ee9e1f856447fba1935aa98925c0b9~tplv-k3u1fbpfcp-zoom-1.image)
 
 # Go 的奇妙旅程：Go 的变量与常量｜Go 主题月
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-vars-and-consts.md-ee51d3128b444d8f89fdb67552054550~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## Go 变量
 
@@ -78,7 +78,7 @@ penguin := "Cute"
 
 啊这……
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9fe174dda05c4ed18a0d8ef733380375~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-vars-and-consts.md-9fe174dda05c4ed18a0d8ef733380375~tplv-k3u1fbpfcp-zoom-1.image)
 
 相信程序员们对下面一段代码是特别特别特别熟悉的了：
 
@@ -90,7 +90,7 @@ if err != nil {
 
 先让我们来看一下字典的定义叭～
 
-![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/edfd4bdc98f24a96a9807771d4016e1e~tplv-k3u1fbpfcp-zoom-1.image)
+![](../images/go-vars-and-consts.md-edfd4bdc98f24a96a9807771d4016e1e~tplv-k3u1fbpfcp-zoom-1.image)
 
 ### 变量的初始化
 

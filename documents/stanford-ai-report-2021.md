@@ -13,7 +13,7 @@
 
 该报告分为七个章节：研究与发展、技术性能、经济、人工智能教育、人工智能应用的道德挑战、人工智能的多样性、AI 政策和国家策略。这些章节基于公开可用的数据，并包含数十个图表。 “研究与开发”一章涵盖了研究论文和会议随着时间和地理区域的变化而增长。“技术性能” 章节在计算机视觉（CV），自然语言处理（NLP）和分子生物学等领域的多个基准上跟踪 AI 的准确性。该报告指出，人工智能系统现在可以生成语音、文字和图像，其质量之高通常使人类无法进行区分。
 
-![GAN Progress on Face Generation](https://res.infoq.com/news/2021/03/stanford-ai-report-2021/en/resources/1face-generation-1615055893968.png)
+![GAN Progress on Face Generation](../images/stanford-ai-report-2021.md-1face-generation-1615055893968.png)
 
 *GAN 网络在人脸合成方面的进步 (图像来源：[Stanford HAI AI Index Report](https://aiindex.stanford.edu/report/))*
 

@@ -16,7 +16,7 @@
 
 随着医疗知情同意管理 API 的应用，开发者们可以很快开发出相关应用，让患者更好地追踪、编辑和撤回对自己数据使用的许可。进一步，有了患者的许可，相关数据就可以留存在谷歌云以备将来使用，比如临床试验的分析。
 
-![同意管理的结构](https://cloud.google.com/healthcare/images/consent_architecture.svg)
+![同意管理的结构](../images/gcp-healthcare-consent-api.md-consent_architecture.svg)
 
 在公众云供应商中，谷歌并不是唯一提供医疗云服务的。例如，微软自 2019 年 11 月就开始[为快速医疗互操作性资源（FHIR）提供 Azure API](https://www.infoq.com/news/2019/11/azure-api-fhir-ga/) 作为一系列帮助客户就云中受保护的健康信息做机器学习的 API 的一部分。另外，AWS 提供[医疗解释服务](https://aws.amazon.com/comprehend/medical/)。这项服务利用机器学习，从杂乱的文本中提取相关的医疗信息。
 

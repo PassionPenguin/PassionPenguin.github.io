@@ -7,7 +7,7 @@
 
 # 黑客“高手”利用 11 个零日漏洞去感染 Windows、iOS 还有 Android 用户
 > 针对未知漏洞的漏洞利用程序花样百出，让这个黑客团伙与众不同。
-![图源 Getty](https://cdn.arstechnica.net/wp-content/uploads/2020/11/zeroday-800x534.jpg)
+![图源 Getty](../images/expert-hackers-used-11-zerodays-to-infect-windows-ios-and-android-users.md-zeroday-800x534.jpg)
 
 谷歌研究人员说，一个高级黑客团队在为期 9 个月的攻击活动中利用了不少于 11 个零日漏洞，并通过被感染的网站去感染打过所有补丁的运行 Windows、iOS 和 Android 的设备。
 
@@ -19,7 +19,7 @@
 
 在所有攻击中，水坑式站点都将访客重定向到一个庞大的架构。这个架构会根据访客使用的设备和浏览器，向用户的设备安装不同的漏洞利用程序。尽管二月份使用的两台服务器仅攻击了 Windows 和 Android 设备，但后来的攻击也针对了运行 iOS 的设备。下图展示了它的工作原理：
 
-![](https://cdn.arstechnica.net/wp-content/uploads/2021/03/device-flow-diagram.jpg)
+![](../images/expert-hackers-used-11-zerodays-to-infect-windows-ios-and-android-users.md-device-flow-diagram.jpg)
 
 突破打过补丁的功能完善的操作系统，以及让应用程序内置的高级防御功能（例如，运行于 Windows 10 的 Chrome 和运行于 iOS 的 Safari）破防的能力证明了该团队的高超技能，也同时说明了这个团伙拥有的零日漏洞的数量之多。Google 修补了攻击者 2 月份在 [Chrome 渲染器](https://nvd.nist.gov/vuln/detail/CVE-2020-15999)中利用的代码执行漏洞后，黑客迅速针对 Chrome V8 引擎的漏洞为他们的利用程序添加了新的代码。
 

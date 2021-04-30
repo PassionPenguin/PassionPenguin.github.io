@@ -29,7 +29,7 @@ GitHub CodeQL 是一个语义代码分析引擎，它使用**查询（Query）**
 
 如果一个构建服务器被 Solorigate 恶意程序的构建劫持组件植入了后门，那么恶意程序会在编译时注入额外代码。如果 CodeQL 在被感染的服务上观察构建进程，它会从真正的源码中提取被注入的恶意源码。产生的 CodeQL 数据库会因此包含 Solorigate 恶意源码的痕迹。请注意，如果你的 CodeQL 数据库生成于**没有**被感染的机器，那么这个数据库就不会包含任何被注入的代码。
 
-![图示：文中描述的代码扫描流程](https://github.blog/wp-content/uploads/2021/03/Screen-Shot-2021-03-10-at-4.41.07-PM.png?w=1024&resize=1024%2C589)
+![图示：文中描述的代码扫描流程](../images/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md-Screen-Shot-2021-03-10-at-4.41.07-PM.png)
 
 [Microsoft 团队贡献的](https://github.com/github/codeql/pull/5083) CodeQL 查询代码会检测被恶意注入的 C# 代码的模式。运行这些查询的最佳方式，是在可能受影响的服务器上手动创建一个 CodeQL 数据库，并用 VS Code 的 CodeQL 插件分析这个数据库。
 
@@ -44,7 +44,7 @@ GitHub CodeQL 是一个语义代码分析引擎，它使用**查询（Query）**
 4. [在 VS Code 中加载 CodeQL 数据库](https://codeql.github.com/docs/codeql-for-visual-studio-code/analyzing-your-projects/)。
 5. 定位到 `**ql/csharp/ql/src/codeql-suites**`，在这里你会找到 CodeQL 查询文件 **`solorigate.qls`**。右击该文件，选择 **CodeQL: Run Queries in Selected Files（在选中文件中运行查询）**。
 
-![界面截图：如何运行 CodeQL 查询](https://github.blog/wp-content/uploads/2021/03/code-scanning-and-codeql-detect-solorigate-fig-2.png?w=512&resize=512%2C72)
+![界面截图：如何运行 CodeQL 查询](../images/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md-code-scanning-and-codeql-detect-solorigate-fig-2.png)
 
 对每个可能受影响的代码库重复第 2 步至第 5 步。
 
@@ -71,7 +71,7 @@ queries: ./.github/codeql/solorigate.qls
 
 通过上面的配置，额外的 CodeQL 查询就可以运行了。如果 CodeQL 在源码中检测到了任何（Solorigate 或其他）恶意程序迹象，它就会在 GitHub 代码扫描界面里生成一个[警告](https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/managing-code-scanning-alerts-for-your-repository)。
 
-![截图：代码扫描警告](https://github.blog/wp-content/uploads/2021/03/code-scanning-and-codeql-detect-solorigate-fig-3.png?w=512&resize=512%2C140)
+![截图：代码扫描警告](../images/using-github-code-scanning-and-codeql-to-detect-traces-of-solorigate-and-other-backdoors.md-code-scanning-and-codeql-detect-solorigate-fig-3.png)
 
 若对更多信息和配置样例感兴趣，请参阅文档：[在 GitHub 代码扫描中运行自定义 CodeQL 查询](https://docs.github.com/en/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-codeql-code-scanning-in-your-ci-system#running-additional-queries)。
 

@@ -7,7 +7,7 @@
 
 # 1993 年的 CGI 脚本和早期服务端 Web 编程
 
-![头图](https://webdevelopmenthistory.com/wp-content/uploads/2021/03/1993_cgi_mosaic.jpg)
+![头图](../images/1993-cgi-scripts-and-early-server-side-web-programming.md-1993_cgi_mosaic.jpg)
 
 在 [JavaScript 诞生](https://webdevelopmenthistory.com/1995-the-birth-of-javascript/)的几年前，一个叫做通用网关接口（CGI）的规范为网页提供了一种早期的交互形式。不同于在浏览器内部（也就是客户端）执行交互任务的 JavaScript，CGI 脚本是借助服务器上的外部程序（服务器端的程序）运行的。CGI 脚本在服务器上执行后，结果会以 HTML 代码的形式发回给原网页。因此，虽然 CGI 脚本不像 JavaScript 那样作为浏览器中的动态组件，但它确实允许那些早期的互联网使用者和开发者在 1993 年和 1994 年运行交互式程序。从很多方面来看，Web 应用应该起源于 CGI，而不是 JavaScript。
 
@@ -15,7 +15,7 @@ CGI 于 1993 年诞生于美国国家超级计算应用中心（NCSA），开创
 
 他的想法是为不同的 Web 服务器（1993 年活跃的其他服务器包括 Tim Berners-Lee 的 CERN httpd 和 Tony Sanders 的 Plexus 服务器）创建一个通用的规范，这样通过网页启动的程序就可以在任何服务器上运行，并将结果发回网页。
 
-![](https://webdevelopmenthistory.com/wp-content/uploads/2021/03/ncsa_http_homepage_april97-1024x704.jpg)
+![](../images/1993-cgi-scripts-and-early-server-side-web-programming.md-ncsa_http_homepage_april97-1024x704.jpg)
 
 [NCSA HTTPd 主页](https://web.archive.org/web/19970414055941/http://hoohoo.ncsa.uiuc.edu/)，截图于 1997 年 4 月。
 
@@ -35,7 +35,7 @@ CGI 于 1993 年诞生于美国国家超级计算应用中心（NCSA），开创
 
 用现代术语来说，我们可以把 CGI 看作是一个应用程序接口（API）。所以从这个意义上说，正如[一份教程](http://www.whizkidtech.redprince.net/cgi-bin/tutorial)所说的那样，"CGI 就是 Web 服务器的 API"。
 
-![](https://webdevelopmenthistory.com/wp-content/uploads/2021/03/cgi1-1024x733.png)
+![](../images/1993-cgi-scripts-and-early-server-side-web-programming.md-cgi1-1024x733.png)
 
 通过超链接启动的 CGI 程序；[图源 Michael Grobe](http://condor.cc.ku.edu/~grobe/docs/forms-intro.shtml)，堪萨斯大学的"1994 年的某个时候"
 
@@ -67,7 +67,7 @@ McCool 的[规范](https://web.archive.org/web/19971210170807/http://hoohoo.ncsa
 
 毫不奇怪，CGI 的第一个用例是专注于将一个应用程序连接到数据库上。因此，CGI 被用来创建像联系表、留言簿、调查或搜索框这样的东西。任何需要用户输入并促使用户从网页到数据库再回到网页的东西，都是使用 CGI 的好选择。
 
-![](https://webdevelopmenthistory.com/wp-content/uploads/2021/03/cgi2-1024x742.png)
+![](../images/1993-cgi-scripts-and-early-server-side-web-programming.md-cgi2-1024x742.png)
 
 通过在线表格使用 CGI 的例子，图片由 Michael Grobe 提供。
 
@@ -79,7 +79,7 @@ McCool 的[规范](https://web.archive.org/web/19971210170807/http://hoohoo.ncsa
 
 [Matt Wright](https://web.archive.org/web/19970130232402/http://www.worldwidemart.com/mattw/) 在 1995 年创办 Matt's Script Archive 时，还是科罗拉多州柯林斯堡的一名高中生。他最受欢迎的脚本之一是一个名为 [FormMail](http://www.scriptarchive.com/formmail.html) 的联系表格，该脚本用 Perl 编写，被描述为"一个通用的 HTML 表格连接到电子邮件网关的脚本，支持解析任何表格的结果，并将它们发送给指定的用户"。不过不幸的是，FormMail 本身就不安全，很快就被垃圾邮件发送者利用来发送垃圾邮件。
 
-![](https://webdevelopmenthistory.com/wp-content/uploads/2021/03/matts_script_archive98-1024x754.jpg)
+![](../images/1993-cgi-scripts-and-early-server-side-web-programming.md-matts_script_archive98-1024x754.jpg)
 
 [Matt's Script Archive](https://web.archive.org/web/19980709151514/http://scriptarchive.com/)，1998 年 7 月版。
 

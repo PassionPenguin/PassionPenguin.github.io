@@ -61,13 +61,13 @@ val channels = groups.flatMap {
 
 这里我们只需要那些正在触发灯光的渠道组，也就是 API 26 及以上。由于我们使用的是比最低 SDK 级别更高的 API 级别的类，编译器会在这里警告我们：
 
-![](https://miro.medium.com/max/1692/1*WWdcZVLzzaXduUd1RT0vBg.png)
+![](../images/when-compat-libraries-do-not-save-you.md-1*WWdcZVLzzaXduUd1RT0vBg.png)
 
 编译器并不在意我们使用 `NotificationManagerCompat` 来达到目的。
 
 我们有多种方法来解决这个问题。
 
-![](https://miro.medium.com/max/1816/1*L_wx_xAhVMYE0SVzE7_AJw.png)
+![](../images/when-compat-libraries-do-not-save-you.md-1*L_wx_xAhVMYE0SVzE7_AJw.png)
 
 将 `RequiresApi` 注解添加到我们的方法中并没有什么意义，因为我们会简单地将警告移到调用函数中。用检查包围似乎已经过时了，因为这个检查已经由 `NotificationManagerCompat` 完成，如上图所示。
 
@@ -129,7 +129,7 @@ private fun List<NotificationChannel>.filterLightingOnes() =
 
 如果我们在上面的例子中使用这种方法，我们在添加 `isBlocked` 的时候就会得到警告：
 
-![](https://miro.medium.com/max/3032/1*OpkxXOXSGueoW_TyJyXw3A.png)
+![](../images/when-compat-libraries-do-not-save-you.md-1*OpkxXOXSGueoW_TyJyXw3A.png)
 
 当然，这对于我们开发者来说多了很多工作，但是我们的用户会很喜欢一个无崩溃的应用。
 

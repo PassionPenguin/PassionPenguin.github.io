@@ -7,7 +7,7 @@
 
 # 谷歌抨击微软“试图破坏开放 web 的运作方式”
 
-![插图作者：Alex Castro（The Verge）](https://cdn.vox-cdn.com/thumbor/rpRylgiUIswQ2IMihRrvowRMcN0=/0x0:2040x1360/1820x1213/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/68955716/acastro_180427_1777_0001.0.jpg)
+![插图作者：Alex Castro（The Verge）](../images/google-microsoft-attack-open-web-online-news-australia-laws.md-acastro_180427_1777_0001.0.jpg)
 
 谷歌和微软工程师可能会在 Chromium 浏览器项目开发上进行合作，但这并没有消除双方之间的企业政治斗争。今天谷歌对微软发起了严厉的攻击，指责它试图 “打破开放 web 的运作方式，以此来削弱竞争对手"。
 
@@ -19,7 +19,7 @@
 
 沃克说：“微软这次的攻击并非巧合，而是有备而来。这发生在 SolarWinds 攻击之后，在他们允许他们的数万名客户被黑客通过微软的主要漏洞攻击的时刻。”沃克接着说：“微软收到了有关他们系统中存在的漏洞的警告，并且知道这些漏洞正在被黑客利用，现在正在做止损工作。而他们的客户正忙着从所谓的 “电子邮件大劫案” 事件中收拾残局。所以对于他们转移视线的老把戏，我们不必大惊小怪”
 
-![Microsoft 的旧的 Scroogled 广告](https://cdn.vox-cdn.com/thumbor/rideFszM2hcQUu5m81921NmTp4Q=/0x0:640x427/1720x0/filters:focal(0x0:640x427):format(webp):no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/14256901/scroogled_427.1419979343.png)
+![Microsoft 的旧的 Scroogled 广告](../images/google-microsoft-attack-open-web-online-news-australia-laws.md-scroogled_427.1419979343.png)
 
 谷歌的这一不同寻常的攻击恰逢众议院司法委员会（[House Judiciary Committee](https://judiciary.house.gov/)）研究自由和多元化新闻竞争的反垄断和商业方面的问题。谷歌认为它并没有从谷歌新闻中赚钱，但微软认为这要复杂得多，涉及到谷歌搜索广告、广告技术业务、广告交换、广告技术工具以及谷歌的整体消费者数据集。
 

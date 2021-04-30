@@ -7,7 +7,7 @@
 
 # 是时候该罢黜 JPEG，独尊新编码了
 
-![是时候用新一代图像编码格式替换 JPEG 编码格式了](https://res.cloudinary.com/cloudinary-marketing/image/upload/c_fill,w_770/dpr_2.0,f_auto,fl_lossy,q_auto/v1/Web_Assets/blog/jxl-compare-codecs.png)
+![是时候用新一代图像编码格式替换 JPEG 编码格式了](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-jxl-compare-codecs.png)
 
 我对图像编码十分狂热。如今，一场“图像编码之战”正在酝酿之中，而我并不是唯一[对此有想法](https://codecs.multimedia.cx/2020/11/an-upcoming-image-format-war/)的人。显然，作为 JPEG 委员会 JPEG XL 特设小组的主席，我坚定地致力于多年的图像编码的工作。但是，在本文中，我将努力做到公平和中立。
 
@@ -48,31 +48,31 @@
 
 1. 原图 - PNG 1799446 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613766717/Web_Assets/blog/original.png)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-original.png)
 
 2. JPEG - 68303 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613766730/Web_Assets/blog/full-jpeg.jpg)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-full-jpeg.jpg)
 
 3. JPEG 2000 - 67611 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613766747/Web_Assets/blog/011.jp2)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-011.jp2)
 
 4. WEBP - 67760 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613767103/Web_Assets/blog/011webp.webp)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-011webp.webp)
 
 5. HEIC - 69798 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613766802/Web_Assets/blog/full-heic.png)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-full-heic.png)
 
 6. AVIF - 67629 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613767134/Web_Assets/blog/011avif.avif)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-011avif.avif)
 
 7. JXL - 67077 bytes
 
-![](https://res.cloudinary.com/cloudinary-marketing/image/upload/v1613767179/Web_Assets/blog/011jxl.jxl)
+![](../images/time-for-next-gen-codecs-to-dethrone-jpeg.md-011jxl.jxl)
 
 ## 速率
 

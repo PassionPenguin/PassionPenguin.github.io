@@ -9,7 +9,7 @@
 
 ## Apple 的开发者大会来了！
 
-![Banner](https://www.cnet.com/a/img/OXj1yUvKlng2dwQvlucDnH5OBhA=/1092x0/2021/03/30/0d0960b9-0fea-4099-8df8-89ff89daee69/apple-wwdc21-newsroom-article-tile-033021-big-jpg-large-2x.jpg)
+![Banner](../images/apple-announces-june-7-start-date-for-wwdc-2021.md-apple-wwdc21-newsroom-article-tile-033021-big-jpg-large-2x.jpg)
 
 > Apple 邀请大家参加 WWDC 21
 

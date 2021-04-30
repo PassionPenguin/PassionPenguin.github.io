@@ -7,11 +7,11 @@
 
 # 构建和 Telegram 一样的上传动画
 
-![](https://miro.medium.com/max/1656/1*Fkn89gxEsTWWefUu1dV0UA.png)
+![](../images/telegram-like-uploading-animation.md-1*Fkn89gxEsTWWefUu1dV0UA.png)
 
 前段时间，我研究了一个新功能：在 app 内部聊天中发送图片。这个功能本身很大，包括了多种东西，但实际上，最初并没有设计上传动画与取消上传的功能。当我用到这部分的时候，我决定增加图片上传动画，所以我们就给他们这个功能吧：)
 
-![](https://miro.medium.com/max/1528/1*La8YF7kI31hvmawzNVHN6g.gif)
+![](../images/telegram-like-uploading-animation.md-1*La8YF7kI31hvmawzNVHN6g.gif)
 
 ## View vs. Drawable
 
@@ -212,19 +212,19 @@ private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
 
 为了展示我将改变笔触的宽度和其他东西，所以你会看到某些方面的不同。这 3 个 `Paint` 就与 3 个关键部分的进度相关联：
 
-![](https://miro.medium.com/max/1200/1*UnoyHSg3xYZzyRNwYm35HA.gif)
+![](../images/telegram-like-uploading-animation.md-1*UnoyHSg3xYZzyRNwYm35HA.gif)
 
 **左：** background; **中：** stroke; **右：** progress
 
 你可能想知道为什么我要用 `Paint.Cap.BUTT`。好吧，为了让这个进度更 "Telegram"（至少在 iOS 设备上是这样），你应该使用 `Paint.Cap.ROUND`。让我来演示一下这三种可能的样式之间的区别（这里增加了描边宽度以让差异更明显）。
 
-![](https://miro.medium.com/max/1200/1*lh_H6Nv_1ixygHP6q8k6Lw.gif)
+![](../images/telegram-like-uploading-animation.md-1*lh_H6Nv_1ixygHP6q8k6Lw.gif)
 
 **左：** `Cap.BUTT`，**中：** `Cap.ROUND`，**右：** `Cap.SQUARE`
 
 因此，主要的区别是，`Cap.ROUND` 给笔画的角以特殊的圆角，而 `Cap.BUTT` 和 `Cap.SQUARE` 只是切割。`Cap.SQUARE` 也和 `Cap.ROUND` 一样预留了额外的空间，但没有圆角效果。这可能导致 `Cap.SQUARE` 显示的角度与 `Cap.BUTT` 相同但预留了额外的空间。
 
-![](https://miro.medium.com/max/1364/1*auxY8ZqofcNmZMsezh0DkA.png)
+![](../images/telegram-like-uploading-animation.md-1*auxY8ZqofcNmZMsezh0DkA.png)
 
 试图用 `Cap.BUTT` 和 `Cap.SQUARE` 来显示 90 度。
 
@@ -263,11 +263,11 @@ private fun normalize(angle: Float): Float {
 
 嗯，这并不难，但我们需要记住一些事情：
 
-![](https://miro.medium.com/max/692/1*x0X1dP0bxHg-Z-iU0p-JhA.png)
+![](../images/telegram-like-uploading-animation.md-1*x0X1dP0bxHg-Z-iU0p-JhA.png)
 
 * 我们不能只拿 `measuredWidth`、`measuredHeight` 来画圆圈背景、进度、描边（主要是描边的原因）。如果我们不考虑描边的宽度，也不从尺寸计算中减去它的一半，我们最终会得到看起来像切开的边界：
 
-![](https://miro.medium.com/max/680/1*pQhNsv1OWffDnraP6njZgA.png)
+![](../images/telegram-like-uploading-animation.md-1*pQhNsv1OWffDnraP6njZgA.png)
 
 * 如果我们不考虑笔触的宽度，我们可能最终会在绘图阶段将其重叠。（这对于不透明的颜色来说是可以的）
 
@@ -427,7 +427,7 @@ drawArc(progressRect, currentAngle - sweepAngle, sweepAngle, false, progressPain
 
 而结果是：
 
-![](https://miro.medium.com/max/1200/1*fbLfs0wImFm_GzMyJYWJCA.gif)
+![](../images/telegram-like-uploading-animation.md-1*fbLfs0wImFm_GzMyJYWJCA.gif)
 
 **左：**第一种情况；**中：**第二种情况；**右**：第三种情况
 
@@ -439,7 +439,7 @@ drawArc(progressRect, currentAngle - sweepAngle, sweepAngle, false, progressPain
 
 动画是伟大的。像素是伟大的。形状是伟大的。我们只需要用爱仔细对待它们。因为细节是产品中最有价值的东西;)
 
-![](https://miro.medium.com/max/292/0*19Qsjr8oaWOKrhLk.gif)
+![](../images/telegram-like-uploading-animation.md-0*19Qsjr8oaWOKrhLk.gif)
 
 如果你喜欢这篇文章，别忘了点赞关注收藏一键三连！如果你有什么问题，可以评论我，我们来讨论一下。祝你编程愉快!
 

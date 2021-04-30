@@ -5,7 +5,7 @@
 > * 译者：[Badd](https://juejin.cn/user/1134351730353207)
 > * 校对者：[PassionPenguin](https://github.com/PassionPenguin), [PingHGao](https://github.com/PingHGao)
 
-![](https://github.blog/wp-content/uploads/2021/03/git-2-31-0-release-banner.jpeg?fit=1200%2C630)
+![](../images/2021-03-15-highlights-from-git-2-31.md-git-2-31-0-release-banner.jpeg)
 
 # Git 2.31 中的闪光点
 

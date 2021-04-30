@@ -69,7 +69,7 @@ a {
 
 此 CSS 功能的兼容性如何，[**浏览器支持**](https://caniuse.com/css-variables)非常好：
 
-![Can I Use](https://s3-torquehhvm-wpengine.netdna-ssl.com/uploads/2021/02/css-variables-custom-properties-browser-support-1024x376.jpg)
+![Can I Use](../images/new-css-features-2021.md-css-variables-custom-properties-browser-support-1024x376.jpg)
 
 ### @supports
 
@@ -109,7 +109,7 @@ a {
 
 为了能够正常使用 `@supports` 功能，你需要知道哪些浏览器支持它（我知道，这是一种元数据）。好消息是**[所有的现代浏览器都支持](https://caniuse.com/css-featurequeries)**。
 
-![Can I Use](https://s3-torquehhvm-wpengine.netdna-ssl.com/uploads/2021/02/css-feature-queries-browser-support-1024x368.jpg)
+![Can I Use](../images/new-css-features-2021.md-css-feature-queries-browser-support-1024x368.jpg)
 
 但是，由于这些查询的目的是启用或禁用旧版浏览器无法处理的功能，因此请确保正确编写它们。即如果要使用功能查询，请为支持功能查询的浏览器创建功能查询条件。让浏览器以它无法理解的方式忽略某些内容是没有用的。
 
@@ -140,7 +140,7 @@ Flexbox 是另一种 CSS 布局模块，而我们[**已经讨论过它**](https:
 
 这就是效果：
 
-![Result](https://s3-torquehhvm-wpengine.netdna-ssl.com/uploads/2021/02/new-css-features-flexbox-gaps-example.jpg)
+![Result](../images/new-css-features-2021.md-new-css-features-flexbox-gaps-example.jpg)
 
 尽管我们可以通过 `margin` 实现相同的布局，但是与简单地声明间隙大小相比，它需要更多的标记和解决方法。
 
@@ -164,7 +164,7 @@ Flexbox 是另一种 CSS 布局模块，而我们[**已经讨论过它**](https:
 
 [浏览器支持方面]((https://caniuse.com/css-content-visibility))，[`content-visibility`](https://caniuse.com/css-content-visibility) 仍然有些差劲，不过正在朝着那个方向前进着，[`contain-intrinsic-size`](https://caniuse.com/mdn-css_properties_contain-intrinsic-size) 同理。
 
-![Can I Use](https://s3-torquehhvm-wpengine.netdna-ssl.com/uploads/2021/02/css-content-visibility-browser-support-1024x370.jpg)
+![Can I Use](../images/new-css-features-2021.md-css-content-visibility-browser-support-1024x370.jpg)
 
 我预计一旦它被更广泛地采用，它将成为加速渲染过程的最有效工具之一。
 
@@ -252,7 +252,7 @@ div:hover {
 
 然后是[浏览器的兼容性](https://caniuse.com/css-snappoints)，这是相当不错的。
 
-![Can I Use](https://s3-torquehhvm-wpengine.netdna-ssl.com/uploads/2021/02/css-scroll-snap-browser-support-1024x378.jpg)
+![Can I Use](../images/new-css-features-2021.md-css-scroll-snap-browser-support-1024x378.jpg)
 
 但是请注意，`scroll-snap` 属性之间的支持会有些许不同。因此，请确保检查你的特定用例。
 

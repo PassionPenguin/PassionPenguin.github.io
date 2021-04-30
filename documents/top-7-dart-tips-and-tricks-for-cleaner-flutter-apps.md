@@ -190,7 +190,7 @@ Inspect 还可以帮助我们可视化 Flutter 控件树以了解布局或确定
 * 单击 `启用选择 Widget 模式`。
 * 选择屏幕上的控件以获取更多信息
 
-![](https://cdn-images-1.medium.com/max/4920/1*8HtnC_I_iMewckScC92stA.png)
+![](../images/top-7-dart-tips-and-tricks-for-cleaner-flutter-apps.md-1*8HtnC_I_iMewckScC92stA.png)
 
 ## 7. 使用 Sync 和 Async 生成器
 

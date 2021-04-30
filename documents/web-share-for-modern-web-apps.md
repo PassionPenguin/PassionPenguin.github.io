@@ -7,7 +7,7 @@
 
 # 现代 Web 应用程序中的 Web 分享
 
-![](https://cdn-images-1.medium.com/max/5760/1*QXEz4H_A4nons0JRZmblhQ.png)
+![](../images/web-share-for-modern-web-apps.md-1*QXEz4H_A4nons0JRZmblhQ.png)
 
 > 最近，Windows 和 Chrome OS（译者注：其实还有 macOS）开始支持 Web 分享 和 Web Share API，这吸引了不少 Web 开发者的目光。
 
@@ -24,7 +24,7 @@
 3. 你可以打开任何允许分享的应用程序。此外，它还支持与附近的设备分享。
 4. 点击分享后，你就可以在目标应用程序中查看分享的数据。我这里使用**邮件**作为应用程序。如图所示，应用程序会将 Web Share API 传递过来的文本数据添加到电子邮件正文中。
 
-![](https://cdn-images-1.medium.com/max/2000/1*YSWUxwngdvAWwQOtAHYzvg.png)
+![](../images/web-share-for-modern-web-apps.md-1*YSWUxwngdvAWwQOtAHYzvg.png)
 
 **我希望你在尝试以后会感到高兴！** —— 至少这是我在浏览器中查看 Web Share 功能演示时的第一印象。
 
@@ -133,7 +133,7 @@ Web Share API 是一个现代化的 Web 平台功能，它有助于我们在社�
 
 Chrome 是支持 Web Share Target API 的主要浏览器之一。此外，Safari 也支持它。
 
-![](https://cdn-images-1.medium.com/max/2000/1*CtRllCb7OzXfmPxJk4eaew.png)
+![](../images/web-share-for-modern-web-apps.md-1*CtRllCb7OzXfmPxJk4eaew.png)
 
 > 但是，Web Share API 应该由用户主动操作触发，这样做是为了减少不便和滥用。
 

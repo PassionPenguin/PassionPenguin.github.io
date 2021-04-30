@@ -37,7 +37,7 @@
 
 该图说明了业务流程中的流动部分。
 
-![图片由作者提供](https://cdn-images-1.medium.com/max/2000/0*ZUyEi9v9becFhGfp.png)
+![图片由作者提供](../images/solutions-architect-tips-the-5-types-of-architecture-diagrams.md-0*ZUyEi9v9becFhGfp.png)
 
 ### 受众
 
@@ -53,7 +53,7 @@
 
 服务图从高层次上说明了连通性。它并不显示工作流或服务如何工作的任何细节，而是显示了发挥作用的主要部分。这是一个旨在显示应用程序中使用的内部与外部服务的图。
 
-![](https://cdn-images-1.medium.com/max/2000/0*hgdP8Dhm9taCxsec.png)
+![](../images/solutions-architect-tips-the-5-types-of-architecture-diagrams.md-0*hgdP8Dhm9taCxsec.png)
 
 ### 受众
 
@@ -71,7 +71,7 @@ IT 和网络工程师往往对这种类型的图最感兴趣。他们关心你�
 
 重要的是要表明你的架构需要解决的业务问题。角色图描述了一个按时间顺序排列的视图和特定工作流中的角色。这是证明你在构建解决方案时已经考虑了业务因素的最佳工具。
 
-![](https://cdn-images-1.medium.com/max/2000/0*YS49oSULHmzUvx2L.png)
+![](../images/solutions-architect-tips-the-5-types-of-architecture-diagrams.md-0*YS49oSULHmzUvx2L.png)
 
 ### 受众
 
@@ -89,7 +89,7 @@ IT 和网络工程师往往对这种类型的图最感兴趣。他们关心你�
 
 这个图的目的是显示已经建立的东西和系统当前的工作方式。可以把它看作是你所构建的应用程序的**蓝图**。
 
-![](https://cdn-images-1.medium.com/max/2000/0*fHIrAhbsy8vjXtrC.png)
+![](../images/solutions-architect-tips-the-5-types-of-architecture-diagrams.md-0*fHIrAhbsy8vjXtrC.png)
 
 ### 受众
 
@@ -109,7 +109,7 @@ IT 和网络工程师往往对这种类型的图最感兴趣。他们关心你�
 
 有人应该能够读懂这张图，并确切地知道该怎么做。
 
-![](https://cdn-images-1.medium.com/max/2000/0*Ph0P0a9JRdHqDDlN.png)
+![](../images/solutions-architect-tips-the-5-types-of-architecture-diagrams.md-0*Ph0P0a9JRdHqDDlN.png)
 
 ### 受众
 

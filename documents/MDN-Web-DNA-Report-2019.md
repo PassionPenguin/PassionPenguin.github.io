@@ -58,13 +58,13 @@ PAB 以外，包括突出贡献的个人：Andreas Bovens、Andrew Overholt、Di
 
 ### 调查结果
 
-<img src="MDN-Web-DNA-Report-2019/p9.svg" alt="P9" height="128" />
+<img src="../images/MDN-Web-DNA-Report-2019/p9.svg" alt="P9" height="128" />
 
 完整的调查结果被按照性别、地区、国家、开发者类型和熟悉程度被进一步在下文中被分类。
 
 ### 按照性别分类
 
-<img src="MDN-Web-DNA-Report-2019/p10.svg" alt="P10" height="384" />
+<img src="../images/MDN-Web-DNA-Report-2019/p10.svg" alt="P10" height="384" />
 
 我们这个项目最初的目标就是去获取一个更广，更能够代表全球开发者群体的一份评估报告。但即便我们尝试去获取有代表性的目标群体的数据，87.1% 的受访者是男性，8.2% 是女性，3.6% 是不愿透露的，以及 1.1% 表示两个选项都不适合自己。从这个角度来看，美国劳工统计局所估计的应该有 20% 的女性参与软件开发，尽管说我们所统计的并不一定与他们所统计的标准相同，但如果将我们的标准修改与美国政府一样，那么我们就拥有了 10.9% 的女性受访者比例。
 
@@ -74,7 +74,7 @@ PAB 以外，包括突出贡献的个人：Andreas Bovens、Andrew Overholt、Di
 
 ### 按照地区分类
 
-<img src="MDN-Web-DNA-Report-2019/p11.svg" alt="P11" align="center" height="384" />
+<img src="../images/MDN-Web-DNA-Report-2019/p11.svg" alt="P11" align="center" height="384" />
 
 ### 按照国家分类
 
@@ -105,13 +105,13 @@ PAB 以外，包括突出贡献的个人：Andreas Bovens、Andrew Overholt、Di
 
 ### 按开发者类型区分
 
-![P13](MDN-Web-DNA-Report-2019/p13.svg)
+![P13](../images/MDN-Web-DNA-Report-2019/p13.svg)
 
 我们的受访者被我们问到了：*"你觉得你是什么类型的开发者"*，并让他们能够多选回答。大多数的受访者都认为他们是全栈或是前端开发者。选择前端的开发者同样选择了另外的两个：基本上是 JavaScript 或是基本上是 CSS 和 HTML。共计 57.1% 的开发者选择了全栈，而仅仅只有 11.7% 的开发者选择了后端开发者。
 
 ### 按开发经验分类
 
-<img src="MDN-Web-DNA-Report-2019/p14.svg" alt="P14" height="305"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p14.svg" alt="P14" height="305"/>
 
 开发经验是以成为开发者时长的年数为标准分类的，公平的包括了近年（两年以内）的开发者到经验丰富的开发者（超过十年的开发经验），分别对应的是 32.8% 和 23.4%。被选择最少的是中级有经验的开发者（6 - 9 年，15.6%）。另外，超过一半的受访者（60.9%），拥有少于 6 年的开发经验。
 
@@ -149,24 +149,24 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 <table style="text-align: center">
 	<tr>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_browsercopatibility.svg" alt="浏览器兼容性" height="48" /><br>浏览器兼容性</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_documentation.svg" alt="编写文档" height="48" /><br>编写文档</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_testing.svg" alt="测试" height="48" /><br>测试</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_debugging.svg" alt="调试" height="48" /><br>调试</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_frameworks.svg" alt="框架" height="48" /><br>框架</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_browsercopatibility.svg" alt="浏览器兼容性" height="48" /><br>浏览器兼容性</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_documentation.svg" alt="编写文档" height="48" /><br>编写文档</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_testing.svg" alt="测试" height="48" /><br>测试</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_debugging.svg" alt="调试" height="48" /><br>调试</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_frameworks.svg" alt="框架" height="48" /><br>框架</td>
 	</tr>
 	<tr>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_privacy.svg" alt="隐私" height="48" /><br>隐私</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_security.svg" alt="安全性" height="48" /><br>安全性</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_authentication.svg" alt="认证" height="48" /><br>认证</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_performance.svg" alt="性能" height="48" /><br>性能</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_outliners.svg" alt="大纲" height="48" /><br>大纲</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_privacy.svg" alt="隐私" height="48" /><br>隐私</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_security.svg" alt="安全性" height="48" /><br>安全性</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_authentication.svg" alt="认证" height="48" /><br>认证</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_performance.svg" alt="性能" height="48" /><br>性能</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_outliners.svg" alt="大纲" height="48" /><br>大纲</td>
 	</tr>
 	<tr>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_design.svg" alt="设计" height="48" /><br>设计</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_localization.svg" alt="本地化" height="48" /><br>本地化</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_paceofchange.svg" alt="变化速度" height="48" /><br>变化速度</td>
-		<td><img src="MDN-Web-DNA-Report-2019/p18_accessibility.svg" alt="无障碍性" height="48" /><br>无障碍性</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_design.svg" alt="设计" height="48" /><br>设计</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_localization.svg" alt="本地化" height="48" /><br>本地化</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_paceofchange.svg" alt="变化速度" height="48" /><br>变化速度</td>
+		<td><img src="../images/MDN-Web-DNA-Report-2019/p18_accessibility.svg" alt="无障碍性" height="48" /><br>无障碍性</td>
 	</tr>
 </table>
 
@@ -223,7 +223,7 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 ### 按国家分类
 
-<img src="MDN-Web-DNA-Report-2019/p21.svg" alt="P21" align="right" height="492"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p21.svg" alt="P21" align="right" height="492"/>
 
 1. 被迫支持特定浏览器，如 IE11。
 2. 框架和库的文档过时或不准确。
@@ -256,7 +256,7 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 ### 按性别分类
 
-<img src="MDN-Web-DNA-Report-2019/p22.svg" alt="P22" align="right" height="489"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p22.svg" alt="P22" align="right" height="489"/>
 
 1. 被迫支持特定浏览器，如 IE11。
 2. 框架和库的文档过时或不准确。
@@ -289,7 +289,7 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 ### 按满意程度分类
 
-<img src="MDN-Web-DNA-Report-2019/p23.svg" alt="P23" align="right" height="491"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p23.svg" alt="P23" align="right" height="491"/>
 
 1. 被迫支持特定浏览器，如 IE11。
 2. 框架和库的文档过时或不准确。
@@ -322,7 +322,7 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 ### 按工作经验分类
 
-<img src="MDN-Web-DNA-Report-2019/p24.svg" alt="P24" align="right" height="490"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p24.svg" alt="P24" align="right" height="490"/>
 
 1. 被迫支持特定浏览器，如 IE11。
 2. 框架和库的文档过时或不准确。
@@ -355,7 +355,7 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 ### 前端开发者想法
 
-<img src="MDN-Web-DNA-Report-2019/p25.svg" alt="P25" align="right" width="131" height="493">
+<img src="../images/MDN-Web-DNA-Report-2019/p25.svg" alt="P25" align="right" width="131" height="493">
 
 1. 被迫支持特定浏览器，如 IE11。
 2. 框架和库的文档过时或不准确。
@@ -388,13 +388,13 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 ### 开发者对需求列表的感受
 
-<img src="MDN-Web-DNA-Report-2019/p26.svg" alt="P26" height="316"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p26.svg" alt="P26" height="316"/>
 
 因为开发者需求评估是准备要每年都发布一份的，我们询问了受访者这 28 个需求的列表对一个 Web 开发者来说是否是一个非常公平的结果。大多数的受访者都赞同这个列表具有代表性，21.6 % 持中性态度，意味着我们还有大量的空间去优化这份列表。
 
 ## 对于 Web 的总体满意度
 
-<img src="MDN-Web-DNA-Report-2019/p28.svg" alt="P28" height="326"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p28.svg" alt="P28" height="326"/>
 
 通过这个项目，我们想要一种合适、恰当的方法来衡量 Web 开发者和设计人员对 Web 作为平台的满意程度。我们希望这是一个可在未来重复再现的问题，以衡量满意度随时间的变化。
 
@@ -505,36 +505,36 @@ I am a __________________ (persona) trying to __________________ (verb) but ____
 
 JavaScript 的最大痛点是 缺乏浏览器 / 引擎 / 对给定语言功能的支持。不过，有 16％ 的受访者对 JavaScript 非常优秀……
 
-![P40](https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p40.svg)
+![P40](../images/https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p40.svg)
 
 ### HTML
 
 HTML 似乎是这些语言的闪亮之星，因为大约三分之一的受访者（35.3％）对该语言没有任何问题。同时，也有 31.5% 的人说，HTML 最大的痛点是缺乏对给定的功能的采用和支持。
 
-![P41](https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p41.svg)
+![P41](../images/https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p41.svg)
 
 ### CSS
 
 近一半（44％）的受访者表示，使用 CSS 的最大痛点是创建指定布局的挑战。由于 CSS 是用于设置网页样式的语言，结果也证实了，使用 CSS 很难实现所需的布局。我们可以用不同的方式解释这个数据，因此需要进一步研究。一种解释是 CSS 导致了很多开发者使用该语言创建布局时感到悲伤。另一种解释是，开发者正在尝试使用 CSS 来尽力而为以实现 Web 友好的布局而不是将其用于非 Web 设计领域。
 
-![P42](https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p42.svg)
+![P42](../images/https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p42.svg)
 
 ### WASM WebAssembly
 
 WebAssembly 是一项新技术，因此只有极少数的受访者（851 位）有足够的经验回答，占总作答数的 3%。下面的结果来自一个比 JavaScript、HTML 和 CSS 小得多的样本。大家认为，WASM 最大的痛点是缺少调试工具支持（51.4％）。
 
-![P43](https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p43.svg)
+![P43](../images/https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p43.svg)
 
 ### 对新技术的包容程度
 
 开发者在采用新技术时面临的最大障碍是跨浏览器的互通性，这与十大需求可是一致的！那十大需求中，其中四个与浏览器兼容性有关。
 
-![P45](https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p45.svg)
+![P45](../images/https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p45.svg)
 
 ### 浏览器
 
 Chrome 和 Firefox 在浏览器开发者支持方面处于领先地位，分别为 97.5％ 和 88.6％。第三名是 Safari，占 59.6％。
-![P47](https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p47.svg)
+![P47](../images/https://insights.developer.mozilla.org/reports/assets/images/web-developer-needs-assessment-2019/p47.svg)
 
 ## 预演调查的结果
 
@@ -542,7 +542,7 @@ Chrome 和 Firefox 在浏览器开发者支持方面处于领先地位，分别�
 
 ### 浏览器支持
 
-<img src="MDN-Web-DNA-Report-2019/p18_browsercopatibility.svg" height="117"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_browsercopatibility.svg" height="117"/>
 
 在完整的需求列表中，浏览器兼容性是重要主题。有四条需求陈述进入了前十名：
 
@@ -594,7 +594,7 @@ Chrome 和 Firefox 在浏览器开发者支持方面处于领先地位，分别�
 
 ### 编写文档
 
-<img src="MDN-Web-DNA-Report-2019/p18_documentation.svg" height="216"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_documentation.svg" height="216"/>
 
 问卷调查参与者们把文档编写评为第二令人沮丧的需求：
 
@@ -612,7 +612,7 @@ Chrome 和 Firefox 在浏览器开发者支持方面处于领先地位，分别�
 
 ### 调试
 
-<img src="MDN-Web-DNA-Report-2019/p18_debugging.svg" height="166"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_debugging.svg" height="166"/>
 
 在需求的完整列表中，调试首次出现在第 6 点：
 
@@ -631,7 +631,7 @@ Chrome 和 Firefox 在浏览器开发者支持方面处于领先地位，分别�
 
 ### 框架
 
-<img src="MDN-Web-DNA-Report-2019/p18_frameworks.svg" height="210"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_frameworks.svg" height="210"/>
 
 Web 开发者对于利益相关者来说有许多未知之处，其中之一就是,为什么他们喜欢框架 —— 那他们又喜欢什么框架呢？事实证明，开发者与框架的关系并不是单纯的爱与恨，这意味着开发者不一定喜欢框架。在调查中，框架在前十条需求中占了两条：
 
@@ -667,7 +667,7 @@ Web 开发者对于利益相关者来说有许多未知之处，其中之一就�
 
 ### 隐私
 
-<img src="MDN-Web-DNA-Report-2019/p18_privacy.svg" height="106"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_privacy.svg" height="106"/>
 
 在调查中被测试的需求的完整列表中，有两个与隐私相关的需求陈述。 一个进入前十名，排名第九：
 
@@ -699,7 +699,7 @@ Web 开发者对于利益相关者来说有许多未知之处，其中之一就�
 
 ### 安全性
 
-<img src="MDN-Web-DNA-Report-2019/p18_security.svg" height="221">
+<img src="../images/MDN-Web-DNA-Report-2019/p18_security.svg" height="221">
 
 使前十的需求完满的是安全，排名第十：
 
@@ -743,7 +743,7 @@ Web 开发者对于利益相关者来说有许多未知之处，其中之一就�
 
 ### 测试
 
-<img src="MDN-Web-DNA-Report-2019/p18_testing.svg" height="255"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_testing.svg" height="255"/>
 
 在这个项目的启动会议上，利益相关者分享了他们关于测试已知情况的想法。归纳出的几点有：自动化测试难以开启，此外存在许多不同类型的测试，比如单元测试、集成测试以及功能测试。未知的点有：开发者运行的类型、以及如何或是否会造成挫败感的测试类型。
 
@@ -777,7 +777,7 @@ Web 开发者对于利益相关者来说有许多未知之处，其中之一就�
 
 ### 验证
 
-<img src="MDN-Web-DNA-Report-2019/p18_authentication.svg" height="200"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_authentication.svg" height="200"/>
 
 Authentication was often described as difficult and frustrating for a variety of reasons, but mainly due to the complicated nature of it and the threat that exists if you get it wrong. However, authentication can be easier if a developer is willing to divest control to a third party.
 
@@ -793,7 +793,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 性能
 
-<img src="MDN-Web-DNA-Report-2019/p18_performance.svg" height="143"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_performance.svg" height="143"/>
 
 性能很少作为（开发中）令人心累的罪魁祸首之一被提及，然而，开发者认为它很重要。说它重要是因为它直接影响用户使用网站的体验。性能还与广泛的可访问性联系在一起，也就是说网站应该在各种设备上都能运行。
 
@@ -833,7 +833,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 本地化
 
-<img src="MDN-Web-DNA-Report-2019/p18_localization.svg" height="176"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_localization.svg" height="176"/>
 
 开发者在本地化方面遇到的挫折，已经超出了传统的考虑不同语言的视觉影响的概念，尽管这可能是挫折的来源。本地化可能意味着理解文化和这些文化中人们如何正式书写他们的名字的偏好，这样你就可以做到在设计输入字段或理解日期和时间格式偏好时考虑到这一点。如果你把这些事情弄错了，那可会导致糟糕的用户体验。本地化也被视为不仅仅是开发者的职责范围，而是开发者和设计师必须一起努力的事情。
 
@@ -847,7 +847,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 变化速度
 
-<img src="MDN-Web-DNA-Report-2019/p18_paceofchange.svg" height="112"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_paceofchange.svg" height="112"/>
 
 开发者们承认网络是一个变化的环境，而且往往变化很快。他们已经接受了这个现实 —— 几乎是带着一种认命的态度。
 
@@ -869,7 +869,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 无障碍
 
-<img src="MDN-Web-DNA-Report-2019/p18_accessibility.svg" height="136"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_accessibility.svg" height="136"/>
 
 与认证类似，无障碍性，开发者也认为它是困难的和令人沮丧的。开发者了解使网站无障碍化的步骤，但有时这些步骤很难做到位，标准也有很多不足之处。通常情况下，开发者可能会遇到这样的情况：他们的组织并没有将无障碍性放在优先位置，因为，也许，它还没有成为一个问题。对这种需求的认识还不到位。在这些情况下，无障碍性被认为不如正确实现它所需的时间和精力重要。
 
@@ -887,7 +887,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 运维
 
-<img src="MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
 
 当提到 Ops 运维时，我们通常指的是与创建构建和部署有关的任何事情。
 
@@ -903,7 +903,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 工具
 
-<img src="MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
 
 工具是一个广泛的主题，与 Web 开发的其他领域如调试、测试和浏览器兼容性等都有联系。开发者对工具领域的变化速度感到沮丧。很难跟上现有的东西。即使他们觉得自己的选择是最新的，决定使用哪种工具也是一件苦差事。
 
@@ -933,7 +933,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 与他人协作
 
-<img src="MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
 
 一些试点访谈参与者与其他人在一个团队中工作，这可能会造成挫折。这并不是 Web 开发者所特有的，但它对他们的影响是，它可以创造一个更复杂的环境来管理代码，也可以决定项目要求。还有对不同类型的开发者的看法，这也会给团队动态带来色彩。这些大多是在部署过程中产生的。
 
@@ -953,7 +953,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 雇佣 Web 开发者
 
-<img src="MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
 
 我们听到的关于招聘的内容可以用另外两个需求声明来概括。
 
@@ -967,7 +967,7 @@ Authentication was often described as difficult and frustrating for a variety of
 
 ### 基础设施建设的不同
 
-<img src="MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
+<img src="../images/MDN-Web-DNA-Report-2019/p18_outliners.svg" height="168"/>
 
 这指的是影响业务决策的间歇性停电，例如，数据中心的位置。我们在尝试进行访谈时，亲身体验到了这种影响。其中一位参与者所处的地区正在经历间歇性停电，无法完成采访。
 

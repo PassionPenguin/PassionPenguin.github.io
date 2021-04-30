@@ -40,7 +40,7 @@
 
 ## 保持活跃度
 
-![Photo by Author](https://cdn-images-1.medium.com/max/2876/1*lm1C-Qngubphko9-OqvvFg.jpeg)
+![Photo by Author](../images/what-makes-a-good-github-profile.md-1*lm1C-Qngubphko9-OqvvFg.jpeg)
 
 **目标**：你肯定想要得到那些绿色方块！更多的绿色信息表明你在平台上很活跃，并且正在不断地贡献代码，这在招聘经理看来是很好的表现。
 
@@ -56,7 +56,7 @@
 
 你的工作场所使用 GitHub 吗？你可以在用户档案下的工作活动中[打开“enable private contributions”开关](https://docs.github.com/en/free-pro-team@latest/github/setting-up-and-managing-your-github-profile/showing-an-overview-of-your-activity-on-your-profile)来展示你在私有库中的贡献，以便在你的用户档案下展示你的工作活动。
 
-![Photo by docs.github.com](https://cdn-images-1.medium.com/max/2000/1*HbJR9Zk1nLob1X_hylb4XQ.png)
+![Photo by docs.github.com](../images/what-makes-a-good-github-profile.md-1*HbJR9Zk1nLob1X_hylb4XQ.png)
 
 ## 使用 GitHub Pages
 

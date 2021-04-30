@@ -7,7 +7,7 @@
 
 # 详细解读 Webpack 的模块热替换功能
 
-![](https://cdn-images-1.medium.com/max/2024/1*q3OLOdT-Ep86tfnvugnabw.png)
+![](../images/webpacks-hot-module-replacement-feature-explained.md-1*q3OLOdT-Ep86tfnvugnabw.png)
 
 在开发 JavaScript 应用程序时，每次我们保存代码更改后，我们都需要重新加载浏览器以刷新用户界面。
 
@@ -26,7 +26,7 @@
 
 HMR 让我们可以在应用程序运行时交换、添加或删除 JavaScript 模块，而无需重新加载浏览器。在 Webpack 中是通过在 Webpack 开发服务器（[webpack-dev-server](https://github.com/webpack/webpack-dev-server)）中创建一个 **HMR 服务器**实现的，而该服务器会通过 Websocket 与浏览器中的 **HMR 运行时**进行通信。
 
-![简述 HMR 工作的方式](https://cdn-images-1.medium.com/max/3840/1*UGYFDKGrQF6ID3CofCHUwg.png)
+![简述 HMR 工作的方式](../images/webpacks-hot-module-replacement-feature-explained.md-1*UGYFDKGrQF6ID3CofCHUwg.png)
 
 交换模块的过程如下：
 
@@ -40,7 +40,7 @@ HMR 让我们可以在应用程序运行时交换、添加或删除 JavaScript �
 
 在运行启用了 HMR 的应用程序时保存代码更改时，我们实际上可以在 “Network” 选项卡上看到从 HMR 服务器发送的热更新文件：
 
-![网络选项卡下的热更新文件](https://cdn-images-1.medium.com/max/2880/1*phxmgjIC0OrLPZVFsWlvyA.png)
+![网络选项卡下的热更新文件](../images/webpacks-hot-module-replacement-feature-explained.md-1*phxmgjIC0OrLPZVFsWlvyA.png)
 
 当“热更新”无法替换浏览器中的代码时，HMR 运行时将通知 webpack-dev-server。然后，webpack-dev-server 将刷新浏览器以下载新的 `bundle.js` 文件。我们可以通过在 Webpack 配置中添加 `hotOnly：true` 来禁用此行为。
 

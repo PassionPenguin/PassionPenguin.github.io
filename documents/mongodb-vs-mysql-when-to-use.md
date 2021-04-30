@@ -31,7 +31,7 @@ MongoDB 也是开源的，但它是一种基于文件存储的数据库，这点
 
 在 MongoDB 中，数据是以类似于 JSON 文件的名值对形式存在的，因其模式设计，它对数据的约束条件较少。因此如果数据是快速变化的，MongoDB 就很有优势。另外，MongoDB 还提供了预定义的结构，如果需要也可以使用。
 
-![图片出处: MongoDB](https://www.imaginarycloud.com/blog/content/images/2021/02/MongoDBJSON.png)
+![图片出处: MongoDB](../images/mongodb-vs-mysql-when-to-use.md-MongoDBJSON.png)
 
 关于**数据模式**，MySQL 就不一样了。在 MySQL 中虽然可以改变模式，但是其灵活性和动态性比基于文件存储的数据库差。在存入任何数据之前，MySQL 都会强制进行检查，如果存入数据后表和列符合预先定义的规则，才会真正执行。更改数据模式也需要重新设计数据库的 DDL（数据定义语言）和 DML（数据建模语言）。
 

@@ -84,11 +84,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
 Flutter 为我们提供了一份免费的入门代码午餐～它已经管理了点击次数的状态，并为我们创建了一个浮动的动作按钮。
 
-![我们目前有的按钮](https://miro.medium.com/max/110/1*TpeTkSaUBAfKctD802YCtA.png)
+![我们目前有的按钮](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*TpeTkSaUBAfKctD802YCtA.png)
 
 下面是我们想要达到的最终效果：
 
-![](https://miro.medium.com/max/1600/1*Hnkdb5BSXFmjVitdYQiirQ.gif)
+![](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*Hnkdb5BSXFmjVitdYQiirQ.gif)
 
 我们将会创建的动画。作者：[**Thuy Gia Nguyen**](https://dribbble.com/shots/4294768-Medium-Claps-Made-in-Flinto)
 
@@ -247,7 +247,7 @@ new Positioned(
 
 比方说，我们想让显示鼓掌次数的 Widget 在 150 毫秒后才从底部向上淡入。让我们在时间轴上思索一下，如下所示：
 
-![](https://miro.medium.com/max/974/1*KZuvwwIIH-YDxiHpMr9FqA.png)
+![](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*KZuvwwIIH-YDxiHpMr9FqA.png)
 
 这是一幅简单的二维图像，位置随着时间推移而改变。
 
@@ -365,7 +365,7 @@ Widget getScoreButton() {
 }
 ```
 
-![动画的现状](https://miro.medium.com/max/748/1*SG72TWaiaHNspnOUmPityQ.gif)
+![动画的现状](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*SG72TWaiaHNspnOUmPityQ.gif)
 
 点开后弹出展示鼓掌次数的 Widget，不过还是有一个问题：
 
@@ -451,7 +451,7 @@ Widget getScoreButton() {
 
 当前输出：
 
-![](https://miro.medium.com/max/732/1*RNvj1meQIy6nCn5d-S74qQ.gif)
+![](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*RNvj1meQIy6nCn5d-S74qQ.gif)
 
 最后，我们需要选择我们需要使用哪个控制器的值来设置展示鼓掌次数的 Widget 的位置和不透明度 —— 它应该弹出+淡出。
 
@@ -518,7 +518,7 @@ width: 50.0  + extraSize,
 
 完整的代码可以在 [GitHub Gist](https://gist.github.com/Kartik1607/52c882194e3119e0d176fb15e6c6b913) 处找到。这里我们同时运行的大小和位置的动画。尺寸放缩动画还需要一点点调整，最后再说。
 
-![尺寸和位置动画一起工作](https://miro.medium.com/max/716/1*5ttrTDWNuApskZBCIX1zrQ.gif)
+![尺寸和位置动画一起工作](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*5ttrTDWNuApskZBCIX1zrQ.gif)
 
 ## 撒花动画
 
@@ -587,7 +587,7 @@ Widget getScoreButton() {
 }
 ```
 
-![最终结果](https://miro.medium.com/max/788/1*O5FNILFgN18aAbfbTVfsDA.gif)
+![最终结果](../images/flutter-animation-creating-mediums-clap-animation-in-flutter.md-1*O5FNILFgN18aAbfbTVfsDA.gif)
 
 这就是我们对 Flutter 中**基本动画的介绍**。我们未来还会继续探索更多的 Flutter 知识，以学习创建更高级的 UI。
 

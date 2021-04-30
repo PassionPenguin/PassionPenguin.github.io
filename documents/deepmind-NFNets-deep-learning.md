@@ -13,7 +13,7 @@
 
 > NFNet-F1 模型达到了和 EfficientNet-B7 相近的精度，但训练速度却比后者快了 8.7 倍。而且我们最大的模型在不利用额外数据的情况下 top-1 精度达到了 86.5%，树立了新的前沿标准。
 
-![](https://res.infoq.com/news/2021/03/deepmind-NFNets-deep-learning/en/resources/11figure-1-1616684541530.jpg)
+![](../images/deepmind-NFNets-deep-learning.md-11figure-1-1616684541530.jpg)
 
 对于大规模的图像识别任务，通常神经网络会使用一种叫[批标准化（batch normalization）](http://cs231n.stanford.edu/slides/2018/cs231n_2018_lecture07.pdf)的技术来让模型训练更高效。此外，这种技术也让神经网络泛化性能更好，换言之，它正则化的作用。
 

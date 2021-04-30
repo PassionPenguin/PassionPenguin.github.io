@@ -35,7 +35,7 @@
 
 ## 高延迟挑战
 
-![https://dzone.com/storage/temp/14502652-picture-1.png](https://dzone.com/storage/temp/14502652-picture-1.png)
+![https://dzone.com/storage/temp/14502652-picture-1.png](../images/serverless-where-is-the-industry-going-in-2021.md-14502652-picture-1.png)
 
 当事件被触发时，先要进行初始化才能接着执行 FaaS 函数。这段初始化事件被称作 VM 运行代码的冷启动时间或暖启动时间。
 

@@ -117,7 +117,7 @@
 
 这是一个直方图:
 
-![https://blog-img.speedcurve.com/img/113/histogram_1.png?auto=format,compress&fit=max&w=2000](https://blog-img.speedcurve.com/img/113/histogram_1.png?auto=format,compress&fit=max&w=2000)
+![https://blog-img.speedcurve.com/img/113/histogram_1.png?auto=format,compress&fit=max&w=2000](../images/Web-Performance-for-Product-Managers.md-histogram_1.png)
 
 直方图表示在访问您的网站时具有多种体验的用户分布。记住这一点。
 
@@ -131,13 +131,13 @@
 
 **第 75 个百分位数：**对于某些流行的指标，例如 [网站核心指标](https://speedcurve.com/blog/web-vitals-user-experience/)，第 75 个百分位数在报告中常被使用。
 
-![https://blog-img.speedcurve.com/img/113/histogram_p50.png?auto=format,compress&fit=max&w=2000](https://blog-img.speedcurve.com/img/113/histogram_p50.png?auto=format,compress&fit=max&w=2000)
+![https://blog-img.speedcurve.com/img/113/histogram_p50.png?auto=format,compress&fit=max&w=2000](../images/Web-Performance-for-Product-Managers.md-histogram_p50.png)
 
 **第 95 个百分位数：**如果你的网站对于大多数用户来说已经相当快了，那么你可以将精力放在剩下的极少部分的使用者，使他们的访问体验变得更快。5％ 的用户听起来可能并不多，但是如果您的网站每月有 1000 万访问者，则意味着其中有 500,000 人的体验确实很差。
 
-![https://blog-img.speedcurve.com/img/113/histogram_p75.png?auto=format,compress&fit=max&w=2000](https://blog-img.speedcurve.com/img/113/histogram_p75.png?auto=format,compress&fit=max&w=2000)
+![https://blog-img.speedcurve.com/img/113/histogram_p75.png?auto=format,compress&fit=max&w=2000](../images/Web-Performance-for-Product-Managers.md-histogram_p75.png)
 
-![https://blog-img.speedcurve.com/img/113/histogram_p95.png?auto=format,compress&fit=max&w=2000](https://blog-img.speedcurve.com/img/113/histogram_p95.png?auto=format,compress&fit=max&w=2000)
+![https://blog-img.speedcurve.com/img/113/histogram_p95.png?auto=format,compress&fit=max&w=2000](../images/Web-Performance-for-Product-Managers.md-histogram_p95.png)
 
 除非你使用算术平均值（也就是传统意义上的平均值）来描述人口，否则要关注哪个百分位数（每种都有其优点）并没有一个确切的答案。 对于这种类型的分布而言，其效果并不理想。
 
@@ -163,7 +163,7 @@
 
 别怕丢人。无论是你亦或是你的竞争对手处于最底层，这种情况随时可能被改变。使用标杆测试来使自己变得更好，或是向他人学习理解。查看我们的 [行业网页速度标杆测试](https://speedcurve.com/benchmarks/) 来了解如何使用工具包中的基准化分析法。
 
-![https://blog-img.speedcurve.com/img/113/benchmarks.png?auto=format,compress&fit=max&w=2000](https://blog-img.speedcurve.com/img/113/benchmarks.png?auto=format,compress&fit=max&w=2000)
+![https://blog-img.speedcurve.com/img/113/benchmarks.png?auto=format,compress&fit=max&w=2000](../images/Web-Performance-for-Product-Managers.md-benchmarks.png)
 
 ## 总结
 

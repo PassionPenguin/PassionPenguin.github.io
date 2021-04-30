@@ -1,13 +1,13 @@
 > * 原文地址：[Flutter Quotes App](https://medium.com/flutterdevs/flutter-quotes-app-bb30ef27b255)
 > * 原文作者：[Anubhav Gupta](https://medium.com/@danubhav)
 > * 译文出自：[掘金翻译计划](https://github.com/xitu/gold-miner)
-> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-quotes-app.md](https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-quotes-app.md)
+> * 本文永久链接：[https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-quote-app.md](https://github.com/xitu/gold-miner/blob/master/article/2021/flutter-quote-app.md)
 > * 译者：[霜羽 Hoarfroster](https://github.com/Hoarfroster)
 > * 校对者：[5Reasons](https://github.com/5Reasons)、[greycodee](https://github.com/greycodee)
 
 # 使用 Flutter 构建一个名言名句应用程序
 
-![](https://miro.medium.com/max/3600/1*WGJ7_7_EXkJwzf1mVTyjrA.png)
+![](../images/flutter-quote-app.md-1*WGJ7_7_EXkJwzf1mVTyjrA.png)
 
 ## 引言
 
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
 
 获取数据的 API 是 [**https://zenquotes.io/api/quotes**](https://zenquotes.io/api/quotes)。当你打开这个链接时，它会向你显示名言名句的原始数据。选择所有的文本复制一下，然后在另一个标签页中打开 [**quicktype**](https://app.quicktype.io/) 并粘贴进去，我们就可以立即生成我们的**Dart Model**。
 
-![](https://miro.medium.com/max/3840/1*zp9nqjB8poJ2Lb8gS-Zw3A.png)
+![](../images/flutter-quote-app.md-1*zp9nqjB8poJ2Lb8gS-Zw3A.png)
 
 将原始数据复制到左侧栏中，并给模型类命名：
 
@@ -354,7 +354,7 @@ PageView buildPageView(AsyncSnapshot<List<Quotes>> snapshot) {
 
 在 PageView 构造器中，我们使用了 `TyperAnimatedTextKit`，而你也需要导入这个包。在 `TyperAnimatedTextKit` 里面有一个函数，可以帮助我们在屏幕上输入完整的字符串时跳到下一页。另外，我们使用了 **Google Fonts**，你也需要导入同样的包。
 
-![](https://miro.medium.com/max/1200/1*PvXgGVrBtx31_HFm_mcWtg.gif)
+![](../images/flutter-quote-app.md-1*PvXgGVrBtx31_HFm_mcWtg.gif)
 
 瞧! 您已经创建了第一个名言名句应用程序。
 
